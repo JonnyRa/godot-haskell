@@ -373,8 +373,10 @@ registerClass (RegClass desc constr) = do
     let tyFingerprint = typeRepFingerprint $ typeRep (Proxy @a)
     tyPtr <- F.new tyFingerprint
 
+    atomically $ modifyTVar' typeTags (S.insert $ castStablePtrToPtr tyPtr)
+
     d <- isJust <$> lookupEnv "HS_GODOT_DEBUG"
-    when d $ putStrLn $ T.unpack $ T.unwords ["Registering class", clsName]
+    when d $ putStrLn $ T.unpack $ T.unwords ["Registering class", clsName, "with base", base]
     withCString (T.unpack clsName)
       $ \namePtr -> withCString (T.unpack base) $ \basePtr -> do
           godot_nativescript_register_class pHandle
