@@ -808,9 +808,6 @@ instance Storable ArvrInterfaceGdnative where
   poke = error "ArvrInterfaceGdnative poke not implemented"
 {#pointer *godot_arvr_interface_gdnative as ArvrInterfaceGdnativePtr -> ArvrInterfaceGdnative #}
 
-
-
-
 gdnativeCoreApiStructRef :: IORef GdnativeCoreApiStruct
 gdnativeCoreApiStructRef = unsafePerformIO $ newIORef $ 
   error "attempted to get gdnativeCoreApiStructRef too early"
