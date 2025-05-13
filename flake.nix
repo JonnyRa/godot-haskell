@@ -26,10 +26,18 @@
           system,
           ...
         }:
+        let
+          godot-haskell = pkgs.callPackage ./. { };
+        in
         {
           treefmt = {
             projectRootFile = "flake.lock";
             programs.nixfmt.enable = true;
+          };
+
+          packages = {
+            inherit godot-haskell;
+            default = godot-haskell;
           };
 
           devShells.default = pkgs.mkShell {
