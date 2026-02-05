@@ -23,6 +23,7 @@ import Godot.Gdnative.Internal
 import Godot.Gdnative.Internal.TH
 
 import System.IO.Unsafe
+import GHC.Stack (HasCallStack)
 
 data LibType = GodotTy | HaskellTy
 
@@ -281,7 +282,7 @@ instance AsVariant GodotVariant where
 $(generateAsVariantInstances)
 
 
-fromGodotVariant :: forall a. (Typeable a, AsVariant a) => GodotVariant -> IO a
+fromGodotVariant :: forall a. (HasCallStack, Typeable a, AsVariant a) => GodotVariant -> IO a
 fromGodotVariant var = do
   res <- fromVariant <$> fromLowLevel var
   case res of
@@ -289,4 +290,4 @@ fromGodotVariant var = do
     Nothing -> do
       haveTy <-  godot_variant_get_type var 
       let expTy = typeOf (undefined :: a)
-      error $ "Error in API: couldn't fromVariant. have: " ++ show haveTy ++ ", expected: " ++ show expTy
+      throwIO $ ErrorCall $ "Error in API: couldn't fromVariant. have: " ++ show haveTy ++ ", expected: " ++ show expTy
