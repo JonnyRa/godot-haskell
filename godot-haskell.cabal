@@ -245,7 +245,6 @@ library
       Godot.Core.GodotFileDialog
       Godot.Core.GodotFont
       Godot.Core.GodotFuncRef
-      Godot.Core.GodotGDLMSensor
       Godot.Core.GodotGDNative
       Godot.Core.GodotGDNativeLibrary
       Godot.Core.GodotGDNativeLibraryResourceLoader
