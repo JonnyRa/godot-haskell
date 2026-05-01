@@ -9100,6 +9100,10 @@ get_overlapping_bodies = runMethod @"get_overlapping_bodies"
 get_overlay :: Method "get_overlay" cls sig => cls -> sig
 get_overlay = runMethod @"get_overlay"
 
+get_override_redirect ::
+                        Method "get_override_redirect" cls sig => cls -> sig
+get_override_redirect = runMethod @"get_override_redirect"
+
 get_oversample :: Method "get_oversample" cls sig => cls -> sig
 get_oversample = runMethod @"get_oversample"
 
@@ -12354,6 +12358,10 @@ has_variable = runMethod @"has_variable"
 has_virtual_keyboard ::
                        Method "has_virtual_keyboard" cls sig => cls -> sig
 has_virtual_keyboard = runMethod @"has_virtual_keyboard"
+
+has_window_type_name ::
+                       Method "has_window_type_name" cls sig => cls -> sig
+has_window_type_name = runMethod @"has_window_type_name"
 
 hide :: Method "hide" cls sig => cls -> sig
 hide = runMethod @"hide"
