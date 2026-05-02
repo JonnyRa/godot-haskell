@@ -12,6 +12,7 @@ cabal.sandbox.config
 app/*.cpp
 src/**/*.cpp
 src/**/*.c
+src.bak/
 *.so
 .ghc*
 #*
