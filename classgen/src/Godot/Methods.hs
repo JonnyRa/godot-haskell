@@ -10893,6 +10893,14 @@ get_surface_material_count ::
 get_surface_material_count
   = runMethod @"get_surface_material_count"
 
+get_surface_origin_x ::
+                       Method "get_surface_origin_x" cls sig => cls -> sig
+get_surface_origin_x = runMethod @"get_surface_origin_x"
+
+get_surface_origin_y ::
+                       Method "get_surface_origin_y" cls sig => cls -> sig
+get_surface_origin_y = runMethod @"get_surface_origin_y"
+
 get_surround :: Method "get_surround" cls sig => cls -> sig
 get_surround = runMethod @"get_surround"
 
@@ -11777,6 +11785,16 @@ get_visible_characters ::
                          Method "get_visible_characters" cls sig => cls -> sig
 get_visible_characters = runMethod @"get_visible_characters"
 
+get_visible_geometry_origin_x ::
+                                Method "get_visible_geometry_origin_x" cls sig => cls -> sig
+get_visible_geometry_origin_x
+  = runMethod @"get_visible_geometry_origin_x"
+
+get_visible_geometry_origin_y ::
+                                Method "get_visible_geometry_origin_y" cls sig => cls -> sig
+get_visible_geometry_origin_y
+  = runMethod @"get_visible_geometry_origin_y"
+
 get_visible_instance_count ::
                              Method "get_visible_instance_count" cls sig => cls -> sig
 get_visible_instance_count
@@ -11900,9 +11918,6 @@ get_world_scale = runMethod @"get_world_scale"
 get_write_mode :: Method "get_write_mode" cls sig => cls -> sig
 get_write_mode = runMethod @"get_write_mode"
 
-get_x :: Method "get_x" cls sig => cls -> sig
-get_x = runMethod @"get_x"
-
 get_x_label :: Method "get_x_label" cls sig => cls -> sig
 get_x_label = runMethod @"get_x_label"
 
@@ -11920,9 +11935,6 @@ get_xfade_time = runMethod @"get_xfade_time"
 
 get_xform :: Method "get_xform" cls sig => cls -> sig
 get_xform = runMethod @"get_xform"
-
-get_y :: Method "get_y" cls sig => cls -> sig
-get_y = runMethod @"get_y"
 
 get_y_label :: Method "get_y_label" cls sig => cls -> sig
 get_y_label = runMethod @"get_y_label"
