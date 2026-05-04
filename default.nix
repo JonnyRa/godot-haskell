@@ -30,8 +30,14 @@ haskellPackages.mkDerivation {
     haskellPackages.hpack
   ];
 
-  preConfigure = ''
+  postUnpack = ''
+    cd "$sourceRoot"
     hpack
+    cd -
+  '';
+
+  preConfigure = ''
+    true
   '';
 
   configureFlags = [ "--ghc-options=-fPIC -fexternal-dynamic-refs" ];
