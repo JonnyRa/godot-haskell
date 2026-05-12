@@ -8370,6 +8370,11 @@ get_listener_transform ::
                          Method "get_listener_transform" cls sig => cls -> sig
 get_listener_transform = runMethod @"get_listener_transform"
 
+get_live_object_dictionary ::
+                             Method "get_live_object_dictionary" cls sig => cls -> sig
+get_live_object_dictionary
+  = runMethod @"get_live_object_dictionary"
+
 get_load_path :: Method "get_load_path" cls sig => cls -> sig
 get_load_path = runMethod @"get_load_path"
 
