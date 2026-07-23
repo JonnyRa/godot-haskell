@@ -51,5 +51,5 @@ update_score self score = do
     <*> toLowLevel (T.pack $ Prelude.show score)
     &   join
 
+deriveHasBase ''HUD
 setupNode ''HUD "HUD" "HUD"
-deriveBase ''HUD

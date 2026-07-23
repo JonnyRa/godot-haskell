@@ -101,5 +101,5 @@ on_MobTimer_timeout self@(Main _ _ mobScene_) = do
     >>= (`godot_vector2_rotated` CFloat direction')
     >>= set_linear_velocity mob
 
+deriveHasBase ''Main
 setupNode ''Main "Main" "Main"
-deriveBase ''Main

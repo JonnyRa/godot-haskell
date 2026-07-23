@@ -91,5 +91,5 @@ player_process self delta = do
           set_flip_v animSprite (velocity' ^. _y > 0)
     else stop animSprite
 
+deriveHasBase ''Player
 setupNode ''Player "Player" "Player"
-deriveBase ''Player
