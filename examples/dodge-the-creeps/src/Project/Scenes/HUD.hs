@@ -2,11 +2,12 @@
 
 {-# LANGUAGE FlexibleContexts, FunctionalDependencies, MultiParamTypeClasses,
   UndecidableInstances, OverloadedStrings, TemplateHaskell, TypeApplications,
-  TypeFamilies, DataKinds, TypeOperators, FlexibleInstances, RankNTypes,
+  TypeFamilies, TupleSections, DataKinds, TypeOperators, FlexibleInstances, RankNTypes,
   AllowAmbiguousTypes, ScopedTypeVariables, DerivingStrategies,
-  GeneralizedNewtypeDeriving, LambdaCase #-}
+  GeneralizedNewtypeDeriving, LambdaCase, ImplicitPrelude #-}
 
 module Project.Scenes.HUD where
+import Prelude
 import Project.Support
 import Godot
 import GHC.TypeLits
