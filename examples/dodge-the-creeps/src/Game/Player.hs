@@ -77,6 +77,7 @@ player_process self delta = do
                 posY = clamp (pos' ^. _y) 0 (screenSize ^. _y)
             in  V2 posX posY
       set_position self =<< toLowLevel newPos
+
       animationName <- toLowLevel ""
       play animSprite (Just animationName) Nothing
       if velocity' ^. _x /= 0
