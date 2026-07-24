@@ -72,7 +72,6 @@ player_process self delta = do
       pos   <- get_position self >>= fromLowLevel
       let velocity' = normalize velocity ^* speed
           pos'      = pos + velocity' ^* delta
-          clamp v a b = max a (min b v)
           newPos =
             let posX = clamp (pos' ^. _x) 0 (screenSize ^. _x)
                 posY = clamp (pos' ^. _y) 0 (screenSize ^. _y)
@@ -90,6 +89,9 @@ player_process self delta = do
           set_animation animSprite =<< toLowLevel "up"
           set_flip_v animSprite (velocity' ^. _y > 0)
     else stop animSprite
+  where
+  clamp :: Float -> Float -> Float -> Float
+  clamp value low high = max low (min high value)
 
 deriveHasBase ''Player
 setupNode ''Player "Player" "Player"
