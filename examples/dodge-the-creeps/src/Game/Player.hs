@@ -78,6 +78,8 @@ player_process self delta = do
             in  V2 posX posY
       set_position self =<< toLowLevel newPos
 
+      -- this looks suspect but replacing with Nothing doesn't make a difference and tbf it's in the godot docs
+      -- likewise replacing Nothing with Just False for backwards doesn't make a difference
       animationName <- toLowLevel ""
       play animSprite (Just animationName) Nothing
       if velocity' ^. _x /= 0
