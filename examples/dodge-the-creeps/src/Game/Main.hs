@@ -77,12 +77,12 @@ on_ScoreTimer_timeout self = do
     &   join
 
 on_MobTimer_timeout :: Main -> IO ()
-on_MobTimer_timeout self@(Main _ _ mobScene_) = do
+on_MobTimer_timeout self = do
   -- Choose a random location on Path2D.
   mobSpawnLoc <- getNode' @"MobPath/MobSpawnLocation" self 
   PathFollow2D.set_offset mobSpawnLoc . fromInteger =<< randomIO
   -- Create a Mob instance and add it to the scene.
-  mob :: Mob <- readMVar mobScene_
+  mob :: Mob <- readMVar (_mobScene self)
             >>= (`PackedScene.instance'` Just 0)
             >>= (asNativeScript . upcast)
             >>= maybe (error "Couldn't cast mob to NativeScript") pure
