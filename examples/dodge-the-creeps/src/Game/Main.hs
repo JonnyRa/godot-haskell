@@ -97,8 +97,8 @@ on_MobTimer_timeout self = do
   set_rotation mob direction'
   -- Set the velocity' (speed & direction).
   testNode <- getNode' @"Test" self
-  --functionName <- toLowLevel "doSomething"
-  --call testNode functionName $ map toVariant [direction, mobSpawnPoint]
+  functionName <- toLowLevel "doSomething"
+  call testNode functionName $ map toVariant [direction, mobSpawnPoint]
   liftM2 (,) (readMVar $ _mMinSpeed mob) (readMVar $ _mMaxSpeed mob)
     >>= randomRIO
     >>= (\x -> toLowLevel (V2 x 0))
