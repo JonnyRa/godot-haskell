@@ -89,7 +89,7 @@ instance SceneNode        "Main" "StartTimer" where
 
 
 instance SceneNode        "Main" "Test" where
-  type SceneNodeType      "Main" "Test" = PackedScene' "Test"
+  type SceneNodeType      "Main" "Test" = Node
   type SceneNodeName      "Main" "Test" = "Test"
   type SceneNodeIsHaskell "Main" "Test" = 'Nothing
 
