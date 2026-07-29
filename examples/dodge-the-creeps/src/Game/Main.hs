@@ -80,7 +80,8 @@ on_MobTimer_timeout :: Main -> IO ()
 on_MobTimer_timeout self = do
   -- Choose a random location on Path2D.
   mobSpawnLoc <- getNode' @"MobPath/MobSpawnLocation" self 
-  PathFollow2D.set_offset mobSpawnLoc . fromInteger =<< randomIO
+  mobSpawnPoint <- fromInteger <$> randomIO
+  PathFollow2D.set_offset mobSpawnLoc mobSpawnPoint
   -- Create a Mob instance and add it to the scene.
   mob :: Mob <- readMVar (_mobScene self)
             >>= (`PackedScene.instance'` Just 0)
@@ -95,6 +96,9 @@ on_MobTimer_timeout self = do
   direction' <- (direction +) <$> randomRIO ((-pi) / 4, pi / 4)
   set_rotation mob direction'
   -- Set the velocity' (speed & direction).
+  testNode <- getNode' @"Test" self
+  functionName <- toLowLevel "doSomething"
+  call testNode functionName $ map toVariant [direction, mobSpawnPoint]
   liftM2 (,) (readMVar $ _mMinSpeed mob) (readMVar $ _mMaxSpeed mob)
     >>= randomRIO
     >>= (\x -> toLowLevel (V2 x 0))
