@@ -9,7 +9,9 @@ func _ready():
 	pass # Replace with function body.
 
 func doSomething(firstParam, secondParam):
-	pass
+	var format = "first %s, second %s"
+	$Params.text = format % [firstParam, secondParam]
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
