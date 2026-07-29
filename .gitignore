@@ -33,3 +33,5 @@ tags
 #vim-stackThoseErrorsOfHs
 errorLog
 .errors
+
+*.cabal
