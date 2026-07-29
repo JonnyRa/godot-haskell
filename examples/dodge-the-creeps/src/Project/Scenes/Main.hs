@@ -88,6 +88,12 @@ instance SceneNode        "Main" "StartTimer" where
   type SceneNodeIsHaskell "Main" "StartTimer" = 'Nothing
 
 
+instance SceneNode        "Main" "Test" where
+  type SceneNodeType      "Main" "Test" = PackedScene' "Test"
+  type SceneNodeName      "Main" "Test" = "Test"
+  type SceneNodeIsHaskell "Main" "Test" = 'Nothing
+
+
 instance SceneConnection "Main" "HUD" "start_game" "Main" "new_game"
 
 
