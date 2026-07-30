@@ -109,9 +109,9 @@ allByExtension ext dir = do
   if b
     then do
       l <- map (dir </>) <$> listDirectory dir
-      tscns <- filterM (\f -> (&& isSuffixOf ext f) <$> doesFileExist f) l
+      files <- filterM (\f -> (&& isSuffixOf ext f) <$> doesFileExist f) l
       dirs <- filterM doesDirectoryExist l
-      (tscns ++) . concat <$> mapM (allByExtension ext) dirs
+      (files ++) . concat <$> mapM (allByExtension ext) dirs
     else pure []
 
 mangle (h : t) = toUpper h : t
