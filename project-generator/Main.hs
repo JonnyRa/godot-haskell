@@ -842,6 +842,7 @@ outputTscn segmentsTscnName sceneName outDir tscn tscns gdnss = do
             (tscn ^. connections)
       )
   where
+    sceneNodes :: [(T.Text, T.Text)]
     sceneNodes =
       flip mapMaybe (M.toList $ tscn ^. nodes) $ \(name, node) -> do
         ty <- case (node ^. ty, node ^. instanceof) of
@@ -865,6 +866,7 @@ outputTscn segmentsTscnName sceneName outDir tscn tscns gdnss = do
             (annotatePackedScene node ty)
             (isHaskellNode name node tscn tscns gdnss)
 
+    annotatePackedScene :: TscnNode -> Ty -> Ty
     annotatePackedScene node (Ty "PackedScene") =
       Ty $
         "PackedScene' \""
