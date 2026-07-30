@@ -39,9 +39,16 @@ instance NodeMethod Main "game_over" '[] (IO ()) where
   nodeMethod = game_over
 instance NodeMethod Main "new_game" '[] (IO ()) where
   nodeMethod = new_game
+instance NodeMethod Main "setMessage" '[GodotString] (IO ()) where
+  nodeMethod = setMessage
 
 instance NodeProperty Main "PackedScene" PackedScene 'False where
   nodeProperty = createMVarProperty' "PackedScene" _mobScene (Left VariantTypeObject)
+
+setMessage :: Main -> GodotString -> IO ()
+setMessage self text = do
+  hud <- getNodeNativeScript' @"HUD" self 
+  show_message hud text
 
 game_over :: Main -> IO ()
 game_over self = do

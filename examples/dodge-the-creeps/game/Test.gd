@@ -11,6 +11,10 @@ func _ready():
 func doSomething(firstParam, secondParam):
 	var format = "first %s, second %s"
 	$Params.text = format % [firstParam, secondParam]
+	
+func callBackToHaskell(main):
+	main.setMessage("horse")
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
