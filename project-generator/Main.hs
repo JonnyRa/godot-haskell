@@ -627,6 +627,7 @@ instance SceneResourcePath "#{mangle $ T.unpack $ unName scene}" where
   sceneResourcePath = "res://#{filepath}"
 |]
 
+mkSceneNode :: FilePath -> String -> T.Text -> Ty -> Ty -> Maybe (Name, Name) -> (T.Text, T.Text)
 mkSceneNode scene name path ty ty' isHaskell =
   ( T.pack [i|import Godot.Core.#{ty}()|],
     T.pack
