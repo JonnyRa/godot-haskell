@@ -690,6 +690,7 @@ resolve (Just (Name n)) (NodePath ".") = NodePath n
 resolve _ (NodePath ".") = error "Relative node path without a current node"
 resolve _ p = p
 
+readTscn :: FilePath -> FilePath -> IO Tscn
 readTscn fn relFile = do
   b <- doesFileExist fn
   let tscnName = Name $ T.pack $ takeBaseName fn
