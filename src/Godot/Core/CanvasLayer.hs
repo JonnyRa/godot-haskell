@@ -98,7 +98,10 @@ get_canvas cls
          godot_method_bind_call bindCanvasLayer_get_canvas (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "get_canvas" '[] (IO Rid) where
         nodeMethod = Godot.Core.CanvasLayer.get_canvas
@@ -125,7 +128,7 @@ get_custom_viewport cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CanvasLayer "get_custom_viewport" '[] (IO Node)
          where
@@ -153,7 +156,10 @@ get_follow_viewport_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "get_follow_viewport_scale" '[]
            (IO Float)
@@ -180,7 +186,10 @@ get_layer cls
          godot_method_bind_call bindCanvasLayer_get_layer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "get_layer" '[] (IO Int) where
         nodeMethod = Godot.Core.CanvasLayer.get_layer
@@ -206,7 +215,10 @@ get_offset cls
          godot_method_bind_call bindCanvasLayer_get_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "get_offset" '[] (IO Vector2) where
         nodeMethod = Godot.Core.CanvasLayer.get_offset
@@ -232,7 +244,10 @@ get_rotation cls
          godot_method_bind_call bindCanvasLayer_get_rotation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "get_rotation" '[] (IO Float) where
         nodeMethod = Godot.Core.CanvasLayer.get_rotation
@@ -259,7 +274,10 @@ get_rotation_degrees cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "get_rotation_degrees" '[]
            (IO Float)
@@ -287,7 +305,10 @@ get_scale cls
          godot_method_bind_call bindCanvasLayer_get_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "get_scale" '[] (IO Vector2) where
         nodeMethod = Godot.Core.CanvasLayer.get_scale
@@ -313,7 +334,10 @@ get_transform cls
          godot_method_bind_call bindCanvasLayer_get_transform (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "get_transform" '[]
            (IO Transform2d)
@@ -342,7 +366,10 @@ is_following_viewport cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "is_following_viewport" '[]
            (IO Bool)
@@ -371,7 +398,10 @@ set_custom_viewport cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "set_custom_viewport" '[Node]
            (IO ())
@@ -400,7 +430,10 @@ set_follow_viewport cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "set_follow_viewport" '[Bool]
            (IO ())
@@ -429,7 +462,10 @@ set_follow_viewport_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "set_follow_viewport_scale"
            '[Float]
@@ -458,7 +494,10 @@ set_layer cls arg1
          godot_method_bind_call bindCanvasLayer_set_layer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "set_layer" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CanvasLayer.set_layer
@@ -484,7 +523,10 @@ set_offset cls arg1
          godot_method_bind_call bindCanvasLayer_set_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "set_offset" '[Vector2] (IO ())
          where
@@ -511,7 +553,10 @@ set_rotation cls arg1
          godot_method_bind_call bindCanvasLayer_set_rotation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "set_rotation" '[Float] (IO ())
          where
@@ -539,7 +584,10 @@ set_rotation_degrees cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "set_rotation_degrees" '[Float]
            (IO ())
@@ -567,7 +615,10 @@ set_scale cls arg1
          godot_method_bind_call bindCanvasLayer_set_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "set_scale" '[Vector2] (IO ())
          where
@@ -594,7 +645,10 @@ set_transform cls arg1
          godot_method_bind_call bindCanvasLayer_set_transform (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasLayer "set_transform" '[Transform2d]
            (IO ())

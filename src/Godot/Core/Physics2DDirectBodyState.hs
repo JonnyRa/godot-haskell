@@ -29,6 +29,7 @@ module Godot.Core.Physics2DDirectBodyState
         Godot.Core.Physics2DDirectBodyState.get_total_gravity,
         Godot.Core.Physics2DDirectBodyState.get_total_linear_damp,
         Godot.Core.Physics2DDirectBodyState.get_transform,
+        Godot.Core.Physics2DDirectBodyState.get_velocity_at_local_position,
         Godot.Core.Physics2DDirectBodyState.integrate_forces,
         Godot.Core.Physics2DDirectBodyState.is_sleeping,
         Godot.Core.Physics2DDirectBodyState.set_angular_velocity,
@@ -134,7 +135,10 @@ add_central_force cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "add_central_force"
            '[Vector2]
@@ -165,7 +169,10 @@ add_force cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "add_force"
            '[Vector2, Vector2]
@@ -196,7 +203,10 @@ add_torque cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "add_torque" '[Float]
            (IO ())
@@ -227,7 +237,10 @@ apply_central_impulse cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState
            "apply_central_impulse"
@@ -260,7 +273,10 @@ apply_impulse cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "apply_impulse"
            '[Vector2, Vector2]
@@ -292,7 +308,10 @@ apply_torque_impulse cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "apply_torque_impulse"
            '[Float]
@@ -303,7 +322,7 @@ instance NodeMethod Physics2DDirectBodyState "apply_torque_impulse"
 
 {-# NOINLINE bindPhysics2DDirectBodyState_get_angular_velocity #-}
 
--- | The body's rotational velocity.
+-- | The body's rotational velocity in @i@radians@/i@ per second.
 bindPhysics2DDirectBodyState_get_angular_velocity :: MethodBind
 bindPhysics2DDirectBodyState_get_angular_velocity
   = unsafePerformIO $
@@ -313,7 +332,7 @@ bindPhysics2DDirectBodyState_get_angular_velocity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The body's rotational velocity.
+-- | The body's rotational velocity in @i@radians@/i@ per second.
 get_angular_velocity ::
                        (Physics2DDirectBodyState :< cls, Object :< cls) => cls -> IO Float
 get_angular_velocity cls
@@ -324,7 +343,10 @@ get_angular_velocity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "get_angular_velocity"
            '[]
@@ -357,7 +379,10 @@ get_contact_collider cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "get_contact_collider"
            '[Int]
@@ -391,7 +416,10 @@ get_contact_collider_id cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_contact_collider_id"
@@ -427,7 +455,7 @@ get_contact_collider_object cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_contact_collider_object"
@@ -463,7 +491,10 @@ get_contact_collider_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_contact_collider_position"
@@ -499,7 +530,10 @@ get_contact_collider_shape cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_contact_collider_shape"
@@ -535,7 +569,7 @@ get_contact_collider_shape_metadata cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_contact_collider_shape_metadata"
@@ -571,7 +605,10 @@ get_contact_collider_velocity_at_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_contact_collider_velocity_at_position"
@@ -606,7 +643,10 @@ get_contact_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "get_contact_count"
            '[]
@@ -639,7 +679,10 @@ get_contact_local_normal cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_contact_local_normal"
@@ -675,7 +718,10 @@ get_contact_local_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_contact_local_position"
@@ -710,7 +756,10 @@ get_contact_local_shape cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_contact_local_shape"
@@ -743,7 +792,10 @@ get_inverse_inertia cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "get_inverse_inertia"
            '[]
@@ -775,7 +827,10 @@ get_inverse_mass cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "get_inverse_mass" '[]
            (IO Float)
@@ -784,7 +839,7 @@ instance NodeMethod Physics2DDirectBodyState "get_inverse_mass" '[]
 
 {-# NOINLINE bindPhysics2DDirectBodyState_get_linear_velocity #-}
 
--- | The body's linear velocity.
+-- | The body's linear velocity in pixels per second.
 bindPhysics2DDirectBodyState_get_linear_velocity :: MethodBind
 bindPhysics2DDirectBodyState_get_linear_velocity
   = unsafePerformIO $
@@ -794,7 +849,7 @@ bindPhysics2DDirectBodyState_get_linear_velocity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The body's linear velocity.
+-- | The body's linear velocity in pixels per second.
 get_linear_velocity ::
                       (Physics2DDirectBodyState :< cls, Object :< cls) =>
                       cls -> IO Vector2
@@ -806,7 +861,10 @@ get_linear_velocity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "get_linear_velocity"
            '[]
@@ -838,7 +896,7 @@ get_space_state cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Physics2DDirectBodyState "get_space_state" '[]
            (IO Physics2DDirectSpaceState)
@@ -867,7 +925,10 @@ get_step cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "get_step" '[]
            (IO Float)
@@ -898,7 +959,10 @@ get_total_angular_damp cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_total_angular_damp"
@@ -932,7 +996,10 @@ get_total_gravity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "get_total_gravity"
            '[]
@@ -963,7 +1030,10 @@ get_total_linear_damp cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState
            "get_total_linear_damp"
@@ -996,12 +1066,54 @@ get_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "get_transform" '[]
            (IO Transform2d)
          where
         nodeMethod = Godot.Core.Physics2DDirectBodyState.get_transform
+
+{-# NOINLINE bindPhysics2DDirectBodyState_get_velocity_at_local_position
+             #-}
+
+-- | Returns the body's velocity at the given relative position, including both translation and rotation.
+bindPhysics2DDirectBodyState_get_velocity_at_local_position ::
+                                                            MethodBind
+bindPhysics2DDirectBodyState_get_velocity_at_local_position
+  = unsafePerformIO $
+      withCString "Physics2DDirectBodyState" $
+        \ clsNamePtr ->
+          withCString "get_velocity_at_local_position" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the body's velocity at the given relative position, including both translation and rotation.
+get_velocity_at_local_position ::
+                                 (Physics2DDirectBodyState :< cls, Object :< cls) =>
+                                 cls -> Vector2 -> IO Vector2
+get_velocity_at_local_position cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindPhysics2DDirectBodyState_get_velocity_at_local_position
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Physics2DDirectBodyState
+           "get_velocity_at_local_position"
+           '[Vector2]
+           (IO Vector2)
+         where
+        nodeMethod
+          = Godot.Core.Physics2DDirectBodyState.get_velocity_at_local_position
 
 {-# NOINLINE bindPhysics2DDirectBodyState_integrate_forces #-}
 
@@ -1026,7 +1138,10 @@ integrate_forces cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "integrate_forces" '[]
            (IO ())
@@ -1055,7 +1170,10 @@ is_sleeping cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "is_sleeping" '[]
            (IO Bool)
@@ -1064,7 +1182,7 @@ instance NodeMethod Physics2DDirectBodyState "is_sleeping" '[]
 
 {-# NOINLINE bindPhysics2DDirectBodyState_set_angular_velocity #-}
 
--- | The body's rotational velocity.
+-- | The body's rotational velocity in @i@radians@/i@ per second.
 bindPhysics2DDirectBodyState_set_angular_velocity :: MethodBind
 bindPhysics2DDirectBodyState_set_angular_velocity
   = unsafePerformIO $
@@ -1074,7 +1192,7 @@ bindPhysics2DDirectBodyState_set_angular_velocity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The body's rotational velocity.
+-- | The body's rotational velocity in @i@radians@/i@ per second.
 set_angular_velocity ::
                        (Physics2DDirectBodyState :< cls, Object :< cls) =>
                        cls -> Float -> IO ()
@@ -1086,7 +1204,10 @@ set_angular_velocity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "set_angular_velocity"
            '[Float]
@@ -1097,7 +1218,7 @@ instance NodeMethod Physics2DDirectBodyState "set_angular_velocity"
 
 {-# NOINLINE bindPhysics2DDirectBodyState_set_linear_velocity #-}
 
--- | The body's linear velocity.
+-- | The body's linear velocity in pixels per second.
 bindPhysics2DDirectBodyState_set_linear_velocity :: MethodBind
 bindPhysics2DDirectBodyState_set_linear_velocity
   = unsafePerformIO $
@@ -1107,7 +1228,7 @@ bindPhysics2DDirectBodyState_set_linear_velocity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The body's linear velocity.
+-- | The body's linear velocity in pixels per second.
 set_linear_velocity ::
                       (Physics2DDirectBodyState :< cls, Object :< cls) =>
                       cls -> Vector2 -> IO ()
@@ -1119,7 +1240,10 @@ set_linear_velocity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "set_linear_velocity"
            '[Vector2]
@@ -1151,7 +1275,10 @@ set_sleep_state cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "set_sleep_state"
            '[Bool]
@@ -1182,7 +1309,10 @@ set_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectBodyState "set_transform"
            '[Transform2d]

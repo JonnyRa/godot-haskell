@@ -56,7 +56,10 @@ _preview_ready cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorResourcePreview "_preview_ready"
            '[GodotString, Texture, Texture, Int, GodotString, GodotVariant]
@@ -88,7 +91,10 @@ add_preview_generator cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorResourcePreview "add_preview_generator"
            '[EditorResourcePreviewGenerator]
@@ -121,7 +127,10 @@ check_for_invalidation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorResourcePreview "check_for_invalidation"
            '[GodotString]
@@ -133,7 +142,8 @@ instance NodeMethod EditorResourcePreview "check_for_invalidation"
 {-# NOINLINE bindEditorResourcePreview_queue_edited_resource_preview
              #-}
 
--- | Queue a resource being edited for preview (using an instance). Once the preview is ready, your receiver.receiver_func will be called either containing the preview texture or an empty texture (if no preview was possible). Callback must have the format: (path,texture,userdata). Userdata can be anything.
+-- | Queue the @resource@ being edited for preview. Once the preview is ready, the @receiver@'s @receiver_func@ will be called. The @receiver_func@ must take the following four arguments: @String@ path, @Texture@ preview, @Texture@ thumbnail_preview, @Variant@ userdata. @userdata@ can be anything, and will be returned when @receiver_func@ is called.
+--   				__Note:__ If it was not possible to create the preview the @receiver_func@ will still be called, but the preview will be null.
 bindEditorResourcePreview_queue_edited_resource_preview ::
                                                         MethodBind
 bindEditorResourcePreview_queue_edited_resource_preview
@@ -144,7 +154,8 @@ bindEditorResourcePreview_queue_edited_resource_preview
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Queue a resource being edited for preview (using an instance). Once the preview is ready, your receiver.receiver_func will be called either containing the preview texture or an empty texture (if no preview was possible). Callback must have the format: (path,texture,userdata). Userdata can be anything.
+-- | Queue the @resource@ being edited for preview. Once the preview is ready, the @receiver@'s @receiver_func@ will be called. The @receiver_func@ must take the following four arguments: @String@ path, @Texture@ preview, @Texture@ thumbnail_preview, @Variant@ userdata. @userdata@ can be anything, and will be returned when @receiver_func@ is called.
+--   				__Note:__ If it was not possible to create the preview the @receiver_func@ will still be called, but the preview will be null.
 queue_edited_resource_preview ::
                                 (EditorResourcePreview :< cls, Object :< cls) =>
                                 cls -> Resource -> Object -> GodotString -> GodotVariant -> IO ()
@@ -157,7 +168,10 @@ queue_edited_resource_preview cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorResourcePreview
            "queue_edited_resource_preview"
@@ -169,7 +183,8 @@ instance NodeMethod EditorResourcePreview
 
 {-# NOINLINE bindEditorResourcePreview_queue_resource_preview #-}
 
--- | Queue a resource file for preview (using a path). Once the preview is ready, your receiver.receiver_func will be called either containing the preview texture or an empty texture (if no preview was possible). Callback must have the format: (path,texture,userdata). Userdata can be anything.
+-- | Queue a resource file located at @path@ for preview. Once the preview is ready, the @receiver@'s @receiver_func@ will be called. The @receiver_func@ must take the following four arguments: @String@ path, @Texture@ preview, @Texture@ thumbnail_preview, @Variant@ userdata. @userdata@ can be anything, and will be returned when @receiver_func@ is called.
+--   				__Note:__ If it was not possible to create the preview the @receiver_func@ will still be called, but the preview will be null.
 bindEditorResourcePreview_queue_resource_preview :: MethodBind
 bindEditorResourcePreview_queue_resource_preview
   = unsafePerformIO $
@@ -179,7 +194,8 @@ bindEditorResourcePreview_queue_resource_preview
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Queue a resource file for preview (using a path). Once the preview is ready, your receiver.receiver_func will be called either containing the preview texture or an empty texture (if no preview was possible). Callback must have the format: (path,texture,userdata). Userdata can be anything.
+-- | Queue a resource file located at @path@ for preview. Once the preview is ready, the @receiver@'s @receiver_func@ will be called. The @receiver_func@ must take the following four arguments: @String@ path, @Texture@ preview, @Texture@ thumbnail_preview, @Variant@ userdata. @userdata@ can be anything, and will be returned when @receiver_func@ is called.
+--   				__Note:__ If it was not possible to create the preview the @receiver_func@ will still be called, but the preview will be null.
 queue_resource_preview ::
                          (EditorResourcePreview :< cls, Object :< cls) =>
                          cls ->
@@ -193,7 +209,10 @@ queue_resource_preview cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorResourcePreview "queue_resource_preview"
            '[GodotString, Object, GodotString, GodotVariant]
@@ -226,7 +245,10 @@ remove_preview_generator cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorResourcePreview
            "remove_preview_generator"

@@ -10,12 +10,14 @@ module Godot.Core.NoiseTexture
         Godot.Core.NoiseTexture._update_texture,
         Godot.Core.NoiseTexture.get_bump_strength,
         Godot.Core.NoiseTexture.get_noise,
+        Godot.Core.NoiseTexture.get_noise_offset,
         Godot.Core.NoiseTexture.get_seamless,
         Godot.Core.NoiseTexture.is_normalmap,
         Godot.Core.NoiseTexture.set_as_normalmap,
         Godot.Core.NoiseTexture.set_bump_strength,
         Godot.Core.NoiseTexture.set_height,
         Godot.Core.NoiseTexture.set_noise,
+        Godot.Core.NoiseTexture.set_noise_offset,
         Godot.Core.NoiseTexture.set_seamless,
         Godot.Core.NoiseTexture.set_width)
        where
@@ -59,7 +61,10 @@ get_height cls
          godot_method_bind_call bindNoiseTexture_get_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "get_height" '[] (IO Int) where
         nodeMethod = Godot.Core.NoiseTexture.get_height
@@ -70,6 +75,11 @@ instance NodeProperty NoiseTexture "height" Int 'False where
 instance NodeProperty NoiseTexture "noise" OpenSimplexNoise 'False
          where
         nodeProperty = (get_noise, wrapDroppingSetter set_noise, Nothing)
+
+instance NodeProperty NoiseTexture "noise_offset" Vector2 'False
+         where
+        nodeProperty
+          = (get_noise_offset, wrapDroppingSetter set_noise_offset, Nothing)
 
 instance NodeProperty NoiseTexture "seamless" Bool 'False where
         nodeProperty
@@ -93,7 +103,10 @@ get_width cls
          godot_method_bind_call bindNoiseTexture_get_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "get_width" '[] (IO Int) where
         nodeMethod = Godot.Core.NoiseTexture.get_width
@@ -121,7 +134,7 @@ _generate_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod NoiseTexture "_generate_texture" '[] (IO Image)
          where
@@ -146,7 +159,10 @@ _queue_update cls
          godot_method_bind_call bindNoiseTexture__queue_update (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "_queue_update" '[] (IO ()) where
         nodeMethod = Godot.Core.NoiseTexture._queue_update
@@ -170,7 +186,10 @@ _thread_done cls arg1
          godot_method_bind_call bindNoiseTexture__thread_done (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "_thread_done" '[Image] (IO ())
          where
@@ -196,7 +215,10 @@ _update_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "_update_texture" '[] (IO ())
          where
@@ -222,7 +244,10 @@ get_bump_strength cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "get_bump_strength" '[] (IO Float)
          where
@@ -247,12 +272,42 @@ get_noise cls
          godot_method_bind_call bindNoiseTexture_get_noise (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod NoiseTexture "get_noise" '[]
            (IO OpenSimplexNoise)
          where
         nodeMethod = Godot.Core.NoiseTexture.get_noise
+
+{-# NOINLINE bindNoiseTexture_get_noise_offset #-}
+
+bindNoiseTexture_get_noise_offset :: MethodBind
+bindNoiseTexture_get_noise_offset
+  = unsafePerformIO $
+      withCString "NoiseTexture" $
+        \ clsNamePtr ->
+          withCString "get_noise_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_noise_offset ::
+                   (NoiseTexture :< cls, Object :< cls) => cls -> IO Vector2
+get_noise_offset cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNoiseTexture_get_noise_offset
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod NoiseTexture "get_noise_offset" '[]
+           (IO Vector2)
+         where
+        nodeMethod = Godot.Core.NoiseTexture.get_noise_offset
 
 {-# NOINLINE bindNoiseTexture_get_seamless #-}
 
@@ -273,7 +328,10 @@ get_seamless cls
          godot_method_bind_call bindNoiseTexture_get_seamless (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "get_seamless" '[] (IO Bool) where
         nodeMethod = Godot.Core.NoiseTexture.get_seamless
@@ -297,7 +355,10 @@ is_normalmap cls
          godot_method_bind_call bindNoiseTexture_is_normalmap (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "is_normalmap" '[] (IO Bool) where
         nodeMethod = Godot.Core.NoiseTexture.is_normalmap
@@ -322,7 +383,10 @@ set_as_normalmap cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "set_as_normalmap" '[Bool] (IO ())
          where
@@ -348,7 +412,10 @@ set_bump_strength cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "set_bump_strength" '[Float]
            (IO ())
@@ -374,7 +441,10 @@ set_height cls arg1
          godot_method_bind_call bindNoiseTexture_set_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "set_height" '[Int] (IO ()) where
         nodeMethod = Godot.Core.NoiseTexture.set_height
@@ -399,12 +469,45 @@ set_noise cls arg1
          godot_method_bind_call bindNoiseTexture_set_noise (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "set_noise" '[OpenSimplexNoise]
            (IO ())
          where
         nodeMethod = Godot.Core.NoiseTexture.set_noise
+
+{-# NOINLINE bindNoiseTexture_set_noise_offset #-}
+
+bindNoiseTexture_set_noise_offset :: MethodBind
+bindNoiseTexture_set_noise_offset
+  = unsafePerformIO $
+      withCString "NoiseTexture" $
+        \ clsNamePtr ->
+          withCString "set_noise_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_noise_offset ::
+                   (NoiseTexture :< cls, Object :< cls) => cls -> Vector2 -> IO ()
+set_noise_offset cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNoiseTexture_set_noise_offset
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod NoiseTexture "set_noise_offset" '[Vector2]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.NoiseTexture.set_noise_offset
 
 {-# NOINLINE bindNoiseTexture_set_seamless #-}
 
@@ -425,7 +528,10 @@ set_seamless cls arg1
          godot_method_bind_call bindNoiseTexture_set_seamless (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "set_seamless" '[Bool] (IO ())
          where
@@ -450,7 +556,10 @@ set_width cls arg1
          godot_method_bind_call bindNoiseTexture_set_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NoiseTexture "set_width" '[Int] (IO ()) where
         nodeMethod = Godot.Core.NoiseTexture.set_width

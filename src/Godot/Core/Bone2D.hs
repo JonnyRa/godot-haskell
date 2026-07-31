@@ -47,7 +47,10 @@ apply_rest cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBone2D_apply_rest (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Bone2D "apply_rest" '[] (IO ()) where
         nodeMethod = Godot.Core.Bone2D.apply_rest
@@ -73,7 +76,10 @@ get_default_length cls
          godot_method_bind_call bindBone2D_get_default_length (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Bone2D "get_default_length" '[] (IO Float)
          where
@@ -101,7 +107,10 @@ get_index_in_skeleton cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Bone2D "get_index_in_skeleton" '[] (IO Int)
          where
@@ -125,7 +134,10 @@ get_rest cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBone2D_get_rest (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Bone2D "get_rest" '[] (IO Transform2d) where
         nodeMethod = Godot.Core.Bone2D.get_rest
@@ -151,7 +163,10 @@ get_skeleton_rest cls
          godot_method_bind_call bindBone2D_get_skeleton_rest (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Bone2D "get_skeleton_rest" '[] (IO Transform2d)
          where
@@ -178,7 +193,10 @@ set_default_length cls arg1
          godot_method_bind_call bindBone2D_set_default_length (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Bone2D "set_default_length" '[Float] (IO ())
          where
@@ -203,7 +221,10 @@ set_rest cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBone2D_set_rest (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Bone2D "set_rest" '[Transform2d] (IO ()) where
         nodeMethod = Godot.Core.Bone2D.set_rest

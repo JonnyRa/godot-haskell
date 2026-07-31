@@ -43,7 +43,10 @@ _curve_changed cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPath__curve_changed (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Path "_curve_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.Path._curve_changed
@@ -66,7 +69,7 @@ get_curve cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPath_get_curve (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Path "get_curve" '[] (IO Curve3D) where
         nodeMethod = Godot.Core.Path.get_curve
@@ -90,7 +93,10 @@ set_curve cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPath_set_curve (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Path "set_curve" '[Curve3D] (IO ()) where
         nodeMethod = Godot.Core.Path.set_curve

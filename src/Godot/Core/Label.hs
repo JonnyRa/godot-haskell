@@ -119,7 +119,10 @@ get_align cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_get_align (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_align" '[] (IO Int) where
         nodeMethod = Godot.Core.Label.get_align
@@ -143,7 +146,10 @@ get_line_count cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_get_line_count (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_line_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Label.get_line_count
@@ -168,7 +174,10 @@ get_line_height cls
          godot_method_bind_call bindLabel_get_line_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_line_height" '[] (IO Int) where
         nodeMethod = Godot.Core.Label.get_line_height
@@ -193,7 +202,10 @@ get_lines_skipped cls
          godot_method_bind_call bindLabel_get_lines_skipped (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_lines_skipped" '[] (IO Int) where
         nodeMethod = Godot.Core.Label.get_lines_skipped
@@ -219,7 +231,10 @@ get_max_lines_visible cls
          godot_method_bind_call bindLabel_get_max_lines_visible (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_max_lines_visible" '[] (IO Int)
          where
@@ -246,7 +261,10 @@ get_percent_visible cls
          godot_method_bind_call bindLabel_get_percent_visible (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_percent_visible" '[] (IO Float)
          where
@@ -270,7 +288,10 @@ get_text cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_get_text (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_text" '[] (IO GodotString) where
         nodeMethod = Godot.Core.Label.get_text
@@ -297,7 +318,10 @@ get_total_character_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_total_character_count" '[] (IO Int)
          where
@@ -321,7 +345,10 @@ get_valign cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_get_valign (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_valign" '[] (IO Int) where
         nodeMethod = Godot.Core.Label.get_valign
@@ -348,7 +375,10 @@ get_visible_characters cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_visible_characters" '[] (IO Int)
          where
@@ -376,7 +406,10 @@ get_visible_line_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "get_visible_line_count" '[] (IO Int)
          where
@@ -401,14 +434,17 @@ has_autowrap cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_has_autowrap (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "has_autowrap" '[] (IO Bool) where
         nodeMethod = Godot.Core.Label.has_autowrap
 
 {-# NOINLINE bindLabel_is_clipping_text #-}
 
--- | If @true@, the Label only shows the text that fits inside its bounding rectangle. It also lets you scale the node down freely.
+-- | If @true@, the Label only shows the text that fits inside its bounding rectangle and will clip text horizontally.
 bindLabel_is_clipping_text :: MethodBind
 bindLabel_is_clipping_text
   = unsafePerformIO $
@@ -418,7 +454,7 @@ bindLabel_is_clipping_text
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the Label only shows the text that fits inside its bounding rectangle. It also lets you scale the node down freely.
+-- | If @true@, the Label only shows the text that fits inside its bounding rectangle and will clip text horizontally.
 is_clipping_text :: (Label :< cls, Object :< cls) => cls -> IO Bool
 is_clipping_text cls
   = withVariantArray []
@@ -426,7 +462,10 @@ is_clipping_text cls
          godot_method_bind_call bindLabel_is_clipping_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "is_clipping_text" '[] (IO Bool) where
         nodeMethod = Godot.Core.Label.is_clipping_text
@@ -450,7 +489,10 @@ is_uppercase cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_is_uppercase (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "is_uppercase" '[] (IO Bool) where
         nodeMethod = Godot.Core.Label.is_uppercase
@@ -473,7 +515,10 @@ set_align cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_set_align (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "set_align" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Label.set_align
@@ -498,14 +543,17 @@ set_autowrap cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_set_autowrap (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "set_autowrap" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Label.set_autowrap
 
 {-# NOINLINE bindLabel_set_clip_text #-}
 
--- | If @true@, the Label only shows the text that fits inside its bounding rectangle. It also lets you scale the node down freely.
+-- | If @true@, the Label only shows the text that fits inside its bounding rectangle and will clip text horizontally.
 bindLabel_set_clip_text :: MethodBind
 bindLabel_set_clip_text
   = unsafePerformIO $
@@ -515,7 +563,7 @@ bindLabel_set_clip_text
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the Label only shows the text that fits inside its bounding rectangle. It also lets you scale the node down freely.
+-- | If @true@, the Label only shows the text that fits inside its bounding rectangle and will clip text horizontally.
 set_clip_text ::
                 (Label :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_clip_text cls arg1
@@ -523,7 +571,10 @@ set_clip_text cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_set_clip_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "set_clip_text" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Label.set_clip_text
@@ -549,7 +600,10 @@ set_lines_skipped cls arg1
          godot_method_bind_call bindLabel_set_lines_skipped (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "set_lines_skipped" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Label.set_lines_skipped
@@ -575,7 +629,10 @@ set_max_lines_visible cls arg1
          godot_method_bind_call bindLabel_set_max_lines_visible (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "set_max_lines_visible" '[Int] (IO ())
          where
@@ -602,7 +659,10 @@ set_percent_visible cls arg1
          godot_method_bind_call bindLabel_set_percent_visible (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "set_percent_visible" '[Float] (IO ())
          where
@@ -627,7 +687,10 @@ set_text cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_set_text (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "set_text" '[GodotString] (IO ()) where
         nodeMethod = Godot.Core.Label.set_text
@@ -652,7 +715,10 @@ set_uppercase cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_set_uppercase (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "set_uppercase" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Label.set_uppercase
@@ -675,7 +741,10 @@ set_valign cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLabel_set_valign (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "set_valign" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Label.set_valign
@@ -702,7 +771,10 @@ set_visible_characters cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Label "set_visible_characters" '[Int] (IO ())
          where

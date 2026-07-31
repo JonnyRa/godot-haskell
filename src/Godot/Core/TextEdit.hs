@@ -62,6 +62,7 @@ module Godot.Core.TextEdit
         Godot.Core.TextEdit.get_v_scroll_speed,
         Godot.Core.TextEdit.get_word_under_cursor,
         Godot.Core.TextEdit.has_keyword_color,
+        Godot.Core.TextEdit.has_redo, Godot.Core.TextEdit.has_undo,
         Godot.Core.TextEdit.insert_text_at_cursor,
         Godot.Core.TextEdit.is_breakpoint_gutter_enabled,
         Godot.Core.TextEdit.is_context_menu_enabled,
@@ -73,6 +74,9 @@ module Godot.Core.TextEdit
         Godot.Core.TextEdit.is_highlight_all_occurrences_enabled,
         Godot.Core.TextEdit.is_highlight_current_line_enabled,
         Godot.Core.TextEdit.is_line_hidden,
+        Godot.Core.TextEdit.is_line_set_as_bookmark,
+        Godot.Core.TextEdit.is_line_set_as_breakpoint,
+        Godot.Core.TextEdit.is_line_set_as_safe,
         Godot.Core.TextEdit.is_overriding_selected_font_color,
         Godot.Core.TextEdit.is_readonly,
         Godot.Core.TextEdit.is_right_click_moving_caret,
@@ -82,6 +86,7 @@ module Godot.Core.TextEdit
         Godot.Core.TextEdit.is_show_line_numbers_enabled,
         Godot.Core.TextEdit.is_smooth_scroll_enabled,
         Godot.Core.TextEdit.is_syntax_coloring_enabled,
+        Godot.Core.TextEdit.is_virtual_keyboard_enabled,
         Godot.Core.TextEdit.is_wrap_enabled,
         Godot.Core.TextEdit.menu_option, Godot.Core.TextEdit.paste,
         Godot.Core.TextEdit.redo, Godot.Core.TextEdit.remove_breakpoints,
@@ -96,7 +101,11 @@ module Godot.Core.TextEdit
         Godot.Core.TextEdit.set_hiding_enabled,
         Godot.Core.TextEdit.set_highlight_all_occurrences,
         Godot.Core.TextEdit.set_highlight_current_line,
+        Godot.Core.TextEdit.set_line,
+        Godot.Core.TextEdit.set_line_as_bookmark,
+        Godot.Core.TextEdit.set_line_as_breakpoint,
         Godot.Core.TextEdit.set_line_as_hidden,
+        Godot.Core.TextEdit.set_line_as_safe,
         Godot.Core.TextEdit.set_minimap_width,
         Godot.Core.TextEdit.set_override_selected_font_color,
         Godot.Core.TextEdit.set_readonly,
@@ -108,6 +117,7 @@ module Godot.Core.TextEdit
         Godot.Core.TextEdit.set_syntax_coloring,
         Godot.Core.TextEdit.set_text, Godot.Core.TextEdit.set_v_scroll,
         Godot.Core.TextEdit.set_v_scroll_speed,
+        Godot.Core.TextEdit.set_virtual_keyboard_enabled,
         Godot.Core.TextEdit.set_wrap_enabled,
         Godot.Core.TextEdit.toggle_fold_line, Godot.Core.TextEdit.undo,
         Godot.Core.TextEdit.unfold_line,
@@ -333,6 +343,13 @@ instance NodeProperty TextEdit "v_scroll_speed" Float 'False where
           = (get_v_scroll_speed, wrapDroppingSetter set_v_scroll_speed,
              Nothing)
 
+instance NodeProperty TextEdit "virtual_keyboard_enabled" Bool
+           'False
+         where
+        nodeProperty
+          = (is_virtual_keyboard_enabled,
+             wrapDroppingSetter set_virtual_keyboard_enabled, Nothing)
+
 instance NodeProperty TextEdit "wrap_enabled" Bool 'False where
         nodeProperty
           = (is_wrap_enabled, wrapDroppingSetter set_wrap_enabled, Nothing)
@@ -357,7 +374,10 @@ _click_selection_held cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "_click_selection_held" '[] (IO ())
          where
@@ -383,7 +403,10 @@ _cursor_changed_emit cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "_cursor_changed_emit" '[] (IO ())
          where
@@ -407,7 +430,10 @@ _gui_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit__gui_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "_gui_input" '[InputEvent] (IO ())
          where
@@ -432,7 +458,10 @@ _push_current_op cls
          godot_method_bind_call bindTextEdit__push_current_op (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "_push_current_op" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit._push_current_op
@@ -456,7 +485,10 @@ _scroll_moved cls arg1
          godot_method_bind_call bindTextEdit__scroll_moved (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "_scroll_moved" '[Float] (IO ()) where
         nodeMethod = Godot.Core.TextEdit._scroll_moved
@@ -480,7 +512,10 @@ _text_changed_emit cls
          godot_method_bind_call bindTextEdit__text_changed_emit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "_text_changed_emit" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit._text_changed_emit
@@ -504,7 +539,10 @@ _toggle_draw_caret cls
          godot_method_bind_call bindTextEdit__toggle_draw_caret (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "_toggle_draw_caret" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit._toggle_draw_caret
@@ -527,7 +565,10 @@ _update_wrap_at cls
          godot_method_bind_call bindTextEdit__update_wrap_at (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "_update_wrap_at" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit._update_wrap_at
@@ -550,7 +591,10 @@ _v_scroll_input cls
          godot_method_bind_call bindTextEdit__v_scroll_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "_v_scroll_input" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit._v_scroll_input
@@ -579,7 +623,10 @@ add_color_region cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindTextEdit_add_color_region (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "add_color_region"
            '[GodotString, GodotString, Color, Maybe Bool]
@@ -609,7 +656,10 @@ add_keyword_color cls arg1 arg2
          godot_method_bind_call bindTextEdit_add_keyword_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "add_keyword_color"
            '[GodotString, Color]
@@ -637,7 +687,10 @@ can_fold cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_can_fold (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "can_fold" '[Int] (IO Bool) where
         nodeMethod = Godot.Core.TextEdit.can_fold
@@ -664,7 +717,10 @@ center_viewport_to_cursor cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "center_viewport_to_cursor" '[]
            (IO ())
@@ -691,7 +747,10 @@ clear_colors cls
          godot_method_bind_call bindTextEdit_clear_colors (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "clear_colors" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.clear_colors
@@ -717,7 +776,10 @@ clear_undo_history cls
          godot_method_bind_call bindTextEdit_clear_undo_history (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "clear_undo_history" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.clear_undo_history
@@ -740,7 +802,10 @@ copy cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_copy (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "copy" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.copy
@@ -767,7 +832,10 @@ cursor_get_blink_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cursor_get_blink_enabled" '[]
            (IO Bool)
@@ -796,7 +864,10 @@ cursor_get_blink_speed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cursor_get_blink_speed" '[]
            (IO Float)
@@ -824,7 +895,10 @@ cursor_get_column cls
          godot_method_bind_call bindTextEdit_cursor_get_column (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cursor_get_column" '[] (IO Int) where
         nodeMethod = Godot.Core.TextEdit.cursor_get_column
@@ -850,7 +924,10 @@ cursor_get_line cls
          godot_method_bind_call bindTextEdit_cursor_get_line (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cursor_get_line" '[] (IO Int) where
         nodeMethod = Godot.Core.TextEdit.cursor_get_line
@@ -879,7 +956,10 @@ cursor_is_block_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cursor_is_block_mode" '[] (IO Bool)
          where
@@ -907,7 +987,10 @@ cursor_set_blink_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cursor_set_blink_enabled" '[Bool]
            (IO ())
@@ -936,7 +1019,10 @@ cursor_set_blink_speed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cursor_set_blink_speed" '[Float]
            (IO ())
@@ -967,7 +1053,10 @@ cursor_set_block_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cursor_set_block_mode" '[Bool]
            (IO ())
@@ -999,7 +1088,10 @@ cursor_set_column cls arg1 arg2
          godot_method_bind_call bindTextEdit_cursor_set_column (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cursor_set_column" '[Int, Maybe Bool]
            (IO ())
@@ -1035,7 +1127,10 @@ cursor_set_line cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindTextEdit_cursor_set_line (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cursor_set_line"
            '[Int, Maybe Bool, Maybe Bool, Maybe Int]
@@ -1061,7 +1156,9 @@ cut cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_cut (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "cut" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.cut
@@ -1085,7 +1182,10 @@ deselect cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_deselect (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "deselect" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.deselect
@@ -1111,7 +1211,10 @@ draw_minimap cls arg1
          godot_method_bind_call bindTextEdit_draw_minimap (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "draw_minimap" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.draw_minimap
@@ -1136,7 +1239,10 @@ fold_all_lines cls
          godot_method_bind_call bindTextEdit_fold_all_lines (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "fold_all_lines" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.fold_all_lines
@@ -1161,7 +1267,10 @@ fold_line cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_fold_line (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "fold_line" '[Int] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.fold_line
@@ -1187,14 +1296,17 @@ get_breakpoints cls
          godot_method_bind_call bindTextEdit_get_breakpoints (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_breakpoints" '[] (IO Array) where
         nodeMethod = Godot.Core.TextEdit.get_breakpoints
 
 {-# NOINLINE bindTextEdit_get_h_scroll #-}
 
--- | The current horizontal scroll value.
+-- | If there is a horizontal scrollbar, this determines the current horizontal scroll value in pixels.
 bindTextEdit_get_h_scroll :: MethodBind
 bindTextEdit_get_h_scroll
   = unsafePerformIO $
@@ -1204,7 +1316,7 @@ bindTextEdit_get_h_scroll
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The current horizontal scroll value.
+-- | If there is a horizontal scrollbar, this determines the current horizontal scroll value in pixels.
 get_h_scroll :: (TextEdit :< cls, Object :< cls) => cls -> IO Int
 get_h_scroll cls
   = withVariantArray []
@@ -1212,7 +1324,10 @@ get_h_scroll cls
          godot_method_bind_call bindTextEdit_get_h_scroll (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_h_scroll" '[] (IO Int) where
         nodeMethod = Godot.Core.TextEdit.get_h_scroll
@@ -1238,7 +1353,10 @@ get_keyword_color cls arg1
          godot_method_bind_call bindTextEdit_get_keyword_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_keyword_color" '[GodotString]
            (IO Color)
@@ -1265,7 +1383,10 @@ get_line cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_get_line (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_line" '[Int] (IO GodotString)
          where
@@ -1291,7 +1412,10 @@ get_line_count cls
          godot_method_bind_call bindTextEdit_get_line_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_line_count" '[] (IO Int) where
         nodeMethod = Godot.Core.TextEdit.get_line_count
@@ -1299,6 +1423,7 @@ instance NodeMethod TextEdit "get_line_count" '[] (IO Int) where
 {-# NOINLINE bindTextEdit_get_menu #-}
 
 -- | Returns the @PopupMenu@ of this @TextEdit@. By default, this menu is displayed when right-clicking on the @TextEdit@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindTextEdit_get_menu :: MethodBind
 bindTextEdit_get_menu
   = unsafePerformIO $
@@ -1309,13 +1434,14 @@ bindTextEdit_get_menu
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the @PopupMenu@ of this @TextEdit@. By default, this menu is displayed when right-clicking on the @TextEdit@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_menu :: (TextEdit :< cls, Object :< cls) => cls -> IO PopupMenu
 get_menu cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_get_menu (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextEdit "get_menu" '[] (IO PopupMenu) where
         nodeMethod = Godot.Core.TextEdit.get_menu
@@ -1341,7 +1467,10 @@ get_minimap_width cls
          godot_method_bind_call bindTextEdit_get_minimap_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_minimap_width" '[] (IO Int) where
         nodeMethod = Godot.Core.TextEdit.get_minimap_width
@@ -1368,7 +1497,10 @@ get_selection_from_column cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_selection_from_column" '[]
            (IO Int)
@@ -1397,7 +1529,10 @@ get_selection_from_line cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_selection_from_line" '[] (IO Int)
          where
@@ -1424,7 +1559,10 @@ get_selection_text cls
          godot_method_bind_call bindTextEdit_get_selection_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_selection_text" '[]
            (IO GodotString)
@@ -1453,7 +1591,10 @@ get_selection_to_column cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_selection_to_column" '[] (IO Int)
          where
@@ -1481,7 +1622,10 @@ get_selection_to_line cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_selection_to_line" '[] (IO Int)
          where
@@ -1507,14 +1651,17 @@ get_text cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_get_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_text" '[] (IO GodotString) where
         nodeMethod = Godot.Core.TextEdit.get_text
 
 {-# NOINLINE bindTextEdit_get_v_scroll #-}
 
--- | The current vertical scroll value.
+-- | If there is a vertical scrollbar, this determines the current vertical scroll value in line numbers, starting at 0 for the top line.
 bindTextEdit_get_v_scroll :: MethodBind
 bindTextEdit_get_v_scroll
   = unsafePerformIO $
@@ -1524,7 +1671,7 @@ bindTextEdit_get_v_scroll
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The current vertical scroll value.
+-- | If there is a vertical scrollbar, this determines the current vertical scroll value in line numbers, starting at 0 for the top line.
 get_v_scroll :: (TextEdit :< cls, Object :< cls) => cls -> IO Float
 get_v_scroll cls
   = withVariantArray []
@@ -1532,7 +1679,10 @@ get_v_scroll cls
          godot_method_bind_call bindTextEdit_get_v_scroll (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_v_scroll" '[] (IO Float) where
         nodeMethod = Godot.Core.TextEdit.get_v_scroll
@@ -1558,7 +1708,10 @@ get_v_scroll_speed cls
          godot_method_bind_call bindTextEdit_get_v_scroll_speed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_v_scroll_speed" '[] (IO Float)
          where
@@ -1566,7 +1719,7 @@ instance NodeMethod TextEdit "get_v_scroll_speed" '[] (IO Float)
 
 {-# NOINLINE bindTextEdit_get_word_under_cursor #-}
 
--- | Returns a @String@ text with the word under the mouse cursor location.
+-- | Returns a @String@ text with the word under the caret (text cursor) location.
 bindTextEdit_get_word_under_cursor :: MethodBind
 bindTextEdit_get_word_under_cursor
   = unsafePerformIO $
@@ -1576,7 +1729,7 @@ bindTextEdit_get_word_under_cursor
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a @String@ text with the word under the mouse cursor location.
+-- | Returns a @String@ text with the word under the caret (text cursor) location.
 get_word_under_cursor ::
                         (TextEdit :< cls, Object :< cls) => cls -> IO GodotString
 get_word_under_cursor cls
@@ -1586,7 +1739,10 @@ get_word_under_cursor cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "get_word_under_cursor" '[]
            (IO GodotString)
@@ -1614,12 +1770,69 @@ has_keyword_color cls arg1
          godot_method_bind_call bindTextEdit_has_keyword_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "has_keyword_color" '[GodotString]
            (IO Bool)
          where
         nodeMethod = Godot.Core.TextEdit.has_keyword_color
+
+{-# NOINLINE bindTextEdit_has_redo #-}
+
+-- | Returns @true@ if a "redo" action is available.
+bindTextEdit_has_redo :: MethodBind
+bindTextEdit_has_redo
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "has_redo" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if a "redo" action is available.
+has_redo :: (TextEdit :< cls, Object :< cls) => cls -> IO Bool
+has_redo cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_has_redo (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "has_redo" '[] (IO Bool) where
+        nodeMethod = Godot.Core.TextEdit.has_redo
+
+{-# NOINLINE bindTextEdit_has_undo #-}
+
+-- | Returns @true@ if an "undo" action is available.
+bindTextEdit_has_undo :: MethodBind
+bindTextEdit_has_undo
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "has_undo" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if an "undo" action is available.
+has_undo :: (TextEdit :< cls, Object :< cls) => cls -> IO Bool
+has_undo cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_has_undo (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "has_undo" '[] (IO Bool) where
+        nodeMethod = Godot.Core.TextEdit.has_undo
 
 {-# NOINLINE bindTextEdit_insert_text_at_cursor #-}
 
@@ -1643,7 +1856,10 @@ insert_text_at_cursor cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "insert_text_at_cursor" '[GodotString]
            (IO ())
@@ -1672,7 +1888,10 @@ is_breakpoint_gutter_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_breakpoint_gutter_enabled" '[]
            (IO Bool)
@@ -1701,7 +1920,10 @@ is_context_menu_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_context_menu_enabled" '[]
            (IO Bool)
@@ -1730,7 +1952,10 @@ is_drawing_fold_gutter cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_drawing_fold_gutter" '[] (IO Bool)
          where
@@ -1757,7 +1982,10 @@ is_drawing_minimap cls
          godot_method_bind_call bindTextEdit_is_drawing_minimap (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_drawing_minimap" '[] (IO Bool)
          where
@@ -1784,7 +2012,10 @@ is_drawing_spaces cls
          godot_method_bind_call bindTextEdit_is_drawing_spaces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_drawing_spaces" '[] (IO Bool)
          where
@@ -1811,7 +2042,10 @@ is_drawing_tabs cls
          godot_method_bind_call bindTextEdit_is_drawing_tabs (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_drawing_tabs" '[] (IO Bool) where
         nodeMethod = Godot.Core.TextEdit.is_drawing_tabs
@@ -1836,7 +2070,10 @@ is_folded cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_is_folded (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_folded" '[Int] (IO Bool) where
         nodeMethod = Godot.Core.TextEdit.is_folded
@@ -1862,7 +2099,10 @@ is_hiding_enabled cls
          godot_method_bind_call bindTextEdit_is_hiding_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_hiding_enabled" '[] (IO Bool)
          where
@@ -1891,7 +2131,10 @@ is_highlight_all_occurrences_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_highlight_all_occurrences_enabled"
            '[]
@@ -1923,7 +2166,10 @@ is_highlight_current_line_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_highlight_current_line_enabled"
            '[]
@@ -1952,11 +2198,109 @@ is_line_hidden cls arg1
          godot_method_bind_call bindTextEdit_is_line_hidden (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_line_hidden" '[Int] (IO Bool)
          where
         nodeMethod = Godot.Core.TextEdit.is_line_hidden
+
+{-# NOINLINE bindTextEdit_is_line_set_as_bookmark #-}
+
+-- | Returns @true@ when the specified @line@ is bookmarked.
+bindTextEdit_is_line_set_as_bookmark :: MethodBind
+bindTextEdit_is_line_set_as_bookmark
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "is_line_set_as_bookmark" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ when the specified @line@ is bookmarked.
+is_line_set_as_bookmark ::
+                          (TextEdit :< cls, Object :< cls) => cls -> Int -> IO Bool
+is_line_set_as_bookmark cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_is_line_set_as_bookmark
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "is_line_set_as_bookmark" '[Int]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextEdit.is_line_set_as_bookmark
+
+{-# NOINLINE bindTextEdit_is_line_set_as_breakpoint #-}
+
+-- | Returns @true@ when the specified @line@ has a breakpoint.
+bindTextEdit_is_line_set_as_breakpoint :: MethodBind
+bindTextEdit_is_line_set_as_breakpoint
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "is_line_set_as_breakpoint" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ when the specified @line@ has a breakpoint.
+is_line_set_as_breakpoint ::
+                            (TextEdit :< cls, Object :< cls) => cls -> Int -> IO Bool
+is_line_set_as_breakpoint cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_is_line_set_as_breakpoint
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "is_line_set_as_breakpoint" '[Int]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextEdit.is_line_set_as_breakpoint
+
+{-# NOINLINE bindTextEdit_is_line_set_as_safe #-}
+
+-- | Returns @true@ when the specified @line@ is marked as safe.
+bindTextEdit_is_line_set_as_safe :: MethodBind
+bindTextEdit_is_line_set_as_safe
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "is_line_set_as_safe" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ when the specified @line@ is marked as safe.
+is_line_set_as_safe ::
+                      (TextEdit :< cls, Object :< cls) => cls -> Int -> IO Bool
+is_line_set_as_safe cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_is_line_set_as_safe
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "is_line_set_as_safe" '[Int] (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextEdit.is_line_set_as_safe
 
 {-# NOINLINE bindTextEdit_is_overriding_selected_font_color #-}
 
@@ -1981,7 +2325,10 @@ is_overriding_selected_font_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_overriding_selected_font_color"
            '[]
@@ -2008,7 +2355,10 @@ is_readonly cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_is_readonly (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_readonly" '[] (IO Bool) where
         nodeMethod = Godot.Core.TextEdit.is_readonly
@@ -2037,7 +2387,10 @@ is_right_click_moving_caret cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_right_click_moving_caret" '[]
            (IO Bool)
@@ -2068,7 +2421,10 @@ is_selecting_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_selecting_enabled" '[] (IO Bool)
          where
@@ -2096,7 +2452,10 @@ is_selection_active cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_selection_active" '[] (IO Bool)
          where
@@ -2124,7 +2483,10 @@ is_shortcut_keys_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_shortcut_keys_enabled" '[]
            (IO Bool)
@@ -2153,7 +2515,10 @@ is_show_line_numbers_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_show_line_numbers_enabled" '[]
            (IO Bool)
@@ -2182,7 +2547,10 @@ is_smooth_scroll_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_smooth_scroll_enabled" '[]
            (IO Bool)
@@ -2211,12 +2579,47 @@ is_syntax_coloring_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_syntax_coloring_enabled" '[]
            (IO Bool)
          where
         nodeMethod = Godot.Core.TextEdit.is_syntax_coloring_enabled
+
+{-# NOINLINE bindTextEdit_is_virtual_keyboard_enabled #-}
+
+-- | If @true@, the native virtual keyboard is shown when focused on platforms that support it.
+bindTextEdit_is_virtual_keyboard_enabled :: MethodBind
+bindTextEdit_is_virtual_keyboard_enabled
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "is_virtual_keyboard_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the native virtual keyboard is shown when focused on platforms that support it.
+is_virtual_keyboard_enabled ::
+                              (TextEdit :< cls, Object :< cls) => cls -> IO Bool
+is_virtual_keyboard_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_is_virtual_keyboard_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "is_virtual_keyboard_enabled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextEdit.is_virtual_keyboard_enabled
 
 {-# NOINLINE bindTextEdit_is_wrap_enabled #-}
 
@@ -2239,7 +2642,10 @@ is_wrap_enabled cls
          godot_method_bind_call bindTextEdit_is_wrap_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "is_wrap_enabled" '[] (IO Bool) where
         nodeMethod = Godot.Core.TextEdit.is_wrap_enabled
@@ -2264,7 +2670,10 @@ menu_option cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_menu_option (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "menu_option" '[Int] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.menu_option
@@ -2287,7 +2696,10 @@ paste cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_paste (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "paste" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.paste
@@ -2310,7 +2722,10 @@ redo cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_redo (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "redo" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.redo
@@ -2336,7 +2751,10 @@ remove_breakpoints cls
          godot_method_bind_call bindTextEdit_remove_breakpoints (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "remove_breakpoints" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.remove_breakpoints
@@ -2384,7 +2802,10 @@ search cls arg1 arg2 arg3 arg4
       [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_search (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "search" '[GodotString, Int, Int, Int]
            (IO PoolIntArray)
@@ -2414,7 +2835,10 @@ select cls arg1 arg2 arg3 arg4
       [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_select (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "select" '[Int, Int, Int, Int] (IO ())
          where
@@ -2441,7 +2865,10 @@ select_all cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_select_all (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "select_all" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.select_all
@@ -2468,7 +2895,10 @@ set_breakpoint_gutter_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_breakpoint_gutter_enabled"
            '[Bool]
@@ -2498,7 +2928,10 @@ set_context_menu_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_context_menu_enabled" '[Bool]
            (IO ())
@@ -2527,7 +2960,10 @@ set_draw_fold_gutter cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_draw_fold_gutter" '[Bool] (IO ())
          where
@@ -2554,7 +2990,10 @@ set_draw_spaces cls arg1
          godot_method_bind_call bindTextEdit_set_draw_spaces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_draw_spaces" '[Bool] (IO ())
          where
@@ -2581,14 +3020,17 @@ set_draw_tabs cls arg1
          godot_method_bind_call bindTextEdit_set_draw_tabs (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_draw_tabs" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.set_draw_tabs
 
 {-# NOINLINE bindTextEdit_set_h_scroll #-}
 
--- | The current horizontal scroll value.
+-- | If there is a horizontal scrollbar, this determines the current horizontal scroll value in pixels.
 bindTextEdit_set_h_scroll :: MethodBind
 bindTextEdit_set_h_scroll
   = unsafePerformIO $
@@ -2598,7 +3040,7 @@ bindTextEdit_set_h_scroll
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The current horizontal scroll value.
+-- | If there is a horizontal scrollbar, this determines the current horizontal scroll value in pixels.
 set_h_scroll ::
                (TextEdit :< cls, Object :< cls) => cls -> Int -> IO ()
 set_h_scroll cls arg1
@@ -2607,7 +3049,10 @@ set_h_scroll cls arg1
          godot_method_bind_call bindTextEdit_set_h_scroll (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_h_scroll" '[Int] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.set_h_scroll
@@ -2633,7 +3078,10 @@ set_hiding_enabled cls arg1
          godot_method_bind_call bindTextEdit_set_hiding_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_hiding_enabled" '[Bool] (IO ())
          where
@@ -2661,7 +3109,10 @@ set_highlight_all_occurrences cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_highlight_all_occurrences"
            '[Bool]
@@ -2691,12 +3142,111 @@ set_highlight_current_line cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_highlight_current_line" '[Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.TextEdit.set_highlight_current_line
+
+{-# NOINLINE bindTextEdit_set_line #-}
+
+-- | Sets the text for a specific line.
+bindTextEdit_set_line :: MethodBind
+bindTextEdit_set_line
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "set_line" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the text for a specific line.
+set_line ::
+           (TextEdit :< cls, Object :< cls) =>
+           cls -> Int -> GodotString -> IO ()
+set_line cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_set_line (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "set_line" '[Int, GodotString] (IO ())
+         where
+        nodeMethod = Godot.Core.TextEdit.set_line
+
+{-# NOINLINE bindTextEdit_set_line_as_bookmark #-}
+
+-- | Bookmarks the @line@ if @bookmark@ is true. Deletes the bookmark if @bookmark@ is false.
+--   				Bookmarks are shown in the @breakpoint_gutter@.
+bindTextEdit_set_line_as_bookmark :: MethodBind
+bindTextEdit_set_line_as_bookmark
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "set_line_as_bookmark" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Bookmarks the @line@ if @bookmark@ is true. Deletes the bookmark if @bookmark@ is false.
+--   				Bookmarks are shown in the @breakpoint_gutter@.
+set_line_as_bookmark ::
+                       (TextEdit :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
+set_line_as_bookmark cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_set_line_as_bookmark
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "set_line_as_bookmark" '[Int, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TextEdit.set_line_as_bookmark
+
+{-# NOINLINE bindTextEdit_set_line_as_breakpoint #-}
+
+-- | Adds or removes the breakpoint in @line@. Breakpoints are shown in the @breakpoint_gutter@.
+bindTextEdit_set_line_as_breakpoint :: MethodBind
+bindTextEdit_set_line_as_breakpoint
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "set_line_as_breakpoint" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Adds or removes the breakpoint in @line@. Breakpoints are shown in the @breakpoint_gutter@.
+set_line_as_breakpoint ::
+                         (TextEdit :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
+set_line_as_breakpoint cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_set_line_as_breakpoint
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "set_line_as_breakpoint" '[Int, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TextEdit.set_line_as_breakpoint
 
 {-# NOINLINE bindTextEdit_set_line_as_hidden #-}
 
@@ -2719,12 +3269,48 @@ set_line_as_hidden cls arg1 arg2
          godot_method_bind_call bindTextEdit_set_line_as_hidden (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_line_as_hidden" '[Int, Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.TextEdit.set_line_as_hidden
+
+{-# NOINLINE bindTextEdit_set_line_as_safe #-}
+
+-- | If @true@, marks the @line@ as safe.
+--   				This will show the line number with the color provided in the @safe_line_number_color@ theme property.
+bindTextEdit_set_line_as_safe :: MethodBind
+bindTextEdit_set_line_as_safe
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "set_line_as_safe" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, marks the @line@ as safe.
+--   				This will show the line number with the color provided in the @safe_line_number_color@ theme property.
+set_line_as_safe ::
+                   (TextEdit :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
+set_line_as_safe cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_set_line_as_safe (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "set_line_as_safe" '[Int, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TextEdit.set_line_as_safe
 
 {-# NOINLINE bindTextEdit_set_minimap_width #-}
 
@@ -2747,7 +3333,10 @@ set_minimap_width cls arg1
          godot_method_bind_call bindTextEdit_set_minimap_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_minimap_width" '[Int] (IO ())
          where
@@ -2776,7 +3365,10 @@ set_override_selected_font_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_override_selected_font_color"
            '[Bool]
@@ -2805,7 +3397,10 @@ set_readonly cls arg1
          godot_method_bind_call bindTextEdit_set_readonly (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_readonly" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.set_readonly
@@ -2834,7 +3429,10 @@ set_right_click_moves_caret cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_right_click_moves_caret" '[Bool]
            (IO ())
@@ -2865,7 +3463,10 @@ set_selecting_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_selecting_enabled" '[Bool]
            (IO ())
@@ -2894,7 +3495,10 @@ set_shortcut_keys_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_shortcut_keys_enabled" '[Bool]
            (IO ())
@@ -2923,7 +3527,10 @@ set_show_line_numbers cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_show_line_numbers" '[Bool]
            (IO ())
@@ -2952,7 +3559,10 @@ set_smooth_scroll_enable cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_smooth_scroll_enable" '[Bool]
            (IO ())
@@ -2981,7 +3591,10 @@ set_syntax_coloring cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_syntax_coloring" '[Bool] (IO ())
          where
@@ -3007,7 +3620,10 @@ set_text cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_set_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_text" '[GodotString] (IO ())
          where
@@ -3015,7 +3631,7 @@ instance NodeMethod TextEdit "set_text" '[GodotString] (IO ())
 
 {-# NOINLINE bindTextEdit_set_v_scroll #-}
 
--- | The current vertical scroll value.
+-- | If there is a vertical scrollbar, this determines the current vertical scroll value in line numbers, starting at 0 for the top line.
 bindTextEdit_set_v_scroll :: MethodBind
 bindTextEdit_set_v_scroll
   = unsafePerformIO $
@@ -3025,7 +3641,7 @@ bindTextEdit_set_v_scroll
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The current vertical scroll value.
+-- | If there is a vertical scrollbar, this determines the current vertical scroll value in line numbers, starting at 0 for the top line.
 set_v_scroll ::
                (TextEdit :< cls, Object :< cls) => cls -> Float -> IO ()
 set_v_scroll cls arg1
@@ -3034,7 +3650,10 @@ set_v_scroll cls arg1
          godot_method_bind_call bindTextEdit_set_v_scroll (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_v_scroll" '[Float] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.set_v_scroll
@@ -3060,11 +3679,46 @@ set_v_scroll_speed cls arg1
          godot_method_bind_call bindTextEdit_set_v_scroll_speed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_v_scroll_speed" '[Float] (IO ())
          where
         nodeMethod = Godot.Core.TextEdit.set_v_scroll_speed
+
+{-# NOINLINE bindTextEdit_set_virtual_keyboard_enabled #-}
+
+-- | If @true@, the native virtual keyboard is shown when focused on platforms that support it.
+bindTextEdit_set_virtual_keyboard_enabled :: MethodBind
+bindTextEdit_set_virtual_keyboard_enabled
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "set_virtual_keyboard_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the native virtual keyboard is shown when focused on platforms that support it.
+set_virtual_keyboard_enabled ::
+                               (TextEdit :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_virtual_keyboard_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_set_virtual_keyboard_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "set_virtual_keyboard_enabled" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TextEdit.set_virtual_keyboard_enabled
 
 {-# NOINLINE bindTextEdit_set_wrap_enabled #-}
 
@@ -3087,7 +3741,10 @@ set_wrap_enabled cls arg1
          godot_method_bind_call bindTextEdit_set_wrap_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "set_wrap_enabled" '[Bool] (IO ())
          where
@@ -3114,7 +3771,10 @@ toggle_fold_line cls arg1
          godot_method_bind_call bindTextEdit_toggle_fold_line (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "toggle_fold_line" '[Int] (IO ())
          where
@@ -3138,7 +3798,10 @@ undo cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_undo (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "undo" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.undo
@@ -3163,7 +3826,10 @@ unfold_line cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTextEdit_unfold_line (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "unfold_line" '[Int] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.unfold_line
@@ -3189,7 +3855,10 @@ unhide_all_lines cls
          godot_method_bind_call bindTextEdit_unhide_all_lines (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextEdit "unhide_all_lines" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.unhide_all_lines

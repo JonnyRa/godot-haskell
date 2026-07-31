@@ -46,7 +46,10 @@ add_translation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TranslationServer "add_translation"
            '[Translation]
@@ -74,14 +77,17 @@ clear cls
          godot_method_bind_call bindTranslationServer_clear (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TranslationServer "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.TranslationServer.clear
 
 {-# NOINLINE bindTranslationServer_get_loaded_locales #-}
 
--- | Returns an Array of all loaded locales of the game.
+-- | Returns an array of all loaded locales of the project.
 bindTranslationServer_get_loaded_locales :: MethodBind
 bindTranslationServer_get_loaded_locales
   = unsafePerformIO $
@@ -91,7 +97,7 @@ bindTranslationServer_get_loaded_locales
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns an Array of all loaded locales of the game.
+-- | Returns an array of all loaded locales of the project.
 get_loaded_locales ::
                      (TranslationServer :< cls, Object :< cls) => cls -> IO Array
 get_loaded_locales cls
@@ -101,7 +107,10 @@ get_loaded_locales cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TranslationServer "get_loaded_locales" '[]
            (IO Array)
@@ -110,7 +119,8 @@ instance NodeMethod TranslationServer "get_loaded_locales" '[]
 
 {-# NOINLINE bindTranslationServer_get_locale #-}
 
--- | Returns the current locale of the game.
+-- | Returns the current locale of the project.
+--   				See also @method OS.get_locale@ and @method OS.get_locale_language@ to query the locale of the user system.
 bindTranslationServer_get_locale :: MethodBind
 bindTranslationServer_get_locale
   = unsafePerformIO $
@@ -120,7 +130,8 @@ bindTranslationServer_get_locale
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the current locale of the game.
+-- | Returns the current locale of the project.
+--   				See also @method OS.get_locale@ and @method OS.get_locale_language@ to query the locale of the user system.
 get_locale ::
              (TranslationServer :< cls, Object :< cls) => cls -> IO GodotString
 get_locale cls
@@ -130,7 +141,10 @@ get_locale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TranslationServer "get_locale" '[]
            (IO GodotString)
@@ -160,7 +174,10 @@ get_locale_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TranslationServer "get_locale_name"
            '[GodotString]
@@ -191,7 +208,10 @@ remove_translation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TranslationServer "remove_translation"
            '[Translation]
@@ -201,7 +221,8 @@ instance NodeMethod TranslationServer "remove_translation"
 
 {-# NOINLINE bindTranslationServer_set_locale #-}
 
--- | Sets the locale of the game.
+-- | Sets the locale of the project. The @locale@ string will be standardized to match known locales (e.g. @en-US@ would be matched to @en_US@).
+--   				If translations have been loaded beforehand for the new locale, they will be applied.
 bindTranslationServer_set_locale :: MethodBind
 bindTranslationServer_set_locale
   = unsafePerformIO $
@@ -211,7 +232,8 @@ bindTranslationServer_set_locale
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the locale of the game.
+-- | Sets the locale of the project. The @locale@ string will be standardized to match known locales (e.g. @en-US@ would be matched to @en_US@).
+--   				If translations have been loaded beforehand for the new locale, they will be applied.
 set_locale ::
              (TranslationServer :< cls, Object :< cls) =>
              cls -> GodotString -> IO ()
@@ -222,7 +244,10 @@ set_locale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TranslationServer "set_locale" '[GodotString]
            (IO ())
@@ -251,7 +276,10 @@ translate cls arg1
          godot_method_bind_call bindTranslationServer_translate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TranslationServer "translate" '[GodotString]
            (IO GodotString)

@@ -115,7 +115,10 @@ _bus_layout_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "_bus_layout_changed" '[]
            (IO ())
@@ -142,7 +145,10 @@ _is_active cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "_is_active" '[] (IO Bool)
          where
@@ -170,7 +176,10 @@ _set_playing cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "_set_playing" '[Bool]
            (IO ())
@@ -198,7 +207,10 @@ get_bus cls
          godot_method_bind_call bindAudioStreamPlayer_get_bus (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "get_bus" '[]
            (IO GodotString)
@@ -227,7 +239,10 @@ get_mix_target cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "get_mix_target" '[] (IO Int)
          where
@@ -255,7 +270,10 @@ get_pitch_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "get_pitch_scale" '[]
            (IO Float)
@@ -284,7 +302,10 @@ get_playback_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "get_playback_position" '[]
            (IO Float)
@@ -313,7 +334,7 @@ get_stream cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AudioStreamPlayer "get_stream" '[]
            (IO AudioStream)
@@ -342,7 +363,10 @@ get_stream_paused cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "get_stream_paused" '[]
            (IO Bool)
@@ -372,7 +396,7 @@ get_stream_playback cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AudioStreamPlayer "get_stream_playback" '[]
            (IO AudioStreamPlayback)
@@ -401,7 +425,10 @@ get_volume_db cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "get_volume_db" '[]
            (IO Float)
@@ -430,7 +457,10 @@ is_autoplay_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "is_autoplay_enabled" '[]
            (IO Bool)
@@ -459,7 +489,10 @@ is_playing cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "is_playing" '[] (IO Bool)
          where
@@ -487,7 +520,10 @@ play cls arg1
          godot_method_bind_call bindAudioStreamPlayer_play (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "play" '[Maybe Float] (IO ())
          where
@@ -514,7 +550,10 @@ seek cls arg1
          godot_method_bind_call bindAudioStreamPlayer_seek (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "seek" '[Float] (IO ()) where
         nodeMethod = Godot.Core.AudioStreamPlayer.seek
@@ -541,7 +580,10 @@ set_autoplay cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "set_autoplay" '[Bool]
            (IO ())
@@ -570,7 +612,10 @@ set_bus cls arg1
          godot_method_bind_call bindAudioStreamPlayer_set_bus (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "set_bus" '[GodotString]
            (IO ())
@@ -599,7 +644,10 @@ set_mix_target cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "set_mix_target" '[Int]
            (IO ())
@@ -628,7 +676,10 @@ set_pitch_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "set_pitch_scale" '[Float]
            (IO ())
@@ -658,7 +709,10 @@ set_stream cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "set_stream" '[AudioStream]
            (IO ())
@@ -687,7 +741,10 @@ set_stream_paused cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "set_stream_paused" '[Bool]
            (IO ())
@@ -716,7 +773,10 @@ set_volume_db cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "set_volume_db" '[Float]
            (IO ())
@@ -743,7 +803,10 @@ stop cls
          godot_method_bind_call bindAudioStreamPlayer_stop (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer "stop" '[] (IO ()) where
         nodeMethod = Godot.Core.AudioStreamPlayer.stop

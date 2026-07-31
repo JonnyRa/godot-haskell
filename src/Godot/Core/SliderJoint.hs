@@ -291,7 +291,10 @@ _get_lower_limit_angular cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SliderJoint "_get_lower_limit_angular" '[]
            (IO Float)
@@ -320,7 +323,10 @@ _get_upper_limit_angular cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SliderJoint "_get_upper_limit_angular" '[]
            (IO Float)
@@ -349,7 +355,10 @@ _set_lower_limit_angular cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SliderJoint "_set_lower_limit_angular" '[Float]
            (IO ())
@@ -378,7 +387,10 @@ _set_upper_limit_angular cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SliderJoint "_set_upper_limit_angular" '[Float]
            (IO ())
@@ -408,7 +420,10 @@ get_param cls arg1
          godot_method_bind_call bindSliderJoint_get_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SliderJoint "get_param" '[Int] (IO Float) where
         nodeMethod = Godot.Core.SliderJoint.get_param
@@ -436,7 +451,10 @@ set_param cls arg1 arg2
          godot_method_bind_call bindSliderJoint_set_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SliderJoint "set_param" '[Int, Float] (IO ())
          where

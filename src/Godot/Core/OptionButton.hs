@@ -82,7 +82,10 @@ _focused cls arg1
          godot_method_bind_call bindOptionButton__focused (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "_focused" '[Int] (IO ()) where
         nodeMethod = Godot.Core.OptionButton._focused
@@ -106,7 +109,10 @@ _get_items cls
          godot_method_bind_call bindOptionButton__get_items (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "_get_items" '[] (IO Array) where
         nodeMethod = Godot.Core.OptionButton._get_items
@@ -132,7 +138,10 @@ _select_int cls arg1
          godot_method_bind_call bindOptionButton__select_int (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "_select_int" '[Int] (IO ()) where
         nodeMethod = Godot.Core.OptionButton._select_int
@@ -156,7 +165,10 @@ _selected cls arg1
          godot_method_bind_call bindOptionButton__selected (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "_selected" '[Int] (IO ()) where
         nodeMethod = Godot.Core.OptionButton._selected
@@ -180,7 +192,10 @@ _set_items cls arg1
          godot_method_bind_call bindOptionButton__set_items (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "_set_items" '[Array] (IO ())
          where
@@ -210,7 +225,10 @@ add_icon_item cls arg1 arg2 arg3
          godot_method_bind_call bindOptionButton_add_icon_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "add_icon_item"
            '[Texture, GodotString, Maybe Int]
@@ -241,7 +259,10 @@ add_item cls arg1 arg2
          godot_method_bind_call bindOptionButton_add_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "add_item"
            '[GodotString, Maybe Int]
@@ -270,7 +291,10 @@ add_separator cls
          godot_method_bind_call bindOptionButton_add_separator (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "add_separator" '[] (IO ()) where
         nodeMethod = Godot.Core.OptionButton.add_separator
@@ -294,7 +318,10 @@ clear cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOptionButton_clear (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.OptionButton.clear
@@ -320,7 +347,10 @@ get_item_count cls
          godot_method_bind_call bindOptionButton_get_item_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "get_item_count" '[] (IO Int)
          where
@@ -347,7 +377,7 @@ get_item_icon cls arg1
          godot_method_bind_call bindOptionButton_get_item_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod OptionButton "get_item_icon" '[Int]
            (IO Texture)
@@ -375,7 +405,10 @@ get_item_id cls arg1
          godot_method_bind_call bindOptionButton_get_item_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "get_item_id" '[Int] (IO Int)
          where
@@ -402,7 +435,10 @@ get_item_index cls arg1
          godot_method_bind_call bindOptionButton_get_item_index (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "get_item_index" '[Int] (IO Int)
          where
@@ -431,7 +467,7 @@ get_item_metadata cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod OptionButton "get_item_metadata" '[Int]
            (IO GodotVariant)
@@ -460,7 +496,10 @@ get_item_text cls arg1
          godot_method_bind_call bindOptionButton_get_item_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "get_item_text" '[Int]
            (IO GodotString)
@@ -470,6 +509,7 @@ instance NodeMethod OptionButton "get_item_text" '[Int]
 {-# NOINLINE bindOptionButton_get_popup #-}
 
 -- | Returns the @PopupMenu@ contained in this button.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindOptionButton_get_popup :: MethodBind
 bindOptionButton_get_popup
   = unsafePerformIO $
@@ -480,6 +520,7 @@ bindOptionButton_get_popup
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the @PopupMenu@ contained in this button.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_popup ::
             (OptionButton :< cls, Object :< cls) => cls -> IO PopupMenu
 get_popup cls
@@ -488,7 +529,7 @@ get_popup cls
          godot_method_bind_call bindOptionButton_get_popup (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod OptionButton "get_popup" '[] (IO PopupMenu)
          where
@@ -515,7 +556,10 @@ get_selected cls
          godot_method_bind_call bindOptionButton_get_selected (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "get_selected" '[] (IO Int) where
         nodeMethod = Godot.Core.OptionButton.get_selected
@@ -542,7 +586,10 @@ get_selected_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "get_selected_id" '[] (IO Int)
          where
@@ -570,7 +617,7 @@ get_selected_metadata cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod OptionButton "get_selected_metadata" '[]
            (IO GodotVariant)
@@ -599,7 +646,10 @@ is_item_disabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "is_item_disabled" '[Int]
            (IO Bool)
@@ -627,7 +677,10 @@ remove_item cls arg1
          godot_method_bind_call bindOptionButton_remove_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "remove_item" '[Int] (IO ()) where
         nodeMethod = Godot.Core.OptionButton.remove_item
@@ -652,7 +705,10 @@ select cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOptionButton_select (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "select" '[Int] (IO ()) where
         nodeMethod = Godot.Core.OptionButton.select
@@ -681,7 +737,10 @@ set_item_disabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "set_item_disabled" '[Int, Bool]
            (IO ())
@@ -710,7 +769,10 @@ set_item_icon cls arg1 arg2
          godot_method_bind_call bindOptionButton_set_item_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "set_item_icon" '[Int, Texture]
            (IO ())
@@ -738,7 +800,10 @@ set_item_id cls arg1 arg2
          godot_method_bind_call bindOptionButton_set_item_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "set_item_id" '[Int, Int] (IO ())
          where
@@ -767,7 +832,10 @@ set_item_metadata cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "set_item_metadata"
            '[Int, GodotVariant]
@@ -797,7 +865,10 @@ set_item_text cls arg1 arg2
          godot_method_bind_call bindOptionButton_set_item_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OptionButton "set_item_text"
            '[Int, GodotString]

@@ -97,7 +97,10 @@ _texture_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureRect "_texture_changed" '[] (IO ())
          where
@@ -125,7 +128,10 @@ get_stretch_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureRect "get_stretch_mode" '[] (IO Int)
          where
@@ -152,7 +158,7 @@ get_texture cls
          godot_method_bind_call bindTextureRect_get_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureRect "get_texture" '[] (IO Texture)
          where
@@ -178,7 +184,10 @@ has_expand cls
          godot_method_bind_call bindTextureRect_has_expand (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureRect "has_expand" '[] (IO Bool) where
         nodeMethod = Godot.Core.TextureRect.has_expand
@@ -204,7 +213,10 @@ is_flipped_h cls
          godot_method_bind_call bindTextureRect_is_flipped_h (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureRect "is_flipped_h" '[] (IO Bool) where
         nodeMethod = Godot.Core.TextureRect.is_flipped_h
@@ -230,7 +242,10 @@ is_flipped_v cls
          godot_method_bind_call bindTextureRect_is_flipped_v (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureRect "is_flipped_v" '[] (IO Bool) where
         nodeMethod = Godot.Core.TextureRect.is_flipped_v
@@ -256,7 +271,10 @@ set_expand cls arg1
          godot_method_bind_call bindTextureRect_set_expand (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureRect "set_expand" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.TextureRect.set_expand
@@ -282,7 +300,10 @@ set_flip_h cls arg1
          godot_method_bind_call bindTextureRect_set_flip_h (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureRect "set_flip_h" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.TextureRect.set_flip_h
@@ -308,7 +329,10 @@ set_flip_v cls arg1
          godot_method_bind_call bindTextureRect_set_flip_v (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureRect "set_flip_v" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.TextureRect.set_flip_v
@@ -335,7 +359,10 @@ set_stretch_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureRect "set_stretch_mode" '[Int] (IO ())
          where
@@ -362,7 +389,10 @@ set_texture cls arg1
          godot_method_bind_call bindTextureRect_set_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureRect "set_texture" '[Texture] (IO ())
          where

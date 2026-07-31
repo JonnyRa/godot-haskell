@@ -21,10 +21,6 @@ module Godot.Core.Area2D
         Godot.Core.Area2D._body_exit_tree, Godot.Core.Area2D._body_inout,
         Godot.Core.Area2D.get_angular_damp,
         Godot.Core.Area2D.get_audio_bus_name,
-        Godot.Core.Area2D.get_collision_layer,
-        Godot.Core.Area2D.get_collision_layer_bit,
-        Godot.Core.Area2D.get_collision_mask,
-        Godot.Core.Area2D.get_collision_mask_bit,
         Godot.Core.Area2D.get_gravity,
         Godot.Core.Area2D.get_gravity_distance_scale,
         Godot.Core.Area2D.get_gravity_vector,
@@ -40,10 +36,6 @@ module Godot.Core.Area2D
         Godot.Core.Area2D.set_angular_damp,
         Godot.Core.Area2D.set_audio_bus_name,
         Godot.Core.Area2D.set_audio_bus_override,
-        Godot.Core.Area2D.set_collision_layer,
-        Godot.Core.Area2D.set_collision_layer_bit,
-        Godot.Core.Area2D.set_collision_mask,
-        Godot.Core.Area2D.set_collision_mask_bit,
         Godot.Core.Area2D.set_gravity,
         Godot.Core.Area2D.set_gravity_distance_scale,
         Godot.Core.Area2D.set_gravity_is_point,
@@ -80,65 +72,81 @@ _SPACE_OVERRIDE_REPLACE_COMBINE = 4
 _SPACE_OVERRIDE_COMBINE :: Int
 _SPACE_OVERRIDE_COMBINE = 1
 
--- | Emitted when another area enters.
+-- | Emitted when another Area2D enters this Area2D. Requires @monitoring@ to be set to @true@.
+--   				@area@ the other Area2D.
 sig_area_entered :: Godot.Internal.Dispatch.Signal Area2D
 sig_area_entered = Godot.Internal.Dispatch.Signal "area_entered"
 
 instance NodeSignal Area2D "area_entered" '[Area2D]
 
--- | Emitted when another area exits.
+-- | Emitted when another Area2D exits this Area2D. Requires @monitoring@ to be set to @true@.
+--   				@area@ the other Area2D.
 sig_area_exited :: Godot.Internal.Dispatch.Signal Area2D
 sig_area_exited = Godot.Internal.Dispatch.Signal "area_exited"
 
 instance NodeSignal Area2D "area_exited" '[Area2D]
 
--- | Emitted when another area enters, reporting which shapes overlapped. @shape_owner_get_owner(shape_find_owner(shape))@ returns the parent object of the owner of the @shape@.
+-- | Emitted when one of another Area2D's @Shape2D@s enters one of this Area2D's @Shape2D@s. Requires @monitoring@ to be set to @true@.
+--   				@area_rid@ the @RID@ of the other Area2D's @CollisionObject2D@ used by the @Physics2DServer@.
+--   				@area@ the other Area2D.
+--   				@area_shape_index@ the index of the @Shape2D@ of the other Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @area.shape_owner_get_owner(area_shape_index)@.
+--   				@local_shape_index@ the index of the @Shape2D@ of this Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
 sig_area_shape_entered :: Godot.Internal.Dispatch.Signal Area2D
 sig_area_shape_entered
   = Godot.Internal.Dispatch.Signal "area_shape_entered"
 
 instance NodeSignal Area2D "area_shape_entered"
-           '[Int, Area2D, Int, Int]
+           '[Rid, Area2D, Int, Int]
 
--- | Emitted when another area exits, reporting which shapes were overlapping.
+-- | Emitted when one of another Area2D's @Shape2D@s exits one of this Area2D's @Shape2D@s. Requires @monitoring@ to be set to @true@.
+--   				@area_rid@ the @RID@ of the other Area2D's @CollisionObject2D@ used by the @Physics2DServer@.
+--   				@area@ the other Area2D.
+--   				@area_shape_index@ the index of the @Shape2D@ of the other Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @area.shape_owner_get_owner(area_shape_index)@.
+--   				@local_shape_index@ the index of the @Shape2D@ of this Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
 sig_area_shape_exited :: Godot.Internal.Dispatch.Signal Area2D
 sig_area_shape_exited
   = Godot.Internal.Dispatch.Signal "area_shape_exited"
 
 instance NodeSignal Area2D "area_shape_exited"
-           '[Int, Area2D, Int, Int]
+           '[Rid, Area2D, Int, Int]
 
--- | Emitted when a physics body enters.
---   				The @body@ argument can either be a @PhysicsBody2D@ or a @TileMap@ instance (while TileMaps are not physics body themselves, they register their tiles with collision shapes as a virtual physics body).
+-- | Emitted when a @PhysicsBody2D@ or @TileMap@ enters this Area2D. Requires @monitoring@ to be set to @true@. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
+--   				@body@ the @Node@, if it exists in the tree, of the other @PhysicsBody2D@ or @TileMap@.
 sig_body_entered :: Godot.Internal.Dispatch.Signal Area2D
 sig_body_entered = Godot.Internal.Dispatch.Signal "body_entered"
 
 instance NodeSignal Area2D "body_entered" '[Node]
 
--- | Emitted when a physics body exits.
---   				The @body@ argument can either be a @PhysicsBody2D@ or a @TileMap@ instance (while TileMaps are not physics body themselves, they register their tiles with collision shapes as a virtual physics body).
+-- | Emitted when a @PhysicsBody2D@ or @TileMap@ exits this Area2D. Requires @monitoring@ to be set to @true@. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
+--   				@body@ the @Node@, if it exists in the tree, of the other @PhysicsBody2D@ or @TileMap@.
 sig_body_exited :: Godot.Internal.Dispatch.Signal Area2D
 sig_body_exited = Godot.Internal.Dispatch.Signal "body_exited"
 
 instance NodeSignal Area2D "body_exited" '[Node]
 
--- | Emitted when a physics body enters, reporting which shapes overlapped.
---   				The @body@ argument can either be a @PhysicsBody2D@ or a @TileMap@ instance (while TileMaps are not physics body themselves, they register their tiles with collision shapes as a virtual physics body).
+-- | Emitted when one of a @PhysicsBody2D@ or @TileMap@'s @Shape2D@s enters one of this Area2D's @Shape2D@s. Requires @monitoring@ to be set to @true@. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
+--   				@body_rid@ the @RID@ of the @PhysicsBody2D@ or @TileSet@'s @CollisionObject2D@ used by the @Physics2DServer@.
+--   				@body@ the @Node@, if it exists in the tree, of the @PhysicsBody2D@ or @TileMap@.
+--   				@body_shape_index@ the index of the @Shape2D@ of the @PhysicsBody2D@ or @TileMap@ used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @body.shape_owner_get_owner(body_shape_index)@.
+--   				@local_shape_index@ the index of the @Shape2D@ of this Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
 sig_body_shape_entered :: Godot.Internal.Dispatch.Signal Area2D
 sig_body_shape_entered
   = Godot.Internal.Dispatch.Signal "body_shape_entered"
 
 instance NodeSignal Area2D "body_shape_entered"
-           '[Int, Node, Int, Int]
+           '[Rid, Node, Int, Int]
 
--- | Emitted when a physics body exits, reporting which shapes were overlapping.
---   				The @body@ argument can either be a @PhysicsBody2D@ or a @TileMap@ instance (while TileMaps are not physics body themselves, they register their tiles with collision shapes as a virtual physics body).
+-- | Emitted when one of a @PhysicsBody2D@ or @TileMap@'s @Shape2D@s exits one of this Area2D's @Shape2D@s. Requires @monitoring@ to be set to @true@. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
+--   				@body_rid@ the @RID@ of the @PhysicsBody2D@ or @TileSet@'s @CollisionObject2D@ used by the @Physics2DServer@.
+--   				@body@ the @Node@, if it exists in the tree, of the @PhysicsBody2D@ or @TileMap@.
+--   				@body_shape_index@ the index of the @Shape2D@ of the @PhysicsBody2D@ or @TileMap@ used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @body.shape_owner_get_owner(body_shape_index)@.
+--   				@local_shape_index@ the index of the @Shape2D@ of this Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
 sig_body_shape_exited :: Godot.Internal.Dispatch.Signal Area2D
 sig_body_shape_exited
   = Godot.Internal.Dispatch.Signal "body_shape_exited"
 
 instance NodeSignal Area2D "body_shape_exited"
-           '[Int, Node, Int, Int]
+           '[Rid, Node, Int, Int]
 
 instance NodeProperty Area2D "angular_damp" Float 'False where
         nodeProperty
@@ -154,16 +162,6 @@ instance NodeProperty Area2D "audio_bus_override" Bool 'False where
         nodeProperty
           = (is_overriding_audio_bus,
              wrapDroppingSetter set_audio_bus_override, Nothing)
-
-instance NodeProperty Area2D "collision_layer" Int 'False where
-        nodeProperty
-          = (get_collision_layer, wrapDroppingSetter set_collision_layer,
-             Nothing)
-
-instance NodeProperty Area2D "collision_mask" Int 'False where
-        nodeProperty
-          = (get_collision_mask, wrapDroppingSetter set_collision_mask,
-             Nothing)
 
 instance NodeProperty Area2D "gravity" Float 'False where
         nodeProperty
@@ -225,7 +223,10 @@ _area_enter_tree cls arg1
          godot_method_bind_call bindArea2D__area_enter_tree (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "_area_enter_tree" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Area2D._area_enter_tree
@@ -249,7 +250,10 @@ _area_exit_tree cls arg1
          godot_method_bind_call bindArea2D__area_exit_tree (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "_area_exit_tree" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Area2D._area_exit_tree
@@ -275,7 +279,10 @@ _area_inout cls arg1 arg2 arg3 arg4 arg5
       (\ (arrPtr, len) ->
          godot_method_bind_call bindArea2D__area_inout (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "_area_inout" '[Int, Rid, Int, Int, Int]
            (IO ())
@@ -301,7 +308,10 @@ _body_enter_tree cls arg1
          godot_method_bind_call bindArea2D__body_enter_tree (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "_body_enter_tree" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Area2D._body_enter_tree
@@ -325,7 +335,10 @@ _body_exit_tree cls arg1
          godot_method_bind_call bindArea2D__body_exit_tree (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "_body_exit_tree" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Area2D._body_exit_tree
@@ -351,7 +364,10 @@ _body_inout cls arg1 arg2 arg3 arg4 arg5
       (\ (arrPtr, len) ->
          godot_method_bind_call bindArea2D__body_inout (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "_body_inout" '[Int, Rid, Int, Int, Int]
            (IO ())
@@ -360,7 +376,8 @@ instance NodeMethod Area2D "_body_inout" '[Int, Rid, Int, Int, Int]
 
 {-# NOINLINE bindArea2D_get_angular_damp #-}
 
--- | The rate at which objects stop spinning in this area. Represents the angular velocity lost per second. Values range from @0@ (no damping) to @1@ (full damping).
+-- | The rate at which objects stop spinning in this area. Represents the angular velocity lost per second.
+--   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 bindArea2D_get_angular_damp :: MethodBind
 bindArea2D_get_angular_damp
   = unsafePerformIO $
@@ -370,7 +387,8 @@ bindArea2D_get_angular_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The rate at which objects stop spinning in this area. Represents the angular velocity lost per second. Values range from @0@ (no damping) to @1@ (full damping).
+-- | The rate at which objects stop spinning in this area. Represents the angular velocity lost per second.
+--   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 get_angular_damp ::
                    (Area2D :< cls, Object :< cls) => cls -> IO Float
 get_angular_damp cls
@@ -379,7 +397,10 @@ get_angular_damp cls
          godot_method_bind_call bindArea2D_get_angular_damp (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "get_angular_damp" '[] (IO Float) where
         nodeMethod = Godot.Core.Area2D.get_angular_damp
@@ -405,126 +426,19 @@ get_audio_bus_name cls
          godot_method_bind_call bindArea2D_get_audio_bus_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "get_audio_bus_name" '[]
            (IO GodotString)
          where
         nodeMethod = Godot.Core.Area2D.get_audio_bus_name
 
-{-# NOINLINE bindArea2D_get_collision_layer #-}
-
--- | The area's physics layer(s). Collidable objects can exist in any of 32 different layers. A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See also @collision_mask@. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
-bindArea2D_get_collision_layer :: MethodBind
-bindArea2D_get_collision_layer
-  = unsafePerformIO $
-      withCString "Area2D" $
-        \ clsNamePtr ->
-          withCString "get_collision_layer" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | The area's physics layer(s). Collidable objects can exist in any of 32 different layers. A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See also @collision_mask@. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
-get_collision_layer ::
-                      (Area2D :< cls, Object :< cls) => cls -> IO Int
-get_collision_layer cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindArea2D_get_collision_layer (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Area2D "get_collision_layer" '[] (IO Int) where
-        nodeMethod = Godot.Core.Area2D.get_collision_layer
-
-{-# NOINLINE bindArea2D_get_collision_layer_bit #-}
-
--- | Returns an individual bit on the layer mask. Describes whether other areas will collide with this one on the given layer.
-bindArea2D_get_collision_layer_bit :: MethodBind
-bindArea2D_get_collision_layer_bit
-  = unsafePerformIO $
-      withCString "Area2D" $
-        \ clsNamePtr ->
-          withCString "get_collision_layer_bit" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | Returns an individual bit on the layer mask. Describes whether other areas will collide with this one on the given layer.
-get_collision_layer_bit ::
-                          (Area2D :< cls, Object :< cls) => cls -> Int -> IO Bool
-get_collision_layer_bit cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindArea2D_get_collision_layer_bit
-           (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Area2D "get_collision_layer_bit" '[Int]
-           (IO Bool)
-         where
-        nodeMethod = Godot.Core.Area2D.get_collision_layer_bit
-
-{-# NOINLINE bindArea2D_get_collision_mask #-}
-
--- | The physics layers this area scans to determine collision detection. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
-bindArea2D_get_collision_mask :: MethodBind
-bindArea2D_get_collision_mask
-  = unsafePerformIO $
-      withCString "Area2D" $
-        \ clsNamePtr ->
-          withCString "get_collision_mask" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | The physics layers this area scans to determine collision detection. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
-get_collision_mask ::
-                     (Area2D :< cls, Object :< cls) => cls -> IO Int
-get_collision_mask cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindArea2D_get_collision_mask (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Area2D "get_collision_mask" '[] (IO Int) where
-        nodeMethod = Godot.Core.Area2D.get_collision_mask
-
-{-# NOINLINE bindArea2D_get_collision_mask_bit #-}
-
--- | Returns an individual bit on the collision mask. Describes whether this area will collide with others on the given layer.
-bindArea2D_get_collision_mask_bit :: MethodBind
-bindArea2D_get_collision_mask_bit
-  = unsafePerformIO $
-      withCString "Area2D" $
-        \ clsNamePtr ->
-          withCString "get_collision_mask_bit" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | Returns an individual bit on the collision mask. Describes whether this area will collide with others on the given layer.
-get_collision_mask_bit ::
-                         (Area2D :< cls, Object :< cls) => cls -> Int -> IO Bool
-get_collision_mask_bit cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindArea2D_get_collision_mask_bit
-           (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Area2D "get_collision_mask_bit" '[Int]
-           (IO Bool)
-         where
-        nodeMethod = Godot.Core.Area2D.get_collision_mask_bit
-
 {-# NOINLINE bindArea2D_get_gravity #-}
 
--- | The area's gravity intensity (ranges from -1024 to 1024). This value multiplies the gravity vector. This is useful to alter the force of gravity without altering its direction.
+-- | The area's gravity intensity (in pixels per second squared). This value multiplies the gravity vector. This is useful to alter the force of gravity without altering its direction.
 bindArea2D_get_gravity :: MethodBind
 bindArea2D_get_gravity
   = unsafePerformIO $
@@ -534,14 +448,17 @@ bindArea2D_get_gravity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The area's gravity intensity (ranges from -1024 to 1024). This value multiplies the gravity vector. This is useful to alter the force of gravity without altering its direction.
+-- | The area's gravity intensity (in pixels per second squared). This value multiplies the gravity vector. This is useful to alter the force of gravity without altering its direction.
 get_gravity :: (Area2D :< cls, Object :< cls) => cls -> IO Float
 get_gravity cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindArea2D_get_gravity (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "get_gravity" '[] (IO Float) where
         nodeMethod = Godot.Core.Area2D.get_gravity
@@ -568,7 +485,10 @@ get_gravity_distance_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "get_gravity_distance_scale" '[]
            (IO Float)
@@ -596,7 +516,10 @@ get_gravity_vector cls
          godot_method_bind_call bindArea2D_get_gravity_vector (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "get_gravity_vector" '[] (IO Vector2)
          where
@@ -604,7 +527,8 @@ instance NodeMethod Area2D "get_gravity_vector" '[] (IO Vector2)
 
 {-# NOINLINE bindArea2D_get_linear_damp #-}
 
--- | The rate at which objects stop moving in this area. Represents the linear velocity lost per second. Values range from @0@ (no damping) to @1@ (full damping).
+-- | The rate at which objects stop moving in this area. Represents the linear velocity lost per second.
+--   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 bindArea2D_get_linear_damp :: MethodBind
 bindArea2D_get_linear_damp
   = unsafePerformIO $
@@ -614,7 +538,8 @@ bindArea2D_get_linear_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The rate at which objects stop moving in this area. Represents the linear velocity lost per second. Values range from @0@ (no damping) to @1@ (full damping).
+-- | The rate at which objects stop moving in this area. Represents the linear velocity lost per second.
+--   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 get_linear_damp ::
                   (Area2D :< cls, Object :< cls) => cls -> IO Float
 get_linear_damp cls
@@ -623,14 +548,18 @@ get_linear_damp cls
          godot_method_bind_call bindArea2D_get_linear_damp (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "get_linear_damp" '[] (IO Float) where
         nodeMethod = Godot.Core.Area2D.get_linear_damp
 
 {-# NOINLINE bindArea2D_get_overlapping_areas #-}
 
--- | Returns a list of intersecting @Area2D@s. For performance reasons (collisions are all processed at the same time) this list is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.
+-- | Returns a list of intersecting @Area2D@s. The overlapping area's @CollisionObject2D.collision_layer@ must be part of this area's @CollisionObject2D.collision_mask@ in order to be detected.
+--   				For performance reasons (collisions are all processed at the same time) this list is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.
 bindArea2D_get_overlapping_areas :: MethodBind
 bindArea2D_get_overlapping_areas
   = unsafePerformIO $
@@ -640,7 +569,8 @@ bindArea2D_get_overlapping_areas
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a list of intersecting @Area2D@s. For performance reasons (collisions are all processed at the same time) this list is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.
+-- | Returns a list of intersecting @Area2D@s. The overlapping area's @CollisionObject2D.collision_layer@ must be part of this area's @CollisionObject2D.collision_mask@ in order to be detected.
+--   				For performance reasons (collisions are all processed at the same time) this list is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.
 get_overlapping_areas ::
                         (Area2D :< cls, Object :< cls) => cls -> IO Array
 get_overlapping_areas cls
@@ -650,7 +580,10 @@ get_overlapping_areas cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "get_overlapping_areas" '[] (IO Array)
          where
@@ -658,7 +591,8 @@ instance NodeMethod Area2D "get_overlapping_areas" '[] (IO Array)
 
 {-# NOINLINE bindArea2D_get_overlapping_bodies #-}
 
--- | Returns a list of intersecting @PhysicsBody2D@s. For performance reasons (collisions are all processed at the same time) this list is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.
+-- | Returns a list of intersecting @PhysicsBody2D@s. The overlapping body's @CollisionObject2D.collision_layer@ must be part of this area's @CollisionObject2D.collision_mask@ in order to be detected.
+--   				For performance reasons (collisions are all processed at the same time) this list is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.
 bindArea2D_get_overlapping_bodies :: MethodBind
 bindArea2D_get_overlapping_bodies
   = unsafePerformIO $
@@ -668,7 +602,8 @@ bindArea2D_get_overlapping_bodies
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a list of intersecting @PhysicsBody2D@s. For performance reasons (collisions are all processed at the same time) this list is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.
+-- | Returns a list of intersecting @PhysicsBody2D@s. The overlapping body's @CollisionObject2D.collision_layer@ must be part of this area's @CollisionObject2D.collision_mask@ in order to be detected.
+--   				For performance reasons (collisions are all processed at the same time) this list is modified once during the physics step, not immediately after objects are moved. Consider using signals instead.
 get_overlapping_bodies ::
                          (Area2D :< cls, Object :< cls) => cls -> IO Array
 get_overlapping_bodies cls
@@ -678,7 +613,10 @@ get_overlapping_bodies cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "get_overlapping_bodies" '[] (IO Array)
          where
@@ -703,7 +641,10 @@ get_priority cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindArea2D_get_priority (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "get_priority" '[] (IO Float) where
         nodeMethod = Godot.Core.Area2D.get_priority
@@ -730,7 +671,10 @@ get_space_override_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "get_space_override_mode" '[] (IO Int)
          where
@@ -757,7 +701,10 @@ is_gravity_a_point cls
          godot_method_bind_call bindArea2D_is_gravity_a_point (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "is_gravity_a_point" '[] (IO Bool) where
         nodeMethod = Godot.Core.Area2D.is_gravity_a_point
@@ -782,7 +729,10 @@ is_monitorable cls
          godot_method_bind_call bindArea2D_is_monitorable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "is_monitorable" '[] (IO Bool) where
         nodeMethod = Godot.Core.Area2D.is_monitorable
@@ -806,7 +756,10 @@ is_monitoring cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindArea2D_is_monitoring (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "is_monitoring" '[] (IO Bool) where
         nodeMethod = Godot.Core.Area2D.is_monitoring
@@ -833,7 +786,10 @@ is_overriding_audio_bus cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "is_overriding_audio_bus" '[] (IO Bool)
          where
@@ -842,7 +798,7 @@ instance NodeMethod Area2D "is_overriding_audio_bus" '[] (IO Bool)
 {-# NOINLINE bindArea2D_overlaps_area #-}
 
 -- | If @true@, the given area overlaps the Area2D.
---   				__Note:__ The result of this test is not immediate after moving objects. For performance, list of overlaps is updated once per frame and before the physics step. Consider using signals instead.
+--   				__Note:__ The result of this test is not immediate after moving objects. For performance, the list of overlaps is updated once per frame and before the physics step. Consider using signals instead.
 bindArea2D_overlaps_area :: MethodBind
 bindArea2D_overlaps_area
   = unsafePerformIO $
@@ -853,7 +809,7 @@ bindArea2D_overlaps_area
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the given area overlaps the Area2D.
---   				__Note:__ The result of this test is not immediate after moving objects. For performance, list of overlaps is updated once per frame and before the physics step. Consider using signals instead.
+--   				__Note:__ The result of this test is not immediate after moving objects. For performance, the list of overlaps is updated once per frame and before the physics step. Consider using signals instead.
 overlaps_area ::
                 (Area2D :< cls, Object :< cls) => cls -> Node -> IO Bool
 overlaps_area cls arg1
@@ -861,7 +817,10 @@ overlaps_area cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindArea2D_overlaps_area (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "overlaps_area" '[Node] (IO Bool) where
         nodeMethod = Godot.Core.Area2D.overlaps_area
@@ -870,7 +829,7 @@ instance NodeMethod Area2D "overlaps_area" '[Node] (IO Bool) where
 
 -- | If @true@, the given physics body overlaps the Area2D.
 --   				__Note:__ The result of this test is not immediate after moving objects. For performance, list of overlaps is updated once per frame and before the physics step. Consider using signals instead.
---   				The @body@ argument can either be a @PhysicsBody2D@ or a @TileMap@ instance (while TileMaps are not physics body themselves, they register their tiles with collision shapes as a virtual physics body).
+--   				The @body@ argument can either be a @PhysicsBody2D@ or a @TileMap@ instance (while TileMaps are not physics bodies themselves, they register their tiles with collision shapes as a virtual physics body).
 bindArea2D_overlaps_body :: MethodBind
 bindArea2D_overlaps_body
   = unsafePerformIO $
@@ -882,7 +841,7 @@ bindArea2D_overlaps_body
 
 -- | If @true@, the given physics body overlaps the Area2D.
 --   				__Note:__ The result of this test is not immediate after moving objects. For performance, list of overlaps is updated once per frame and before the physics step. Consider using signals instead.
---   				The @body@ argument can either be a @PhysicsBody2D@ or a @TileMap@ instance (while TileMaps are not physics body themselves, they register their tiles with collision shapes as a virtual physics body).
+--   				The @body@ argument can either be a @PhysicsBody2D@ or a @TileMap@ instance (while TileMaps are not physics bodies themselves, they register their tiles with collision shapes as a virtual physics body).
 overlaps_body ::
                 (Area2D :< cls, Object :< cls) => cls -> Node -> IO Bool
 overlaps_body cls arg1
@@ -890,14 +849,18 @@ overlaps_body cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindArea2D_overlaps_body (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "overlaps_body" '[Node] (IO Bool) where
         nodeMethod = Godot.Core.Area2D.overlaps_body
 
 {-# NOINLINE bindArea2D_set_angular_damp #-}
 
--- | The rate at which objects stop spinning in this area. Represents the angular velocity lost per second. Values range from @0@ (no damping) to @1@ (full damping).
+-- | The rate at which objects stop spinning in this area. Represents the angular velocity lost per second.
+--   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 bindArea2D_set_angular_damp :: MethodBind
 bindArea2D_set_angular_damp
   = unsafePerformIO $
@@ -907,7 +870,8 @@ bindArea2D_set_angular_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The rate at which objects stop spinning in this area. Represents the angular velocity lost per second. Values range from @0@ (no damping) to @1@ (full damping).
+-- | The rate at which objects stop spinning in this area. Represents the angular velocity lost per second.
+--   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 set_angular_damp ::
                    (Area2D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_angular_damp cls arg1
@@ -916,7 +880,10 @@ set_angular_damp cls arg1
          godot_method_bind_call bindArea2D_set_angular_damp (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_angular_damp" '[Float] (IO ())
          where
@@ -943,7 +910,10 @@ set_audio_bus_name cls arg1
          godot_method_bind_call bindArea2D_set_audio_bus_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_audio_bus_name" '[GodotString]
            (IO ())
@@ -972,127 +942,18 @@ set_audio_bus_override cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_audio_bus_override" '[Bool] (IO ())
          where
         nodeMethod = Godot.Core.Area2D.set_audio_bus_override
 
-{-# NOINLINE bindArea2D_set_collision_layer #-}
-
--- | The area's physics layer(s). Collidable objects can exist in any of 32 different layers. A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See also @collision_mask@. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
-bindArea2D_set_collision_layer :: MethodBind
-bindArea2D_set_collision_layer
-  = unsafePerformIO $
-      withCString "Area2D" $
-        \ clsNamePtr ->
-          withCString "set_collision_layer" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | The area's physics layer(s). Collidable objects can exist in any of 32 different layers. A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See also @collision_mask@. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
-set_collision_layer ::
-                      (Area2D :< cls, Object :< cls) => cls -> Int -> IO ()
-set_collision_layer cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindArea2D_set_collision_layer (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Area2D "set_collision_layer" '[Int] (IO ())
-         where
-        nodeMethod = Godot.Core.Area2D.set_collision_layer
-
-{-# NOINLINE bindArea2D_set_collision_layer_bit #-}
-
--- | Set/clear individual bits on the layer mask. This makes getting an area in/out of only one layer easier.
-bindArea2D_set_collision_layer_bit :: MethodBind
-bindArea2D_set_collision_layer_bit
-  = unsafePerformIO $
-      withCString "Area2D" $
-        \ clsNamePtr ->
-          withCString "set_collision_layer_bit" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | Set/clear individual bits on the layer mask. This makes getting an area in/out of only one layer easier.
-set_collision_layer_bit ::
-                          (Area2D :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
-set_collision_layer_bit cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindArea2D_set_collision_layer_bit
-           (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Area2D "set_collision_layer_bit" '[Int, Bool]
-           (IO ())
-         where
-        nodeMethod = Godot.Core.Area2D.set_collision_layer_bit
-
-{-# NOINLINE bindArea2D_set_collision_mask #-}
-
--- | The physics layers this area scans to determine collision detection. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
-bindArea2D_set_collision_mask :: MethodBind
-bindArea2D_set_collision_mask
-  = unsafePerformIO $
-      withCString "Area2D" $
-        \ clsNamePtr ->
-          withCString "set_collision_mask" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | The physics layers this area scans to determine collision detection. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
-set_collision_mask ::
-                     (Area2D :< cls, Object :< cls) => cls -> Int -> IO ()
-set_collision_mask cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindArea2D_set_collision_mask (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Area2D "set_collision_mask" '[Int] (IO ())
-         where
-        nodeMethod = Godot.Core.Area2D.set_collision_mask
-
-{-# NOINLINE bindArea2D_set_collision_mask_bit #-}
-
--- | Set/clear individual bits on the collision mask. This makes selecting the areas scanned easier.
-bindArea2D_set_collision_mask_bit :: MethodBind
-bindArea2D_set_collision_mask_bit
-  = unsafePerformIO $
-      withCString "Area2D" $
-        \ clsNamePtr ->
-          withCString "set_collision_mask_bit" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | Set/clear individual bits on the collision mask. This makes selecting the areas scanned easier.
-set_collision_mask_bit ::
-                         (Area2D :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
-set_collision_mask_bit cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindArea2D_set_collision_mask_bit
-           (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Area2D "set_collision_mask_bit" '[Int, Bool]
-           (IO ())
-         where
-        nodeMethod = Godot.Core.Area2D.set_collision_mask_bit
-
 {-# NOINLINE bindArea2D_set_gravity #-}
 
--- | The area's gravity intensity (ranges from -1024 to 1024). This value multiplies the gravity vector. This is useful to alter the force of gravity without altering its direction.
+-- | The area's gravity intensity (in pixels per second squared). This value multiplies the gravity vector. This is useful to alter the force of gravity without altering its direction.
 bindArea2D_set_gravity :: MethodBind
 bindArea2D_set_gravity
   = unsafePerformIO $
@@ -1102,7 +963,7 @@ bindArea2D_set_gravity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The area's gravity intensity (ranges from -1024 to 1024). This value multiplies the gravity vector. This is useful to alter the force of gravity without altering its direction.
+-- | The area's gravity intensity (in pixels per second squared). This value multiplies the gravity vector. This is useful to alter the force of gravity without altering its direction.
 set_gravity ::
               (Area2D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_gravity cls arg1
@@ -1110,7 +971,10 @@ set_gravity cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindArea2D_set_gravity (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_gravity" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Area2D.set_gravity
@@ -1137,7 +1001,10 @@ set_gravity_distance_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_gravity_distance_scale" '[Float]
            (IO ())
@@ -1165,7 +1032,10 @@ set_gravity_is_point cls arg1
          godot_method_bind_call bindArea2D_set_gravity_is_point (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_gravity_is_point" '[Bool] (IO ())
          where
@@ -1192,7 +1062,10 @@ set_gravity_vector cls arg1
          godot_method_bind_call bindArea2D_set_gravity_vector (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_gravity_vector" '[Vector2] (IO ())
          where
@@ -1200,7 +1073,8 @@ instance NodeMethod Area2D "set_gravity_vector" '[Vector2] (IO ())
 
 {-# NOINLINE bindArea2D_set_linear_damp #-}
 
--- | The rate at which objects stop moving in this area. Represents the linear velocity lost per second. Values range from @0@ (no damping) to @1@ (full damping).
+-- | The rate at which objects stop moving in this area. Represents the linear velocity lost per second.
+--   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 bindArea2D_set_linear_damp :: MethodBind
 bindArea2D_set_linear_damp
   = unsafePerformIO $
@@ -1210,7 +1084,8 @@ bindArea2D_set_linear_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The rate at which objects stop moving in this area. Represents the linear velocity lost per second. Values range from @0@ (no damping) to @1@ (full damping).
+-- | The rate at which objects stop moving in this area. Represents the linear velocity lost per second.
+--   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 set_linear_damp ::
                   (Area2D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_linear_damp cls arg1
@@ -1219,7 +1094,10 @@ set_linear_damp cls arg1
          godot_method_bind_call bindArea2D_set_linear_damp (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_linear_damp" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Area2D.set_linear_damp
@@ -1245,7 +1123,10 @@ set_monitorable cls arg1
          godot_method_bind_call bindArea2D_set_monitorable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_monitorable" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Area2D.set_monitorable
@@ -1271,7 +1152,10 @@ set_monitoring cls arg1
          godot_method_bind_call bindArea2D_set_monitoring (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_monitoring" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Area2D.set_monitoring
@@ -1296,7 +1180,10 @@ set_priority cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindArea2D_set_priority (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_priority" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Area2D.set_priority
@@ -1323,7 +1210,10 @@ set_space_override_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Area2D "set_space_override_mode" '[Int] (IO ())
          where

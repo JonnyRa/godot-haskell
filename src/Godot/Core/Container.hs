@@ -50,7 +50,10 @@ _child_minsize_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Container "_child_minsize_changed" '[] (IO ())
          where
@@ -74,7 +77,10 @@ _sort_children cls
          godot_method_bind_call bindContainer__sort_children (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Container "_sort_children" '[] (IO ()) where
         nodeMethod = Godot.Core.Container._sort_children
@@ -101,7 +107,10 @@ fit_child_in_rect cls arg1 arg2
          godot_method_bind_call bindContainer_fit_child_in_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Container "fit_child_in_rect" '[Control, Rect2]
            (IO ())
@@ -127,7 +136,10 @@ queue_sort cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindContainer_queue_sort (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Container "queue_sort" '[] (IO ()) where
         nodeMethod = Godot.Core.Container.queue_sort

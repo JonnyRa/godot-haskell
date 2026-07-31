@@ -125,7 +125,10 @@ get_anchor_detection_is_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "get_anchor_detection_is_enabled"
            '[]
@@ -156,7 +159,10 @@ get_camera_feed_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "get_camera_feed_id" '[] (IO Int)
          where
@@ -184,7 +190,10 @@ get_capabilities cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "get_capabilities" '[] (IO Int)
          where
@@ -211,7 +220,10 @@ get_name cls
          godot_method_bind_call bindARVRInterface_get_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "get_name" '[] (IO GodotString)
          where
@@ -239,7 +251,10 @@ get_render_targetsize cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "get_render_targetsize" '[]
            (IO Vector2)
@@ -268,7 +283,10 @@ get_tracking_status cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "get_tracking_status" '[]
            (IO Int)
@@ -304,7 +322,10 @@ initialize cls
          godot_method_bind_call bindARVRInterface_initialize (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "initialize" '[] (IO Bool) where
         nodeMethod = Godot.Core.ARVRInterface.initialize
@@ -331,7 +352,10 @@ is_initialized cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "is_initialized" '[] (IO Bool)
          where
@@ -358,7 +382,10 @@ is_primary cls
          godot_method_bind_call bindARVRInterface_is_primary (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "is_primary" '[] (IO Bool) where
         nodeMethod = Godot.Core.ARVRInterface.is_primary
@@ -384,7 +411,10 @@ is_stereo cls
          godot_method_bind_call bindARVRInterface_is_stereo (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "is_stereo" '[] (IO Bool) where
         nodeMethod = Godot.Core.ARVRInterface.is_stereo
@@ -412,7 +442,10 @@ set_anchor_detection_is_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "set_anchor_detection_is_enabled"
            '[Bool]
@@ -443,7 +476,10 @@ set_is_initialized cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "set_is_initialized" '[Bool]
            (IO ())
@@ -472,7 +508,10 @@ set_is_primary cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "set_is_primary" '[Bool] (IO ())
          where
@@ -499,7 +538,10 @@ uninitialize cls
          godot_method_bind_call bindARVRInterface_uninitialize (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRInterface "uninitialize" '[] (IO ()) where
         nodeMethod = Godot.Core.ARVRInterface.uninitialize

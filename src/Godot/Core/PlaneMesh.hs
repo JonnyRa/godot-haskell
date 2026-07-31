@@ -2,9 +2,11 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.PlaneMesh
-       (Godot.Core.PlaneMesh.get_size,
+       (Godot.Core.PlaneMesh.get_center_offset,
+        Godot.Core.PlaneMesh.get_size,
         Godot.Core.PlaneMesh.get_subdivide_depth,
         Godot.Core.PlaneMesh.get_subdivide_width,
+        Godot.Core.PlaneMesh.set_center_offset,
         Godot.Core.PlaneMesh.set_size,
         Godot.Core.PlaneMesh.set_subdivide_depth,
         Godot.Core.PlaneMesh.set_subdivide_width)
@@ -21,6 +23,12 @@ import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.PrimitiveMesh()
 
+instance NodeProperty PlaneMesh "center_offset" Vector3 'False
+         where
+        nodeProperty
+          = (get_center_offset, wrapDroppingSetter set_center_offset,
+             Nothing)
+
 instance NodeProperty PlaneMesh "size" Vector2 'False where
         nodeProperty = (get_size, wrapDroppingSetter set_size, Nothing)
 
@@ -33,6 +41,36 @@ instance NodeProperty PlaneMesh "subdivide_width" Int 'False where
         nodeProperty
           = (get_subdivide_width, wrapDroppingSetter set_subdivide_width,
              Nothing)
+
+{-# NOINLINE bindPlaneMesh_get_center_offset #-}
+
+-- | Offset from the origin of the generated plane. Useful for particles.
+bindPlaneMesh_get_center_offset :: MethodBind
+bindPlaneMesh_get_center_offset
+  = unsafePerformIO $
+      withCString "PlaneMesh" $
+        \ clsNamePtr ->
+          withCString "get_center_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Offset from the origin of the generated plane. Useful for particles.
+get_center_offset ::
+                    (PlaneMesh :< cls, Object :< cls) => cls -> IO Vector3
+get_center_offset cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPlaneMesh_get_center_offset (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod PlaneMesh "get_center_offset" '[] (IO Vector3)
+         where
+        nodeMethod = Godot.Core.PlaneMesh.get_center_offset
 
 {-# NOINLINE bindPlaneMesh_get_size #-}
 
@@ -53,7 +91,10 @@ get_size cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPlaneMesh_get_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PlaneMesh "get_size" '[] (IO Vector2) where
         nodeMethod = Godot.Core.PlaneMesh.get_size
@@ -80,7 +121,10 @@ get_subdivide_depth cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PlaneMesh "get_subdivide_depth" '[] (IO Int)
          where
@@ -108,11 +152,45 @@ get_subdivide_width cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PlaneMesh "get_subdivide_width" '[] (IO Int)
          where
         nodeMethod = Godot.Core.PlaneMesh.get_subdivide_width
+
+{-# NOINLINE bindPlaneMesh_set_center_offset #-}
+
+-- | Offset from the origin of the generated plane. Useful for particles.
+bindPlaneMesh_set_center_offset :: MethodBind
+bindPlaneMesh_set_center_offset
+  = unsafePerformIO $
+      withCString "PlaneMesh" $
+        \ clsNamePtr ->
+          withCString "set_center_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Offset from the origin of the generated plane. Useful for particles.
+set_center_offset ::
+                    (PlaneMesh :< cls, Object :< cls) => cls -> Vector3 -> IO ()
+set_center_offset cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPlaneMesh_set_center_offset (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod PlaneMesh "set_center_offset" '[Vector3]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.PlaneMesh.set_center_offset
 
 {-# NOINLINE bindPlaneMesh_set_size #-}
 
@@ -134,7 +212,10 @@ set_size cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPlaneMesh_set_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PlaneMesh "set_size" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.PlaneMesh.set_size
@@ -161,7 +242,10 @@ set_subdivide_depth cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PlaneMesh "set_subdivide_depth" '[Int] (IO ())
          where
@@ -189,7 +273,10 @@ set_subdivide_width cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PlaneMesh "set_subdivide_width" '[Int] (IO ())
          where

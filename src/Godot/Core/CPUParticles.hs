@@ -15,6 +15,7 @@ module Godot.Core.CPUParticles
         Godot.Core.CPUParticles._EMISSION_SHAPE_POINTS,
         Godot.Core.CPUParticles._PARAM_MAX,
         Godot.Core.CPUParticles._PARAM_INITIAL_LINEAR_VELOCITY,
+        Godot.Core.CPUParticles._EMISSION_SHAPE_RING,
         Godot.Core.CPUParticles._FLAG_MAX,
         Godot.Core.CPUParticles._PARAM_LINEAR_ACCEL,
         Godot.Core.CPUParticles._EMISSION_SHAPE_DIRECTED_POINTS,
@@ -39,6 +40,10 @@ module Godot.Core.CPUParticles
         Godot.Core.CPUParticles.get_emission_colors,
         Godot.Core.CPUParticles.get_emission_normals,
         Godot.Core.CPUParticles.get_emission_points,
+        Godot.Core.CPUParticles.get_emission_ring_axis,
+        Godot.Core.CPUParticles.get_emission_ring_height,
+        Godot.Core.CPUParticles.get_emission_ring_inner_radius,
+        Godot.Core.CPUParticles.get_emission_ring_radius,
         Godot.Core.CPUParticles.get_emission_shape,
         Godot.Core.CPUParticles.get_emission_sphere_radius,
         Godot.Core.CPUParticles.get_explosiveness_ratio,
@@ -70,6 +75,10 @@ module Godot.Core.CPUParticles
         Godot.Core.CPUParticles.set_emission_colors,
         Godot.Core.CPUParticles.set_emission_normals,
         Godot.Core.CPUParticles.set_emission_points,
+        Godot.Core.CPUParticles.set_emission_ring_axis,
+        Godot.Core.CPUParticles.set_emission_ring_height,
+        Godot.Core.CPUParticles.set_emission_ring_inner_radius,
+        Godot.Core.CPUParticles.set_emission_ring_radius,
         Godot.Core.CPUParticles.set_emission_shape,
         Godot.Core.CPUParticles.set_emission_sphere_radius,
         Godot.Core.CPUParticles.set_emitting,
@@ -123,7 +132,7 @@ _PARAM_ANGULAR_VELOCITY :: Int
 _PARAM_ANGULAR_VELOCITY = 1
 
 _EMISSION_SHAPE_MAX :: Int
-_EMISSION_SHAPE_MAX = 5
+_EMISSION_SHAPE_MAX = 6
 
 _PARAM_TANGENTIAL_ACCEL :: Int
 _PARAM_TANGENTIAL_ACCEL = 5
@@ -142,6 +151,9 @@ _PARAM_MAX = 12
 
 _PARAM_INITIAL_LINEAR_VELOCITY :: Int
 _PARAM_INITIAL_LINEAR_VELOCITY = 0
+
+_EMISSION_SHAPE_RING :: Int
+_EMISSION_SHAPE_RING = 5
 
 _FLAG_MAX :: Int
 _FLAG_MAX = 3
@@ -318,6 +330,35 @@ instance NodeProperty CPUParticles "emission_points"
         nodeProperty
           = (get_emission_points, wrapDroppingSetter set_emission_points,
              Nothing)
+
+instance NodeProperty CPUParticles "emission_ring_axis" Vector3
+           'False
+         where
+        nodeProperty
+          = (get_emission_ring_axis,
+             wrapDroppingSetter set_emission_ring_axis, Nothing)
+
+instance NodeProperty CPUParticles "emission_ring_height" Float
+           'False
+         where
+        nodeProperty
+          = (get_emission_ring_height,
+             wrapDroppingSetter set_emission_ring_height, Nothing)
+
+instance NodeProperty CPUParticles "emission_ring_inner_radius"
+           Float
+           'False
+         where
+        nodeProperty
+          = (get_emission_ring_inner_radius,
+             wrapDroppingSetter set_emission_ring_inner_radius, Nothing)
+
+instance NodeProperty CPUParticles "emission_ring_radius" Float
+           'False
+         where
+        nodeProperty
+          = (get_emission_ring_radius,
+             wrapDroppingSetter set_emission_ring_radius, Nothing)
 
 instance NodeProperty CPUParticles "emission_shape" Int 'False
          where
@@ -569,7 +610,10 @@ _update_render_thread cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "_update_render_thread" '[]
            (IO ())
@@ -598,7 +642,10 @@ convert_from_particles cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "convert_from_particles" '[Node]
            (IO ())
@@ -607,7 +654,8 @@ instance NodeMethod CPUParticles "convert_from_particles" '[Node]
 
 {-# NOINLINE bindCPUParticles_get_amount #-}
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 bindCPUParticles_get_amount :: MethodBind
 bindCPUParticles_get_amount
   = unsafePerformIO $
@@ -617,7 +665,8 @@ bindCPUParticles_get_amount
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 get_amount :: (CPUParticles :< cls, Object :< cls) => cls -> IO Int
 get_amount cls
   = withVariantArray []
@@ -625,14 +674,17 @@ get_amount cls
          godot_method_bind_call bindCPUParticles_get_amount (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_amount" '[] (IO Int) where
         nodeMethod = Godot.Core.CPUParticles.get_amount
 
 {-# NOINLINE bindCPUParticles_get_color #-}
 
--- | Unused for 3D particles.
+-- | Each particle's initial color. To have particle display color in a @SpatialMaterial@ make sure to set @SpatialMaterial.vertex_color_use_as_albedo@ to @true@.
 bindCPUParticles_get_color :: MethodBind
 bindCPUParticles_get_color
   = unsafePerformIO $
@@ -642,7 +694,7 @@ bindCPUParticles_get_color
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Unused for 3D particles.
+-- | Each particle's initial color. To have particle display color in a @SpatialMaterial@ make sure to set @SpatialMaterial.vertex_color_use_as_albedo@ to @true@.
 get_color ::
             (CPUParticles :< cls, Object :< cls) => cls -> IO Color
 get_color cls
@@ -651,14 +703,17 @@ get_color cls
          godot_method_bind_call bindCPUParticles_get_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_color" '[] (IO Color) where
         nodeMethod = Godot.Core.CPUParticles.get_color
 
 {-# NOINLINE bindCPUParticles_get_color_ramp #-}
 
--- | Unused for 3D particles.
+-- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
 bindCPUParticles_get_color_ramp :: MethodBind
 bindCPUParticles_get_color_ramp
   = unsafePerformIO $
@@ -668,7 +723,7 @@ bindCPUParticles_get_color_ramp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Unused for 3D particles.
+-- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
 get_color_ramp ::
                  (CPUParticles :< cls, Object :< cls) => cls -> IO Gradient
 get_color_ramp cls
@@ -677,7 +732,7 @@ get_color_ramp cls
          godot_method_bind_call bindCPUParticles_get_color_ramp (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CPUParticles "get_color_ramp" '[] (IO Gradient)
          where
@@ -704,7 +759,10 @@ get_direction cls
          godot_method_bind_call bindCPUParticles_get_direction (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_direction" '[] (IO Vector3)
          where
@@ -731,7 +789,10 @@ get_draw_order cls
          godot_method_bind_call bindCPUParticles_get_draw_order (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_draw_order" '[] (IO Int)
          where
@@ -759,7 +820,10 @@ get_emission_box_extents cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_emission_box_extents" '[]
            (IO Vector3)
@@ -788,7 +852,10 @@ get_emission_colors cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_emission_colors" '[]
            (IO PoolColorArray)
@@ -817,7 +884,10 @@ get_emission_normals cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_emission_normals" '[]
            (IO PoolVector3Array)
@@ -846,12 +916,145 @@ get_emission_points cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_emission_points" '[]
            (IO PoolVector3Array)
          where
         nodeMethod = Godot.Core.CPUParticles.get_emission_points
+
+{-# NOINLINE bindCPUParticles_get_emission_ring_axis #-}
+
+-- | The axis for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+bindCPUParticles_get_emission_ring_axis :: MethodBind
+bindCPUParticles_get_emission_ring_axis
+  = unsafePerformIO $
+      withCString "CPUParticles" $
+        \ clsNamePtr ->
+          withCString "get_emission_ring_axis" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The axis for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+get_emission_ring_axis ::
+                         (CPUParticles :< cls, Object :< cls) => cls -> IO Vector3
+get_emission_ring_axis cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCPUParticles_get_emission_ring_axis
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CPUParticles "get_emission_ring_axis" '[]
+           (IO Vector3)
+         where
+        nodeMethod = Godot.Core.CPUParticles.get_emission_ring_axis
+
+{-# NOINLINE bindCPUParticles_get_emission_ring_height #-}
+
+-- | The height for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+bindCPUParticles_get_emission_ring_height :: MethodBind
+bindCPUParticles_get_emission_ring_height
+  = unsafePerformIO $
+      withCString "CPUParticles" $
+        \ clsNamePtr ->
+          withCString "get_emission_ring_height" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The height for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+get_emission_ring_height ::
+                           (CPUParticles :< cls, Object :< cls) => cls -> IO Float
+get_emission_ring_height cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCPUParticles_get_emission_ring_height
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CPUParticles "get_emission_ring_height" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.CPUParticles.get_emission_ring_height
+
+{-# NOINLINE bindCPUParticles_get_emission_ring_inner_radius #-}
+
+-- | The inner radius for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+bindCPUParticles_get_emission_ring_inner_radius :: MethodBind
+bindCPUParticles_get_emission_ring_inner_radius
+  = unsafePerformIO $
+      withCString "CPUParticles" $
+        \ clsNamePtr ->
+          withCString "get_emission_ring_inner_radius" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The inner radius for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+get_emission_ring_inner_radius ::
+                                 (CPUParticles :< cls, Object :< cls) => cls -> IO Float
+get_emission_ring_inner_radius cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindCPUParticles_get_emission_ring_inner_radius
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CPUParticles "get_emission_ring_inner_radius"
+           '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.CPUParticles.get_emission_ring_inner_radius
+
+{-# NOINLINE bindCPUParticles_get_emission_ring_radius #-}
+
+-- | The radius for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+bindCPUParticles_get_emission_ring_radius :: MethodBind
+bindCPUParticles_get_emission_ring_radius
+  = unsafePerformIO $
+      withCString "CPUParticles" $
+        \ clsNamePtr ->
+          withCString "get_emission_ring_radius" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The radius for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+get_emission_ring_radius ::
+                           (CPUParticles :< cls, Object :< cls) => cls -> IO Float
+get_emission_ring_radius cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCPUParticles_get_emission_ring_radius
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CPUParticles "get_emission_ring_radius" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.CPUParticles.get_emission_ring_radius
 
 {-# NOINLINE bindCPUParticles_get_emission_shape #-}
 
@@ -875,7 +1078,10 @@ get_emission_shape cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_emission_shape" '[] (IO Int)
          where
@@ -903,7 +1109,10 @@ get_emission_sphere_radius cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_emission_sphere_radius" '[]
            (IO Float)
@@ -932,7 +1141,10 @@ get_explosiveness_ratio cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_explosiveness_ratio" '[]
            (IO Float)
@@ -960,7 +1172,10 @@ get_fixed_fps cls
          godot_method_bind_call bindCPUParticles_get_fixed_fps (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_fixed_fps" '[] (IO Int) where
         nodeMethod = Godot.Core.CPUParticles.get_fixed_fps
@@ -986,7 +1201,10 @@ get_flatness cls
          godot_method_bind_call bindCPUParticles_get_flatness (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_flatness" '[] (IO Float)
          where
@@ -1014,7 +1232,10 @@ get_fractional_delta cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_fractional_delta" '[]
            (IO Bool)
@@ -1042,7 +1263,10 @@ get_gravity cls
          godot_method_bind_call bindCPUParticles_get_gravity (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_gravity" '[] (IO Vector3)
          where
@@ -1050,7 +1274,7 @@ instance NodeMethod CPUParticles "get_gravity" '[] (IO Vector3)
 
 {-# NOINLINE bindCPUParticles_get_lifetime #-}
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 bindCPUParticles_get_lifetime :: MethodBind
 bindCPUParticles_get_lifetime
   = unsafePerformIO $
@@ -1060,7 +1284,7 @@ bindCPUParticles_get_lifetime
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 get_lifetime ::
                (CPUParticles :< cls, Object :< cls) => cls -> IO Float
 get_lifetime cls
@@ -1069,7 +1293,10 @@ get_lifetime cls
          godot_method_bind_call bindCPUParticles_get_lifetime (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_lifetime" '[] (IO Float)
          where
@@ -1097,7 +1324,10 @@ get_lifetime_randomness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_lifetime_randomness" '[]
            (IO Float)
@@ -1124,7 +1354,7 @@ get_mesh cls
          godot_method_bind_call bindCPUParticles_get_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CPUParticles "get_mesh" '[] (IO Mesh) where
         nodeMethod = Godot.Core.CPUParticles.get_mesh
@@ -1150,7 +1380,10 @@ get_one_shot cls
          godot_method_bind_call bindCPUParticles_get_one_shot (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_one_shot" '[] (IO Bool) where
         nodeMethod = Godot.Core.CPUParticles.get_one_shot
@@ -1176,7 +1409,10 @@ get_param cls arg1
          godot_method_bind_call bindCPUParticles_get_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_param" '[Int] (IO Float)
          where
@@ -1204,7 +1440,7 @@ get_param_curve cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CPUParticles "get_param_curve" '[Int]
            (IO Curve)
@@ -1233,7 +1469,10 @@ get_param_randomness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_param_randomness" '[Int]
            (IO Float)
@@ -1262,7 +1501,10 @@ get_particle_flag cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_particle_flag" '[Int]
            (IO Bool)
@@ -1291,7 +1533,10 @@ get_pre_process_time cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_pre_process_time" '[]
            (IO Float)
@@ -1320,7 +1565,10 @@ get_randomness_ratio cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_randomness_ratio" '[]
            (IO Float)
@@ -1349,7 +1597,10 @@ get_speed_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_speed_scale" '[] (IO Float)
          where
@@ -1376,7 +1627,10 @@ get_spread cls
          godot_method_bind_call bindCPUParticles_get_spread (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_spread" '[] (IO Float) where
         nodeMethod = Godot.Core.CPUParticles.get_spread
@@ -1403,7 +1657,10 @@ get_use_local_coordinates cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "get_use_local_coordinates" '[]
            (IO Bool)
@@ -1431,7 +1688,10 @@ is_emitting cls
          godot_method_bind_call bindCPUParticles_is_emitting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "is_emitting" '[] (IO Bool) where
         nodeMethod = Godot.Core.CPUParticles.is_emitting
@@ -1455,14 +1715,18 @@ restart cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCPUParticles_restart (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "restart" '[] (IO ()) where
         nodeMethod = Godot.Core.CPUParticles.restart
 
 {-# NOINLINE bindCPUParticles_set_amount #-}
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 bindCPUParticles_set_amount :: MethodBind
 bindCPUParticles_set_amount
   = unsafePerformIO $
@@ -1472,7 +1736,8 @@ bindCPUParticles_set_amount
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 set_amount ::
              (CPUParticles :< cls, Object :< cls) => cls -> Int -> IO ()
 set_amount cls arg1
@@ -1481,14 +1746,17 @@ set_amount cls arg1
          godot_method_bind_call bindCPUParticles_set_amount (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_amount" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CPUParticles.set_amount
 
 {-# NOINLINE bindCPUParticles_set_color #-}
 
--- | Unused for 3D particles.
+-- | Each particle's initial color. To have particle display color in a @SpatialMaterial@ make sure to set @SpatialMaterial.vertex_color_use_as_albedo@ to @true@.
 bindCPUParticles_set_color :: MethodBind
 bindCPUParticles_set_color
   = unsafePerformIO $
@@ -1498,7 +1766,7 @@ bindCPUParticles_set_color
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Unused for 3D particles.
+-- | Each particle's initial color. To have particle display color in a @SpatialMaterial@ make sure to set @SpatialMaterial.vertex_color_use_as_albedo@ to @true@.
 set_color ::
             (CPUParticles :< cls, Object :< cls) => cls -> Color -> IO ()
 set_color cls arg1
@@ -1507,14 +1775,17 @@ set_color cls arg1
          godot_method_bind_call bindCPUParticles_set_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_color" '[Color] (IO ()) where
         nodeMethod = Godot.Core.CPUParticles.set_color
 
 {-# NOINLINE bindCPUParticles_set_color_ramp #-}
 
--- | Unused for 3D particles.
+-- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
 bindCPUParticles_set_color_ramp :: MethodBind
 bindCPUParticles_set_color_ramp
   = unsafePerformIO $
@@ -1524,7 +1795,7 @@ bindCPUParticles_set_color_ramp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Unused for 3D particles.
+-- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
 set_color_ramp ::
                  (CPUParticles :< cls, Object :< cls) => cls -> Gradient -> IO ()
 set_color_ramp cls arg1
@@ -1533,7 +1804,10 @@ set_color_ramp cls arg1
          godot_method_bind_call bindCPUParticles_set_color_ramp (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_color_ramp" '[Gradient]
            (IO ())
@@ -1561,7 +1835,10 @@ set_direction cls arg1
          godot_method_bind_call bindCPUParticles_set_direction (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_direction" '[Vector3] (IO ())
          where
@@ -1588,7 +1865,10 @@ set_draw_order cls arg1
          godot_method_bind_call bindCPUParticles_set_draw_order (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_draw_order" '[Int] (IO ())
          where
@@ -1616,7 +1896,10 @@ set_emission_box_extents cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_emission_box_extents"
            '[Vector3]
@@ -1647,7 +1930,10 @@ set_emission_colors cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_emission_colors"
            '[PoolColorArray]
@@ -1678,7 +1964,10 @@ set_emission_normals cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_emission_normals"
            '[PoolVector3Array]
@@ -1709,13 +1998,149 @@ set_emission_points cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_emission_points"
            '[PoolVector3Array]
            (IO ())
          where
         nodeMethod = Godot.Core.CPUParticles.set_emission_points
+
+{-# NOINLINE bindCPUParticles_set_emission_ring_axis #-}
+
+-- | The axis for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+bindCPUParticles_set_emission_ring_axis :: MethodBind
+bindCPUParticles_set_emission_ring_axis
+  = unsafePerformIO $
+      withCString "CPUParticles" $
+        \ clsNamePtr ->
+          withCString "set_emission_ring_axis" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The axis for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+set_emission_ring_axis ::
+                         (CPUParticles :< cls, Object :< cls) => cls -> Vector3 -> IO ()
+set_emission_ring_axis cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCPUParticles_set_emission_ring_axis
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CPUParticles "set_emission_ring_axis"
+           '[Vector3]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CPUParticles.set_emission_ring_axis
+
+{-# NOINLINE bindCPUParticles_set_emission_ring_height #-}
+
+-- | The height for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+bindCPUParticles_set_emission_ring_height :: MethodBind
+bindCPUParticles_set_emission_ring_height
+  = unsafePerformIO $
+      withCString "CPUParticles" $
+        \ clsNamePtr ->
+          withCString "set_emission_ring_height" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The height for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+set_emission_ring_height ::
+                           (CPUParticles :< cls, Object :< cls) => cls -> Float -> IO ()
+set_emission_ring_height cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCPUParticles_set_emission_ring_height
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CPUParticles "set_emission_ring_height"
+           '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CPUParticles.set_emission_ring_height
+
+{-# NOINLINE bindCPUParticles_set_emission_ring_inner_radius #-}
+
+-- | The inner radius for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+bindCPUParticles_set_emission_ring_inner_radius :: MethodBind
+bindCPUParticles_set_emission_ring_inner_radius
+  = unsafePerformIO $
+      withCString "CPUParticles" $
+        \ clsNamePtr ->
+          withCString "set_emission_ring_inner_radius" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The inner radius for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+set_emission_ring_inner_radius ::
+                                 (CPUParticles :< cls, Object :< cls) => cls -> Float -> IO ()
+set_emission_ring_inner_radius cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindCPUParticles_set_emission_ring_inner_radius
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CPUParticles "set_emission_ring_inner_radius"
+           '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CPUParticles.set_emission_ring_inner_radius
+
+{-# NOINLINE bindCPUParticles_set_emission_ring_radius #-}
+
+-- | The radius for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+bindCPUParticles_set_emission_ring_radius :: MethodBind
+bindCPUParticles_set_emission_ring_radius
+  = unsafePerformIO $
+      withCString "CPUParticles" $
+        \ clsNamePtr ->
+          withCString "set_emission_ring_radius" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The radius for the ring shaped emitter when using @EMISSION_SHAPE_RING@.
+set_emission_ring_radius ::
+                           (CPUParticles :< cls, Object :< cls) => cls -> Float -> IO ()
+set_emission_ring_radius cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCPUParticles_set_emission_ring_radius
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CPUParticles "set_emission_ring_radius"
+           '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CPUParticles.set_emission_ring_radius
 
 {-# NOINLINE bindCPUParticles_set_emission_shape #-}
 
@@ -1739,7 +2164,10 @@ set_emission_shape cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_emission_shape" '[Int]
            (IO ())
@@ -1768,7 +2196,10 @@ set_emission_sphere_radius cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_emission_sphere_radius"
            '[Float]
@@ -1797,7 +2228,10 @@ set_emitting cls arg1
          godot_method_bind_call bindCPUParticles_set_emitting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_emitting" '[Bool] (IO ())
          where
@@ -1825,7 +2259,10 @@ set_explosiveness_ratio cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_explosiveness_ratio" '[Float]
            (IO ())
@@ -1853,7 +2290,10 @@ set_fixed_fps cls arg1
          godot_method_bind_call bindCPUParticles_set_fixed_fps (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_fixed_fps" '[Int] (IO ())
          where
@@ -1880,7 +2320,10 @@ set_flatness cls arg1
          godot_method_bind_call bindCPUParticles_set_flatness (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_flatness" '[Float] (IO ())
          where
@@ -1908,7 +2351,10 @@ set_fractional_delta cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_fractional_delta" '[Bool]
            (IO ())
@@ -1936,7 +2382,10 @@ set_gravity cls arg1
          godot_method_bind_call bindCPUParticles_set_gravity (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_gravity" '[Vector3] (IO ())
          where
@@ -1944,7 +2393,7 @@ instance NodeMethod CPUParticles "set_gravity" '[Vector3] (IO ())
 
 {-# NOINLINE bindCPUParticles_set_lifetime #-}
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 bindCPUParticles_set_lifetime :: MethodBind
 bindCPUParticles_set_lifetime
   = unsafePerformIO $
@@ -1954,7 +2403,7 @@ bindCPUParticles_set_lifetime
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 set_lifetime ::
                (CPUParticles :< cls, Object :< cls) => cls -> Float -> IO ()
 set_lifetime cls arg1
@@ -1963,7 +2412,10 @@ set_lifetime cls arg1
          godot_method_bind_call bindCPUParticles_set_lifetime (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_lifetime" '[Float] (IO ())
          where
@@ -1991,7 +2443,10 @@ set_lifetime_randomness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_lifetime_randomness" '[Float]
            (IO ())
@@ -2019,7 +2474,10 @@ set_mesh cls arg1
          godot_method_bind_call bindCPUParticles_set_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_mesh" '[Mesh] (IO ()) where
         nodeMethod = Godot.Core.CPUParticles.set_mesh
@@ -2045,7 +2503,10 @@ set_one_shot cls arg1
          godot_method_bind_call bindCPUParticles_set_one_shot (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_one_shot" '[Bool] (IO ())
          where
@@ -2073,7 +2534,10 @@ set_param cls arg1 arg2
          godot_method_bind_call bindCPUParticles_set_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_param" '[Int, Float] (IO ())
          where
@@ -2102,7 +2566,10 @@ set_param_curve cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_param_curve" '[Int, Curve]
            (IO ())
@@ -2132,7 +2599,10 @@ set_param_randomness cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_param_randomness"
            '[Int, Float]
@@ -2162,7 +2632,10 @@ set_particle_flag cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_particle_flag" '[Int, Bool]
            (IO ())
@@ -2191,7 +2664,10 @@ set_pre_process_time cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_pre_process_time" '[Float]
            (IO ())
@@ -2220,7 +2696,10 @@ set_randomness_ratio cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_randomness_ratio" '[Float]
            (IO ())
@@ -2249,7 +2728,10 @@ set_speed_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_speed_scale" '[Float] (IO ())
          where
@@ -2276,7 +2758,10 @@ set_spread cls arg1
          godot_method_bind_call bindCPUParticles_set_spread (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_spread" '[Float] (IO ())
          where
@@ -2304,7 +2789,10 @@ set_use_local_coordinates cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles "set_use_local_coordinates"
            '[Bool]

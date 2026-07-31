@@ -52,7 +52,10 @@ get_brake cls
          godot_method_bind_call bindVehicleBody_get_brake (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VehicleBody "get_brake" '[] (IO Float) where
         nodeMethod = Godot.Core.VehicleBody.get_brake
@@ -83,7 +86,10 @@ get_engine_force cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VehicleBody "get_engine_force" '[] (IO Float)
          where
@@ -110,7 +116,10 @@ get_steering cls
          godot_method_bind_call bindVehicleBody_get_steering (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VehicleBody "get_steering" '[] (IO Float) where
         nodeMethod = Godot.Core.VehicleBody.get_steering
@@ -136,7 +145,10 @@ set_brake cls arg1
          godot_method_bind_call bindVehicleBody_set_brake (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VehicleBody "set_brake" '[Float] (IO ()) where
         nodeMethod = Godot.Core.VehicleBody.set_brake
@@ -167,7 +179,10 @@ set_engine_force cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VehicleBody "set_engine_force" '[Float] (IO ())
          where
@@ -194,7 +209,10 @@ set_steering cls arg1
          godot_method_bind_call bindVehicleBody_set_steering (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VehicleBody "set_steering" '[Float] (IO ())
          where

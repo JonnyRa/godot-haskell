@@ -60,7 +60,10 @@ get_button_mask cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMouse "get_button_mask" '[] (IO Int)
          where
@@ -68,7 +71,7 @@ instance NodeMethod InputEventMouse "get_button_mask" '[] (IO Int)
 
 {-# NOINLINE bindInputEventMouse_get_global_position #-}
 
--- | The global mouse position relative to the current @Viewport@ when used in @method Control._gui_input@, otherwise is at 0,0.
+-- | The global mouse position relative to the current @Viewport@. If used in @method Control._gui_input@ and if the current @Control@ is not under the mouse, moving it will not update this value.
 bindInputEventMouse_get_global_position :: MethodBind
 bindInputEventMouse_get_global_position
   = unsafePerformIO $
@@ -78,7 +81,7 @@ bindInputEventMouse_get_global_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The global mouse position relative to the current @Viewport@ when used in @method Control._gui_input@, otherwise is at 0,0.
+-- | The global mouse position relative to the current @Viewport@. If used in @method Control._gui_input@ and if the current @Control@ is not under the mouse, moving it will not update this value.
 get_global_position ::
                       (InputEventMouse :< cls, Object :< cls) => cls -> IO Vector2
 get_global_position cls
@@ -88,7 +91,10 @@ get_global_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMouse "get_global_position" '[]
            (IO Vector2)
@@ -97,7 +103,7 @@ instance NodeMethod InputEventMouse "get_global_position" '[]
 
 {-# NOINLINE bindInputEventMouse_get_position #-}
 
--- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse.
+-- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse. If the current @Control@ is not under the mouse, moving it will not update this value.
 bindInputEventMouse_get_position :: MethodBind
 bindInputEventMouse_get_position
   = unsafePerformIO $
@@ -107,7 +113,7 @@ bindInputEventMouse_get_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse.
+-- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse. If the current @Control@ is not under the mouse, moving it will not update this value.
 get_position ::
                (InputEventMouse :< cls, Object :< cls) => cls -> IO Vector2
 get_position cls
@@ -117,7 +123,10 @@ get_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMouse "get_position" '[] (IO Vector2)
          where
@@ -145,7 +154,10 @@ set_button_mask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMouse "set_button_mask" '[Int]
            (IO ())
@@ -154,7 +166,7 @@ instance NodeMethod InputEventMouse "set_button_mask" '[Int]
 
 {-# NOINLINE bindInputEventMouse_set_global_position #-}
 
--- | The global mouse position relative to the current @Viewport@ when used in @method Control._gui_input@, otherwise is at 0,0.
+-- | The global mouse position relative to the current @Viewport@. If used in @method Control._gui_input@ and if the current @Control@ is not under the mouse, moving it will not update this value.
 bindInputEventMouse_set_global_position :: MethodBind
 bindInputEventMouse_set_global_position
   = unsafePerformIO $
@@ -164,7 +176,7 @@ bindInputEventMouse_set_global_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The global mouse position relative to the current @Viewport@ when used in @method Control._gui_input@, otherwise is at 0,0.
+-- | The global mouse position relative to the current @Viewport@. If used in @method Control._gui_input@ and if the current @Control@ is not under the mouse, moving it will not update this value.
 set_global_position ::
                       (InputEventMouse :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_global_position cls arg1
@@ -174,7 +186,10 @@ set_global_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMouse "set_global_position"
            '[Vector2]
@@ -184,7 +199,7 @@ instance NodeMethod InputEventMouse "set_global_position"
 
 {-# NOINLINE bindInputEventMouse_set_position #-}
 
--- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse.
+-- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse. If the current @Control@ is not under the mouse, moving it will not update this value.
 bindInputEventMouse_set_position :: MethodBind
 bindInputEventMouse_set_position
   = unsafePerformIO $
@@ -194,7 +209,7 @@ bindInputEventMouse_set_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse.
+-- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse. If the current @Control@ is not under the mouse, moving it will not update this value.
 set_position ::
                (InputEventMouse :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_position cls arg1
@@ -204,7 +219,10 @@ set_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMouse "set_position" '[Vector2]
            (IO ())

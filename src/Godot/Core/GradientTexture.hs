@@ -46,7 +46,10 @@ get_width cls
          godot_method_bind_call bindGradientTexture_get_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GradientTexture "get_width" '[] (IO Int) where
         nodeMethod = Godot.Core.GradientTexture.get_width
@@ -72,7 +75,10 @@ _update cls
          godot_method_bind_call bindGradientTexture__update (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GradientTexture "_update" '[] (IO ()) where
         nodeMethod = Godot.Core.GradientTexture._update
@@ -99,7 +105,7 @@ get_gradient cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod GradientTexture "get_gradient" '[]
            (IO Gradient)
@@ -128,7 +134,10 @@ set_gradient cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GradientTexture "set_gradient" '[Gradient]
            (IO ())
@@ -156,7 +165,10 @@ set_width cls arg1
          godot_method_bind_call bindGradientTexture_set_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GradientTexture "set_width" '[Int] (IO ())
          where

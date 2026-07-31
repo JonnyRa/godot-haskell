@@ -143,7 +143,10 @@ _has_editable_3d_polygon_no_depth cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "_has_editable_3d_polygon_no_depth"
            '[]
@@ -172,7 +175,10 @@ _is_editable_3d_polygon cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "_is_editable_3d_polygon" '[]
            (IO Bool)
@@ -197,7 +203,10 @@ _path_changed cls
          godot_method_bind_call bindCSGPolygon__path_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "_path_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.CSGPolygon._path_changed
@@ -220,7 +229,10 @@ _path_exited cls
          godot_method_bind_call bindCSGPolygon__path_exited (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "_path_exited" '[] (IO ()) where
         nodeMethod = Godot.Core.CSGPolygon._path_exited
@@ -242,7 +254,10 @@ get_depth cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGPolygon_get_depth (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "get_depth" '[] (IO Float) where
         nodeMethod = Godot.Core.CSGPolygon.get_depth
@@ -266,7 +281,7 @@ get_material cls
          godot_method_bind_call bindCSGPolygon_get_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CSGPolygon "get_material" '[] (IO Material)
          where
@@ -289,7 +304,10 @@ get_mode cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGPolygon_get_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "get_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.CSGPolygon.get_mode
@@ -314,7 +332,10 @@ get_path_interval cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "get_path_interval" '[] (IO Float)
          where
@@ -339,7 +360,10 @@ get_path_node cls
          godot_method_bind_call bindCSGPolygon_get_path_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "get_path_node" '[] (IO NodePath)
          where
@@ -365,7 +389,10 @@ get_path_rotation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "get_path_rotation" '[] (IO Int)
          where
@@ -390,7 +417,10 @@ get_polygon cls
          godot_method_bind_call bindCSGPolygon_get_polygon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "get_polygon" '[]
            (IO PoolVector2Array)
@@ -416,7 +446,10 @@ get_smooth_faces cls
          godot_method_bind_call bindCSGPolygon_get_smooth_faces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "get_smooth_faces" '[] (IO Bool)
          where
@@ -441,7 +474,10 @@ get_spin_degrees cls
          godot_method_bind_call bindCSGPolygon_get_spin_degrees (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "get_spin_degrees" '[] (IO Float)
          where
@@ -466,7 +502,10 @@ get_spin_sides cls
          godot_method_bind_call bindCSGPolygon_get_spin_sides (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "get_spin_sides" '[] (IO Int) where
         nodeMethod = Godot.Core.CSGPolygon.get_spin_sides
@@ -491,7 +530,10 @@ is_path_continuous_u cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "is_path_continuous_u" '[] (IO Bool)
          where
@@ -516,7 +558,10 @@ is_path_joined cls
          godot_method_bind_call bindCSGPolygon_is_path_joined (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "is_path_joined" '[] (IO Bool) where
         nodeMethod = Godot.Core.CSGPolygon.is_path_joined
@@ -540,7 +585,10 @@ is_path_local cls
          godot_method_bind_call bindCSGPolygon_is_path_local (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "is_path_local" '[] (IO Bool) where
         nodeMethod = Godot.Core.CSGPolygon.is_path_local
@@ -563,7 +611,10 @@ set_depth cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGPolygon_set_depth (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_depth" '[Float] (IO ()) where
         nodeMethod = Godot.Core.CSGPolygon.set_depth
@@ -587,7 +638,10 @@ set_material cls arg1
          godot_method_bind_call bindCSGPolygon_set_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_material" '[Material] (IO ())
          where
@@ -611,7 +665,10 @@ set_mode cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGPolygon_set_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CSGPolygon.set_mode
@@ -636,7 +693,10 @@ set_path_continuous_u cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_path_continuous_u" '[Bool]
            (IO ())
@@ -663,7 +723,10 @@ set_path_interval cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_path_interval" '[Float] (IO ())
          where
@@ -688,7 +751,10 @@ set_path_joined cls arg1
          godot_method_bind_call bindCSGPolygon_set_path_joined (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_path_joined" '[Bool] (IO ())
          where
@@ -713,7 +779,10 @@ set_path_local cls arg1
          godot_method_bind_call bindCSGPolygon_set_path_local (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_path_local" '[Bool] (IO ())
          where
@@ -738,7 +807,10 @@ set_path_node cls arg1
          godot_method_bind_call bindCSGPolygon_set_path_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_path_node" '[NodePath] (IO ())
          where
@@ -764,7 +836,10 @@ set_path_rotation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_path_rotation" '[Int] (IO ())
          where
@@ -790,7 +865,10 @@ set_polygon cls arg1
          godot_method_bind_call bindCSGPolygon_set_polygon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_polygon" '[PoolVector2Array]
            (IO ())
@@ -816,7 +894,10 @@ set_smooth_faces cls arg1
          godot_method_bind_call bindCSGPolygon_set_smooth_faces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_smooth_faces" '[Bool] (IO ())
          where
@@ -841,7 +922,10 @@ set_spin_degrees cls arg1
          godot_method_bind_call bindCSGPolygon_set_spin_degrees (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_spin_degrees" '[Float] (IO ())
          where
@@ -866,7 +950,10 @@ set_spin_sides cls arg1
          godot_method_bind_call bindCSGPolygon_set_spin_sides (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGPolygon "set_spin_sides" '[Int] (IO ())
          where

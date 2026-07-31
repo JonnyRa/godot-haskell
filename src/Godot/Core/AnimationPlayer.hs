@@ -38,6 +38,7 @@ module Godot.Core.AnimationPlayer
         Godot.Core.AnimationPlayer.has_animation,
         Godot.Core.AnimationPlayer.is_active,
         Godot.Core.AnimationPlayer.is_playing,
+        Godot.Core.AnimationPlayer.is_reset_on_save_enabled,
         Godot.Core.AnimationPlayer.play,
         Godot.Core.AnimationPlayer.play_backwards,
         Godot.Core.AnimationPlayer.queue,
@@ -52,6 +53,7 @@ module Godot.Core.AnimationPlayer
         Godot.Core.AnimationPlayer.set_current_animation,
         Godot.Core.AnimationPlayer.set_default_blend_time,
         Godot.Core.AnimationPlayer.set_method_call_mode,
+        Godot.Core.AnimationPlayer.set_reset_on_save_enabled,
         Godot.Core.AnimationPlayer.set_root,
         Godot.Core.AnimationPlayer.set_speed_scale,
         Godot.Core.AnimationPlayer.stop)
@@ -83,7 +85,8 @@ _ANIMATION_PROCESS_PHYSICS = 0
 _ANIMATION_PROCESS_IDLE :: Int
 _ANIMATION_PROCESS_IDLE = 1
 
--- | If the currently being played animation changes, this signal will notify of such change.
+-- | Emitted when a queued animation plays after the previous animation was finished. See @method queue@.
+--   				__Note:__ The signal is not emitted when the animation is changed via @method play@ or from @AnimationTree@.
 sig_animation_changed ::
                       Godot.Internal.Dispatch.Signal AnimationPlayer
 sig_animation_changed
@@ -181,6 +184,12 @@ instance NodeProperty AnimationPlayer "playback_speed" Float 'False
         nodeProperty
           = (get_speed_scale, wrapDroppingSetter set_speed_scale, Nothing)
 
+instance NodeProperty AnimationPlayer "reset_on_save" Bool 'False
+         where
+        nodeProperty
+          = (is_reset_on_save_enabled,
+             wrapDroppingSetter set_reset_on_save_enabled, Nothing)
+
 instance NodeProperty AnimationPlayer "root_node" NodePath 'False
          where
         nodeProperty = (get_root, wrapDroppingSetter set_root, Nothing)
@@ -205,7 +214,10 @@ _animation_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "_animation_changed" '[]
            (IO ())
@@ -232,7 +244,10 @@ _node_removed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "_node_removed" '[Node] (IO ())
          where
@@ -261,7 +276,10 @@ add_animation cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "add_animation"
            '[GodotString, Animation]
@@ -290,7 +308,10 @@ advance cls arg1
          godot_method_bind_call bindAnimationPlayer_advance (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "advance" '[Float] (IO ())
          where
@@ -319,7 +340,10 @@ animation_get_next cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "animation_get_next"
            '[GodotString]
@@ -350,7 +374,10 @@ animation_set_next cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "animation_set_next"
            '[GodotString, GodotString]
@@ -380,7 +407,10 @@ clear_caches cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "clear_caches" '[] (IO ())
          where
@@ -407,7 +437,10 @@ clear_queue cls
          godot_method_bind_call bindAnimationPlayer_clear_queue (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "clear_queue" '[] (IO ()) where
         nodeMethod = Godot.Core.AnimationPlayer.clear_queue
@@ -435,7 +468,10 @@ find_animation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "find_animation" '[Animation]
            (IO GodotString)
@@ -465,7 +501,7 @@ get_animation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AnimationPlayer "get_animation" '[GodotString]
            (IO Animation)
@@ -495,7 +531,10 @@ get_animation_list cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_animation_list" '[]
            (IO PoolStringArray)
@@ -525,7 +564,10 @@ get_animation_process_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_animation_process_mode"
            '[]
@@ -555,7 +597,10 @@ get_assigned_animation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_assigned_animation" '[]
            (IO GodotString)
@@ -584,7 +629,10 @@ get_autoplay cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_autoplay" '[]
            (IO GodotString)
@@ -614,7 +662,10 @@ get_blend_time cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_blend_time"
            '[GodotString, GodotString]
@@ -625,7 +676,7 @@ instance NodeMethod AnimationPlayer "get_blend_time"
 {-# NOINLINE bindAnimationPlayer_get_current_animation #-}
 
 -- | The name of the currently playing animation. If no animation is playing, the property's value is an empty string. Changing this value does not restart the animation. See @method play@ for more information on playing animations.
---   			__Note__: while this property appears in the inspector, it's not meant to be edited and it's not saved in the scene. This property is mainly used to get the currently playing animation, and internally for animation playback tracks. For more information, see @Animation@.
+--   			__Note:__ While this property appears in the inspector, it's not meant to be edited, and it's not saved in the scene. This property is mainly used to get the currently playing animation, and internally for animation playback tracks. For more information, see @Animation@.
 bindAnimationPlayer_get_current_animation :: MethodBind
 bindAnimationPlayer_get_current_animation
   = unsafePerformIO $
@@ -636,7 +687,7 @@ bindAnimationPlayer_get_current_animation
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The name of the currently playing animation. If no animation is playing, the property's value is an empty string. Changing this value does not restart the animation. See @method play@ for more information on playing animations.
---   			__Note__: while this property appears in the inspector, it's not meant to be edited and it's not saved in the scene. This property is mainly used to get the currently playing animation, and internally for animation playback tracks. For more information, see @Animation@.
+--   			__Note:__ While this property appears in the inspector, it's not meant to be edited, and it's not saved in the scene. This property is mainly used to get the currently playing animation, and internally for animation playback tracks. For more information, see @Animation@.
 get_current_animation ::
                         (AnimationPlayer :< cls, Object :< cls) => cls -> IO GodotString
 get_current_animation cls
@@ -646,7 +697,10 @@ get_current_animation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_current_animation" '[]
            (IO GodotString)
@@ -676,7 +730,10 @@ get_current_animation_length cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_current_animation_length"
            '[]
@@ -708,7 +765,10 @@ get_current_animation_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer
            "get_current_animation_position"
@@ -740,7 +800,10 @@ get_default_blend_time cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_default_blend_time" '[]
            (IO Float)
@@ -769,7 +832,10 @@ get_method_call_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_method_call_mode" '[]
            (IO Int)
@@ -798,7 +864,10 @@ get_playing_speed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_playing_speed" '[]
            (IO Float)
@@ -827,7 +896,10 @@ get_queue cls
          godot_method_bind_call bindAnimationPlayer_get_queue (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_queue" '[]
            (IO PoolStringArray)
@@ -855,7 +927,10 @@ get_root cls
          godot_method_bind_call bindAnimationPlayer_get_root (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_root" '[] (IO NodePath)
          where
@@ -883,7 +958,10 @@ get_speed_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "get_speed_scale" '[]
            (IO Float)
@@ -913,7 +991,10 @@ has_animation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "has_animation" '[GodotString]
            (IO Bool)
@@ -941,7 +1022,10 @@ is_active cls
          godot_method_bind_call bindAnimationPlayer_is_active (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "is_active" '[] (IO Bool) where
         nodeMethod = Godot.Core.AnimationPlayer.is_active
@@ -967,11 +1051,48 @@ is_playing cls
          godot_method_bind_call bindAnimationPlayer_is_playing (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "is_playing" '[] (IO Bool)
          where
         nodeMethod = Godot.Core.AnimationPlayer.is_playing
+
+{-# NOINLINE bindAnimationPlayer_is_reset_on_save_enabled #-}
+
+-- | This is used by the editor. If set to @true@, the scene will be saved with the effects of the reset animation applied (as if it had been seeked to time 0), then reverted after saving.
+--   			In other words, the saved scene file will contain the "default pose", as defined by the reset animation, if any, with the editor keeping the values that the nodes had before saving.
+bindAnimationPlayer_is_reset_on_save_enabled :: MethodBind
+bindAnimationPlayer_is_reset_on_save_enabled
+  = unsafePerformIO $
+      withCString "AnimationPlayer" $
+        \ clsNamePtr ->
+          withCString "is_reset_on_save_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | This is used by the editor. If set to @true@, the scene will be saved with the effects of the reset animation applied (as if it had been seeked to time 0), then reverted after saving.
+--   			In other words, the saved scene file will contain the "default pose", as defined by the reset animation, if any, with the editor keeping the values that the nodes had before saving.
+is_reset_on_save_enabled ::
+                           (AnimationPlayer :< cls, Object :< cls) => cls -> IO Bool
+is_reset_on_save_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindAnimationPlayer_is_reset_on_save_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod AnimationPlayer "is_reset_on_save_enabled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.AnimationPlayer.is_reset_on_save_enabled
 
 {-# NOINLINE bindAnimationPlayer_play #-}
 
@@ -1004,7 +1125,10 @@ play cls arg1 arg2 arg3 arg4
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimationPlayer_play (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "play"
            '[Maybe GodotString, Maybe Float, Maybe Float, Maybe Bool]
@@ -1039,7 +1163,10 @@ play_backwards cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "play_backwards"
            '[Maybe GodotString, Maybe Float]
@@ -1071,7 +1198,10 @@ queue cls arg1
          godot_method_bind_call bindAnimationPlayer_queue (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "queue" '[GodotString] (IO ())
          where
@@ -1100,7 +1230,10 @@ remove_animation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "remove_animation"
            '[GodotString]
@@ -1131,7 +1264,10 @@ rename_animation cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "rename_animation"
            '[GodotString, GodotString]
@@ -1161,7 +1297,10 @@ seek cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimationPlayer_seek (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "seek" '[Float, Maybe Bool]
            (IO ())
@@ -1189,7 +1328,10 @@ set_active cls arg1
          godot_method_bind_call bindAnimationPlayer_set_active (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "set_active" '[Bool] (IO ())
          where
@@ -1218,7 +1360,10 @@ set_animation_process_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "set_animation_process_mode"
            '[Int]
@@ -1249,7 +1394,10 @@ set_assigned_animation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "set_assigned_animation"
            '[GodotString]
@@ -1280,7 +1428,10 @@ set_autoplay cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "set_autoplay" '[GodotString]
            (IO ())
@@ -1310,7 +1461,10 @@ set_blend_time cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "set_blend_time"
            '[GodotString, GodotString, Float]
@@ -1321,7 +1475,7 @@ instance NodeMethod AnimationPlayer "set_blend_time"
 {-# NOINLINE bindAnimationPlayer_set_current_animation #-}
 
 -- | The name of the currently playing animation. If no animation is playing, the property's value is an empty string. Changing this value does not restart the animation. See @method play@ for more information on playing animations.
---   			__Note__: while this property appears in the inspector, it's not meant to be edited and it's not saved in the scene. This property is mainly used to get the currently playing animation, and internally for animation playback tracks. For more information, see @Animation@.
+--   			__Note:__ While this property appears in the inspector, it's not meant to be edited, and it's not saved in the scene. This property is mainly used to get the currently playing animation, and internally for animation playback tracks. For more information, see @Animation@.
 bindAnimationPlayer_set_current_animation :: MethodBind
 bindAnimationPlayer_set_current_animation
   = unsafePerformIO $
@@ -1332,7 +1486,7 @@ bindAnimationPlayer_set_current_animation
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The name of the currently playing animation. If no animation is playing, the property's value is an empty string. Changing this value does not restart the animation. See @method play@ for more information on playing animations.
---   			__Note__: while this property appears in the inspector, it's not meant to be edited and it's not saved in the scene. This property is mainly used to get the currently playing animation, and internally for animation playback tracks. For more information, see @Animation@.
+--   			__Note:__ While this property appears in the inspector, it's not meant to be edited, and it's not saved in the scene. This property is mainly used to get the currently playing animation, and internally for animation playback tracks. For more information, see @Animation@.
 set_current_animation ::
                         (AnimationPlayer :< cls, Object :< cls) =>
                         cls -> GodotString -> IO ()
@@ -1343,7 +1497,10 @@ set_current_animation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "set_current_animation"
            '[GodotString]
@@ -1373,7 +1530,10 @@ set_default_blend_time cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "set_default_blend_time"
            '[Float]
@@ -1403,12 +1563,51 @@ set_method_call_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "set_method_call_mode" '[Int]
            (IO ())
          where
         nodeMethod = Godot.Core.AnimationPlayer.set_method_call_mode
+
+{-# NOINLINE bindAnimationPlayer_set_reset_on_save_enabled #-}
+
+-- | This is used by the editor. If set to @true@, the scene will be saved with the effects of the reset animation applied (as if it had been seeked to time 0), then reverted after saving.
+--   			In other words, the saved scene file will contain the "default pose", as defined by the reset animation, if any, with the editor keeping the values that the nodes had before saving.
+bindAnimationPlayer_set_reset_on_save_enabled :: MethodBind
+bindAnimationPlayer_set_reset_on_save_enabled
+  = unsafePerformIO $
+      withCString "AnimationPlayer" $
+        \ clsNamePtr ->
+          withCString "set_reset_on_save_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | This is used by the editor. If set to @true@, the scene will be saved with the effects of the reset animation applied (as if it had been seeked to time 0), then reverted after saving.
+--   			In other words, the saved scene file will contain the "default pose", as defined by the reset animation, if any, with the editor keeping the values that the nodes had before saving.
+set_reset_on_save_enabled ::
+                            (AnimationPlayer :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_reset_on_save_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindAnimationPlayer_set_reset_on_save_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod AnimationPlayer "set_reset_on_save_enabled"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.AnimationPlayer.set_reset_on_save_enabled
 
 {-# NOINLINE bindAnimationPlayer_set_root #-}
 
@@ -1431,7 +1630,10 @@ set_root cls arg1
          godot_method_bind_call bindAnimationPlayer_set_root (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "set_root" '[NodePath] (IO ())
          where
@@ -1459,7 +1661,10 @@ set_speed_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "set_speed_scale" '[Float]
            (IO ())
@@ -1489,7 +1694,10 @@ stop cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimationPlayer_stop (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationPlayer "stop" '[Maybe Bool] (IO ())
          where

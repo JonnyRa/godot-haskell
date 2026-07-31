@@ -30,7 +30,7 @@ instance NodeProperty SceneTreeTimer "time_left" Float 'False where
 
 {-# NOINLINE bindSceneTreeTimer_get_time_left #-}
 
--- | The time remaining.
+-- | The time remaining (in seconds).
 bindSceneTreeTimer_get_time_left :: MethodBind
 bindSceneTreeTimer_get_time_left
   = unsafePerformIO $
@@ -40,7 +40,7 @@ bindSceneTreeTimer_get_time_left
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The time remaining.
+-- | The time remaining (in seconds).
 get_time_left ::
                 (SceneTreeTimer :< cls, Object :< cls) => cls -> IO Float
 get_time_left cls
@@ -50,7 +50,10 @@ get_time_left cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneTreeTimer "get_time_left" '[] (IO Float)
          where
@@ -58,7 +61,7 @@ instance NodeMethod SceneTreeTimer "get_time_left" '[] (IO Float)
 
 {-# NOINLINE bindSceneTreeTimer_set_time_left #-}
 
--- | The time remaining.
+-- | The time remaining (in seconds).
 bindSceneTreeTimer_set_time_left :: MethodBind
 bindSceneTreeTimer_set_time_left
   = unsafePerformIO $
@@ -68,7 +71,7 @@ bindSceneTreeTimer_set_time_left
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The time remaining.
+-- | The time remaining (in seconds).
 set_time_left ::
                 (SceneTreeTimer :< cls, Object :< cls) => cls -> Float -> IO ()
 set_time_left cls arg1
@@ -78,7 +81,10 @@ set_time_left cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneTreeTimer "set_time_left" '[Float] (IO ())
          where

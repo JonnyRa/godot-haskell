@@ -155,7 +155,10 @@ _remove_by_uid cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween__remove_by_uid (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "_remove_by_uid" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tween._remove_by_uid
@@ -194,7 +197,10 @@ follow_method cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_follow_method (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "follow_method"
            '[Object, GodotString, GodotVariant, Object, GodotString, Float,
@@ -238,7 +244,10 @@ follow_property cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9
          godot_method_bind_call bindTween_follow_property (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "follow_property"
            '[Object, NodePath, GodotVariant, Object, NodePath, Float,
@@ -266,7 +275,10 @@ get_runtime cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_get_runtime (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "get_runtime" '[] (IO Float) where
         nodeMethod = Godot.Core.Tween.get_runtime
@@ -291,7 +303,10 @@ get_speed_scale cls
          godot_method_bind_call bindTween_get_speed_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "get_speed_scale" '[] (IO Float) where
         nodeMethod = Godot.Core.Tween.get_speed_scale
@@ -318,7 +333,10 @@ get_tween_process_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "get_tween_process_mode" '[] (IO Int)
          where
@@ -357,7 +375,10 @@ interpolate_callback cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
          godot_method_bind_call bindTween_interpolate_callback (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "interpolate_callback"
            '[Object, Float, GodotString, Maybe GodotVariant,
@@ -402,7 +423,10 @@ interpolate_deferred_callback cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "interpolate_deferred_callback"
            '[Object, Float, GodotString, Maybe GodotVariant,
@@ -445,7 +469,10 @@ interpolate_method cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
          godot_method_bind_call bindTween_interpolate_method (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "interpolate_method"
            '[Object, GodotString, GodotVariant, GodotVariant, Float,
@@ -487,7 +514,10 @@ interpolate_property cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
          godot_method_bind_call bindTween_interpolate_property (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "interpolate_property"
            '[Object, NodePath, GodotVariant, GodotVariant, Float, Maybe Int,
@@ -516,7 +546,10 @@ is_active cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_is_active (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "is_active" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tween.is_active
@@ -539,7 +572,10 @@ is_repeat cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_is_repeat (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "is_repeat" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tween.is_repeat
@@ -565,7 +601,9 @@ remove cls arg1 arg2
       [toVariant arg1, defaultedVariant VariantString "" arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_remove (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "remove" '[Object, Maybe GodotString]
            (IO Bool)
@@ -590,7 +628,10 @@ remove_all cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_remove_all (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "remove_all" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tween.remove_all
@@ -616,7 +657,9 @@ reset cls arg1 arg2
       [toVariant arg1, defaultedVariant VariantString "" arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_reset (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "reset" '[Object, Maybe GodotString]
            (IO Bool)
@@ -641,7 +684,10 @@ reset_all cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_reset_all (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "reset_all" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tween.reset_all
@@ -667,7 +713,9 @@ resume cls arg1 arg2
       [toVariant arg1, defaultedVariant VariantString "" arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_resume (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "resume" '[Object, Maybe GodotString]
            (IO Bool)
@@ -692,7 +740,10 @@ resume_all cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_resume_all (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "resume_all" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tween.resume_all
@@ -715,7 +766,9 @@ seek cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_seek (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "seek" '[Float] (IO Bool) where
         nodeMethod = Godot.Core.Tween.seek
@@ -738,7 +791,10 @@ set_active cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_set_active (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "set_active" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Tween.set_active
@@ -761,7 +817,10 @@ set_repeat cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_set_repeat (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "set_repeat" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Tween.set_repeat
@@ -787,7 +846,10 @@ set_speed_scale cls arg1
          godot_method_bind_call bindTween_set_speed_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "set_speed_scale" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Tween.set_speed_scale
@@ -814,7 +876,10 @@ set_tween_process_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "set_tween_process_mode" '[Int] (IO ())
          where
@@ -838,7 +903,9 @@ start cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_start (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "start" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tween.start
@@ -864,7 +931,9 @@ stop cls arg1 arg2
       [toVariant arg1, defaultedVariant VariantString "" arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_stop (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "stop" '[Object, Maybe GodotString]
            (IO Bool)
@@ -889,7 +958,10 @@ stop_all cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_stop_all (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "stop_all" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tween.stop_all
@@ -929,7 +1001,10 @@ targeting_method cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9
          godot_method_bind_call bindTween_targeting_method (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "targeting_method"
            '[Object, GodotString, Object, GodotString, GodotVariant, Float,
@@ -973,7 +1048,10 @@ targeting_property cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9
          godot_method_bind_call bindTween_targeting_property (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "targeting_property"
            '[Object, NodePath, Object, NodePath, GodotVariant, Float,
@@ -1000,7 +1078,9 @@ tell cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_tell (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tween "tell" '[] (IO Float) where
         nodeMethod = Godot.Core.Tween.tell

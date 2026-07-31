@@ -12,8 +12,10 @@ module Godot.Core.IP
         Godot.Core.IP.get_local_addresses,
         Godot.Core.IP.get_local_interfaces,
         Godot.Core.IP.get_resolve_item_address,
+        Godot.Core.IP.get_resolve_item_addresses,
         Godot.Core.IP.get_resolve_item_status,
         Godot.Core.IP.resolve_hostname,
+        Godot.Core.IP.resolve_hostname_addresses,
         Godot.Core.IP.resolve_hostname_queue_item)
        where
 import Data.Coerce
@@ -77,7 +79,10 @@ clear_cache cls arg1
   = withVariantArray [defaultedVariant VariantString "" arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindIP_clear_cache (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod IP "clear_cache" '[Maybe GodotString] (IO ())
          where
@@ -104,14 +109,17 @@ erase_resolve_item cls arg1
          godot_method_bind_call bindIP_erase_resolve_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod IP "erase_resolve_item" '[Int] (IO ()) where
         nodeMethod = Godot.Core.IP.erase_resolve_item
 
 {-# NOINLINE bindIP_get_local_addresses #-}
 
--- | Returns all of the user's current IPv4 and IPv6 addresses as an array.
+-- | Returns all the user's current IPv4 and IPv6 addresses as an array.
 bindIP_get_local_addresses :: MethodBind
 bindIP_get_local_addresses
   = unsafePerformIO $
@@ -121,7 +129,7 @@ bindIP_get_local_addresses
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns all of the user's current IPv4 and IPv6 addresses as an array.
+-- | Returns all the user's current IPv4 and IPv6 addresses as an array.
 get_local_addresses ::
                       (IP :< cls, Object :< cls) => cls -> IO Array
 get_local_addresses cls
@@ -130,7 +138,10 @@ get_local_addresses cls
          godot_method_bind_call bindIP_get_local_addresses (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod IP "get_local_addresses" '[] (IO Array) where
         nodeMethod = Godot.Core.IP.get_local_addresses
@@ -180,7 +191,10 @@ get_local_interfaces cls
          godot_method_bind_call bindIP_get_local_interfaces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod IP "get_local_interfaces" '[] (IO Array) where
         nodeMethod = Godot.Core.IP.get_local_interfaces
@@ -206,12 +220,47 @@ get_resolve_item_address cls arg1
          godot_method_bind_call bindIP_get_resolve_item_address (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod IP "get_resolve_item_address" '[Int]
            (IO GodotString)
          where
         nodeMethod = Godot.Core.IP.get_resolve_item_address
+
+{-# NOINLINE bindIP_get_resolve_item_addresses #-}
+
+-- | Return resolved addresses, or an empty array if an error happened or resolution didn't happen yet (see @method get_resolve_item_status@).
+bindIP_get_resolve_item_addresses :: MethodBind
+bindIP_get_resolve_item_addresses
+  = unsafePerformIO $
+      withCString "IP" $
+        \ clsNamePtr ->
+          withCString "get_resolve_item_addresses" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Return resolved addresses, or an empty array if an error happened or resolution didn't happen yet (see @method get_resolve_item_status@).
+get_resolve_item_addresses ::
+                             (IP :< cls, Object :< cls) => cls -> Int -> IO Array
+get_resolve_item_addresses cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindIP_get_resolve_item_addresses
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod IP "get_resolve_item_addresses" '[Int]
+           (IO Array)
+         where
+        nodeMethod = Godot.Core.IP.get_resolve_item_addresses
 
 {-# NOINLINE bindIP_get_resolve_item_status #-}
 
@@ -234,7 +283,10 @@ get_resolve_item_status cls arg1
          godot_method_bind_call bindIP_get_resolve_item_status (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod IP "get_resolve_item_status" '[Int] (IO Int)
          where
@@ -262,12 +314,50 @@ resolve_hostname cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindIP_resolve_hostname (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod IP "resolve_hostname" '[GodotString, Maybe Int]
            (IO GodotString)
          where
         nodeMethod = Godot.Core.IP.resolve_hostname
+
+{-# NOINLINE bindIP_resolve_hostname_addresses #-}
+
+-- | Resolves a given hostname in a blocking way. Addresses are returned as an @Array@ of IPv4 or IPv6 depending on @ip_type@.
+bindIP_resolve_hostname_addresses :: MethodBind
+bindIP_resolve_hostname_addresses
+  = unsafePerformIO $
+      withCString "IP" $
+        \ clsNamePtr ->
+          withCString "resolve_hostname_addresses" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Resolves a given hostname in a blocking way. Addresses are returned as an @Array@ of IPv4 or IPv6 depending on @ip_type@.
+resolve_hostname_addresses ::
+                             (IP :< cls, Object :< cls) =>
+                             cls -> GodotString -> Maybe Int -> IO Array
+resolve_hostname_addresses cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (3)) toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindIP_resolve_hostname_addresses
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod IP "resolve_hostname_addresses"
+           '[GodotString, Maybe Int]
+           (IO Array)
+         where
+        nodeMethod = Godot.Core.IP.resolve_hostname_addresses
 
 {-# NOINLINE bindIP_resolve_hostname_queue_item #-}
 
@@ -293,7 +383,10 @@ resolve_hostname_queue_item cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod IP "resolve_hostname_queue_item"
            '[GodotString, Maybe Int]

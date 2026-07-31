@@ -51,7 +51,10 @@ get_constant_type cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptConstant "get_constant_type" '[]
            (IO Int)
@@ -79,7 +82,7 @@ get_constant_value cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod VisualScriptConstant "get_constant_value" '[]
            (IO GodotVariant)
@@ -106,7 +109,10 @@ set_constant_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptConstant "set_constant_type" '[Int]
            (IO ())
@@ -134,7 +140,10 @@ set_constant_value cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptConstant "set_constant_value"
            '[GodotVariant]

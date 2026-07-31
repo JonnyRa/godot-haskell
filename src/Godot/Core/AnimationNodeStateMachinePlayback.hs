@@ -2,7 +2,9 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.AnimationNodeStateMachinePlayback
-       (Godot.Core.AnimationNodeStateMachinePlayback.get_current_node,
+       (Godot.Core.AnimationNodeStateMachinePlayback.get_current_length,
+        Godot.Core.AnimationNodeStateMachinePlayback.get_current_node,
+        Godot.Core.AnimationNodeStateMachinePlayback.get_current_play_position,
         Godot.Core.AnimationNodeStateMachinePlayback.get_travel_path,
         Godot.Core.AnimationNodeStateMachinePlayback.is_playing,
         Godot.Core.AnimationNodeStateMachinePlayback.start,
@@ -20,6 +22,43 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Resource()
+
+{-# NOINLINE bindAnimationNodeStateMachinePlayback_get_current_length
+             #-}
+
+bindAnimationNodeStateMachinePlayback_get_current_length ::
+                                                         MethodBind
+bindAnimationNodeStateMachinePlayback_get_current_length
+  = unsafePerformIO $
+      withCString "AnimationNodeStateMachinePlayback" $
+        \ clsNamePtr ->
+          withCString "get_current_length" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_current_length ::
+                     (AnimationNodeStateMachinePlayback :< cls, Object :< cls) =>
+                     cls -> IO Float
+get_current_length cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindAnimationNodeStateMachinePlayback_get_current_length
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod AnimationNodeStateMachinePlayback
+           "get_current_length"
+           '[]
+           (IO Float)
+         where
+        nodeMethod
+          = Godot.Core.AnimationNodeStateMachinePlayback.get_current_length
 
 {-# NOINLINE bindAnimationNodeStateMachinePlayback_get_current_node
              #-}
@@ -47,7 +86,10 @@ get_current_node cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachinePlayback
            "get_current_node"
@@ -56,6 +98,45 @@ instance NodeMethod AnimationNodeStateMachinePlayback
          where
         nodeMethod
           = Godot.Core.AnimationNodeStateMachinePlayback.get_current_node
+
+{-# NOINLINE bindAnimationNodeStateMachinePlayback_get_current_play_position
+             #-}
+
+-- | Returns the playback position within the current animation state.
+bindAnimationNodeStateMachinePlayback_get_current_play_position ::
+                                                                MethodBind
+bindAnimationNodeStateMachinePlayback_get_current_play_position
+  = unsafePerformIO $
+      withCString "AnimationNodeStateMachinePlayback" $
+        \ clsNamePtr ->
+          withCString "get_current_play_position" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the playback position within the current animation state.
+get_current_play_position ::
+                            (AnimationNodeStateMachinePlayback :< cls, Object :< cls) =>
+                            cls -> IO Float
+get_current_play_position cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindAnimationNodeStateMachinePlayback_get_current_play_position
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod AnimationNodeStateMachinePlayback
+           "get_current_play_position"
+           '[]
+           (IO Float)
+         where
+        nodeMethod
+          = Godot.Core.AnimationNodeStateMachinePlayback.get_current_play_position
 
 {-# NOINLINE bindAnimationNodeStateMachinePlayback_get_travel_path
              #-}
@@ -82,7 +163,10 @@ get_travel_path cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachinePlayback
            "get_travel_path"
@@ -116,7 +200,10 @@ is_playing cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachinePlayback "is_playing"
            '[]
@@ -148,7 +235,10 @@ start cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachinePlayback "start"
            '[GodotString]
@@ -179,7 +269,10 @@ stop cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachinePlayback "stop" '[]
            (IO ())
@@ -209,7 +302,10 @@ travel cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachinePlayback "travel"
            '[GodotString]

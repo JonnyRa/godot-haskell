@@ -41,7 +41,10 @@ get_color cls
          godot_method_bind_call bindCanvasModulate_get_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasModulate "get_color" '[] (IO Color) where
         nodeMethod = Godot.Core.CanvasModulate.get_color
@@ -67,7 +70,10 @@ set_color cls arg1
          godot_method_bind_call bindCanvasModulate_set_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasModulate "set_color" '[Color] (IO ())
          where

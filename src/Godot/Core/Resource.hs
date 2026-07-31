@@ -4,9 +4,10 @@
 module Godot.Core.Resource
        (Godot.Core.Resource.sig_changed,
         Godot.Core.Resource._setup_local_to_scene,
-        Godot.Core.Resource.duplicate, Godot.Core.Resource.get_local_scene,
-        Godot.Core.Resource.get_name, Godot.Core.Resource.get_path,
-        Godot.Core.Resource.get_rid, Godot.Core.Resource.is_local_to_scene,
+        Godot.Core.Resource.duplicate, Godot.Core.Resource.emit_changed,
+        Godot.Core.Resource.get_local_scene, Godot.Core.Resource.get_name,
+        Godot.Core.Resource.get_path, Godot.Core.Resource.get_rid,
+        Godot.Core.Resource.is_local_to_scene,
         Godot.Core.Resource.set_local_to_scene,
         Godot.Core.Resource.set_name, Godot.Core.Resource.set_path,
         Godot.Core.Resource.setup_local_to_scene,
@@ -25,6 +26,7 @@ import Godot.Api.Types
 import Godot.Core.Reference()
 
 -- | Emitted whenever the resource changes.
+--   				__Note:__ This signal is not emitted automatically for custom resources, which means that you need to create a setter and emit the signal yourself.
 sig_changed :: Godot.Internal.Dispatch.Signal Resource
 sig_changed = Godot.Internal.Dispatch.Signal "changed"
 
@@ -67,7 +69,10 @@ _setup_local_to_scene cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Resource "_setup_local_to_scene" '[] (IO ())
          where
@@ -75,8 +80,10 @@ instance NodeMethod Resource "_setup_local_to_scene" '[] (IO ())
 
 {-# NOINLINE bindResource_duplicate #-}
 
--- | Duplicates the resource, returning a new resource. By default, sub-resources are shared between resource copies for efficiency. This can be changed by passing @true@ to the @subresources@ argument which will copy the subresources.
+-- | Duplicates the resource, returning a new resource with the exported members copied. __Note:__ To duplicate the resource the constructor is called without arguments. This method will error when the constructor doesn't have default values.
+--   				By default, sub-resources are shared between resource copies for efficiency. This can be changed by passing @true@ to the @subresources@ argument which will copy the subresources.
 --   				__Note:__ If @subresources@ is @true@, this method will only perform a shallow copy. Nested resources within subresources will not be duplicated and will still be shared.
+--   				__Note:__ When duplicating a resource, only @export@ed properties are copied. Other properties will be set to their default value in the new resource.
 bindResource_duplicate :: MethodBind
 bindResource_duplicate
   = unsafePerformIO $
@@ -86,8 +93,10 @@ bindResource_duplicate
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Duplicates the resource, returning a new resource. By default, sub-resources are shared between resource copies for efficiency. This can be changed by passing @true@ to the @subresources@ argument which will copy the subresources.
+-- | Duplicates the resource, returning a new resource with the exported members copied. __Note:__ To duplicate the resource the constructor is called without arguments. This method will error when the constructor doesn't have default values.
+--   				By default, sub-resources are shared between resource copies for efficiency. This can be changed by passing @true@ to the @subresources@ argument which will copy the subresources.
 --   				__Note:__ If @subresources@ is @true@, this method will only perform a shallow copy. Nested resources within subresources will not be duplicated and will still be shared.
+--   				__Note:__ When duplicating a resource, only @export@ed properties are copied. Other properties will be set to their default value in the new resource.
 duplicate ::
             (Resource :< cls, Object :< cls) =>
             cls -> Maybe Bool -> IO Resource
@@ -96,12 +105,60 @@ duplicate cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindResource_duplicate (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Resource "duplicate" '[Maybe Bool]
            (IO Resource)
          where
         nodeMethod = Godot.Core.Resource.duplicate
+
+{-# NOINLINE bindResource_emit_changed #-}
+
+-- | Emits the @signal changed@ signal.
+--   				If external objects which depend on this resource should be updated, this method must be called manually whenever the state of this resource has changed (such as modification of properties).
+--   				The method is equivalent to:
+--   				
+--   @
+--   
+--   				emit_signal("changed")
+--   				
+--   @
+--   
+--   				__Note:__ This method is called automatically for built-in resources.
+bindResource_emit_changed :: MethodBind
+bindResource_emit_changed
+  = unsafePerformIO $
+      withCString "Resource" $
+        \ clsNamePtr ->
+          withCString "emit_changed" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Emits the @signal changed@ signal.
+--   				If external objects which depend on this resource should be updated, this method must be called manually whenever the state of this resource has changed (such as modification of properties).
+--   				The method is equivalent to:
+--   				
+--   @
+--   
+--   				emit_signal("changed")
+--   				
+--   @
+--   
+--   				__Note:__ This method is called automatically for built-in resources.
+emit_changed :: (Resource :< cls, Object :< cls) => cls -> IO ()
+emit_changed cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindResource_emit_changed (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Resource "emit_changed" '[] (IO ()) where
+        nodeMethod = Godot.Core.Resource.emit_changed
 
 {-# NOINLINE bindResource_get_local_scene #-}
 
@@ -124,14 +181,14 @@ get_local_scene cls
          godot_method_bind_call bindResource_get_local_scene (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Resource "get_local_scene" '[] (IO Node) where
         nodeMethod = Godot.Core.Resource.get_local_scene
 
 {-# NOINLINE bindResource_get_name #-}
 
--- | The name of the resource. This is an optional identifier.
+-- | The name of the resource. This is an optional identifier. If @resource_name@ is not empty, its value will be displayed to represent the current resource in the editor inspector. For built-in scripts, the @resource_name@ will be displayed as the tab name in the script editor.
 bindResource_get_name :: MethodBind
 bindResource_get_name
   = unsafePerformIO $
@@ -141,7 +198,7 @@ bindResource_get_name
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The name of the resource. This is an optional identifier.
+-- | The name of the resource. This is an optional identifier. If @resource_name@ is not empty, its value will be displayed to represent the current resource in the editor inspector. For built-in scripts, the @resource_name@ will be displayed as the tab name in the script editor.
 get_name ::
            (Resource :< cls, Object :< cls) => cls -> IO GodotString
 get_name cls
@@ -149,7 +206,10 @@ get_name cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindResource_get_name (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Resource "get_name" '[] (IO GodotString) where
         nodeMethod = Godot.Core.Resource.get_name
@@ -174,7 +234,10 @@ get_path cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindResource_get_path (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Resource "get_path" '[] (IO GodotString) where
         nodeMethod = Godot.Core.Resource.get_path
@@ -197,7 +260,10 @@ get_rid cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindResource_get_rid (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Resource "get_rid" '[] (IO Rid) where
         nodeMethod = Godot.Core.Resource.get_rid
@@ -223,7 +289,10 @@ is_local_to_scene cls
          godot_method_bind_call bindResource_is_local_to_scene (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Resource "is_local_to_scene" '[] (IO Bool)
          where
@@ -250,7 +319,10 @@ set_local_to_scene cls arg1
          godot_method_bind_call bindResource_set_local_to_scene (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Resource "set_local_to_scene" '[Bool] (IO ())
          where
@@ -258,7 +330,7 @@ instance NodeMethod Resource "set_local_to_scene" '[Bool] (IO ())
 
 {-# NOINLINE bindResource_set_name #-}
 
--- | The name of the resource. This is an optional identifier.
+-- | The name of the resource. This is an optional identifier. If @resource_name@ is not empty, its value will be displayed to represent the current resource in the editor inspector. For built-in scripts, the @resource_name@ will be displayed as the tab name in the script editor.
 bindResource_set_name :: MethodBind
 bindResource_set_name
   = unsafePerformIO $
@@ -268,7 +340,7 @@ bindResource_set_name
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The name of the resource. This is an optional identifier.
+-- | The name of the resource. This is an optional identifier. If @resource_name@ is not empty, its value will be displayed to represent the current resource in the editor inspector. For built-in scripts, the @resource_name@ will be displayed as the tab name in the script editor.
 set_name ::
            (Resource :< cls, Object :< cls) => cls -> GodotString -> IO ()
 set_name cls arg1
@@ -276,7 +348,10 @@ set_name cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindResource_set_name (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Resource "set_name" '[GodotString] (IO ())
          where
@@ -302,7 +377,10 @@ set_path cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindResource_set_path (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Resource "set_path" '[GodotString] (IO ())
          where
@@ -332,7 +410,10 @@ setup_local_to_scene cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Resource "setup_local_to_scene" '[] (IO ())
          where
@@ -359,7 +440,10 @@ take_over_path cls arg1
          godot_method_bind_call bindResource_take_over_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Resource "take_over_path" '[GodotString]
            (IO ())

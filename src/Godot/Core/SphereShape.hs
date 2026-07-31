@@ -41,7 +41,10 @@ get_radius cls
          godot_method_bind_call bindSphereShape_get_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereShape "get_radius" '[] (IO Float) where
         nodeMethod = Godot.Core.SphereShape.get_radius
@@ -67,7 +70,10 @@ set_radius cls arg1
          godot_method_bind_call bindSphereShape_set_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereShape "set_radius" '[Float] (IO ()) where
         nodeMethod = Godot.Core.SphereShape.set_radius

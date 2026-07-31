@@ -81,7 +81,10 @@ _get_extensions cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSceneImporter "_get_extensions" '[]
            (IO Array)
@@ -108,7 +111,10 @@ _get_import_flags cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSceneImporter "_get_import_flags" '[]
            (IO Int)
@@ -136,7 +142,7 @@ _import_animation cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorSceneImporter "_import_animation"
            '[GodotString, Int, Int]
@@ -165,7 +171,7 @@ _import_scene cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorSceneImporter "_import_scene"
            '[GodotString, Int, Int]
@@ -197,7 +203,7 @@ import_animation_from_other_importer cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorSceneImporter
            "import_animation_from_other_importer"
@@ -231,7 +237,7 @@ import_scene_from_other_importer cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorSceneImporter
            "import_scene_from_other_importer"

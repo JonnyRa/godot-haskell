@@ -119,7 +119,10 @@ _edit_request_change cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_edit_request_change"
            '[Object, GodotString]
@@ -147,7 +150,10 @@ _feature_profile_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_feature_profile_changed" '[]
            (IO ())
@@ -175,7 +181,10 @@ _filter_changed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_filter_changed"
            '[GodotString]
@@ -205,7 +214,10 @@ _multiple_properties_changed cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_multiple_properties_changed"
            '[PoolStringArray, Array]
@@ -234,7 +246,10 @@ _node_removed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_node_removed" '[Node] (IO ())
          where
@@ -261,7 +276,10 @@ _object_id_selected cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_object_id_selected"
            '[GodotString, Int]
@@ -295,7 +313,10 @@ _property_changed cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_property_changed"
            '[GodotString, GodotVariant, Maybe GodotString, Maybe Bool]
@@ -326,7 +347,10 @@ _property_changed_update_all cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_property_changed_update_all"
            '[GodotString, GodotVariant, GodotString, Bool]
@@ -356,7 +380,10 @@ _property_checked cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_property_checked"
            '[GodotString, Bool]
@@ -385,7 +412,10 @@ _property_keyed cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_property_keyed"
            '[GodotString, Bool]
@@ -415,7 +445,10 @@ _property_keyed_with_value cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_property_keyed_with_value"
            '[GodotString, GodotVariant, Bool]
@@ -444,7 +477,10 @@ _property_selected cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_property_selected"
            '[GodotString, Int]
@@ -473,7 +509,10 @@ _resource_selected cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_resource_selected"
            '[GodotString, Resource]
@@ -501,7 +540,10 @@ _vscroll_changed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "_vscroll_changed" '[Float]
            (IO ())
@@ -530,7 +572,10 @@ refresh cls
          godot_method_bind_call bindEditorInspector_refresh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspector "refresh" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorInspector.refresh

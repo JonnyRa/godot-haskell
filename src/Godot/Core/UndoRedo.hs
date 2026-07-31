@@ -70,7 +70,10 @@ add_do_method cls arg1 arg2 varargs
          godot_method_bind_call bindUndoRedo_add_do_method (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "add_do_method"
            '[Object, GodotString, [Variant 'GodotTy]]
@@ -100,7 +103,10 @@ add_do_property cls arg1 arg2 arg3
          godot_method_bind_call bindUndoRedo_add_do_property (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "add_do_property"
            '[Object, GodotString, GodotVariant]
@@ -129,7 +135,10 @@ add_do_reference cls arg1
          godot_method_bind_call bindUndoRedo_add_do_reference (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "add_do_reference" '[Object] (IO ())
          where
@@ -157,7 +166,10 @@ add_undo_method cls arg1 arg2 varargs
          godot_method_bind_call bindUndoRedo_add_undo_method (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "add_undo_method"
            '[Object, GodotString, [Variant 'GodotTy]]
@@ -187,7 +199,10 @@ add_undo_property cls arg1 arg2 arg3
          godot_method_bind_call bindUndoRedo_add_undo_property (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "add_undo_property"
            '[Object, GodotString, GodotVariant]
@@ -216,7 +231,10 @@ add_undo_reference cls arg1
          godot_method_bind_call bindUndoRedo_add_undo_reference (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "add_undo_reference" '[Object] (IO ())
          where
@@ -245,7 +263,10 @@ clear_history cls arg1
          godot_method_bind_call bindUndoRedo_clear_history (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "clear_history" '[Maybe Bool] (IO ())
          where
@@ -271,7 +292,10 @@ commit_action cls
          godot_method_bind_call bindUndoRedo_commit_action (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "commit_action" '[] (IO ()) where
         nodeMethod = Godot.Core.UndoRedo.commit_action
@@ -301,7 +325,10 @@ create_action cls arg1 arg2
          godot_method_bind_call bindUndoRedo_create_action (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "create_action"
            '[GodotString, Maybe Int]
@@ -331,7 +358,10 @@ get_current_action_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "get_current_action_name" '[]
            (IO GodotString)
@@ -359,7 +389,10 @@ get_version cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUndoRedo_get_version (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "get_version" '[] (IO Int) where
         nodeMethod = Godot.Core.UndoRedo.get_version
@@ -383,7 +416,10 @@ has_redo cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUndoRedo_has_redo (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "has_redo" '[] (IO Bool) where
         nodeMethod = Godot.Core.UndoRedo.has_redo
@@ -407,7 +443,10 @@ has_undo cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUndoRedo_has_undo (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "has_undo" '[] (IO Bool) where
         nodeMethod = Godot.Core.UndoRedo.has_undo
@@ -434,7 +473,10 @@ is_commiting_action cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "is_commiting_action" '[] (IO Bool)
          where
@@ -458,7 +500,10 @@ redo cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUndoRedo_redo (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "redo" '[] (IO Bool) where
         nodeMethod = Godot.Core.UndoRedo.redo
@@ -481,7 +526,10 @@ undo cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUndoRedo_undo (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UndoRedo "undo" '[] (IO Bool) where
         nodeMethod = Godot.Core.UndoRedo.undo

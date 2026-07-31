@@ -56,7 +56,10 @@ get_map_data cls
          godot_method_bind_call bindHeightMapShape_get_map_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HeightMapShape "get_map_data" '[]
            (IO PoolRealArray)
@@ -65,7 +68,7 @@ instance NodeMethod HeightMapShape "get_map_data" '[]
 
 {-# NOINLINE bindHeightMapShape_get_map_depth #-}
 
--- | Depth of the height map data. Changing this will resize the @map_data@.
+-- | Number of vertices in the depth of the height map. Changing this will resize the @map_data@.
 bindHeightMapShape_get_map_depth :: MethodBind
 bindHeightMapShape_get_map_depth
   = unsafePerformIO $
@@ -75,7 +78,7 @@ bindHeightMapShape_get_map_depth
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Depth of the height map data. Changing this will resize the @map_data@.
+-- | Number of vertices in the depth of the height map. Changing this will resize the @map_data@.
 get_map_depth ::
                 (HeightMapShape :< cls, Object :< cls) => cls -> IO Int
 get_map_depth cls
@@ -85,7 +88,10 @@ get_map_depth cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HeightMapShape "get_map_depth" '[] (IO Int)
          where
@@ -93,7 +99,7 @@ instance NodeMethod HeightMapShape "get_map_depth" '[] (IO Int)
 
 {-# NOINLINE bindHeightMapShape_get_map_width #-}
 
--- | Width of the height map data. Changing this will resize the @map_data@.
+-- | Number of vertices in the width of the height map. Changing this will resize the @map_data@.
 bindHeightMapShape_get_map_width :: MethodBind
 bindHeightMapShape_get_map_width
   = unsafePerformIO $
@@ -103,7 +109,7 @@ bindHeightMapShape_get_map_width
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Width of the height map data. Changing this will resize the @map_data@.
+-- | Number of vertices in the width of the height map. Changing this will resize the @map_data@.
 get_map_width ::
                 (HeightMapShape :< cls, Object :< cls) => cls -> IO Int
 get_map_width cls
@@ -113,7 +119,10 @@ get_map_width cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HeightMapShape "get_map_width" '[] (IO Int)
          where
@@ -141,7 +150,10 @@ set_map_data cls arg1
          godot_method_bind_call bindHeightMapShape_set_map_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HeightMapShape "set_map_data" '[PoolRealArray]
            (IO ())
@@ -150,7 +162,7 @@ instance NodeMethod HeightMapShape "set_map_data" '[PoolRealArray]
 
 {-# NOINLINE bindHeightMapShape_set_map_depth #-}
 
--- | Depth of the height map data. Changing this will resize the @map_data@.
+-- | Number of vertices in the depth of the height map. Changing this will resize the @map_data@.
 bindHeightMapShape_set_map_depth :: MethodBind
 bindHeightMapShape_set_map_depth
   = unsafePerformIO $
@@ -160,7 +172,7 @@ bindHeightMapShape_set_map_depth
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Depth of the height map data. Changing this will resize the @map_data@.
+-- | Number of vertices in the depth of the height map. Changing this will resize the @map_data@.
 set_map_depth ::
                 (HeightMapShape :< cls, Object :< cls) => cls -> Int -> IO ()
 set_map_depth cls arg1
@@ -170,7 +182,10 @@ set_map_depth cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HeightMapShape "set_map_depth" '[Int] (IO ())
          where
@@ -178,7 +193,7 @@ instance NodeMethod HeightMapShape "set_map_depth" '[Int] (IO ())
 
 {-# NOINLINE bindHeightMapShape_set_map_width #-}
 
--- | Width of the height map data. Changing this will resize the @map_data@.
+-- | Number of vertices in the width of the height map. Changing this will resize the @map_data@.
 bindHeightMapShape_set_map_width :: MethodBind
 bindHeightMapShape_set_map_width
   = unsafePerformIO $
@@ -188,7 +203,7 @@ bindHeightMapShape_set_map_width
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Width of the height map data. Changing this will resize the @map_data@.
+-- | Number of vertices in the width of the height map. Changing this will resize the @map_data@.
 set_map_width ::
                 (HeightMapShape :< cls, Object :< cls) => cls -> Int -> IO ()
 set_map_width cls arg1
@@ -198,7 +213,10 @@ set_map_width cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HeightMapShape "set_map_width" '[Int] (IO ())
          where

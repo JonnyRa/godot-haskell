@@ -37,7 +37,10 @@ _skin_changed cls
          godot_method_bind_call bindSkinReference__skin_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SkinReference "_skin_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.SkinReference._skin_changed
@@ -61,7 +64,10 @@ get_skeleton cls
          godot_method_bind_call bindSkinReference_get_skeleton (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SkinReference "get_skeleton" '[] (IO Rid) where
         nodeMethod = Godot.Core.SkinReference.get_skeleton
@@ -84,7 +90,7 @@ get_skin cls
          godot_method_bind_call bindSkinReference_get_skin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod SkinReference "get_skin" '[] (IO Skin) where
         nodeMethod = Godot.Core.SkinReference.get_skin

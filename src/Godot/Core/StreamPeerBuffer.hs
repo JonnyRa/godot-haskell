@@ -47,7 +47,10 @@ clear cls
          godot_method_bind_call bindStreamPeerBuffer_clear (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerBuffer "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.StreamPeerBuffer.clear
@@ -72,7 +75,7 @@ duplicate cls
          godot_method_bind_call bindStreamPeerBuffer_duplicate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod StreamPeerBuffer "duplicate" '[]
            (IO StreamPeerBuffer)
@@ -99,7 +102,10 @@ get_data_array cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerBuffer "get_data_array" '[]
            (IO PoolByteArray)
@@ -126,7 +132,10 @@ get_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerBuffer "get_position" '[] (IO Int)
          where
@@ -151,7 +160,10 @@ get_size cls
          godot_method_bind_call bindStreamPeerBuffer_get_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerBuffer "get_size" '[] (IO Int) where
         nodeMethod = Godot.Core.StreamPeerBuffer.get_size
@@ -175,7 +187,10 @@ resize cls arg1
          godot_method_bind_call bindStreamPeerBuffer_resize (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerBuffer "resize" '[Int] (IO ()) where
         nodeMethod = Godot.Core.StreamPeerBuffer.resize
@@ -199,7 +214,10 @@ seek cls arg1
          godot_method_bind_call bindStreamPeerBuffer_seek (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerBuffer "seek" '[Int] (IO ()) where
         nodeMethod = Godot.Core.StreamPeerBuffer.seek
@@ -225,7 +243,10 @@ set_data_array cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerBuffer "set_data_array"
            '[PoolByteArray]

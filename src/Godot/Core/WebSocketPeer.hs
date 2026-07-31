@@ -7,6 +7,7 @@ module Godot.Core.WebSocketPeer
         Godot.Core.WebSocketPeer.close,
         Godot.Core.WebSocketPeer.get_connected_host,
         Godot.Core.WebSocketPeer.get_connected_port,
+        Godot.Core.WebSocketPeer.get_current_outbound_buffered_amount,
         Godot.Core.WebSocketPeer.get_write_mode,
         Godot.Core.WebSocketPeer.is_connected_to_host,
         Godot.Core.WebSocketPeer.set_no_delay,
@@ -52,7 +53,10 @@ close cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindWebSocketPeer_close (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketPeer "close"
            '[Maybe Int, Maybe GodotString]
@@ -80,7 +84,10 @@ get_connected_host cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketPeer "get_connected_host" '[]
            (IO GodotString)
@@ -107,11 +114,50 @@ get_connected_port cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketPeer "get_connected_port" '[] (IO Int)
          where
         nodeMethod = Godot.Core.WebSocketPeer.get_connected_port
+
+{-# NOINLINE bindWebSocketPeer_get_current_outbound_buffered_amount
+             #-}
+
+bindWebSocketPeer_get_current_outbound_buffered_amount ::
+                                                       MethodBind
+bindWebSocketPeer_get_current_outbound_buffered_amount
+  = unsafePerformIO $
+      withCString "WebSocketPeer" $
+        \ clsNamePtr ->
+          withCString "get_current_outbound_buffered_amount" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_current_outbound_buffered_amount ::
+                                       (WebSocketPeer :< cls, Object :< cls) => cls -> IO Int
+get_current_outbound_buffered_amount cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindWebSocketPeer_get_current_outbound_buffered_amount
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod WebSocketPeer
+           "get_current_outbound_buffered_amount"
+           '[]
+           (IO Int)
+         where
+        nodeMethod
+          = Godot.Core.WebSocketPeer.get_current_outbound_buffered_amount
 
 {-# NOINLINE bindWebSocketPeer_get_write_mode #-}
 
@@ -133,7 +179,10 @@ get_write_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketPeer "get_write_mode" '[] (IO Int)
          where
@@ -159,7 +208,10 @@ is_connected_to_host cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketPeer "is_connected_to_host" '[]
            (IO Bool)
@@ -185,7 +237,10 @@ set_no_delay cls arg1
          godot_method_bind_call bindWebSocketPeer_set_no_delay (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketPeer "set_no_delay" '[Bool] (IO ())
          where
@@ -211,7 +266,10 @@ set_write_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketPeer "set_write_mode" '[Int] (IO ())
          where
@@ -237,7 +295,10 @@ was_string_packet cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketPeer "was_string_packet" '[] (IO Bool)
          where

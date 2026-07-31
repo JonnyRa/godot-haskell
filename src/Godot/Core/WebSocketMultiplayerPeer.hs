@@ -45,7 +45,7 @@ get_peer cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod WebSocketMultiplayerPeer "get_peer" '[Int]
            (IO WebSocketPeer)
@@ -74,7 +74,10 @@ set_buffers cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketMultiplayerPeer "set_buffers"
            '[Int, Int, Int, Int]

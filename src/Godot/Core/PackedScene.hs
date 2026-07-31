@@ -62,7 +62,10 @@ _get_bundled_scene cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PackedScene "_get_bundled_scene" '[]
            (IO Dictionary)
@@ -93,7 +96,10 @@ _set_bundled_scene cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PackedScene "_set_bundled_scene" '[Dictionary]
            (IO ())
@@ -121,7 +127,10 @@ can_instance cls
          godot_method_bind_call bindPackedScene_can_instance (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PackedScene "can_instance" '[] (IO Bool) where
         nodeMethod = Godot.Core.PackedScene.can_instance
@@ -147,7 +156,7 @@ get_state cls
          godot_method_bind_call bindPackedScene_get_state (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod PackedScene "get_state" '[] (IO SceneState)
          where
@@ -174,7 +183,7 @@ instance' cls arg1
          godot_method_bind_call bindPackedScene_instance' (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod PackedScene "instance" '[Maybe Int] (IO Node)
          where
@@ -199,7 +208,10 @@ pack cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPackedScene_pack (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PackedScene "pack" '[Node] (IO Int) where
         nodeMethod = Godot.Core.PackedScene.pack

@@ -57,7 +57,10 @@ _get_default_input_values cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptNode "_get_default_input_values"
            '[]
@@ -86,7 +89,10 @@ _set_default_input_values cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptNode "_set_default_input_values"
            '[Array]
@@ -115,7 +121,7 @@ get_default_input_value cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod VisualScriptNode "get_default_input_value"
            '[Int]
@@ -143,7 +149,7 @@ get_visual_script cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod VisualScriptNode "get_visual_script" '[]
            (IO VisualScript)
@@ -170,7 +176,10 @@ ports_changed_notify cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptNode "ports_changed_notify" '[]
            (IO ())
@@ -198,7 +207,10 @@ set_default_input_value cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptNode "set_default_input_value"
            '[Int, GodotVariant]

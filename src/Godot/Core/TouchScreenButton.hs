@@ -126,7 +126,10 @@ _input cls arg1
          godot_method_bind_call bindTouchScreenButton__input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "_input" '[InputEvent]
            (IO ())
@@ -155,7 +158,10 @@ get_action cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "get_action" '[]
            (IO GodotString)
@@ -184,7 +190,7 @@ get_bitmask cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TouchScreenButton "get_bitmask" '[] (IO BitMap)
          where
@@ -211,7 +217,7 @@ get_shape cls
          godot_method_bind_call bindTouchScreenButton_get_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TouchScreenButton "get_shape" '[] (IO Shape2D)
          where
@@ -239,7 +245,7 @@ get_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TouchScreenButton "get_texture" '[]
            (IO Texture)
@@ -268,7 +274,7 @@ get_texture_pressed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TouchScreenButton "get_texture_pressed" '[]
            (IO Texture)
@@ -297,7 +303,10 @@ get_visibility_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "get_visibility_mode" '[]
            (IO Int)
@@ -306,7 +315,8 @@ instance NodeMethod TouchScreenButton "get_visibility_mode" '[]
 
 {-# NOINLINE bindTouchScreenButton_is_passby_press_enabled #-}
 
--- | If @true@, pass-by presses are enabled.
+-- | If @true@, the @signal pressed@ and @signal released@ signals are emitted whenever a pressed finger goes in and out of the button, even if the pressure started outside the active area of the button.
+--   			__Note:__ This is a "pass-by" (not "bypass") press mode.
 bindTouchScreenButton_is_passby_press_enabled :: MethodBind
 bindTouchScreenButton_is_passby_press_enabled
   = unsafePerformIO $
@@ -316,7 +326,8 @@ bindTouchScreenButton_is_passby_press_enabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, pass-by presses are enabled.
+-- | If @true@, the @signal pressed@ and @signal released@ signals are emitted whenever a pressed finger goes in and out of the button, even if the pressure started outside the active area of the button.
+--   			__Note:__ This is a "pass-by" (not "bypass") press mode.
 is_passby_press_enabled ::
                           (TouchScreenButton :< cls, Object :< cls) => cls -> IO Bool
 is_passby_press_enabled cls
@@ -327,7 +338,10 @@ is_passby_press_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "is_passby_press_enabled" '[]
            (IO Bool)
@@ -356,7 +370,10 @@ is_pressed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "is_pressed" '[] (IO Bool)
          where
@@ -384,7 +401,10 @@ is_shape_centered cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "is_shape_centered" '[]
            (IO Bool)
@@ -413,7 +433,10 @@ is_shape_visible cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "is_shape_visible" '[]
            (IO Bool)
@@ -443,7 +466,10 @@ set_action cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "set_action" '[GodotString]
            (IO ())
@@ -472,7 +498,10 @@ set_bitmask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "set_bitmask" '[BitMap]
            (IO ())
@@ -481,7 +510,8 @@ instance NodeMethod TouchScreenButton "set_bitmask" '[BitMap]
 
 {-# NOINLINE bindTouchScreenButton_set_passby_press #-}
 
--- | If @true@, pass-by presses are enabled.
+-- | If @true@, the @signal pressed@ and @signal released@ signals are emitted whenever a pressed finger goes in and out of the button, even if the pressure started outside the active area of the button.
+--   			__Note:__ This is a "pass-by" (not "bypass") press mode.
 bindTouchScreenButton_set_passby_press :: MethodBind
 bindTouchScreenButton_set_passby_press
   = unsafePerformIO $
@@ -491,7 +521,8 @@ bindTouchScreenButton_set_passby_press
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, pass-by presses are enabled.
+-- | If @true@, the @signal pressed@ and @signal released@ signals are emitted whenever a pressed finger goes in and out of the button, even if the pressure started outside the active area of the button.
+--   			__Note:__ This is a "pass-by" (not "bypass") press mode.
 set_passby_press ::
                    (TouchScreenButton :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_passby_press cls arg1
@@ -501,7 +532,10 @@ set_passby_press cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "set_passby_press" '[Bool]
            (IO ())
@@ -530,7 +564,10 @@ set_shape cls arg1
          godot_method_bind_call bindTouchScreenButton_set_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "set_shape" '[Shape2D]
            (IO ())
@@ -559,7 +596,10 @@ set_shape_centered cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "set_shape_centered" '[Bool]
            (IO ())
@@ -588,7 +628,10 @@ set_shape_visible cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "set_shape_visible" '[Bool]
            (IO ())
@@ -618,7 +661,10 @@ set_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "set_texture" '[Texture]
            (IO ())
@@ -648,7 +694,10 @@ set_texture_pressed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "set_texture_pressed"
            '[Texture]
@@ -678,7 +727,10 @@ set_visibility_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TouchScreenButton "set_visibility_mode" '[Int]
            (IO ())

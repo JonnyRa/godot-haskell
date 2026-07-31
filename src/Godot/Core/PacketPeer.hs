@@ -60,7 +60,10 @@ get_available_packet_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PacketPeer "get_available_packet_count" '[]
            (IO Int)
@@ -91,7 +94,10 @@ get_encode_buffer_max_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PacketPeer "get_encode_buffer_max_size" '[]
            (IO Int)
@@ -119,7 +125,10 @@ get_packet cls
          godot_method_bind_call bindPacketPeer_get_packet (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PacketPeer "get_packet" '[] (IO PoolByteArray)
          where
@@ -146,7 +155,10 @@ get_packet_error cls
          godot_method_bind_call bindPacketPeer_get_packet_error (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PacketPeer "get_packet_error" '[] (IO Int)
          where
@@ -175,7 +187,7 @@ get_var cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPacketPeer_get_var (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod PacketPeer "get_var" '[Maybe Bool]
            (IO GodotVariant)
@@ -208,7 +220,10 @@ is_object_decoding_allowed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PacketPeer "is_object_decoding_allowed" '[]
            (IO Bool)
@@ -237,7 +252,10 @@ put_packet cls arg1
          godot_method_bind_call bindPacketPeer_put_packet (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PacketPeer "put_packet" '[PoolByteArray]
            (IO Int)
@@ -266,7 +284,10 @@ put_var cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPacketPeer_put_var (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PacketPeer "put_var"
            '[GodotVariant, Maybe Bool]
@@ -300,7 +321,10 @@ set_allow_object_decoding cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PacketPeer "set_allow_object_decoding" '[Bool]
            (IO ())
@@ -331,7 +355,10 @@ set_encode_buffer_max_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PacketPeer "set_encode_buffer_max_size" '[Int]
            (IO ())

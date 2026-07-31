@@ -50,7 +50,10 @@ finish cls
          godot_method_bind_call bindHashingContext_finish (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HashingContext "finish" '[] (IO PoolByteArray)
          where
@@ -76,7 +79,10 @@ start cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindHashingContext_start (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HashingContext "start" '[Int] (IO Int) where
         nodeMethod = Godot.Core.HashingContext.start
@@ -103,7 +109,10 @@ update cls arg1
          godot_method_bind_call bindHashingContext_update (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HashingContext "update" '[PoolByteArray]
            (IO Int)

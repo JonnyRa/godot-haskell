@@ -20,13 +20,16 @@ module Godot.Core.LineEdit
         Godot.Core.LineEdit.cursor_get_blink_speed,
         Godot.Core.LineEdit.cursor_set_blink_enabled,
         Godot.Core.LineEdit.cursor_set_blink_speed,
-        Godot.Core.LineEdit.deselect, Godot.Core.LineEdit.get_align,
+        Godot.Core.LineEdit.delete_char_at_cursor,
+        Godot.Core.LineEdit.delete_text, Godot.Core.LineEdit.deselect,
+        Godot.Core.LineEdit.get_align,
         Godot.Core.LineEdit.get_cursor_position,
         Godot.Core.LineEdit.get_expand_to_text_length,
         Godot.Core.LineEdit.get_max_length, Godot.Core.LineEdit.get_menu,
         Godot.Core.LineEdit.get_placeholder,
         Godot.Core.LineEdit.get_placeholder_alpha,
         Godot.Core.LineEdit.get_right_icon,
+        Godot.Core.LineEdit.get_scroll_offset,
         Godot.Core.LineEdit.get_secret_character,
         Godot.Core.LineEdit.get_text,
         Godot.Core.LineEdit.is_clear_button_enabled,
@@ -34,6 +37,7 @@ module Godot.Core.LineEdit
         Godot.Core.LineEdit.is_editable, Godot.Core.LineEdit.is_secret,
         Godot.Core.LineEdit.is_selecting_enabled,
         Godot.Core.LineEdit.is_shortcut_keys_enabled,
+        Godot.Core.LineEdit.is_virtual_keyboard_enabled,
         Godot.Core.LineEdit.menu_option, Godot.Core.LineEdit.select,
         Godot.Core.LineEdit.select_all, Godot.Core.LineEdit.set_align,
         Godot.Core.LineEdit.set_clear_button_enabled,
@@ -48,7 +52,8 @@ module Godot.Core.LineEdit
         Godot.Core.LineEdit.set_secret_character,
         Godot.Core.LineEdit.set_selecting_enabled,
         Godot.Core.LineEdit.set_shortcut_keys_enabled,
-        Godot.Core.LineEdit.set_text)
+        Godot.Core.LineEdit.set_text,
+        Godot.Core.LineEdit.set_virtual_keyboard_enabled)
        where
 import Data.Coerce
 import Foreign.C
@@ -98,12 +103,12 @@ _ALIGN_LEFT = 0
 _ALIGN_CENTER :: Int
 _ALIGN_CENTER = 1
 
--- | Emitted when trying to append text that would overflow the @max_length@.
+-- | Emitted when appending text that overflows the @max_length@. The appended text is truncated to fit @max_length@, and the part that couldn't fit is passed as the @rejected_substring@ argument.
 sig_text_change_rejected :: Godot.Internal.Dispatch.Signal LineEdit
 sig_text_change_rejected
   = Godot.Internal.Dispatch.Signal "text_change_rejected"
 
-instance NodeSignal LineEdit "text_change_rejected" '[]
+instance NodeSignal LineEdit "text_change_rejected" '[GodotString]
 
 -- | Emitted when the text changes.
 sig_text_changed :: Godot.Internal.Dispatch.Signal LineEdit
@@ -203,6 +208,13 @@ instance NodeProperty LineEdit "shortcut_keys_enabled" Bool 'False
 instance NodeProperty LineEdit "text" GodotString 'False where
         nodeProperty = (get_text, wrapDroppingSetter set_text, Nothing)
 
+instance NodeProperty LineEdit "virtual_keyboard_enabled" Bool
+           'False
+         where
+        nodeProperty
+          = (is_virtual_keyboard_enabled,
+             wrapDroppingSetter set_virtual_keyboard_enabled, Nothing)
+
 {-# NOINLINE bindLineEdit__editor_settings_changed #-}
 
 bindLineEdit__editor_settings_changed :: MethodBind
@@ -223,7 +235,10 @@ _editor_settings_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "_editor_settings_changed" '[] (IO ())
          where
@@ -247,7 +262,10 @@ _gui_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit__gui_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "_gui_input" '[InputEvent] (IO ())
          where
@@ -271,7 +289,10 @@ _text_changed cls
          godot_method_bind_call bindLineEdit__text_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "_text_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.LineEdit._text_changed
@@ -295,7 +316,10 @@ _toggle_draw_caret cls
          godot_method_bind_call bindLineEdit__toggle_draw_caret (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "_toggle_draw_caret" '[] (IO ()) where
         nodeMethod = Godot.Core.LineEdit._toggle_draw_caret
@@ -321,7 +345,10 @@ append_at_cursor cls arg1
          godot_method_bind_call bindLineEdit_append_at_cursor (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "append_at_cursor" '[GodotString]
            (IO ())
@@ -346,7 +373,10 @@ clear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_clear (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.LineEdit.clear
@@ -373,7 +403,10 @@ cursor_get_blink_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "cursor_get_blink_enabled" '[]
            (IO Bool)
@@ -402,7 +435,10 @@ cursor_get_blink_speed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "cursor_get_blink_speed" '[]
            (IO Float)
@@ -431,7 +467,10 @@ cursor_set_blink_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "cursor_set_blink_enabled" '[Bool]
            (IO ())
@@ -460,12 +499,75 @@ cursor_set_blink_speed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "cursor_set_blink_speed" '[Float]
            (IO ())
          where
         nodeMethod = Godot.Core.LineEdit.cursor_set_blink_speed
+
+{-# NOINLINE bindLineEdit_delete_char_at_cursor #-}
+
+-- | Deletes one character at the cursor's current position (equivalent to pressing the @Delete@ key).
+bindLineEdit_delete_char_at_cursor :: MethodBind
+bindLineEdit_delete_char_at_cursor
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "delete_char_at_cursor" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Deletes one character at the cursor's current position (equivalent to pressing the @Delete@ key).
+delete_char_at_cursor ::
+                        (LineEdit :< cls, Object :< cls) => cls -> IO ()
+delete_char_at_cursor cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_delete_char_at_cursor
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "delete_char_at_cursor" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.LineEdit.delete_char_at_cursor
+
+{-# NOINLINE bindLineEdit_delete_text #-}
+
+-- | Deletes a section of the @text@ going from position @from_column@ to @to_column@. Both parameters should be within the text's length.
+bindLineEdit_delete_text :: MethodBind
+bindLineEdit_delete_text
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "delete_text" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Deletes a section of the @text@ going from position @from_column@ to @to_column@. Both parameters should be within the text's length.
+delete_text ::
+              (LineEdit :< cls, Object :< cls) => cls -> Int -> Int -> IO ()
+delete_text cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_delete_text (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "delete_text" '[Int, Int] (IO ())
+         where
+        nodeMethod = Godot.Core.LineEdit.delete_text
 
 {-# NOINLINE bindLineEdit_deselect #-}
 
@@ -486,7 +588,10 @@ deselect cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_deselect (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "deselect" '[] (IO ()) where
         nodeMethod = Godot.Core.LineEdit.deselect
@@ -510,7 +615,10 @@ get_align cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_get_align (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "get_align" '[] (IO Int) where
         nodeMethod = Godot.Core.LineEdit.get_align
@@ -537,7 +645,10 @@ get_cursor_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "get_cursor_position" '[] (IO Int)
          where
@@ -565,7 +676,10 @@ get_expand_to_text_length cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "get_expand_to_text_length" '[]
            (IO Bool)
@@ -575,6 +689,20 @@ instance NodeMethod LineEdit "get_expand_to_text_length" '[]
 {-# NOINLINE bindLineEdit_get_max_length #-}
 
 -- | Maximum amount of characters that can be entered inside the @LineEdit@. If @0@, there is no limit.
+--   			When a limit is defined, characters that would exceed @max_length@ are truncated. This happens both for existing @text@ contents when setting the max length, or for new text inserted in the @LineEdit@, including pasting. If any input text is truncated, the @signal text_change_rejected@ signal is emitted with the truncated substring as parameter.
+--   			__Example:__
+--   			
+--   @
+--   
+--   			text = "Hello world"
+--   			max_length = 5
+--   			# `text` becomes "Hello".
+--   			max_length = 10
+--   			text += " goodbye"
+--   			# `text` becomes "Hello good".
+--   			# `text_change_rejected` is emitted with "bye" as parameter.
+--   			
+--   @
 bindLineEdit_get_max_length :: MethodBind
 bindLineEdit_get_max_length
   = unsafePerformIO $
@@ -585,6 +713,20 @@ bindLineEdit_get_max_length
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Maximum amount of characters that can be entered inside the @LineEdit@. If @0@, there is no limit.
+--   			When a limit is defined, characters that would exceed @max_length@ are truncated. This happens both for existing @text@ contents when setting the max length, or for new text inserted in the @LineEdit@, including pasting. If any input text is truncated, the @signal text_change_rejected@ signal is emitted with the truncated substring as parameter.
+--   			__Example:__
+--   			
+--   @
+--   
+--   			text = "Hello world"
+--   			max_length = 5
+--   			# `text` becomes "Hello".
+--   			max_length = 10
+--   			text += " goodbye"
+--   			# `text` becomes "Hello good".
+--   			# `text_change_rejected` is emitted with "bye" as parameter.
+--   			
+--   @
 get_max_length :: (LineEdit :< cls, Object :< cls) => cls -> IO Int
 get_max_length cls
   = withVariantArray []
@@ -592,7 +734,10 @@ get_max_length cls
          godot_method_bind_call bindLineEdit_get_max_length (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "get_max_length" '[] (IO Int) where
         nodeMethod = Godot.Core.LineEdit.get_max_length
@@ -600,6 +745,7 @@ instance NodeMethod LineEdit "get_max_length" '[] (IO Int) where
 {-# NOINLINE bindLineEdit_get_menu #-}
 
 -- | Returns the @PopupMenu@ of this @LineEdit@. By default, this menu is displayed when right-clicking on the @LineEdit@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindLineEdit_get_menu :: MethodBind
 bindLineEdit_get_menu
   = unsafePerformIO $
@@ -610,13 +756,14 @@ bindLineEdit_get_menu
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the @PopupMenu@ of this @LineEdit@. By default, this menu is displayed when right-clicking on the @LineEdit@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_menu :: (LineEdit :< cls, Object :< cls) => cls -> IO PopupMenu
 get_menu cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_get_menu (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod LineEdit "get_menu" '[] (IO PopupMenu) where
         nodeMethod = Godot.Core.LineEdit.get_menu
@@ -642,7 +789,10 @@ get_placeholder cls
          godot_method_bind_call bindLineEdit_get_placeholder (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "get_placeholder" '[] (IO GodotString)
          where
@@ -670,7 +820,10 @@ get_placeholder_alpha cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "get_placeholder_alpha" '[] (IO Float)
          where
@@ -697,11 +850,40 @@ get_right_icon cls
          godot_method_bind_call bindLineEdit_get_right_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod LineEdit "get_right_icon" '[] (IO Texture)
          where
         nodeMethod = Godot.Core.LineEdit.get_right_icon
+
+{-# NOINLINE bindLineEdit_get_scroll_offset #-}
+
+-- | Returns the scroll offset due to @caret_position@, as a number of characters.
+bindLineEdit_get_scroll_offset :: MethodBind
+bindLineEdit_get_scroll_offset
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "get_scroll_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the scroll offset due to @caret_position@, as a number of characters.
+get_scroll_offset ::
+                    (LineEdit :< cls, Object :< cls) => cls -> IO Int
+get_scroll_offset cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_get_scroll_offset (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "get_scroll_offset" '[] (IO Int) where
+        nodeMethod = Godot.Core.LineEdit.get_scroll_offset
 
 {-# NOINLINE bindLineEdit_get_secret_character #-}
 
@@ -725,7 +907,10 @@ get_secret_character cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "get_secret_character" '[]
            (IO GodotString)
@@ -754,7 +939,10 @@ get_text cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_get_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "get_text" '[] (IO GodotString) where
         nodeMethod = Godot.Core.LineEdit.get_text
@@ -781,7 +969,10 @@ is_clear_button_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "is_clear_button_enabled" '[]
            (IO Bool)
@@ -810,7 +1001,10 @@ is_context_menu_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "is_context_menu_enabled" '[]
            (IO Bool)
@@ -836,7 +1030,10 @@ is_editable cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_is_editable (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "is_editable" '[] (IO Bool) where
         nodeMethod = Godot.Core.LineEdit.is_editable
@@ -860,7 +1057,10 @@ is_secret cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_is_secret (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "is_secret" '[] (IO Bool) where
         nodeMethod = Godot.Core.LineEdit.is_secret
@@ -887,7 +1087,10 @@ is_selecting_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "is_selecting_enabled" '[] (IO Bool)
          where
@@ -915,12 +1118,47 @@ is_shortcut_keys_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "is_shortcut_keys_enabled" '[]
            (IO Bool)
          where
         nodeMethod = Godot.Core.LineEdit.is_shortcut_keys_enabled
+
+{-# NOINLINE bindLineEdit_is_virtual_keyboard_enabled #-}
+
+-- | If @true@, the native virtual keyboard is shown when focused on platforms that support it.
+bindLineEdit_is_virtual_keyboard_enabled :: MethodBind
+bindLineEdit_is_virtual_keyboard_enabled
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "is_virtual_keyboard_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the native virtual keyboard is shown when focused on platforms that support it.
+is_virtual_keyboard_enabled ::
+                              (LineEdit :< cls, Object :< cls) => cls -> IO Bool
+is_virtual_keyboard_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_is_virtual_keyboard_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "is_virtual_keyboard_enabled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.LineEdit.is_virtual_keyboard_enabled
 
 {-# NOINLINE bindLineEdit_menu_option #-}
 
@@ -942,7 +1180,10 @@ menu_option cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_menu_option (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "menu_option" '[Int] (IO ()) where
         nodeMethod = Godot.Core.LineEdit.menu_option
@@ -987,7 +1228,10 @@ select cls arg1 arg2
        maybe (VariantInt (-1)) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_select (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "select" '[Maybe Int, Maybe Int]
            (IO ())
@@ -1013,7 +1257,10 @@ select_all cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_select_all (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "select_all" '[] (IO ()) where
         nodeMethod = Godot.Core.LineEdit.select_all
@@ -1038,7 +1285,10 @@ set_align cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_set_align (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_align" '[Int] (IO ()) where
         nodeMethod = Godot.Core.LineEdit.set_align
@@ -1065,7 +1315,10 @@ set_clear_button_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_clear_button_enabled" '[Bool]
            (IO ())
@@ -1094,7 +1347,10 @@ set_context_menu_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_context_menu_enabled" '[Bool]
            (IO ())
@@ -1123,7 +1379,10 @@ set_cursor_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_cursor_position" '[Int] (IO ())
          where
@@ -1150,7 +1409,10 @@ set_editable cls arg1
          godot_method_bind_call bindLineEdit_set_editable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_editable" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.LineEdit.set_editable
@@ -1177,7 +1439,10 @@ set_expand_to_text_length cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_expand_to_text_length" '[Bool]
            (IO ())
@@ -1187,6 +1452,20 @@ instance NodeMethod LineEdit "set_expand_to_text_length" '[Bool]
 {-# NOINLINE bindLineEdit_set_max_length #-}
 
 -- | Maximum amount of characters that can be entered inside the @LineEdit@. If @0@, there is no limit.
+--   			When a limit is defined, characters that would exceed @max_length@ are truncated. This happens both for existing @text@ contents when setting the max length, or for new text inserted in the @LineEdit@, including pasting. If any input text is truncated, the @signal text_change_rejected@ signal is emitted with the truncated substring as parameter.
+--   			__Example:__
+--   			
+--   @
+--   
+--   			text = "Hello world"
+--   			max_length = 5
+--   			# `text` becomes "Hello".
+--   			max_length = 10
+--   			text += " goodbye"
+--   			# `text` becomes "Hello good".
+--   			# `text_change_rejected` is emitted with "bye" as parameter.
+--   			
+--   @
 bindLineEdit_set_max_length :: MethodBind
 bindLineEdit_set_max_length
   = unsafePerformIO $
@@ -1197,6 +1476,20 @@ bindLineEdit_set_max_length
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Maximum amount of characters that can be entered inside the @LineEdit@. If @0@, there is no limit.
+--   			When a limit is defined, characters that would exceed @max_length@ are truncated. This happens both for existing @text@ contents when setting the max length, or for new text inserted in the @LineEdit@, including pasting. If any input text is truncated, the @signal text_change_rejected@ signal is emitted with the truncated substring as parameter.
+--   			__Example:__
+--   			
+--   @
+--   
+--   			text = "Hello world"
+--   			max_length = 5
+--   			# `text` becomes "Hello".
+--   			max_length = 10
+--   			text += " goodbye"
+--   			# `text` becomes "Hello good".
+--   			# `text_change_rejected` is emitted with "bye" as parameter.
+--   			
+--   @
 set_max_length ::
                  (LineEdit :< cls, Object :< cls) => cls -> Int -> IO ()
 set_max_length cls arg1
@@ -1205,7 +1498,10 @@ set_max_length cls arg1
          godot_method_bind_call bindLineEdit_set_max_length (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_max_length" '[Int] (IO ()) where
         nodeMethod = Godot.Core.LineEdit.set_max_length
@@ -1231,7 +1527,10 @@ set_placeholder cls arg1
          godot_method_bind_call bindLineEdit_set_placeholder (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_placeholder" '[GodotString]
            (IO ())
@@ -1260,7 +1559,10 @@ set_placeholder_alpha cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_placeholder_alpha" '[Float]
            (IO ())
@@ -1288,7 +1590,10 @@ set_right_icon cls arg1
          godot_method_bind_call bindLineEdit_set_right_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_right_icon" '[Texture] (IO ())
          where
@@ -1314,7 +1619,10 @@ set_secret cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_set_secret (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_secret" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.LineEdit.set_secret
@@ -1341,7 +1649,10 @@ set_secret_character cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_secret_character" '[GodotString]
            (IO ())
@@ -1370,7 +1681,10 @@ set_selecting_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_selecting_enabled" '[Bool]
            (IO ())
@@ -1399,7 +1713,10 @@ set_shortcut_keys_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_shortcut_keys_enabled" '[Bool]
            (IO ())
@@ -1428,8 +1745,43 @@ set_text cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineEdit_set_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineEdit "set_text" '[GodotString] (IO ())
          where
         nodeMethod = Godot.Core.LineEdit.set_text
+
+{-# NOINLINE bindLineEdit_set_virtual_keyboard_enabled #-}
+
+-- | If @true@, the native virtual keyboard is shown when focused on platforms that support it.
+bindLineEdit_set_virtual_keyboard_enabled :: MethodBind
+bindLineEdit_set_virtual_keyboard_enabled
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "set_virtual_keyboard_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the native virtual keyboard is shown when focused on platforms that support it.
+set_virtual_keyboard_enabled ::
+                               (LineEdit :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_virtual_keyboard_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_set_virtual_keyboard_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "set_virtual_keyboard_enabled" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.LineEdit.set_virtual_keyboard_enabled

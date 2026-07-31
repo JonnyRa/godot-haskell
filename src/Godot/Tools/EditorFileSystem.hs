@@ -36,7 +36,7 @@ sig_filesystem_changed
 
 instance NodeSignal EditorFileSystem "filesystem_changed" '[]
 
--- | Remitted if a resource is reimported.
+-- | Emitted if a resource is reimported.
 sig_resources_reimported ::
                          Godot.Internal.Dispatch.Signal EditorFileSystem
 sig_resources_reimported
@@ -64,7 +64,7 @@ instance NodeSignal EditorFileSystem "sources_changed" '[Bool]
 
 {-# NOINLINE bindEditorFileSystem_get_file_type #-}
 
--- | Gets the type of the file, given the full path.
+-- | Returns the resource type of the file, given the full path. This returns a string such as @"Resource"@ or @"GDScript"@, @i@not@/i@ a file extension such as @".gd"@.
 bindEditorFileSystem_get_file_type :: MethodBind
 bindEditorFileSystem_get_file_type
   = unsafePerformIO $
@@ -74,7 +74,7 @@ bindEditorFileSystem_get_file_type
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the type of the file, given the full path.
+-- | Returns the resource type of the file, given the full path. This returns a string such as @"Resource"@ or @"GDScript"@, @i@not@/i@ a file extension such as @".gd"@.
 get_file_type ::
                 (EditorFileSystem :< cls, Object :< cls) =>
                 cls -> GodotString -> IO GodotString
@@ -85,7 +85,10 @@ get_file_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystem "get_file_type" '[GodotString]
            (IO GodotString)
@@ -115,7 +118,7 @@ get_filesystem cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorFileSystem "get_filesystem" '[]
            (IO EditorFileSystemDirectory)
@@ -145,7 +148,7 @@ get_filesystem_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorFileSystem "get_filesystem_path"
            '[GodotString]
@@ -175,7 +178,10 @@ get_scanning_progress cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystem "get_scanning_progress" '[]
            (IO Float)
@@ -204,7 +210,10 @@ is_scanning cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystem "is_scanning" '[] (IO Bool)
          where
@@ -230,7 +239,10 @@ scan cls
          godot_method_bind_call bindEditorFileSystem_scan (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystem "scan" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorFileSystem.scan
@@ -257,7 +269,10 @@ scan_sources cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystem "scan_sources" '[] (IO ())
          where
@@ -286,7 +301,10 @@ update_file cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystem "update_file" '[GodotString]
            (IO ())
@@ -315,7 +333,10 @@ update_script_classes cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystem "update_script_classes" '[]
            (IO ())

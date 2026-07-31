@@ -20,6 +20,7 @@ import Godot.Core.Reference()
 {-# NOINLINE bindMutex_lock #-}
 
 -- | Locks this @Mutex@, blocks until it is unlocked by the current owner.
+--   				__Note:__ This function returns without blocking if the thread already has ownership of the mutex.
 bindMutex_lock :: MethodBind
 bindMutex_lock
   = unsafePerformIO $
@@ -30,12 +31,15 @@ bindMutex_lock
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Locks this @Mutex@, blocks until it is unlocked by the current owner.
+--   				__Note:__ This function returns without blocking if the thread already has ownership of the mutex.
 lock :: (Mutex :< cls, Object :< cls) => cls -> IO ()
 lock cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMutex_lock (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mutex "lock" '[] (IO ()) where
         nodeMethod = Godot.Core.Mutex.lock
@@ -43,6 +47,7 @@ instance NodeMethod Mutex "lock" '[] (IO ()) where
 {-# NOINLINE bindMutex_try_lock #-}
 
 -- | Tries locking this @Mutex@, but does not block. Returns @OK@ on success, @ERR_BUSY@ otherwise.
+--   				__Note:__ This function returns @OK@ if the thread already has ownership of the mutex.
 bindMutex_try_lock :: MethodBind
 bindMutex_try_lock
   = unsafePerformIO $
@@ -53,12 +58,16 @@ bindMutex_try_lock
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Tries locking this @Mutex@, but does not block. Returns @OK@ on success, @ERR_BUSY@ otherwise.
+--   				__Note:__ This function returns @OK@ if the thread already has ownership of the mutex.
 try_lock :: (Mutex :< cls, Object :< cls) => cls -> IO Int
 try_lock cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMutex_try_lock (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mutex "try_lock" '[] (IO Int) where
         nodeMethod = Godot.Core.Mutex.try_lock
@@ -66,6 +75,7 @@ instance NodeMethod Mutex "try_lock" '[] (IO Int) where
 {-# NOINLINE bindMutex_unlock #-}
 
 -- | Unlocks this @Mutex@, leaving it to other threads.
+--   				__Note:__ If a thread called @method lock@ or @method try_lock@ multiple times while already having ownership of the mutex, it must also call @method unlock@ the same number of times in order to unlock it correctly.
 bindMutex_unlock :: MethodBind
 bindMutex_unlock
   = unsafePerformIO $
@@ -76,12 +86,15 @@ bindMutex_unlock
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Unlocks this @Mutex@, leaving it to other threads.
+--   				__Note:__ If a thread called @method lock@ or @method try_lock@ multiple times while already having ownership of the mutex, it must also call @method unlock@ the same number of times in order to unlock it correctly.
 unlock :: (Mutex :< cls, Object :< cls) => cls -> IO ()
 unlock cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMutex_unlock (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mutex "unlock" '[] (IO ()) where
         nodeMethod = Godot.Core.Mutex.unlock

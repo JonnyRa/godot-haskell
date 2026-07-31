@@ -3,7 +3,9 @@
   MultiParamTypeClasses #-}
 module Godot.Core.VisualServer
        (Godot.Core.VisualServer._ARRAY_COMPRESS_WEIGHTS,
+        Godot.Core.VisualServer._LIGHT_PARAM_SIZE,
         Godot.Core.VisualServer._ARRAY_FLAG_USE_16_BIT_BONES,
+        Godot.Core.VisualServer._INFO_2D_DRAW_CALLS_IN_FRAME,
         Godot.Core.VisualServer._VIEWPORT_UPDATE_ALWAYS,
         Godot.Core.VisualServer._ARRAY_FORMAT_INDEX,
         Godot.Core.VisualServer._INFO_SURFACE_CHANGES_IN_FRAME,
@@ -17,6 +19,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._ARRAY_COMPRESS_NORMAL,
         Godot.Core.VisualServer._ARRAY_FORMAT_COLOR,
         Godot.Core.VisualServer._VIEWPORT_CLEAR_NEVER,
+        Godot.Core.VisualServer._ARRAY_FLAG_USE_OCTAHEDRAL_COMPRESSION,
         Godot.Core.VisualServer._TEXTURE_TYPE_2D_ARRAY,
         Godot.Core.VisualServer._INSTANCE_GEOMETRY_MASK,
         Godot.Core.VisualServer._VIEWPORT_USAGE_2D,
@@ -36,9 +39,11 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._VIEWPORT_DEBUG_DRAW_DISABLED,
         Godot.Core.VisualServer._CANVAS_ITEM_Z_MIN,
         Godot.Core.VisualServer._VIEWPORT_MSAA_8X,
+        Godot.Core.VisualServer._LIGHT_BAKE_ALL,
         Godot.Core.VisualServer._INFO_MATERIAL_CHANGES_IN_FRAME,
         Godot.Core.VisualServer._MAX_GLOW_LEVELS,
         Godot.Core.VisualServer._LIGHT_OMNI_SHADOW_DETAIL_HORIZONTAL,
+        Godot.Core.VisualServer._VIEWPORT_RENDER_INFO_2D_DRAW_CALLS_IN_FRAME,
         Godot.Core.VisualServer._TEXTURE_TYPE_CUBEMAP,
         Godot.Core.VisualServer._VIEWPORT_RENDER_INFO_SURFACE_CHANGES_IN_FRAME,
         Godot.Core.VisualServer._ARRAY_COMPRESS_TEX_UV,
@@ -116,7 +121,9 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._LIGHT_PARAM_SHADOW_SPLIT_3_OFFSET,
         Godot.Core.VisualServer._VIEWPORT_RENDER_INFO_VERTICES_IN_FRAME,
         Godot.Core.VisualServer._MULTIMESH_CUSTOM_DATA_NONE,
+        Godot.Core.VisualServer._ENV_TONE_MAPPER_ACES_FITTED,
         Godot.Core.VisualServer._LIGHT_OMNI,
+        Godot.Core.VisualServer._INFO_2D_ITEMS_IN_FRAME,
         Godot.Core.VisualServer._ENV_BG_MAX,
         Godot.Core.VisualServer._INSTANCE_REFLECTION_PROBE,
         Godot.Core.VisualServer._INFO_TEXTURE_MEM_USED,
@@ -141,6 +148,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._PRIMITIVE_MAX,
         Godot.Core.VisualServer._LIGHT_PARAM_CONTACT_SHADOW_SIZE,
         Godot.Core.VisualServer._INSTANCE_MAX,
+        Godot.Core.VisualServer._VIEWPORT_RENDER_INFO_2D_ITEMS_IN_FRAME,
         Godot.Core.VisualServer._ENV_SSAO_BLUR_3x3,
         Godot.Core.VisualServer._ARRAY_WEIGHTS,
         Godot.Core.VisualServer._LIGHT_PARAM_MAX,
@@ -191,6 +199,8 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME,
         Godot.Core.VisualServer._ARRAY_BONES,
         Godot.Core.VisualServer._LIGHT_PARAM_ATTENUATION,
+        Godot.Core.VisualServer._LIGHT_BAKE_DISABLED,
+        Godot.Core.VisualServer._LIGHT_PARAM_INDIRECT_ENERGY,
         Godot.Core.VisualServer._VIEWPORT_DEBUG_DRAW_WIREFRAME,
         Godot.Core.VisualServer._CANVAS_LIGHT_MODE_MIX,
         Godot.Core.VisualServer._NINE_PATCH_TILE,
@@ -207,6 +217,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._NO_INDEX_ARRAY,
         Godot.Core.VisualServer._ARRAY_VERTEX,
         Godot.Core.VisualServer._ARRAY_FLAG_USE_2D_VERTICES,
+        Godot.Core.VisualServer._LIGHT_BAKE_INDIRECT,
         Godot.Core.VisualServer._CANVAS_LIGHT_FILTER_PCF5,
         Godot.Core.VisualServer._LIGHT_DIRECTIONAL,
         Godot.Core.VisualServer._ARRAY_COMPRESS_INDEX,
@@ -390,11 +401,13 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.instances_cull_aabb,
         Godot.Core.VisualServer.instances_cull_convex,
         Godot.Core.VisualServer.instances_cull_ray,
+        Godot.Core.VisualServer.is_render_loop_enabled,
         Godot.Core.VisualServer.light_directional_set_blend_splits,
         Godot.Core.VisualServer.light_directional_set_shadow_depth_range_mode,
         Godot.Core.VisualServer.light_directional_set_shadow_mode,
         Godot.Core.VisualServer.light_omni_set_shadow_detail,
         Godot.Core.VisualServer.light_omni_set_shadow_mode,
+        Godot.Core.VisualServer.light_set_bake_mode,
         Godot.Core.VisualServer.light_set_color,
         Godot.Core.VisualServer.light_set_cull_mask,
         Godot.Core.VisualServer.light_set_negative,
@@ -410,8 +423,10 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.lightmap_capture_get_octree,
         Godot.Core.VisualServer.lightmap_capture_get_octree_cell_subdiv,
         Godot.Core.VisualServer.lightmap_capture_get_octree_cell_transform,
+        Godot.Core.VisualServer.lightmap_capture_is_interior,
         Godot.Core.VisualServer.lightmap_capture_set_bounds,
         Godot.Core.VisualServer.lightmap_capture_set_energy,
+        Godot.Core.VisualServer.lightmap_capture_set_interior,
         Godot.Core.VisualServer.lightmap_capture_set_octree,
         Godot.Core.VisualServer.lightmap_capture_set_octree_cell_subdiv,
         Godot.Core.VisualServer.lightmap_capture_set_octree_cell_transform,
@@ -514,6 +529,9 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.set_boot_image,
         Godot.Core.VisualServer.set_debug_generate_wireframes,
         Godot.Core.VisualServer.set_default_clear_color,
+        Godot.Core.VisualServer.set_render_loop_enabled,
+        Godot.Core.VisualServer.set_shader_time_scale,
+        Godot.Core.VisualServer.set_use_occlusion_culling,
         Godot.Core.VisualServer.shader_create,
         Godot.Core.VisualServer.shader_get_code,
         Godot.Core.VisualServer.shader_get_default_texture_param,
@@ -577,11 +595,14 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.viewport_set_scenario,
         Godot.Core.VisualServer.viewport_set_shadow_atlas_quadrant_subdivision,
         Godot.Core.VisualServer.viewport_set_shadow_atlas_size,
+        Godot.Core.VisualServer.viewport_set_sharpen_intensity,
         Godot.Core.VisualServer.viewport_set_size,
         Godot.Core.VisualServer.viewport_set_transparent_background,
         Godot.Core.VisualServer.viewport_set_update_mode,
         Godot.Core.VisualServer.viewport_set_usage,
         Godot.Core.VisualServer.viewport_set_use_arvr,
+        Godot.Core.VisualServer.viewport_set_use_debanding,
+        Godot.Core.VisualServer.viewport_set_use_fxaa,
         Godot.Core.VisualServer.viewport_set_vflip)
        where
 import Data.Coerce
@@ -599,8 +620,14 @@ import Godot.Core.Object()
 _ARRAY_COMPRESS_WEIGHTS :: Int
 _ARRAY_COMPRESS_WEIGHTS = 65536
 
+_LIGHT_PARAM_SIZE :: Int
+_LIGHT_PARAM_SIZE = 2
+
 _ARRAY_FLAG_USE_16_BIT_BONES :: Int
 _ARRAY_FLAG_USE_16_BIT_BONES = 524288
+
+_INFO_2D_DRAW_CALLS_IN_FRAME :: Int
+_INFO_2D_DRAW_CALLS_IN_FRAME = 7
 
 _VIEWPORT_UPDATE_ALWAYS :: Int
 _VIEWPORT_UPDATE_ALWAYS = 3
@@ -641,8 +668,11 @@ _ARRAY_FORMAT_COLOR = 8
 _VIEWPORT_CLEAR_NEVER :: Int
 _VIEWPORT_CLEAR_NEVER = 1
 
+_ARRAY_FLAG_USE_OCTAHEDRAL_COMPRESSION :: Int
+_ARRAY_FLAG_USE_OCTAHEDRAL_COMPRESSION = 2097152
+
 _TEXTURE_TYPE_2D_ARRAY :: Int
-_TEXTURE_TYPE_2D_ARRAY = 2
+_TEXTURE_TYPE_2D_ARRAY = 3
 
 _INSTANCE_GEOMETRY_MASK :: Int
 _INSTANCE_GEOMETRY_MASK = 30
@@ -698,6 +728,9 @@ _CANVAS_ITEM_Z_MIN = -4096
 _VIEWPORT_MSAA_8X :: Int
 _VIEWPORT_MSAA_8X = 3
 
+_LIGHT_BAKE_ALL :: Int
+_LIGHT_BAKE_ALL = 2
+
 _INFO_MATERIAL_CHANGES_IN_FRAME :: Int
 _INFO_MATERIAL_CHANGES_IN_FRAME = 2
 
@@ -707,8 +740,11 @@ _MAX_GLOW_LEVELS = 7
 _LIGHT_OMNI_SHADOW_DETAIL_HORIZONTAL :: Int
 _LIGHT_OMNI_SHADOW_DETAIL_HORIZONTAL = 1
 
+_VIEWPORT_RENDER_INFO_2D_DRAW_CALLS_IN_FRAME :: Int
+_VIEWPORT_RENDER_INFO_2D_DRAW_CALLS_IN_FRAME = 7
+
 _TEXTURE_TYPE_CUBEMAP :: Int
-_TEXTURE_TYPE_CUBEMAP = 1
+_TEXTURE_TYPE_CUBEMAP = 2
 
 _VIEWPORT_RENDER_INFO_SURFACE_CHANGES_IN_FRAME :: Int
 _VIEWPORT_RENDER_INFO_SURFACE_CHANGES_IN_FRAME = 4
@@ -732,7 +768,7 @@ _ARRAY_MAX :: Int
 _ARRAY_MAX = 9
 
 _LIGHT_PARAM_SHADOW_SPLIT_2_OFFSET :: Int
-_LIGHT_PARAM_SHADOW_SPLIT_2_OFFSET = 10
+_LIGHT_PARAM_SHADOW_SPLIT_2_OFFSET = 11
 
 _ENV_TONE_MAPPER_FILMIC :: Int
 _ENV_TONE_MAPPER_FILMIC = 2
@@ -744,7 +780,7 @@ _NINE_PATCH_STRETCH :: Int
 _NINE_PATCH_STRETCH = 0
 
 _INFO_USAGE_VIDEO_MEM_TOTAL :: Int
-_INFO_USAGE_VIDEO_MEM_TOTAL = 6
+_INFO_USAGE_VIDEO_MEM_TOTAL = 8
 
 _ARRAY_NORMAL :: Int
 _ARRAY_NORMAL = 1
@@ -765,7 +801,7 @@ _MATERIAL_RENDER_PRIORITY_MAX :: Int
 _MATERIAL_RENDER_PRIORITY_MAX = 127
 
 _LIGHT_PARAM_SHADOW_MAX_DISTANCE :: Int
-_LIGHT_PARAM_SHADOW_MAX_DISTANCE = 8
+_LIGHT_PARAM_SHADOW_MAX_DISTANCE = 9
 
 _VIEWPORT_MSAA_2X :: Int
 _VIEWPORT_MSAA_2X = 1
@@ -804,7 +840,7 @@ _PRIMITIVE_TRIANGLE_STRIP :: Int
 _PRIMITIVE_TRIANGLE_STRIP = 5
 
 _VIEWPORT_RENDER_INFO_MAX :: Int
-_VIEWPORT_RENDER_INFO_MAX = 6
+_VIEWPORT_RENDER_INFO_MAX = 8
 
 _PRIMITIVE_TRIANGLES :: Int
 _PRIMITIVE_TRIANGLES = 4
@@ -834,7 +870,7 @@ _PRIMITIVE_LINE_LOOP :: Int
 _PRIMITIVE_LINE_LOOP = 3
 
 _LIGHT_PARAM_SPECULAR :: Int
-_LIGHT_PARAM_SPECULAR = 2
+_LIGHT_PARAM_SPECULAR = 3
 
 _VIEWPORT_MSAA_EXT_2X :: Int
 _VIEWPORT_MSAA_EXT_2X = 5
@@ -912,13 +948,13 @@ _TEXTURE_FLAG_REPEAT :: Int
 _TEXTURE_FLAG_REPEAT = 2
 
 _LIGHT_PARAM_SPOT_ATTENUATION :: Int
-_LIGHT_PARAM_SPOT_ATTENUATION = 6
+_LIGHT_PARAM_SPOT_ATTENUATION = 7
 
 _REFLECTION_PROBE_UPDATE_ONCE :: Int
 _REFLECTION_PROBE_UPDATE_ONCE = 0
 
 _ARRAY_COMPRESS_DEFAULT :: Int
-_ARRAY_COMPRESS_DEFAULT = 97280
+_ARRAY_COMPRESS_DEFAULT = 2194432
 
 _CANVAS_OCCLUDER_POLYGON_CULL_COUNTER_CLOCKWISE :: Int
 _CANVAS_OCCLUDER_POLYGON_CULL_COUNTER_CLOCKWISE = 2
@@ -930,7 +966,7 @@ _ENV_TONE_MAPPER_LINEAR :: Int
 _ENV_TONE_MAPPER_LINEAR = 0
 
 _LIGHT_PARAM_SHADOW_SPLIT_3_OFFSET :: Int
-_LIGHT_PARAM_SHADOW_SPLIT_3_OFFSET = 11
+_LIGHT_PARAM_SHADOW_SPLIT_3_OFFSET = 12
 
 _VIEWPORT_RENDER_INFO_VERTICES_IN_FRAME :: Int
 _VIEWPORT_RENDER_INFO_VERTICES_IN_FRAME = 1
@@ -938,8 +974,14 @@ _VIEWPORT_RENDER_INFO_VERTICES_IN_FRAME = 1
 _MULTIMESH_CUSTOM_DATA_NONE :: Int
 _MULTIMESH_CUSTOM_DATA_NONE = 0
 
+_ENV_TONE_MAPPER_ACES_FITTED :: Int
+_ENV_TONE_MAPPER_ACES_FITTED = 4
+
 _LIGHT_OMNI :: Int
 _LIGHT_OMNI = 1
+
+_INFO_2D_ITEMS_IN_FRAME :: Int
+_INFO_2D_ITEMS_IN_FRAME = 6
 
 _ENV_BG_MAX :: Int
 _ENV_BG_MAX = 7
@@ -948,7 +990,7 @@ _INSTANCE_REFLECTION_PROBE :: Int
 _INSTANCE_REFLECTION_PROBE = 6
 
 _INFO_TEXTURE_MEM_USED :: Int
-_INFO_TEXTURE_MEM_USED = 8
+_INFO_TEXTURE_MEM_USED = 10
 
 _INSTANCE_NONE :: Int
 _INSTANCE_NONE = 0
@@ -966,7 +1008,7 @@ _ARRAY_FORMAT_BONES :: Int
 _ARRAY_FORMAT_BONES = 64
 
 _LIGHT_PARAM_SPOT_ANGLE :: Int
-_LIGHT_PARAM_SPOT_ANGLE = 5
+_LIGHT_PARAM_SPOT_ANGLE = 6
 
 _ARRAY_WEIGHTS_SIZE :: Int
 _ARRAY_WEIGHTS_SIZE = 4
@@ -981,7 +1023,7 @@ _INFO_VERTICES_IN_FRAME :: Int
 _INFO_VERTICES_IN_FRAME = 1
 
 _INFO_VIDEO_MEM_USED :: Int
-_INFO_VIDEO_MEM_USED = 7
+_INFO_VIDEO_MEM_USED = 9
 
 _GLOW_BLEND_MODE_REPLACE :: Int
 _GLOW_BLEND_MODE_REPLACE = 3
@@ -1008,10 +1050,13 @@ _PRIMITIVE_MAX :: Int
 _PRIMITIVE_MAX = 7
 
 _LIGHT_PARAM_CONTACT_SHADOW_SIZE :: Int
-_LIGHT_PARAM_CONTACT_SHADOW_SIZE = 7
+_LIGHT_PARAM_CONTACT_SHADOW_SIZE = 8
 
 _INSTANCE_MAX :: Int
 _INSTANCE_MAX = 9
+
+_VIEWPORT_RENDER_INFO_2D_ITEMS_IN_FRAME :: Int
+_VIEWPORT_RENDER_INFO_2D_ITEMS_IN_FRAME = 6
 
 _ENV_SSAO_BLUR_3x3 :: Int
 _ENV_SSAO_BLUR_3x3 = 3
@@ -1020,7 +1065,7 @@ _ARRAY_WEIGHTS :: Int
 _ARRAY_WEIGHTS = 7
 
 _LIGHT_PARAM_MAX :: Int
-_LIGHT_PARAM_MAX = 15
+_LIGHT_PARAM_MAX = 16
 
 _CUBEMAP_BOTTOM :: Int
 _CUBEMAP_BOTTOM = 2
@@ -1038,7 +1083,7 @@ _INSTANCE_GI_PROBE :: Int
 _INSTANCE_GI_PROBE = 7
 
 _LIGHT_PARAM_SHADOW_NORMAL_BIAS :: Int
-_LIGHT_PARAM_SHADOW_NORMAL_BIAS = 12
+_LIGHT_PARAM_SHADOW_NORMAL_BIAS = 13
 
 _VIEWPORT_USAGE_2D_NO_SAMPLING :: Int
 _VIEWPORT_USAGE_2D_NO_SAMPLING = 1
@@ -1104,7 +1149,7 @@ _INSTANCE_LIGHT :: Int
 _INSTANCE_LIGHT = 5
 
 _TEXTURE_TYPE_3D :: Int
-_TEXTURE_TYPE_3D = 3
+_TEXTURE_TYPE_3D = 4
 
 _TEXTURE_FLAG_MIPMAPS :: Int
 _TEXTURE_FLAG_MIPMAPS = 1
@@ -1128,7 +1173,7 @@ _TEXTURE_FLAG_USED_FOR_STREAMING :: Int
 _TEXTURE_FLAG_USED_FOR_STREAMING = 2048
 
 _INFO_VERTEX_MEM_USED :: Int
-_INFO_VERTEX_MEM_USED = 9
+_INFO_VERTEX_MEM_USED = 11
 
 _TEXTURE_FLAG_MIRRORED_REPEAT :: Int
 _TEXTURE_FLAG_MIRRORED_REPEAT = 32
@@ -1152,7 +1197,7 @@ _CANVAS_LIGHT_MODE_ADD :: Int
 _CANVAS_LIGHT_MODE_ADD = 0
 
 _LIGHT_PARAM_SHADOW_BIAS_SPLIT_SCALE :: Int
-_LIGHT_PARAM_SHADOW_BIAS_SPLIT_SCALE = 14
+_LIGHT_PARAM_SHADOW_BIAS_SPLIT_SCALE = 15
 
 _VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME :: Int
 _VIEWPORT_RENDER_INFO_DRAW_CALLS_IN_FRAME = 5
@@ -1161,7 +1206,13 @@ _ARRAY_BONES :: Int
 _ARRAY_BONES = 6
 
 _LIGHT_PARAM_ATTENUATION :: Int
-_LIGHT_PARAM_ATTENUATION = 4
+_LIGHT_PARAM_ATTENUATION = 5
+
+_LIGHT_BAKE_DISABLED :: Int
+_LIGHT_BAKE_DISABLED = 0
+
+_LIGHT_PARAM_INDIRECT_ENERGY :: Int
+_LIGHT_PARAM_INDIRECT_ENERGY = 1
 
 _VIEWPORT_DEBUG_DRAW_WIREFRAME :: Int
 _VIEWPORT_DEBUG_DRAW_WIREFRAME = 3
@@ -1182,7 +1233,7 @@ _CANVAS_LIGHT_MODE_MASK :: Int
 _CANVAS_LIGHT_MODE_MASK = 3
 
 _LIGHT_PARAM_RANGE :: Int
-_LIGHT_PARAM_RANGE = 3
+_LIGHT_PARAM_RANGE = 4
 
 _BLEND_SHAPE_MODE_RELATIVE :: Int
 _BLEND_SHAPE_MODE_RELATIVE = 1
@@ -1191,7 +1242,7 @@ _VIEWPORT_MSAA_4X :: Int
 _VIEWPORT_MSAA_4X = 2
 
 _LIGHT_PARAM_SHADOW_SPLIT_1_OFFSET :: Int
-_LIGHT_PARAM_SHADOW_SPLIT_1_OFFSET = 9
+_LIGHT_PARAM_SHADOW_SPLIT_1_OFFSET = 10
 
 _ENV_TONE_MAPPER_REINHARD :: Int
 _ENV_TONE_MAPPER_REINHARD = 1
@@ -1211,6 +1262,9 @@ _ARRAY_VERTEX = 0
 _ARRAY_FLAG_USE_2D_VERTICES :: Int
 _ARRAY_FLAG_USE_2D_VERTICES = 262144
 
+_LIGHT_BAKE_INDIRECT :: Int
+_LIGHT_BAKE_INDIRECT = 1
+
 _CANVAS_LIGHT_FILTER_PCF5 :: Int
 _CANVAS_LIGHT_FILTER_PCF5 = 2
 
@@ -1227,7 +1281,7 @@ _CUBEMAP_LEFT :: Int
 _CUBEMAP_LEFT = 0
 
 _LIGHT_PARAM_SHADOW_BIAS :: Int
-_LIGHT_PARAM_SHADOW_BIAS = 13
+_LIGHT_PARAM_SHADOW_BIAS = 14
 
 _ARRAY_FORMAT_WEIGHTS :: Int
 _ARRAY_FORMAT_WEIGHTS = 128
@@ -1255,6 +1309,13 @@ sig_frame_pre_draw
 
 instance NodeSignal VisualServer "frame_pre_draw" '[]
 
+instance NodeProperty VisualServer "render_loop_enabled" Bool
+           'False
+         where
+        nodeProperty
+          = (is_render_loop_enabled,
+             wrapDroppingSetter set_render_loop_enabled, Nothing)
+
 {-# NOINLINE bindVisualServer_black_bars_set_images #-}
 
 -- | Sets images to be rendered in the window margin.
@@ -1279,7 +1340,10 @@ black_bars_set_images cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "black_bars_set_images"
            '[Rid, Rid, Rid, Rid]
@@ -1311,7 +1375,10 @@ black_bars_set_margins cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "black_bars_set_margins"
            '[Int, Int, Int, Int]
@@ -1342,7 +1409,10 @@ camera_create cls
          godot_method_bind_call bindVisualServer_camera_create (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "camera_create" '[] (IO Rid) where
         nodeMethod = Godot.Core.VisualServer.camera_create
@@ -1369,7 +1439,10 @@ camera_set_cull_mask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "camera_set_cull_mask" '[Rid, Int]
            (IO ())
@@ -1398,7 +1471,10 @@ camera_set_environment cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "camera_set_environment"
            '[Rid, Rid]
@@ -1431,7 +1507,10 @@ camera_set_frustum cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "camera_set_frustum"
            '[Rid, Float, Vector2, Float, Float]
@@ -1463,7 +1542,10 @@ camera_set_orthogonal cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "camera_set_orthogonal"
            '[Rid, Float, Float, Float]
@@ -1495,7 +1577,10 @@ camera_set_perspective cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "camera_set_perspective"
            '[Rid, Float, Float, Float]
@@ -1526,7 +1611,10 @@ camera_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "camera_set_transform"
            '[Rid, Transform]
@@ -1557,7 +1645,10 @@ camera_set_use_vertical_aspect cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "camera_set_use_vertical_aspect"
            '[Rid, Bool]
@@ -1588,7 +1679,10 @@ canvas_create cls
          godot_method_bind_call bindVisualServer_canvas_create (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_create" '[] (IO Rid) where
         nodeMethod = Godot.Core.VisualServer.canvas_create
@@ -1617,7 +1711,10 @@ canvas_item_add_circle cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_circle"
            '[Rid, Vector2, Float, Color]
@@ -1647,7 +1744,10 @@ canvas_item_add_clip_ignore cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_clip_ignore"
            '[Rid, Bool]
@@ -1683,7 +1783,10 @@ canvas_item_add_line cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_line"
            '[Rid, Vector2, Vector2, Color, Maybe Float, Maybe Bool]
@@ -1723,7 +1826,10 @@ canvas_item_add_mesh cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_mesh"
            '[Rid, Rid, Maybe Transform2d, Maybe Color, Maybe Rid, Maybe Rid]
@@ -1756,7 +1862,10 @@ canvas_item_add_multimesh cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_multimesh"
            '[Rid, Rid, Rid, Maybe Rid]
@@ -1806,7 +1915,10 @@ canvas_item_add_nine_patch cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_nine_patch"
            '[Rid, Rect2, Rect2, Rid, Vector2, Vector2, Maybe Int, Maybe Int,
@@ -1839,7 +1951,10 @@ canvas_item_add_particles cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_particles"
            '[Rid, Rid, Rid, Rid]
@@ -1879,7 +1994,10 @@ canvas_item_add_polygon cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_polygon"
            '[Rid, PoolVector2Array, PoolColorArray, Maybe PoolVector2Array,
@@ -1917,7 +2035,10 @@ canvas_item_add_polyline cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_polyline"
            '[Rid, PoolVector2Array, PoolColorArray, Maybe Float, Maybe Bool]
@@ -1955,7 +2076,10 @@ canvas_item_add_primitive cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_primitive"
            '[Rid, PoolVector2Array, PoolColorArray, PoolVector2Array, Rid,
@@ -1987,7 +2111,10 @@ canvas_item_add_rect cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_rect"
            '[Rid, Rect2, Color]
@@ -2021,7 +2148,10 @@ canvas_item_add_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_set_transform"
            '[Rid, Transform2d]
@@ -2062,7 +2192,10 @@ canvas_item_add_texture_rect cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_texture_rect"
            '[Rid, Rect2, Rid, Maybe Bool, Maybe Color, Maybe Bool, Maybe Rid]
@@ -2107,7 +2240,10 @@ canvas_item_add_texture_rect_region cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_item_add_texture_rect_region"
@@ -2162,7 +2298,10 @@ canvas_item_add_triangle_array cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_add_triangle_array"
            '[Rid, PoolIntArray, PoolVector2Array, PoolColorArray,
@@ -2194,7 +2333,10 @@ canvas_item_clear cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_clear" '[Rid] (IO ())
          where
@@ -2224,7 +2366,10 @@ canvas_item_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_create" '[] (IO Rid)
          where
@@ -2252,7 +2397,10 @@ canvas_item_set_clip cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_clip"
            '[Rid, Bool]
@@ -2285,7 +2433,10 @@ canvas_item_set_copy_to_backbuffer cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_item_set_copy_to_backbuffer"
@@ -2320,7 +2471,10 @@ canvas_item_set_custom_rect cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_custom_rect"
            '[Rid, Bool, Maybe Rect2]
@@ -2353,7 +2507,10 @@ canvas_item_set_distance_field_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_item_set_distance_field_mode"
@@ -2388,7 +2545,10 @@ canvas_item_set_draw_behind_parent cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_item_set_draw_behind_parent"
@@ -2420,7 +2580,10 @@ canvas_item_set_draw_index cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_draw_index"
            '[Rid, Int]
@@ -2450,7 +2613,10 @@ canvas_item_set_light_mask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_light_mask"
            '[Rid, Int]
@@ -2480,7 +2646,10 @@ canvas_item_set_material cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_material"
            '[Rid, Rid]
@@ -2511,7 +2680,10 @@ canvas_item_set_modulate cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_modulate"
            '[Rid, Color]
@@ -2541,7 +2713,10 @@ canvas_item_set_parent cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_parent"
            '[Rid, Rid]
@@ -2573,7 +2748,10 @@ canvas_item_set_self_modulate cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_self_modulate"
            '[Rid, Color]
@@ -2606,7 +2784,10 @@ canvas_item_set_sort_children_by_y cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_item_set_sort_children_by_y"
@@ -2639,7 +2820,10 @@ canvas_item_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_transform"
            '[Rid, Transform2d]
@@ -2672,7 +2856,10 @@ canvas_item_set_use_parent_material cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_item_set_use_parent_material"
@@ -2704,7 +2891,10 @@ canvas_item_set_visible cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_visible"
            '[Rid, Bool]
@@ -2738,7 +2928,10 @@ canvas_item_set_z_as_relative_to_parent cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_item_set_z_as_relative_to_parent"
@@ -2770,7 +2963,10 @@ canvas_item_set_z_index cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_item_set_z_index"
            '[Rid, Int]
@@ -2801,7 +2997,10 @@ canvas_light_attach_to_canvas cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_attach_to_canvas"
            '[Rid, Rid]
@@ -2833,7 +3032,10 @@ canvas_light_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_create" '[] (IO Rid)
          where
@@ -2865,7 +3067,10 @@ canvas_light_occluder_attach_to_canvas cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_light_occluder_attach_to_canvas"
@@ -2900,7 +3105,10 @@ canvas_light_occluder_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_occluder_create" '[]
            (IO Rid)
@@ -2931,7 +3139,10 @@ canvas_light_occluder_set_enabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_light_occluder_set_enabled"
@@ -2966,7 +3177,10 @@ canvas_light_occluder_set_light_mask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_light_occluder_set_light_mask"
@@ -3000,7 +3214,10 @@ canvas_light_occluder_set_polygon cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_light_occluder_set_polygon"
@@ -3035,7 +3252,10 @@ canvas_light_occluder_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_light_occluder_set_transform"
@@ -3068,7 +3288,10 @@ canvas_light_set_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_color"
            '[Rid, Color]
@@ -3098,7 +3321,10 @@ canvas_light_set_enabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_enabled"
            '[Rid, Bool]
@@ -3129,7 +3355,10 @@ canvas_light_set_energy cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_energy"
            '[Rid, Float]
@@ -3160,7 +3389,10 @@ canvas_light_set_height cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_height"
            '[Rid, Float]
@@ -3191,7 +3423,10 @@ canvas_light_set_item_cull_mask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_item_cull_mask"
            '[Rid, Int]
@@ -3226,7 +3461,10 @@ canvas_light_set_item_shadow_cull_mask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_light_set_item_shadow_cull_mask"
@@ -3260,7 +3498,10 @@ canvas_light_set_layer_range cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_layer_range"
            '[Rid, Int, Int]
@@ -3290,7 +3531,10 @@ canvas_light_set_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_mode"
            '[Rid, Int]
@@ -3321,7 +3565,10 @@ canvas_light_set_scale cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_scale"
            '[Rid, Float]
@@ -3354,7 +3601,10 @@ canvas_light_set_shadow_buffer_size cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_light_set_shadow_buffer_size"
@@ -3388,7 +3638,10 @@ canvas_light_set_shadow_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_shadow_color"
            '[Rid, Color]
@@ -3420,7 +3673,10 @@ canvas_light_set_shadow_enabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_shadow_enabled"
            '[Rid, Bool]
@@ -3452,7 +3708,10 @@ canvas_light_set_shadow_filter cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_shadow_filter"
            '[Rid, Int]
@@ -3486,7 +3745,10 @@ canvas_light_set_shadow_gradient_length cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_light_set_shadow_gradient_length"
@@ -3520,7 +3782,10 @@ canvas_light_set_shadow_smooth cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_shadow_smooth"
            '[Rid, Float]
@@ -3550,7 +3815,10 @@ canvas_light_set_texture cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_texture"
            '[Rid, Rid]
@@ -3582,7 +3850,10 @@ canvas_light_set_texture_offset cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_texture_offset"
            '[Rid, Vector2]
@@ -3614,7 +3885,10 @@ canvas_light_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_transform"
            '[Rid, Transform2d]
@@ -3645,7 +3919,10 @@ canvas_light_set_z_range cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_light_set_z_range"
            '[Rid, Int, Int]
@@ -3678,7 +3955,10 @@ canvas_occluder_polygon_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_occluder_polygon_create"
            '[]
@@ -3712,7 +3992,10 @@ canvas_occluder_polygon_set_cull_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_occluder_polygon_set_cull_mode"
@@ -3746,7 +4029,10 @@ canvas_occluder_polygon_set_shape cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_occluder_polygon_set_shape"
@@ -3782,7 +4068,10 @@ canvas_occluder_polygon_set_shape_as_lines cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "canvas_occluder_polygon_set_shape_as_lines"
@@ -3815,7 +4104,10 @@ canvas_set_item_mirroring cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_set_item_mirroring"
            '[Rid, Rid, Vector2]
@@ -3846,7 +4138,10 @@ canvas_set_modulate cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "canvas_set_modulate"
            '[Rid, Color]
@@ -3880,7 +4175,10 @@ directional_light_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "directional_light_create" '[]
            (IO Rid)
@@ -3910,7 +4208,10 @@ draw cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVisualServer_draw (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "draw" '[Maybe Bool, Maybe Float]
            (IO ())
@@ -3941,7 +4242,10 @@ environment_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_create" '[] (IO Rid)
          where
@@ -3972,7 +4276,10 @@ environment_set_adjustment cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_adjustment"
            '[Rid, Bool, Float, Float, Float, Rid]
@@ -4007,7 +4314,10 @@ environment_set_ambient_light cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_ambient_light"
            '[Rid, Color, Maybe Float, Maybe Float]
@@ -4037,7 +4347,10 @@ environment_set_background cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_background"
            '[Rid, Int]
@@ -4068,7 +4381,10 @@ environment_set_bg_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_bg_color"
            '[Rid, Color]
@@ -4099,7 +4415,10 @@ environment_set_bg_energy cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_bg_energy"
            '[Rid, Float]
@@ -4131,7 +4450,10 @@ environment_set_canvas_max_layer cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_canvas_max_layer"
            '[Rid, Int]
@@ -4166,7 +4488,10 @@ environment_set_dof_blur_far cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_dof_blur_far"
            '[Rid, Bool, Float, Float, Float, Int]
@@ -4200,7 +4525,10 @@ environment_set_dof_blur_near cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_dof_blur_near"
            '[Rid, Bool, Float, Float, Float, Int]
@@ -4233,7 +4561,10 @@ environment_set_fog cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_fog"
            '[Rid, Bool, Color, Color, Float]
@@ -4267,7 +4598,10 @@ environment_set_fog_depth cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_fog_depth"
            '[Rid, Bool, Float, Float, Float, Bool, Float]
@@ -4300,7 +4634,10 @@ environment_set_fog_height cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_fog_height"
            '[Rid, Bool, Float, Float, Float]
@@ -4340,7 +4677,10 @@ environment_set_glow cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_glow"
            '[Rid, Bool, Int, Float, Float, Float, Int, Float, Float, Float,
@@ -4371,7 +4711,10 @@ environment_set_sky cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_sky" '[Rid, Rid]
            (IO ())
@@ -4402,7 +4745,10 @@ environment_set_sky_custom_fov cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_sky_custom_fov"
            '[Rid, Float]
@@ -4434,7 +4780,10 @@ environment_set_sky_orientation cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_sky_orientation"
            '[Rid, Basis]
@@ -4479,7 +4828,10 @@ environment_set_ssao cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_ssao"
            '[Rid, Bool, Float, Float, Float, Float, Float, Float, Float,
@@ -4514,7 +4866,10 @@ environment_set_ssr cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_ssr"
            '[Rid, Bool, Int, Float, Float, Float, Bool]
@@ -4552,7 +4907,10 @@ environment_set_tonemap cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "environment_set_tonemap"
            '[Rid, Int, Float, Float, Bool, Float, Float, Float, Float]
@@ -4579,7 +4937,10 @@ finish cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVisualServer_finish (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "finish" '[] (IO ()) where
         nodeMethod = Godot.Core.VisualServer.finish
@@ -4608,7 +4969,10 @@ force_draw cls arg1 arg2
          godot_method_bind_call bindVisualServer_force_draw (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "force_draw"
            '[Maybe Bool, Maybe Float]
@@ -4636,7 +5000,10 @@ force_sync cls
          godot_method_bind_call bindVisualServer_force_sync (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "force_sync" '[] (IO ()) where
         nodeMethod = Godot.Core.VisualServer.force_sync
@@ -4662,7 +5029,10 @@ free_rid cls arg1
          godot_method_bind_call bindVisualServer_free_rid (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "free_rid" '[Rid] (IO ()) where
         nodeMethod = Godot.Core.VisualServer.free_rid
@@ -4689,7 +5059,10 @@ get_render_info cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "get_render_info" '[Int] (IO Int)
          where
@@ -4716,7 +5089,10 @@ get_test_cube cls
          godot_method_bind_call bindVisualServer_get_test_cube (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "get_test_cube" '[] (IO Rid) where
         nodeMethod = Godot.Core.VisualServer.get_test_cube
@@ -4743,7 +5119,10 @@ get_test_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "get_test_texture" '[] (IO Rid)
          where
@@ -4773,7 +5152,10 @@ get_video_adapter_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "get_video_adapter_name" '[]
            (IO GodotString)
@@ -4804,7 +5186,10 @@ get_video_adapter_vendor cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "get_video_adapter_vendor" '[]
            (IO GodotString)
@@ -4833,7 +5218,10 @@ get_white_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "get_white_texture" '[] (IO Rid)
          where
@@ -4865,7 +5253,10 @@ gi_probe_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_create" '[] (IO Rid)
          where
@@ -4893,7 +5284,10 @@ gi_probe_get_bias cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_get_bias" '[Rid]
            (IO Float)
@@ -4922,7 +5316,10 @@ gi_probe_get_bounds cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_get_bounds" '[Rid]
            (IO Aabb)
@@ -4951,7 +5348,10 @@ gi_probe_get_cell_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_get_cell_size" '[Rid]
            (IO Float)
@@ -4981,7 +5381,10 @@ gi_probe_get_dynamic_data cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_get_dynamic_data" '[Rid]
            (IO PoolIntArray)
@@ -5010,7 +5413,10 @@ gi_probe_get_dynamic_range cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_get_dynamic_range"
            '[Rid]
@@ -5040,7 +5446,10 @@ gi_probe_get_energy cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_get_energy" '[Rid]
            (IO Float)
@@ -5069,7 +5478,10 @@ gi_probe_get_normal_bias cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_get_normal_bias" '[Rid]
            (IO Float)
@@ -5098,7 +5510,10 @@ gi_probe_get_propagation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_get_propagation" '[Rid]
            (IO Float)
@@ -5127,7 +5542,10 @@ gi_probe_get_to_cell_xform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_get_to_cell_xform"
            '[Rid]
@@ -5157,7 +5575,10 @@ gi_probe_is_compressed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_is_compressed" '[Rid]
            (IO Bool)
@@ -5186,7 +5607,10 @@ gi_probe_is_interior cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_is_interior" '[Rid]
            (IO Bool)
@@ -5216,7 +5640,10 @@ gi_probe_set_bias cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_bias" '[Rid, Float]
            (IO ())
@@ -5245,7 +5672,10 @@ gi_probe_set_bounds cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_bounds" '[Rid, Aabb]
            (IO ())
@@ -5275,7 +5705,10 @@ gi_probe_set_cell_size cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_cell_size"
            '[Rid, Float]
@@ -5305,7 +5738,10 @@ gi_probe_set_compress cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_compress"
            '[Rid, Bool]
@@ -5336,7 +5772,10 @@ gi_probe_set_dynamic_data cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_dynamic_data"
            '[Rid, PoolIntArray]
@@ -5366,7 +5805,10 @@ gi_probe_set_dynamic_range cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_dynamic_range"
            '[Rid, Int]
@@ -5397,7 +5839,10 @@ gi_probe_set_energy cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_energy"
            '[Rid, Float]
@@ -5427,7 +5872,10 @@ gi_probe_set_interior cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_interior"
            '[Rid, Bool]
@@ -5458,7 +5906,10 @@ gi_probe_set_normal_bias cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_normal_bias"
            '[Rid, Float]
@@ -5489,7 +5940,10 @@ gi_probe_set_propagation cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_propagation"
            '[Rid, Float]
@@ -5520,7 +5974,10 @@ gi_probe_set_to_cell_xform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "gi_probe_set_to_cell_xform"
            '[Rid, Transform]
@@ -5549,7 +6006,10 @@ has_changed cls
          godot_method_bind_call bindVisualServer_has_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "has_changed" '[] (IO Bool) where
         nodeMethod = Godot.Core.VisualServer.has_changed
@@ -5575,7 +6035,10 @@ has_feature cls arg1
          godot_method_bind_call bindVisualServer_has_feature (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "has_feature" '[Int] (IO Bool)
          where
@@ -5583,7 +6046,8 @@ instance NodeMethod VisualServer "has_feature" '[Int] (IO Bool)
 
 {-# NOINLINE bindVisualServer_has_os_feature #-}
 
--- | Returns @true@ if the OS supports a certain feature. Features might be @s3tc@, @etc@, @etc2@ and @pvrtc@.
+-- | Returns @true@ if the OS supports a certain feature. Features might be @s3tc@, @etc@, @etc2@, @pvrtc@ and @skinning_fallback@.
+--   				When rendering with GLES2, returns @true@ with @skinning_fallback@ in case the hardware doesn't support the default GPU skinning process.
 bindVisualServer_has_os_feature :: MethodBind
 bindVisualServer_has_os_feature
   = unsafePerformIO $
@@ -5593,7 +6057,8 @@ bindVisualServer_has_os_feature
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if the OS supports a certain feature. Features might be @s3tc@, @etc@, @etc2@ and @pvrtc@.
+-- | Returns @true@ if the OS supports a certain feature. Features might be @s3tc@, @etc@, @etc2@, @pvrtc@ and @skinning_fallback@.
+--   				When rendering with GLES2, returns @true@ with @skinning_fallback@ in case the hardware doesn't support the default GPU skinning process.
 has_os_feature ::
                  (VisualServer :< cls, Object :< cls) =>
                  cls -> GodotString -> IO Bool
@@ -5603,7 +6068,10 @@ has_os_feature cls arg1
          godot_method_bind_call bindVisualServer_has_os_feature (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "has_os_feature" '[GodotString]
            (IO Bool)
@@ -5634,7 +6102,10 @@ immediate_begin cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_begin"
            '[Rid, Int, Maybe Rid]
@@ -5664,7 +6135,10 @@ immediate_clear cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_clear" '[Rid] (IO ())
          where
@@ -5693,7 +6167,10 @@ immediate_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_color" '[Rid, Color]
            (IO ())
@@ -5726,7 +6203,10 @@ immediate_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_create" '[] (IO Rid)
          where
@@ -5753,7 +6233,10 @@ immediate_end cls arg1
          godot_method_bind_call bindVisualServer_immediate_end (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_end" '[Rid] (IO ())
          where
@@ -5781,7 +6264,10 @@ immediate_get_material cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_get_material" '[Rid]
            (IO Rid)
@@ -5811,7 +6297,10 @@ immediate_normal cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_normal" '[Rid, Vector3]
            (IO ())
@@ -5840,7 +6329,10 @@ immediate_set_material cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_set_material"
            '[Rid, Rid]
@@ -5871,7 +6363,10 @@ immediate_tangent cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_tangent" '[Rid, Plane]
            (IO ())
@@ -5900,7 +6395,10 @@ immediate_uv cls arg1 arg2
          godot_method_bind_call bindVisualServer_immediate_uv (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_uv" '[Rid, Vector2]
            (IO ())
@@ -5929,7 +6427,10 @@ immediate_uv2 cls arg1 arg2
          godot_method_bind_call bindVisualServer_immediate_uv2 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_uv2" '[Rid, Vector2]
            (IO ())
@@ -5959,7 +6460,10 @@ immediate_vertex cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_vertex" '[Rid, Vector3]
            (IO ())
@@ -5989,7 +6493,10 @@ immediate_vertex_2d cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "immediate_vertex_2d"
            '[Rid, Vector2]
@@ -6016,7 +6523,10 @@ init cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVisualServer_init (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "init" '[] (IO ()) where
         nodeMethod = Godot.Core.VisualServer.init
@@ -6046,7 +6556,10 @@ instance_attach_object_instance_id cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "instance_attach_object_instance_id"
@@ -6078,7 +6591,10 @@ instance_attach_skeleton cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_attach_skeleton"
            '[Rid, Rid]
@@ -6112,7 +6628,10 @@ instance_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_create" '[] (IO Rid)
          where
@@ -6142,7 +6661,10 @@ instance_create2 cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_create2" '[Rid, Rid]
            (IO Rid)
@@ -6175,7 +6697,10 @@ instance_geometry_set_as_instance_lod cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "instance_geometry_set_as_instance_lod"
@@ -6211,7 +6736,10 @@ instance_geometry_set_cast_shadows_setting cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "instance_geometry_set_cast_shadows_setting"
@@ -6247,7 +6775,10 @@ instance_geometry_set_draw_range cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_geometry_set_draw_range"
            '[Rid, Float, Float, Float, Float]
@@ -6279,7 +6810,10 @@ instance_geometry_set_flag cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_geometry_set_flag"
            '[Rid, Int, Bool]
@@ -6313,7 +6847,10 @@ instance_geometry_set_material_override cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "instance_geometry_set_material_override"
@@ -6345,7 +6882,10 @@ instance_set_base cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_set_base" '[Rid, Rid]
            (IO ())
@@ -6376,7 +6916,10 @@ instance_set_blend_shape_weight cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_set_blend_shape_weight"
            '[Rid, Int, Float]
@@ -6407,7 +6950,10 @@ instance_set_custom_aabb cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_set_custom_aabb"
            '[Rid, Aabb]
@@ -6437,7 +6983,10 @@ instance_set_exterior cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_set_exterior"
            '[Rid, Bool]
@@ -6448,7 +6997,7 @@ instance NodeMethod VisualServer "instance_set_exterior"
 {-# NOINLINE bindVisualServer_instance_set_extra_visibility_margin
              #-}
 
--- | Sets a margin to increase the size of the AABB when culling objects from the view frustum. This allows you avoid culling objects that fall outside the view frustum. Equivalent to @GeometryInstance.extra_cull_margin@.
+-- | Sets a margin to increase the size of the AABB when culling objects from the view frustum. This allows you to avoid culling objects that fall outside the view frustum. Equivalent to @GeometryInstance.extra_cull_margin@.
 bindVisualServer_instance_set_extra_visibility_margin :: MethodBind
 bindVisualServer_instance_set_extra_visibility_margin
   = unsafePerformIO $
@@ -6458,7 +7007,7 @@ bindVisualServer_instance_set_extra_visibility_margin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets a margin to increase the size of the AABB when culling objects from the view frustum. This allows you avoid culling objects that fall outside the view frustum. Equivalent to @GeometryInstance.extra_cull_margin@.
+-- | Sets a margin to increase the size of the AABB when culling objects from the view frustum. This allows you to avoid culling objects that fall outside the view frustum. Equivalent to @GeometryInstance.extra_cull_margin@.
 instance_set_extra_visibility_margin ::
                                        (VisualServer :< cls, Object :< cls) =>
                                        cls -> Rid -> Float -> IO ()
@@ -6470,7 +7019,10 @@ instance_set_extra_visibility_margin cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "instance_set_extra_visibility_margin"
@@ -6502,7 +7054,10 @@ instance_set_layer_mask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_set_layer_mask"
            '[Rid, Int]
@@ -6532,7 +7087,10 @@ instance_set_scenario cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_set_scenario"
            '[Rid, Rid]
@@ -6564,7 +7122,10 @@ instance_set_surface_material cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_set_surface_material"
            '[Rid, Int, Rid]
@@ -6595,7 +7156,10 @@ instance_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_set_transform"
            '[Rid, Transform]
@@ -6618,18 +7182,24 @@ bindVisualServer_instance_set_use_lightmap
 -- | Sets the lightmap to use with this instance.
 instance_set_use_lightmap ::
                             (VisualServer :< cls, Object :< cls) =>
-                            cls -> Rid -> Rid -> Rid -> IO ()
-instance_set_use_lightmap cls arg1 arg2 arg3
-  = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
+                            cls -> Rid -> Rid -> Rid -> Maybe Int -> Maybe Rect2 -> IO ()
+instance_set_use_lightmap cls arg1 arg2 arg3 arg4 arg5
+  = withVariantArray
+      [toVariant arg1, toVariant arg2, toVariant arg3,
+       maybe (VariantInt (-1)) toVariant arg4,
+       defaultedVariant VariantRect2 (V2 (V2 0 0) (V2 1 1)) arg5]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVisualServer_instance_set_use_lightmap
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_set_use_lightmap"
-           '[Rid, Rid, Rid]
+           '[Rid, Rid, Rid, Maybe Int, Maybe Rect2]
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.instance_set_use_lightmap
@@ -6656,7 +7226,10 @@ instance_set_visible cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instance_set_visible"
            '[Rid, Bool]
@@ -6690,7 +7263,10 @@ instances_cull_aabb cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instances_cull_aabb"
            '[Aabb, Maybe Rid]
@@ -6724,7 +7300,10 @@ instances_cull_convex cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instances_cull_convex"
            '[Array, Maybe Rid]
@@ -6758,13 +7337,48 @@ instances_cull_ray cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "instances_cull_ray"
            '[Vector3, Vector3, Maybe Rid]
            (IO Array)
          where
         nodeMethod = Godot.Core.VisualServer.instances_cull_ray
+
+{-# NOINLINE bindVisualServer_is_render_loop_enabled #-}
+
+-- | If @false@, disables rendering completely, but the engine logic is still being processed. You can call @method force_draw@ to draw a frame even with rendering disabled.
+bindVisualServer_is_render_loop_enabled :: MethodBind
+bindVisualServer_is_render_loop_enabled
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "is_render_loop_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @false@, disables rendering completely, but the engine logic is still being processed. You can call @method force_draw@ to draw a frame even with rendering disabled.
+is_render_loop_enabled ::
+                         (VisualServer :< cls, Object :< cls) => cls -> IO Bool
+is_render_loop_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualServer_is_render_loop_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "is_render_loop_enabled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.VisualServer.is_render_loop_enabled
 
 {-# NOINLINE bindVisualServer_light_directional_set_blend_splits
              #-}
@@ -6791,7 +7405,10 @@ light_directional_set_blend_splits cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "light_directional_set_blend_splits"
@@ -6827,7 +7444,10 @@ light_directional_set_shadow_depth_range_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "light_directional_set_shadow_depth_range_mode"
@@ -6861,7 +7481,10 @@ light_directional_set_shadow_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "light_directional_set_shadow_mode"
@@ -6894,7 +7517,10 @@ light_omni_set_shadow_detail cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_omni_set_shadow_detail"
            '[Rid, Int]
@@ -6924,13 +7550,48 @@ light_omni_set_shadow_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_omni_set_shadow_mode"
            '[Rid, Int]
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.light_omni_set_shadow_mode
+
+{-# NOINLINE bindVisualServer_light_set_bake_mode #-}
+
+-- | Sets the bake mode for this light, see @enum LightBakeMode@ for options. The bake mode affects how the light will be baked in @BakedLightmap@s and @GIProbe@s.
+bindVisualServer_light_set_bake_mode :: MethodBind
+bindVisualServer_light_set_bake_mode
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "light_set_bake_mode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the bake mode for this light, see @enum LightBakeMode@ for options. The bake mode affects how the light will be baked in @BakedLightmap@s and @GIProbe@s.
+light_set_bake_mode ::
+                      (VisualServer :< cls, Object :< cls) => cls -> Rid -> Int -> IO ()
+light_set_bake_mode cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualServer_light_set_bake_mode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "light_set_bake_mode" '[Rid, Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.light_set_bake_mode
 
 {-# NOINLINE bindVisualServer_light_set_color #-}
 
@@ -6955,7 +7616,10 @@ light_set_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_set_color" '[Rid, Color]
            (IO ())
@@ -6984,7 +7648,10 @@ light_set_cull_mask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_set_cull_mask" '[Rid, Int]
            (IO ())
@@ -7013,7 +7680,10 @@ light_set_negative cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_set_negative" '[Rid, Bool]
            (IO ())
@@ -7043,7 +7713,10 @@ light_set_param cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_set_param"
            '[Rid, Int, Float]
@@ -7073,7 +7746,10 @@ light_set_projector cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_set_projector" '[Rid, Rid]
            (IO ())
@@ -7104,7 +7780,10 @@ light_set_reverse_cull_face_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_set_reverse_cull_face_mode"
            '[Rid, Bool]
@@ -7135,7 +7814,10 @@ light_set_shadow cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_set_shadow" '[Rid, Bool]
            (IO ())
@@ -7165,7 +7847,10 @@ light_set_shadow_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_set_shadow_color"
            '[Rid, Color]
@@ -7175,7 +7860,7 @@ instance NodeMethod VisualServer "light_set_shadow_color"
 
 {-# NOINLINE bindVisualServer_light_set_use_gi #-}
 
--- | Sets whether GI probes capture light information from this light.
+-- | Sets whether GI probes capture light information from this light. @i@Deprecated method.@/i@ Use @method light_set_bake_mode@ instead. This method is only kept for compatibility reasons and calls @method light_set_bake_mode@ internally, setting the bake mode to @LIGHT_BAKE_DISABLED@ or @LIGHT_BAKE_INDIRECT@ depending on the given parameter.
 bindVisualServer_light_set_use_gi :: MethodBind
 bindVisualServer_light_set_use_gi
   = unsafePerformIO $
@@ -7185,7 +7870,7 @@ bindVisualServer_light_set_use_gi
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets whether GI probes capture light information from this light.
+-- | Sets whether GI probes capture light information from this light. @i@Deprecated method.@/i@ Use @method light_set_bake_mode@ instead. This method is only kept for compatibility reasons and calls @method light_set_bake_mode@ internally, setting the bake mode to @LIGHT_BAKE_DISABLED@ or @LIGHT_BAKE_INDIRECT@ depending on the given parameter.
 light_set_use_gi ::
                    (VisualServer :< cls, Object :< cls) => cls -> Rid -> Bool -> IO ()
 light_set_use_gi cls arg1 arg2
@@ -7195,7 +7880,10 @@ light_set_use_gi cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "light_set_use_gi" '[Rid, Bool]
            (IO ())
@@ -7228,7 +7916,10 @@ lightmap_capture_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "lightmap_capture_create" '[]
            (IO Rid)
@@ -7257,7 +7948,10 @@ lightmap_capture_get_bounds cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "lightmap_capture_get_bounds"
            '[Rid]
@@ -7287,7 +7981,10 @@ lightmap_capture_get_energy cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "lightmap_capture_get_energy"
            '[Rid]
@@ -7318,7 +8015,10 @@ lightmap_capture_get_octree cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "lightmap_capture_get_octree"
            '[Rid]
@@ -7352,7 +8052,10 @@ lightmap_capture_get_octree_cell_subdiv cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "lightmap_capture_get_octree_cell_subdiv"
@@ -7388,7 +8091,10 @@ lightmap_capture_get_octree_cell_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "lightmap_capture_get_octree_cell_transform"
@@ -7397,6 +8103,40 @@ instance NodeMethod VisualServer
          where
         nodeMethod
           = Godot.Core.VisualServer.lightmap_capture_get_octree_cell_transform
+
+{-# NOINLINE bindVisualServer_lightmap_capture_is_interior #-}
+
+-- | Returns @true@ if capture is in "interior" mode.
+bindVisualServer_lightmap_capture_is_interior :: MethodBind
+bindVisualServer_lightmap_capture_is_interior
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "lightmap_capture_is_interior" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if capture is in "interior" mode.
+lightmap_capture_is_interior ::
+                               (VisualServer :< cls, Object :< cls) => cls -> Rid -> IO Bool
+lightmap_capture_is_interior cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_lightmap_capture_is_interior
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "lightmap_capture_is_interior"
+           '[Rid]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.VisualServer.lightmap_capture_is_interior
 
 {-# NOINLINE bindVisualServer_lightmap_capture_set_bounds #-}
 
@@ -7420,7 +8160,10 @@ lightmap_capture_set_bounds cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "lightmap_capture_set_bounds"
            '[Rid, Aabb]
@@ -7451,13 +8194,50 @@ lightmap_capture_set_energy cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "lightmap_capture_set_energy"
            '[Rid, Float]
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.lightmap_capture_set_energy
+
+{-# NOINLINE bindVisualServer_lightmap_capture_set_interior #-}
+
+-- | Sets the "interior" mode for this lightmap capture. Equivalent to @BakedLightmapData.interior@.
+bindVisualServer_lightmap_capture_set_interior :: MethodBind
+bindVisualServer_lightmap_capture_set_interior
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "lightmap_capture_set_interior" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the "interior" mode for this lightmap capture. Equivalent to @BakedLightmapData.interior@.
+lightmap_capture_set_interior ::
+                                (VisualServer :< cls, Object :< cls) => cls -> Rid -> Bool -> IO ()
+lightmap_capture_set_interior cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_lightmap_capture_set_interior
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "lightmap_capture_set_interior"
+           '[Rid, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.lightmap_capture_set_interior
 
 {-# NOINLINE bindVisualServer_lightmap_capture_set_octree #-}
 
@@ -7482,7 +8262,10 @@ lightmap_capture_set_octree cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "lightmap_capture_set_octree"
            '[Rid, PoolByteArray]
@@ -7516,7 +8299,10 @@ lightmap_capture_set_octree_cell_subdiv cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "lightmap_capture_set_octree_cell_subdiv"
@@ -7552,7 +8338,10 @@ lightmap_capture_set_octree_cell_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "lightmap_capture_set_octree_cell_transform"
@@ -7585,7 +8374,10 @@ make_sphere_mesh cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "make_sphere_mesh"
            '[Int, Int, Float]
@@ -7617,7 +8409,10 @@ material_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "material_create" '[] (IO Rid)
          where
@@ -7646,7 +8441,7 @@ material_get_param cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod VisualServer "material_get_param"
            '[Rid, GodotString]
@@ -7677,7 +8472,7 @@ material_get_param_default cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod VisualServer "material_get_param_default"
            '[Rid, GodotString]
@@ -7707,7 +8502,10 @@ material_get_shader cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "material_get_shader" '[Rid]
            (IO Rid)
@@ -7737,7 +8535,10 @@ material_set_line_width cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "material_set_line_width"
            '[Rid, Float]
@@ -7767,7 +8568,10 @@ material_set_next_pass cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "material_set_next_pass"
            '[Rid, Rid]
@@ -7798,7 +8602,10 @@ material_set_param cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "material_set_param"
            '[Rid, GodotString, GodotVariant]
@@ -7829,7 +8636,10 @@ material_set_render_priority cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "material_set_render_priority"
            '[Rid, Int]
@@ -7859,7 +8669,10 @@ material_set_shader cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "material_set_shader" '[Rid, Rid]
            (IO ())
@@ -7886,14 +8699,17 @@ mesh_add_surface_from_arrays cls arg1 arg2 arg3 arg4 arg5
   = withVariantArray
       [toVariant arg1, toVariant arg2, toVariant arg3,
        defaultedVariant VariantArray V.empty arg4,
-       maybe (VariantInt (97280)) toVariant arg5]
+       maybe (VariantInt (2194432)) toVariant arg5]
       (\ (arrPtr, len) ->
          godot_method_bind_call
            bindVisualServer_mesh_add_surface_from_arrays
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_add_surface_from_arrays"
            '[Rid, Int, Array, Maybe Array, Maybe Int]
@@ -7922,7 +8738,10 @@ mesh_clear cls arg1
          godot_method_bind_call bindVisualServer_mesh_clear (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_clear" '[Rid] (IO ()) where
         nodeMethod = Godot.Core.VisualServer.mesh_clear
@@ -7952,7 +8771,10 @@ mesh_create cls
          godot_method_bind_call bindVisualServer_mesh_create (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_create" '[] (IO Rid) where
         nodeMethod = Godot.Core.VisualServer.mesh_create
@@ -7979,7 +8801,10 @@ mesh_get_blend_shape_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_get_blend_shape_count"
            '[Rid]
@@ -8009,7 +8834,10 @@ mesh_get_blend_shape_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_get_blend_shape_mode" '[Rid]
            (IO Int)
@@ -8038,7 +8866,10 @@ mesh_get_custom_aabb cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_get_custom_aabb" '[Rid]
            (IO Aabb)
@@ -8067,7 +8898,10 @@ mesh_get_surface_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_get_surface_count" '[Rid]
            (IO Int)
@@ -8096,7 +8930,10 @@ mesh_remove_surface cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_remove_surface" '[Rid, Int]
            (IO ())
@@ -8125,7 +8962,10 @@ mesh_set_blend_shape_count cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_set_blend_shape_count"
            '[Rid, Int]
@@ -8155,7 +8995,10 @@ mesh_set_blend_shape_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_set_blend_shape_mode"
            '[Rid, Int]
@@ -8185,7 +9028,10 @@ mesh_set_custom_aabb cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_set_custom_aabb"
            '[Rid, Aabb]
@@ -8216,7 +9062,10 @@ mesh_surface_get_aabb cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_aabb"
            '[Rid, Int]
@@ -8247,7 +9096,10 @@ mesh_surface_get_array cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_array"
            '[Rid, Int]
@@ -8279,7 +9131,10 @@ mesh_surface_get_array_index_len cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_array_index_len"
            '[Rid, Int]
@@ -8310,7 +9165,10 @@ mesh_surface_get_array_len cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_array_len"
            '[Rid, Int]
@@ -8341,7 +9199,10 @@ mesh_surface_get_arrays cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_arrays"
            '[Rid, Int]
@@ -8374,7 +9235,10 @@ mesh_surface_get_blend_shape_arrays cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "mesh_surface_get_blend_shape_arrays"
@@ -8406,7 +9270,10 @@ mesh_surface_get_format cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_format"
            '[Rid, Int]
@@ -8439,7 +9306,10 @@ mesh_surface_get_format_offset cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_format_offset"
            '[Int, Int, Int, Int]
@@ -8449,7 +9319,6 @@ instance NodeMethod VisualServer "mesh_surface_get_format_offset"
 
 {-# NOINLINE bindVisualServer_mesh_surface_get_format_stride #-}
 
--- | Function is unused in Godot 3.x.
 bindVisualServer_mesh_surface_get_format_stride :: MethodBind
 bindVisualServer_mesh_surface_get_format_stride
   = unsafePerformIO $
@@ -8459,22 +9328,25 @@ bindVisualServer_mesh_surface_get_format_stride
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Function is unused in Godot 3.x.
 mesh_surface_get_format_stride ::
                                  (VisualServer :< cls, Object :< cls) =>
-                                 cls -> Int -> Int -> Int -> IO Int
-mesh_surface_get_format_stride cls arg1 arg2 arg3
-  = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
+                                 cls -> Int -> Int -> Int -> Int -> IO Int
+mesh_surface_get_format_stride cls arg1 arg2 arg3 arg4
+  = withVariantArray
+      [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4]
       (\ (arrPtr, len) ->
          godot_method_bind_call
            bindVisualServer_mesh_surface_get_format_stride
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_format_stride"
-           '[Int, Int, Int]
+           '[Int, Int, Int, Int]
            (IO Int)
          where
         nodeMethod = Godot.Core.VisualServer.mesh_surface_get_format_stride
@@ -8503,7 +9375,10 @@ mesh_surface_get_index_array cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_index_array"
            '[Rid, Int]
@@ -8533,7 +9408,10 @@ mesh_surface_get_material cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_material"
            '[Rid, Int]
@@ -8565,7 +9443,10 @@ mesh_surface_get_primitive_type cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_primitive_type"
            '[Rid, Int]
@@ -8598,7 +9479,10 @@ mesh_surface_get_skeleton_aabb cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_get_skeleton_aabb"
            '[Rid, Int]
@@ -8629,7 +9513,10 @@ mesh_surface_set_material cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_set_material"
            '[Rid, Int, Rid]
@@ -8661,7 +9548,10 @@ mesh_surface_update_region cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "mesh_surface_update_region"
            '[Rid, Int, Int, PoolByteArray]
@@ -8694,7 +9584,10 @@ multimesh_allocate cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_allocate"
            '[Rid, Int, Int, Int, Maybe Int]
@@ -8728,7 +9621,10 @@ multimesh_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_create" '[] (IO Rid)
          where
@@ -8756,7 +9652,10 @@ multimesh_get_aabb cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_get_aabb" '[Rid]
            (IO Aabb)
@@ -8786,7 +9685,10 @@ multimesh_get_instance_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_get_instance_count"
            '[Rid]
@@ -8816,7 +9718,10 @@ multimesh_get_mesh cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_get_mesh" '[Rid]
            (IO Rid)
@@ -8846,7 +9751,10 @@ multimesh_get_visible_instances cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_get_visible_instances"
            '[Rid]
@@ -8879,7 +9787,10 @@ multimesh_instance_get_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_instance_get_color"
            '[Rid, Int]
@@ -8912,7 +9823,10 @@ multimesh_instance_get_custom_data cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "multimesh_instance_get_custom_data"
@@ -8946,7 +9860,10 @@ multimesh_instance_get_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_instance_get_transform"
            '[Rid, Int]
@@ -8980,7 +9897,10 @@ multimesh_instance_get_transform_2d cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "multimesh_instance_get_transform_2d"
@@ -9014,7 +9934,10 @@ multimesh_instance_set_color cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_instance_set_color"
            '[Rid, Int, Color]
@@ -9047,7 +9970,10 @@ multimesh_instance_set_custom_data cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "multimesh_instance_set_custom_data"
@@ -9081,7 +10007,10 @@ multimesh_instance_set_transform cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_instance_set_transform"
            '[Rid, Int, Transform]
@@ -9115,7 +10044,10 @@ multimesh_instance_set_transform_2d cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "multimesh_instance_set_transform_2d"
@@ -9156,7 +10088,10 @@ multimesh_set_as_bulk_array cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_set_as_bulk_array"
            '[Rid, PoolRealArray]
@@ -9186,7 +10121,10 @@ multimesh_set_mesh cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_set_mesh" '[Rid, Rid]
            (IO ())
@@ -9216,7 +10154,10 @@ multimesh_set_visible_instances cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "multimesh_set_visible_instances"
            '[Rid, Int]
@@ -9251,7 +10192,10 @@ omni_light_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "omni_light_create" '[] (IO Rid)
          where
@@ -9283,7 +10227,10 @@ particles_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_create" '[] (IO Rid)
          where
@@ -9311,7 +10258,10 @@ particles_get_current_aabb cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_get_current_aabb"
            '[Rid]
@@ -9341,7 +10291,10 @@ particles_get_emitting cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_get_emitting" '[Rid]
            (IO Bool)
@@ -9370,7 +10323,10 @@ particles_is_inactive cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_is_inactive" '[Rid]
            (IO Bool)
@@ -9399,7 +10355,10 @@ particles_request_process cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_request_process" '[Rid]
            (IO ())
@@ -9428,7 +10387,10 @@ particles_restart cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_restart" '[Rid] (IO ())
          where
@@ -9456,7 +10418,10 @@ particles_set_amount cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_amount" '[Rid, Int]
            (IO ())
@@ -9485,7 +10450,10 @@ particles_set_custom_aabb cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_custom_aabb"
            '[Rid, Aabb]
@@ -9515,7 +10483,10 @@ particles_set_draw_order cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_draw_order"
            '[Rid, Int]
@@ -9547,7 +10518,10 @@ particles_set_draw_pass_mesh cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_draw_pass_mesh"
            '[Rid, Int, Rid]
@@ -9577,7 +10551,10 @@ particles_set_draw_passes cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_draw_passes"
            '[Rid, Int]
@@ -9609,7 +10586,10 @@ particles_set_emission_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_emission_transform"
            '[Rid, Transform]
@@ -9640,7 +10620,10 @@ particles_set_emitting cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_emitting"
            '[Rid, Bool]
@@ -9672,7 +10655,10 @@ particles_set_explosiveness_ratio cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "particles_set_explosiveness_ratio"
@@ -9704,7 +10690,10 @@ particles_set_fixed_fps cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_fixed_fps"
            '[Rid, Int]
@@ -9735,7 +10724,10 @@ particles_set_fractional_delta cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_fractional_delta"
            '[Rid, Bool]
@@ -9766,7 +10758,10 @@ particles_set_lifetime cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_lifetime"
            '[Rid, Float]
@@ -9796,7 +10791,10 @@ particles_set_one_shot cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_one_shot"
            '[Rid, Bool]
@@ -9806,7 +10804,7 @@ instance NodeMethod VisualServer "particles_set_one_shot"
 
 {-# NOINLINE bindVisualServer_particles_set_pre_process_time #-}
 
--- | Sets the preprocess time for the particles animation. This lets you delay starting an animation until after the particles have begun emitting. Equivalent to @Particles.preprocess@.
+-- | Sets the preprocess time for the particles' animation. This lets you delay starting an animation until after the particles have begun emitting. Equivalent to @Particles.preprocess@.
 bindVisualServer_particles_set_pre_process_time :: MethodBind
 bindVisualServer_particles_set_pre_process_time
   = unsafePerformIO $
@@ -9816,7 +10814,7 @@ bindVisualServer_particles_set_pre_process_time
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the preprocess time for the particles animation. This lets you delay starting an animation until after the particles have begun emitting. Equivalent to @Particles.preprocess@.
+-- | Sets the preprocess time for the particles' animation. This lets you delay starting an animation until after the particles have begun emitting. Equivalent to @Particles.preprocess@.
 particles_set_pre_process_time ::
                                  (VisualServer :< cls, Object :< cls) =>
                                  cls -> Rid -> Float -> IO ()
@@ -9828,7 +10826,10 @@ particles_set_pre_process_time cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_pre_process_time"
            '[Rid, Float]
@@ -9838,7 +10839,8 @@ instance NodeMethod VisualServer "particles_set_pre_process_time"
 
 {-# NOINLINE bindVisualServer_particles_set_process_material #-}
 
--- | Sets the material for processing the particles. Note: this is not the material used to draw the materials. Equivalent to @Particles.process_material@.
+-- | Sets the material for processing the particles.
+--   				__Note:__ This is not the material used to draw the materials. Equivalent to @Particles.process_material@.
 bindVisualServer_particles_set_process_material :: MethodBind
 bindVisualServer_particles_set_process_material
   = unsafePerformIO $
@@ -9848,7 +10850,8 @@ bindVisualServer_particles_set_process_material
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the material for processing the particles. Note: this is not the material used to draw the materials. Equivalent to @Particles.process_material@.
+-- | Sets the material for processing the particles.
+--   				__Note:__ This is not the material used to draw the materials. Equivalent to @Particles.process_material@.
 particles_set_process_material ::
                                  (VisualServer :< cls, Object :< cls) => cls -> Rid -> Rid -> IO ()
 particles_set_process_material cls arg1 arg2
@@ -9859,7 +10862,10 @@ particles_set_process_material cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_process_material"
            '[Rid, Rid]
@@ -9891,7 +10897,10 @@ particles_set_randomness_ratio cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_randomness_ratio"
            '[Rid, Float]
@@ -9922,7 +10931,10 @@ particles_set_speed_scale cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "particles_set_speed_scale"
            '[Rid, Float]
@@ -9955,7 +10967,10 @@ particles_set_use_local_coordinates cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "particles_set_use_local_coordinates"
@@ -9991,7 +11006,10 @@ reflection_probe_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "reflection_probe_create" '[]
            (IO Rid)
@@ -10022,7 +11040,10 @@ reflection_probe_set_as_interior cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "reflection_probe_set_as_interior"
            '[Rid, Bool]
@@ -10054,7 +11075,10 @@ reflection_probe_set_cull_mask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "reflection_probe_set_cull_mask"
            '[Rid, Int]
@@ -10088,7 +11112,10 @@ reflection_probe_set_enable_box_projection cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "reflection_probe_set_enable_box_projection"
@@ -10123,7 +11150,10 @@ reflection_probe_set_enable_shadows cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "reflection_probe_set_enable_shadows"
@@ -10157,7 +11187,10 @@ reflection_probe_set_extents cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "reflection_probe_set_extents"
            '[Rid, Vector3]
@@ -10189,7 +11222,10 @@ reflection_probe_set_intensity cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "reflection_probe_set_intensity"
            '[Rid, Float]
@@ -10223,7 +11259,10 @@ reflection_probe_set_interior_ambient cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "reflection_probe_set_interior_ambient"
@@ -10259,7 +11298,10 @@ reflection_probe_set_interior_ambient_energy cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "reflection_probe_set_interior_ambient_energy"
@@ -10298,7 +11340,10 @@ reflection_probe_set_interior_ambient_probe_contribution cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "reflection_probe_set_interior_ambient_probe_contribution"
@@ -10332,7 +11377,10 @@ reflection_probe_set_max_distance cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "reflection_probe_set_max_distance"
@@ -10367,7 +11415,10 @@ reflection_probe_set_origin_offset cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "reflection_probe_set_origin_offset"
@@ -10401,7 +11452,10 @@ reflection_probe_set_update_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "reflection_probe_set_update_mode"
            '[Rid, Int]
@@ -10436,7 +11490,10 @@ request_frame_drawn_callback cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "request_frame_drawn_callback"
            '[Object, GodotString, GodotVariant]
@@ -10470,7 +11527,10 @@ scenario_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "scenario_create" '[] (IO Rid)
          where
@@ -10498,7 +11558,10 @@ scenario_set_debug cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "scenario_set_debug" '[Rid, Int]
            (IO ())
@@ -10527,7 +11590,10 @@ scenario_set_environment cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "scenario_set_environment"
            '[Rid, Rid]
@@ -10559,7 +11625,10 @@ scenario_set_fallback_environment cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "scenario_set_fallback_environment"
@@ -10594,7 +11663,10 @@ scenario_set_reflection_atlas_size cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "scenario_set_reflection_atlas_size"
@@ -10628,7 +11700,10 @@ set_boot_image cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindVisualServer_set_boot_image (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "set_boot_image"
            '[Image, Color, Bool, Maybe Bool]
@@ -10659,7 +11734,10 @@ set_debug_generate_wireframes cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "set_debug_generate_wireframes"
            '[Bool]
@@ -10689,12 +11767,114 @@ set_default_clear_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "set_default_clear_color" '[Color]
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.set_default_clear_color
+
+{-# NOINLINE bindVisualServer_set_render_loop_enabled #-}
+
+-- | If @false@, disables rendering completely, but the engine logic is still being processed. You can call @method force_draw@ to draw a frame even with rendering disabled.
+bindVisualServer_set_render_loop_enabled :: MethodBind
+bindVisualServer_set_render_loop_enabled
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "set_render_loop_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @false@, disables rendering completely, but the engine logic is still being processed. You can call @method force_draw@ to draw a frame even with rendering disabled.
+set_render_loop_enabled ::
+                          (VisualServer :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_render_loop_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualServer_set_render_loop_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "set_render_loop_enabled" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.set_render_loop_enabled
+
+{-# NOINLINE bindVisualServer_set_shader_time_scale #-}
+
+-- | Sets the scale to apply to the passage of time for the shaders' @TIME@ builtin.
+--   				The default value is @1.0@, which means @TIME@ will count the real time as it goes by, without narrowing or stretching it.
+bindVisualServer_set_shader_time_scale :: MethodBind
+bindVisualServer_set_shader_time_scale
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "set_shader_time_scale" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the scale to apply to the passage of time for the shaders' @TIME@ builtin.
+--   				The default value is @1.0@, which means @TIME@ will count the real time as it goes by, without narrowing or stretching it.
+set_shader_time_scale ::
+                        (VisualServer :< cls, Object :< cls) => cls -> Float -> IO ()
+set_shader_time_scale cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualServer_set_shader_time_scale
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "set_shader_time_scale" '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.set_shader_time_scale
+
+{-# NOINLINE bindVisualServer_set_use_occlusion_culling #-}
+
+-- | Enables or disables occlusion culling.
+bindVisualServer_set_use_occlusion_culling :: MethodBind
+bindVisualServer_set_use_occlusion_culling
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "set_use_occlusion_culling" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Enables or disables occlusion culling.
+set_use_occlusion_culling ::
+                            (VisualServer :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_use_occlusion_culling cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualServer_set_use_occlusion_culling
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "set_use_occlusion_culling"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.set_use_occlusion_culling
 
 {-# NOINLINE bindVisualServer_shader_create #-}
 
@@ -10719,7 +11899,10 @@ shader_create cls
          godot_method_bind_call bindVisualServer_shader_create (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "shader_create" '[] (IO Rid) where
         nodeMethod = Godot.Core.VisualServer.shader_create
@@ -10747,7 +11930,10 @@ shader_get_code cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "shader_get_code" '[Rid]
            (IO GodotString)
@@ -10778,7 +11964,10 @@ shader_get_default_texture_param cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "shader_get_default_texture_param"
            '[Rid, GodotString]
@@ -10809,7 +11998,10 @@ shader_get_param_list cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "shader_get_param_list" '[Rid]
            (IO Array)
@@ -10839,7 +12031,10 @@ shader_set_code cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "shader_set_code"
            '[Rid, GodotString]
@@ -10871,7 +12066,10 @@ shader_set_default_texture_param cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "shader_set_default_texture_param"
            '[Rid, GodotString, Rid]
@@ -10905,7 +12103,10 @@ skeleton_allocate cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "skeleton_allocate"
            '[Rid, Int, Maybe Bool]
@@ -10936,7 +12137,10 @@ skeleton_bone_get_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "skeleton_bone_get_transform"
            '[Rid, Int]
@@ -10968,7 +12172,10 @@ skeleton_bone_get_transform_2d cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "skeleton_bone_get_transform_2d"
            '[Rid, Int]
@@ -10999,7 +12206,10 @@ skeleton_bone_set_transform cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "skeleton_bone_set_transform"
            '[Rid, Int, Transform]
@@ -11031,7 +12241,10 @@ skeleton_bone_set_transform_2d cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "skeleton_bone_set_transform_2d"
            '[Rid, Int, Transform2d]
@@ -11063,7 +12276,10 @@ skeleton_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "skeleton_create" '[] (IO Rid)
          where
@@ -11091,7 +12307,10 @@ skeleton_get_bone_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "skeleton_get_bone_count" '[Rid]
            (IO Int)
@@ -11120,7 +12339,10 @@ sky_create cls
          godot_method_bind_call bindVisualServer_sky_create (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "sky_create" '[] (IO Rid) where
         nodeMethod = Godot.Core.VisualServer.sky_create
@@ -11148,7 +12370,10 @@ sky_set_texture cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "sky_set_texture" '[Rid, Rid, Int]
            (IO ())
@@ -11181,7 +12406,10 @@ spot_light_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "spot_light_create" '[] (IO Rid)
          where
@@ -11206,7 +12434,10 @@ sync cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVisualServer_sync (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "sync" '[] (IO ()) where
         nodeMethod = Godot.Core.VisualServer.sync
@@ -11237,7 +12468,10 @@ texture_allocate cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_allocate"
            '[Rid, Int, Int, Int, Int, Int, Maybe Int]
@@ -11266,7 +12500,10 @@ texture_bind cls arg1 arg2
          godot_method_bind_call bindVisualServer_texture_bind (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_bind" '[Rid, Int] (IO ())
          where
@@ -11295,7 +12532,10 @@ texture_create cls
          godot_method_bind_call bindVisualServer_texture_create (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_create" '[] (IO Rid)
          where
@@ -11325,7 +12565,10 @@ texture_create_from_image cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_create_from_image"
            '[Image, Maybe Int]
@@ -11355,7 +12598,10 @@ texture_debug_usage cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_debug_usage" '[]
            (IO Array)
@@ -11386,7 +12632,7 @@ texture_get_data cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod VisualServer "texture_get_data"
            '[Rid, Maybe Int]
@@ -11416,7 +12662,10 @@ texture_get_depth cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_get_depth" '[Rid]
            (IO Int)
@@ -11445,7 +12694,10 @@ texture_get_flags cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_get_flags" '[Rid]
            (IO Int)
@@ -11474,7 +12726,10 @@ texture_get_format cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_get_format" '[Rid]
            (IO Int)
@@ -11503,7 +12758,10 @@ texture_get_height cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_get_height" '[Rid]
            (IO Int)
@@ -11533,7 +12791,10 @@ texture_get_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_get_path" '[Rid]
            (IO GodotString)
@@ -11562,7 +12823,10 @@ texture_get_texid cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_get_texid" '[Rid]
            (IO Int)
@@ -11591,7 +12855,10 @@ texture_get_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_get_type" '[Rid] (IO Int)
          where
@@ -11619,7 +12886,10 @@ texture_get_width cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_get_width" '[Rid]
            (IO Int)
@@ -11651,7 +12921,10 @@ texture_set_data cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_set_data"
            '[Rid, Image, Maybe Int]
@@ -11689,7 +12962,10 @@ texture_set_data_partial cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_set_data_partial"
            '[Rid, Image, Int, Int, Int, Int, Int, Int, Int, Maybe Int]
@@ -11719,7 +12995,10 @@ texture_set_flags cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_set_flags" '[Rid, Int]
            (IO ())
@@ -11749,7 +13028,10 @@ texture_set_path cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_set_path"
            '[Rid, GodotString]
@@ -11782,7 +13064,10 @@ texture_set_shrink_all_x2_on_set_data cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "texture_set_shrink_all_x2_on_set_data"
@@ -11816,7 +13101,10 @@ texture_set_size_override cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "texture_set_size_override"
            '[Rid, Int, Int, Int]
@@ -11846,7 +13134,10 @@ textures_keep_original cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "textures_keep_original" '[Bool]
            (IO ())
@@ -11875,7 +13166,10 @@ viewport_attach_camera cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_attach_camera"
            '[Rid, Rid]
@@ -11905,7 +13199,10 @@ viewport_attach_canvas cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_attach_canvas"
            '[Rid, Rid]
@@ -11961,7 +13258,10 @@ viewport_attach_to_screen cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_attach_to_screen"
            '[Rid, Maybe Rect2, Maybe Int]
@@ -11993,7 +13293,10 @@ viewport_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_create" '[] (IO Rid)
          where
@@ -12021,7 +13324,10 @@ viewport_detach cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_detach" '[Rid] (IO ())
          where
@@ -12049,7 +13355,10 @@ viewport_get_render_info cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_get_render_info"
            '[Rid, Int]
@@ -12079,7 +13388,10 @@ viewport_get_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_get_texture" '[Rid]
            (IO Rid)
@@ -12108,7 +13420,10 @@ viewport_remove_canvas cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_remove_canvas"
            '[Rid, Rid]
@@ -12138,7 +13453,10 @@ viewport_set_active cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_active" '[Rid, Bool]
            (IO ())
@@ -12172,7 +13490,10 @@ viewport_set_canvas_stacking cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_canvas_stacking"
            '[Rid, Rid, Int, Int]
@@ -12204,7 +13525,10 @@ viewport_set_canvas_transform cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_canvas_transform"
            '[Rid, Rid, Transform2d]
@@ -12234,7 +13558,10 @@ viewport_set_clear_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_clear_mode"
            '[Rid, Int]
@@ -12264,7 +13591,10 @@ viewport_set_debug_draw cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_debug_draw"
            '[Rid, Int]
@@ -12294,7 +13624,10 @@ viewport_set_disable_3d cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_disable_3d"
            '[Rid, Bool]
@@ -12326,7 +13659,10 @@ viewport_set_disable_environment cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_disable_environment"
            '[Rid, Bool]
@@ -12360,7 +13696,10 @@ viewport_set_global_canvas_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "viewport_set_global_canvas_transform"
@@ -12392,7 +13731,10 @@ viewport_set_hdr cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_hdr" '[Rid, Bool]
            (IO ())
@@ -12421,7 +13763,10 @@ viewport_set_hide_canvas cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_hide_canvas"
            '[Rid, Bool]
@@ -12451,7 +13796,10 @@ viewport_set_hide_scenario cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_hide_scenario"
            '[Rid, Bool]
@@ -12481,7 +13829,10 @@ viewport_set_msaa cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_msaa" '[Rid, Int]
            (IO ())
@@ -12511,7 +13862,10 @@ viewport_set_parent_viewport cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_parent_viewport"
            '[Rid, Rid]
@@ -12544,7 +13898,10 @@ viewport_set_render_direct_to_screen cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "viewport_set_render_direct_to_screen"
@@ -12578,7 +13935,10 @@ viewport_set_scenario cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_scenario"
            '[Rid, Rid]
@@ -12612,7 +13972,10 @@ viewport_set_shadow_atlas_quadrant_subdivision cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "viewport_set_shadow_atlas_quadrant_subdivision"
@@ -12645,13 +14008,51 @@ viewport_set_shadow_atlas_size cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_shadow_atlas_size"
            '[Rid, Int]
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.viewport_set_shadow_atlas_size
+
+{-# NOINLINE bindVisualServer_viewport_set_sharpen_intensity #-}
+
+-- | Sets the sharpening @intensity@ for the @viewport@. If set to a value greater than @0.0@, contrast-adaptive sharpening will be applied to the 3D viewport. This has a low performance cost and can be used to recover some of the sharpness lost from using FXAA. Values around @0.5@ generally give the best results. See also @method viewport_set_use_fxaa@.
+bindVisualServer_viewport_set_sharpen_intensity :: MethodBind
+bindVisualServer_viewport_set_sharpen_intensity
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "viewport_set_sharpen_intensity" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the sharpening @intensity@ for the @viewport@. If set to a value greater than @0.0@, contrast-adaptive sharpening will be applied to the 3D viewport. This has a low performance cost and can be used to recover some of the sharpness lost from using FXAA. Values around @0.5@ generally give the best results. See also @method viewport_set_use_fxaa@.
+viewport_set_sharpen_intensity ::
+                                 (VisualServer :< cls, Object :< cls) =>
+                                 cls -> Rid -> Float -> IO ()
+viewport_set_sharpen_intensity cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_viewport_set_sharpen_intensity
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "viewport_set_sharpen_intensity"
+           '[Rid, Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.viewport_set_sharpen_intensity
 
 {-# NOINLINE bindVisualServer_viewport_set_size #-}
 
@@ -12676,7 +14077,10 @@ viewport_set_size cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_size"
            '[Rid, Int, Int]
@@ -12709,7 +14113,10 @@ viewport_set_transparent_background cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer
            "viewport_set_transparent_background"
@@ -12741,7 +14148,10 @@ viewport_set_update_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_update_mode"
            '[Rid, Int]
@@ -12771,7 +14181,10 @@ viewport_set_usage cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_usage" '[Rid, Int]
            (IO ())
@@ -12800,13 +14213,84 @@ viewport_set_use_arvr cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_use_arvr"
            '[Rid, Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.viewport_set_use_arvr
+
+{-# NOINLINE bindVisualServer_viewport_set_use_debanding #-}
+
+-- | If @true@, uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
+--   				__Note:__ Only available on the GLES3 backend. @Viewport.hdr@ must also be @true@ for debanding to be effective.
+bindVisualServer_viewport_set_use_debanding :: MethodBind
+bindVisualServer_viewport_set_use_debanding
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "viewport_set_use_debanding" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
+--   				__Note:__ Only available on the GLES3 backend. @Viewport.hdr@ must also be @true@ for debanding to be effective.
+viewport_set_use_debanding ::
+                             (VisualServer :< cls, Object :< cls) => cls -> Rid -> Bool -> IO ()
+viewport_set_use_debanding cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualServer_viewport_set_use_debanding
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "viewport_set_use_debanding"
+           '[Rid, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.viewport_set_use_debanding
+
+{-# NOINLINE bindVisualServer_viewport_set_use_fxaa #-}
+
+-- | Enables fast approximate antialiasing for this viewport. FXAA is a popular screen-space antialiasing method, which is fast but will make the image look blurry, especially at lower resolutions. It can still work relatively well at large resolutions such as 1440p and 4K. Some of the lost sharpness can be recovered by enabling contrast-adaptive sharpening (see @method viewport_set_sharpen_intensity@).
+bindVisualServer_viewport_set_use_fxaa :: MethodBind
+bindVisualServer_viewport_set_use_fxaa
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "viewport_set_use_fxaa" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Enables fast approximate antialiasing for this viewport. FXAA is a popular screen-space antialiasing method, which is fast but will make the image look blurry, especially at lower resolutions. It can still work relatively well at large resolutions such as 1440p and 4K. Some of the lost sharpness can be recovered by enabling contrast-adaptive sharpening (see @method viewport_set_sharpen_intensity@).
+viewport_set_use_fxaa ::
+                        (VisualServer :< cls, Object :< cls) => cls -> Rid -> Bool -> IO ()
+viewport_set_use_fxaa cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualServer_viewport_set_use_fxaa
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "viewport_set_use_fxaa"
+           '[Rid, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.viewport_set_use_fxaa
 
 {-# NOINLINE bindVisualServer_viewport_set_vflip #-}
 
@@ -12830,7 +14314,10 @@ viewport_set_vflip cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualServer "viewport_set_vflip" '[Rid, Bool]
            (IO ())

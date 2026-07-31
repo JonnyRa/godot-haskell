@@ -17,9 +17,13 @@ module Godot.Core.TextureButton
         Godot.Core.TextureButton.get_normal_texture,
         Godot.Core.TextureButton.get_pressed_texture,
         Godot.Core.TextureButton.get_stretch_mode,
+        Godot.Core.TextureButton.is_flipped_h,
+        Godot.Core.TextureButton.is_flipped_v,
         Godot.Core.TextureButton.set_click_mask,
         Godot.Core.TextureButton.set_disabled_texture,
         Godot.Core.TextureButton.set_expand,
+        Godot.Core.TextureButton.set_flip_h,
+        Godot.Core.TextureButton.set_flip_v,
         Godot.Core.TextureButton.set_focused_texture,
         Godot.Core.TextureButton.set_hover_texture,
         Godot.Core.TextureButton.set_normal_texture,
@@ -61,6 +65,14 @@ _STRETCH_KEEP_ASPECT_CENTERED = 5
 
 instance NodeProperty TextureButton "expand" Bool 'False where
         nodeProperty = (get_expand, wrapDroppingSetter set_expand, Nothing)
+
+instance NodeProperty TextureButton "flip_h" Bool 'False where
+        nodeProperty
+          = (is_flipped_h, wrapDroppingSetter set_flip_h, Nothing)
+
+instance NodeProperty TextureButton "flip_v" Bool 'False where
+        nodeProperty
+          = (is_flipped_v, wrapDroppingSetter set_flip_v, Nothing)
 
 instance NodeProperty TextureButton "stretch_mode" Int 'False where
         nodeProperty
@@ -127,7 +139,7 @@ get_click_mask cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureButton "get_click_mask" '[] (IO BitMap)
          where
@@ -155,7 +167,7 @@ get_disabled_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureButton "get_disabled_texture" '[]
            (IO Texture)
@@ -183,7 +195,10 @@ get_expand cls
          godot_method_bind_call bindTextureButton_get_expand (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureButton "get_expand" '[] (IO Bool) where
         nodeMethod = Godot.Core.TextureButton.get_expand
@@ -210,7 +225,7 @@ get_focused_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureButton "get_focused_texture" '[]
            (IO Texture)
@@ -239,7 +254,7 @@ get_hover_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureButton "get_hover_texture" '[]
            (IO Texture)
@@ -268,7 +283,7 @@ get_normal_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureButton "get_normal_texture" '[]
            (IO Texture)
@@ -297,7 +312,7 @@ get_pressed_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureButton "get_pressed_texture" '[]
            (IO Texture)
@@ -326,11 +341,74 @@ get_stretch_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureButton "get_stretch_mode" '[] (IO Int)
          where
         nodeMethod = Godot.Core.TextureButton.get_stretch_mode
+
+{-# NOINLINE bindTextureButton_is_flipped_h #-}
+
+-- | If @true@, texture is flipped horizontally.
+bindTextureButton_is_flipped_h :: MethodBind
+bindTextureButton_is_flipped_h
+  = unsafePerformIO $
+      withCString "TextureButton" $
+        \ clsNamePtr ->
+          withCString "is_flipped_h" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, texture is flipped horizontally.
+is_flipped_h ::
+               (TextureButton :< cls, Object :< cls) => cls -> IO Bool
+is_flipped_h cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextureButton_is_flipped_h (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextureButton "is_flipped_h" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextureButton.is_flipped_h
+
+{-# NOINLINE bindTextureButton_is_flipped_v #-}
+
+-- | If @true@, texture is flipped vertically.
+bindTextureButton_is_flipped_v :: MethodBind
+bindTextureButton_is_flipped_v
+  = unsafePerformIO $
+      withCString "TextureButton" $
+        \ clsNamePtr ->
+          withCString "is_flipped_v" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, texture is flipped vertically.
+is_flipped_v ::
+               (TextureButton :< cls, Object :< cls) => cls -> IO Bool
+is_flipped_v cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextureButton_is_flipped_v (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextureButton "is_flipped_v" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextureButton.is_flipped_v
 
 {-# NOINLINE bindTextureButton_set_click_mask #-}
 
@@ -354,7 +432,10 @@ set_click_mask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureButton "set_click_mask" '[BitMap]
            (IO ())
@@ -383,7 +464,10 @@ set_disabled_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureButton "set_disabled_texture" '[Texture]
            (IO ())
@@ -411,11 +495,74 @@ set_expand cls arg1
          godot_method_bind_call bindTextureButton_set_expand (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureButton "set_expand" '[Bool] (IO ())
          where
         nodeMethod = Godot.Core.TextureButton.set_expand
+
+{-# NOINLINE bindTextureButton_set_flip_h #-}
+
+-- | If @true@, texture is flipped horizontally.
+bindTextureButton_set_flip_h :: MethodBind
+bindTextureButton_set_flip_h
+  = unsafePerformIO $
+      withCString "TextureButton" $
+        \ clsNamePtr ->
+          withCString "set_flip_h" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, texture is flipped horizontally.
+set_flip_h ::
+             (TextureButton :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_flip_h cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextureButton_set_flip_h (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextureButton "set_flip_h" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.TextureButton.set_flip_h
+
+{-# NOINLINE bindTextureButton_set_flip_v #-}
+
+-- | If @true@, texture is flipped vertically.
+bindTextureButton_set_flip_v :: MethodBind
+bindTextureButton_set_flip_v
+  = unsafePerformIO $
+      withCString "TextureButton" $
+        \ clsNamePtr ->
+          withCString "set_flip_v" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, texture is flipped vertically.
+set_flip_v ::
+             (TextureButton :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_flip_v cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextureButton_set_flip_v (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextureButton "set_flip_v" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.TextureButton.set_flip_v
 
 {-# NOINLINE bindTextureButton_set_focused_texture #-}
 
@@ -439,7 +586,10 @@ set_focused_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureButton "set_focused_texture" '[Texture]
            (IO ())
@@ -468,7 +618,10 @@ set_hover_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureButton "set_hover_texture" '[Texture]
            (IO ())
@@ -497,7 +650,10 @@ set_normal_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureButton "set_normal_texture" '[Texture]
            (IO ())
@@ -526,7 +682,10 @@ set_pressed_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureButton "set_pressed_texture" '[Texture]
            (IO ())
@@ -555,7 +714,10 @@ set_stretch_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureButton "set_stretch_mode" '[Int] (IO ())
          where

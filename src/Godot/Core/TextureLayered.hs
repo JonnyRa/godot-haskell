@@ -2,13 +2,14 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.TextureLayered
-       (Godot.Core.TextureLayered._FLAGS_DEFAULT,
+       (Godot.Core.TextureLayered._FLAGS_DEFAULT_TEXTURE_ARRAY,
         Godot.Core.TextureLayered._FLAG_REPEAT,
+        Godot.Core.TextureLayered._FLAG_ANISOTROPIC_FILTER,
         Godot.Core.TextureLayered._FLAG_MIPMAPS,
         Godot.Core.TextureLayered._FLAG_FILTER,
+        Godot.Core.TextureLayered._FLAGS_DEFAULT_TEXTURE_3D,
         Godot.Core.TextureLayered._get_data,
         Godot.Core.TextureLayered._set_data,
-        Godot.Core.TextureLayered.create,
         Godot.Core.TextureLayered.get_depth,
         Godot.Core.TextureLayered.get_flags,
         Godot.Core.TextureLayered.get_format,
@@ -31,17 +32,23 @@ import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Resource()
 
-_FLAGS_DEFAULT :: Int
-_FLAGS_DEFAULT = 4
+_FLAGS_DEFAULT_TEXTURE_ARRAY :: Int
+_FLAGS_DEFAULT_TEXTURE_ARRAY = 7
 
 _FLAG_REPEAT :: Int
 _FLAG_REPEAT = 2
+
+_FLAG_ANISOTROPIC_FILTER :: Int
+_FLAG_ANISOTROPIC_FILTER = 8
 
 _FLAG_MIPMAPS :: Int
 _FLAG_MIPMAPS = 1
 
 _FLAG_FILTER :: Int
 _FLAG_FILTER = 4
+
+_FLAGS_DEFAULT_TEXTURE_3D :: Int
+_FLAGS_DEFAULT_TEXTURE_3D = 4
 
 instance NodeProperty TextureLayered "data" Dictionary 'False where
         nodeProperty = (_get_data, wrapDroppingSetter _set_data, Nothing)
@@ -70,7 +77,10 @@ _get_data cls
          godot_method_bind_call bindTextureLayered__get_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureLayered "_get_data" '[] (IO Dictionary)
          where
@@ -98,44 +108,15 @@ _set_data cls arg1
          godot_method_bind_call bindTextureLayered__set_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureLayered "_set_data" '[Dictionary]
            (IO ())
          where
         nodeMethod = Godot.Core.TextureLayered._set_data
-
-{-# NOINLINE bindTextureLayered_create #-}
-
--- | Creates the @Texture3D@ or @TextureArray@ with specified @width@, @height@, and @depth@. See @enum Image.Format@ for @format@ options. See @enum Flags@ enumerator for @flags@ options.
-bindTextureLayered_create :: MethodBind
-bindTextureLayered_create
-  = unsafePerformIO $
-      withCString "TextureLayered" $
-        \ clsNamePtr ->
-          withCString "create" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | Creates the @Texture3D@ or @TextureArray@ with specified @width@, @height@, and @depth@. See @enum Image.Format@ for @format@ options. See @enum Flags@ enumerator for @flags@ options.
-create ::
-         (TextureLayered :< cls, Object :< cls) =>
-         cls -> Int -> Int -> Int -> Int -> Maybe Int -> IO ()
-create cls arg1 arg2 arg3 arg4 arg5
-  = withVariantArray
-      [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4,
-       maybe (VariantInt (4)) toVariant arg5]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindTextureLayered_create (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod TextureLayered "create"
-           '[Int, Int, Int, Int, Maybe Int]
-           (IO ())
-         where
-        nodeMethod = Godot.Core.TextureLayered.create
 
 {-# NOINLINE bindTextureLayered_get_depth #-}
 
@@ -158,7 +139,10 @@ get_depth cls
          godot_method_bind_call bindTextureLayered_get_depth (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureLayered "get_depth" '[] (IO Int) where
         nodeMethod = Godot.Core.TextureLayered.get_depth
@@ -184,7 +168,10 @@ get_flags cls
          godot_method_bind_call bindTextureLayered_get_flags (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureLayered "get_flags" '[] (IO Int) where
         nodeMethod = Godot.Core.TextureLayered.get_flags
@@ -210,7 +197,10 @@ get_format cls
          godot_method_bind_call bindTextureLayered_get_format (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureLayered "get_format" '[] (IO Int) where
         nodeMethod = Godot.Core.TextureLayered.get_format
@@ -236,7 +226,10 @@ get_height cls
          godot_method_bind_call bindTextureLayered_get_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureLayered "get_height" '[] (IO Int) where
         nodeMethod = Godot.Core.TextureLayered.get_height
@@ -263,7 +256,7 @@ get_layer_data cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureLayered "get_layer_data" '[Int]
            (IO Image)
@@ -291,7 +284,10 @@ get_width cls
          godot_method_bind_call bindTextureLayered_get_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureLayered "get_width" '[] (IO Int) where
         nodeMethod = Godot.Core.TextureLayered.get_width
@@ -321,7 +317,10 @@ set_data_partial cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureLayered "set_data_partial"
            '[Image, Int, Int, Int, Maybe Int]
@@ -350,7 +349,10 @@ set_flags cls arg1
          godot_method_bind_call bindTextureLayered_set_flags (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureLayered "set_flags" '[Int] (IO ()) where
         nodeMethod = Godot.Core.TextureLayered.set_flags
@@ -378,7 +380,10 @@ set_layer_data cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureLayered "set_layer_data" '[Image, Int]
            (IO ())

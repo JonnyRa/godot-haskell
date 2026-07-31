@@ -55,7 +55,7 @@ get_base_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshTexture "get_base_texture" '[] (IO Texture)
          where
@@ -82,7 +82,10 @@ get_image_size cls
          godot_method_bind_call bindMeshTexture_get_image_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshTexture "get_image_size" '[] (IO Vector2)
          where
@@ -107,7 +110,7 @@ get_mesh cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMeshTexture_get_mesh (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshTexture "get_mesh" '[] (IO Mesh) where
         nodeMethod = Godot.Core.MeshTexture.get_mesh
@@ -134,7 +137,10 @@ set_base_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshTexture "set_base_texture" '[Texture]
            (IO ())
@@ -162,7 +168,10 @@ set_image_size cls arg1
          godot_method_bind_call bindMeshTexture_set_image_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshTexture "set_image_size" '[Vector2] (IO ())
          where
@@ -188,7 +197,10 @@ set_mesh cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMeshTexture_set_mesh (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshTexture "set_mesh" '[Mesh] (IO ()) where
         nodeMethod = Godot.Core.MeshTexture.set_mesh

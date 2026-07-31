@@ -15,6 +15,7 @@ module Godot.Core.ParticlesMaterial
         Godot.Core.ParticlesMaterial._EMISSION_SHAPE_POINTS,
         Godot.Core.ParticlesMaterial._PARAM_MAX,
         Godot.Core.ParticlesMaterial._PARAM_INITIAL_LINEAR_VELOCITY,
+        Godot.Core.ParticlesMaterial._EMISSION_SHAPE_RING,
         Godot.Core.ParticlesMaterial._FLAG_MAX,
         Godot.Core.ParticlesMaterial._PARAM_LINEAR_ACCEL,
         Godot.Core.ParticlesMaterial._EMISSION_SHAPE_DIRECTED_POINTS,
@@ -33,6 +34,10 @@ module Godot.Core.ParticlesMaterial
         Godot.Core.ParticlesMaterial.get_emission_normal_texture,
         Godot.Core.ParticlesMaterial.get_emission_point_count,
         Godot.Core.ParticlesMaterial.get_emission_point_texture,
+        Godot.Core.ParticlesMaterial.get_emission_ring_axis,
+        Godot.Core.ParticlesMaterial.get_emission_ring_height,
+        Godot.Core.ParticlesMaterial.get_emission_ring_inner_radius,
+        Godot.Core.ParticlesMaterial.get_emission_ring_radius,
         Godot.Core.ParticlesMaterial.get_emission_shape,
         Godot.Core.ParticlesMaterial.get_emission_sphere_radius,
         Godot.Core.ParticlesMaterial.get_flag,
@@ -54,6 +59,10 @@ module Godot.Core.ParticlesMaterial
         Godot.Core.ParticlesMaterial.set_emission_normal_texture,
         Godot.Core.ParticlesMaterial.set_emission_point_count,
         Godot.Core.ParticlesMaterial.set_emission_point_texture,
+        Godot.Core.ParticlesMaterial.set_emission_ring_axis,
+        Godot.Core.ParticlesMaterial.set_emission_ring_height,
+        Godot.Core.ParticlesMaterial.set_emission_ring_inner_radius,
+        Godot.Core.ParticlesMaterial.set_emission_ring_radius,
         Godot.Core.ParticlesMaterial.set_emission_shape,
         Godot.Core.ParticlesMaterial.set_emission_sphere_radius,
         Godot.Core.ParticlesMaterial.set_flag,
@@ -99,7 +108,7 @@ _PARAM_ANGULAR_VELOCITY :: Int
 _PARAM_ANGULAR_VELOCITY = 1
 
 _EMISSION_SHAPE_MAX :: Int
-_EMISSION_SHAPE_MAX = 5
+_EMISSION_SHAPE_MAX = 6
 
 _PARAM_TANGENTIAL_ACCEL :: Int
 _PARAM_TANGENTIAL_ACCEL = 5
@@ -118,6 +127,9 @@ _PARAM_MAX = 12
 
 _PARAM_INITIAL_LINEAR_VELOCITY :: Int
 _PARAM_INITIAL_LINEAR_VELOCITY = 0
+
+_EMISSION_SHAPE_RING :: Int
+_EMISSION_SHAPE_RING = 5
 
 _FLAG_MAX :: Int
 _FLAG_MAX = 3
@@ -301,6 +313,39 @@ instance NodeProperty ParticlesMaterial "emission_point_texture"
         nodeProperty
           = (get_emission_point_texture,
              wrapDroppingSetter set_emission_point_texture, Nothing)
+
+instance NodeProperty ParticlesMaterial "emission_ring_axis"
+           Vector3
+           'False
+         where
+        nodeProperty
+          = (get_emission_ring_axis,
+             wrapDroppingSetter set_emission_ring_axis, Nothing)
+
+instance NodeProperty ParticlesMaterial "emission_ring_height"
+           Float
+           'False
+         where
+        nodeProperty
+          = (get_emission_ring_height,
+             wrapDroppingSetter set_emission_ring_height, Nothing)
+
+instance NodeProperty ParticlesMaterial
+           "emission_ring_inner_radius"
+           Float
+           'False
+         where
+        nodeProperty
+          = (get_emission_ring_inner_radius,
+             wrapDroppingSetter set_emission_ring_inner_radius, Nothing)
+
+instance NodeProperty ParticlesMaterial "emission_ring_radius"
+           Float
+           'False
+         where
+        nodeProperty
+          = (get_emission_ring_radius,
+             wrapDroppingSetter set_emission_ring_radius, Nothing)
 
 instance NodeProperty ParticlesMaterial "emission_shape" Int 'False
          where
@@ -542,7 +587,10 @@ get_color cls
          godot_method_bind_call bindParticlesMaterial_get_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_color" '[] (IO Color)
          where
@@ -550,7 +598,7 @@ instance NodeMethod ParticlesMaterial "get_color" '[] (IO Color)
 
 {-# NOINLINE bindParticlesMaterial_get_color_ramp #-}
 
--- | Each particle's color will vary along this @GradientTexture@.
+-- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
 bindParticlesMaterial_get_color_ramp :: MethodBind
 bindParticlesMaterial_get_color_ramp
   = unsafePerformIO $
@@ -560,7 +608,7 @@ bindParticlesMaterial_get_color_ramp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Each particle's color will vary along this @GradientTexture@.
+-- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
 get_color_ramp ::
                  (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Texture
 get_color_ramp cls
@@ -570,7 +618,7 @@ get_color_ramp cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ParticlesMaterial "get_color_ramp" '[]
            (IO Texture)
@@ -599,7 +647,10 @@ get_direction cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_direction" '[]
            (IO Vector3)
@@ -629,7 +680,10 @@ get_emission_box_extents cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_emission_box_extents"
            '[]
@@ -660,7 +714,7 @@ get_emission_color_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ParticlesMaterial "get_emission_color_texture"
            '[]
@@ -692,7 +746,7 @@ get_emission_normal_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ParticlesMaterial "get_emission_normal_texture"
            '[]
@@ -724,7 +778,10 @@ get_emission_point_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_emission_point_count"
            '[]
@@ -755,7 +812,7 @@ get_emission_point_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ParticlesMaterial "get_emission_point_texture"
            '[]
@@ -763,6 +820,143 @@ instance NodeMethod ParticlesMaterial "get_emission_point_texture"
          where
         nodeMethod
           = Godot.Core.ParticlesMaterial.get_emission_point_texture
+
+{-# NOINLINE bindParticlesMaterial_get_emission_ring_axis #-}
+
+-- | The axis of the ring when using the emitter @EMISSION_SHAPE_RING@.
+bindParticlesMaterial_get_emission_ring_axis :: MethodBind
+bindParticlesMaterial_get_emission_ring_axis
+  = unsafePerformIO $
+      withCString "ParticlesMaterial" $
+        \ clsNamePtr ->
+          withCString "get_emission_ring_axis" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The axis of the ring when using the emitter @EMISSION_SHAPE_RING@.
+get_emission_ring_axis ::
+                         (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Vector3
+get_emission_ring_axis cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindParticlesMaterial_get_emission_ring_axis
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ParticlesMaterial "get_emission_ring_axis" '[]
+           (IO Vector3)
+         where
+        nodeMethod = Godot.Core.ParticlesMaterial.get_emission_ring_axis
+
+{-# NOINLINE bindParticlesMaterial_get_emission_ring_height #-}
+
+-- | The height of the ring when using the emitter @EMISSION_SHAPE_RING@.
+bindParticlesMaterial_get_emission_ring_height :: MethodBind
+bindParticlesMaterial_get_emission_ring_height
+  = unsafePerformIO $
+      withCString "ParticlesMaterial" $
+        \ clsNamePtr ->
+          withCString "get_emission_ring_height" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The height of the ring when using the emitter @EMISSION_SHAPE_RING@.
+get_emission_ring_height ::
+                           (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Float
+get_emission_ring_height cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindParticlesMaterial_get_emission_ring_height
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ParticlesMaterial "get_emission_ring_height"
+           '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.ParticlesMaterial.get_emission_ring_height
+
+{-# NOINLINE bindParticlesMaterial_get_emission_ring_inner_radius
+             #-}
+
+-- | The inner radius of the ring when using the emitter @EMISSION_SHAPE_RING@.
+bindParticlesMaterial_get_emission_ring_inner_radius :: MethodBind
+bindParticlesMaterial_get_emission_ring_inner_radius
+  = unsafePerformIO $
+      withCString "ParticlesMaterial" $
+        \ clsNamePtr ->
+          withCString "get_emission_ring_inner_radius" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The inner radius of the ring when using the emitter @EMISSION_SHAPE_RING@.
+get_emission_ring_inner_radius ::
+                                 (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Float
+get_emission_ring_inner_radius cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindParticlesMaterial_get_emission_ring_inner_radius
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ParticlesMaterial
+           "get_emission_ring_inner_radius"
+           '[]
+           (IO Float)
+         where
+        nodeMethod
+          = Godot.Core.ParticlesMaterial.get_emission_ring_inner_radius
+
+{-# NOINLINE bindParticlesMaterial_get_emission_ring_radius #-}
+
+-- | The radius of the ring when using the emitter @EMISSION_SHAPE_RING@.
+bindParticlesMaterial_get_emission_ring_radius :: MethodBind
+bindParticlesMaterial_get_emission_ring_radius
+  = unsafePerformIO $
+      withCString "ParticlesMaterial" $
+        \ clsNamePtr ->
+          withCString "get_emission_ring_radius" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The radius of the ring when using the emitter @EMISSION_SHAPE_RING@.
+get_emission_ring_radius ::
+                           (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Float
+get_emission_ring_radius cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindParticlesMaterial_get_emission_ring_radius
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ParticlesMaterial "get_emission_ring_radius"
+           '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.ParticlesMaterial.get_emission_ring_radius
 
 {-# NOINLINE bindParticlesMaterial_get_emission_shape #-}
 
@@ -786,7 +980,10 @@ get_emission_shape cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_emission_shape" '[]
            (IO Int)
@@ -816,7 +1013,10 @@ get_emission_sphere_radius cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_emission_sphere_radius"
            '[]
@@ -846,7 +1046,10 @@ get_flag cls arg1
          godot_method_bind_call bindParticlesMaterial_get_flag (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_flag" '[Int] (IO Bool)
          where
@@ -854,7 +1057,7 @@ instance NodeMethod ParticlesMaterial "get_flag" '[Int] (IO Bool)
 
 {-# NOINLINE bindParticlesMaterial_get_flatness #-}
 
--- | Amount of @spread@ in Y/Z plane. A value of @1@ restricts particles to X/Z plane.
+-- | Amount of @spread@ along the Y axis.
 bindParticlesMaterial_get_flatness :: MethodBind
 bindParticlesMaterial_get_flatness
   = unsafePerformIO $
@@ -864,7 +1067,7 @@ bindParticlesMaterial_get_flatness
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount of @spread@ in Y/Z plane. A value of @1@ restricts particles to X/Z plane.
+-- | Amount of @spread@ along the Y axis.
 get_flatness ::
                (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Float
 get_flatness cls
@@ -874,7 +1077,10 @@ get_flatness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_flatness" '[] (IO Float)
          where
@@ -902,7 +1108,10 @@ get_gravity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_gravity" '[]
            (IO Vector3)
@@ -932,7 +1141,10 @@ get_lifetime_randomness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_lifetime_randomness" '[]
            (IO Float)
@@ -960,7 +1172,10 @@ get_param cls arg1
          godot_method_bind_call bindParticlesMaterial_get_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_param" '[Int] (IO Float)
          where
@@ -988,7 +1203,10 @@ get_param_randomness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_param_randomness" '[Int]
            (IO Float)
@@ -1018,7 +1236,7 @@ get_param_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ParticlesMaterial "get_param_texture" '[Int]
            (IO Texture)
@@ -1027,7 +1245,7 @@ instance NodeMethod ParticlesMaterial "get_param_texture" '[Int]
 
 {-# NOINLINE bindParticlesMaterial_get_spread #-}
 
--- | Each particle's initial direction range from @+spread@ to @-spread@ degrees. Applied to X/Z plane and Y/Z planes.
+-- | Each particle's initial direction range from @+spread@ to @-spread@ degrees.
 bindParticlesMaterial_get_spread :: MethodBind
 bindParticlesMaterial_get_spread
   = unsafePerformIO $
@@ -1037,7 +1255,7 @@ bindParticlesMaterial_get_spread
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Each particle's initial direction range from @+spread@ to @-spread@ degrees. Applied to X/Z plane and Y/Z planes.
+-- | Each particle's initial direction range from @+spread@ to @-spread@ degrees.
 get_spread ::
              (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Float
 get_spread cls
@@ -1047,7 +1265,10 @@ get_spread cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_spread" '[] (IO Float)
          where
@@ -1077,7 +1298,7 @@ get_trail_color_modifier cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ParticlesMaterial "get_trail_color_modifier"
            '[]
@@ -1107,7 +1328,10 @@ get_trail_divisor cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "get_trail_divisor" '[]
            (IO Int)
@@ -1137,7 +1361,7 @@ get_trail_size_modifier cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ParticlesMaterial "get_trail_size_modifier" '[]
            (IO CurveTexture)
@@ -1165,7 +1389,10 @@ set_color cls arg1
          godot_method_bind_call bindParticlesMaterial_set_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_color" '[Color] (IO ())
          where
@@ -1173,7 +1400,7 @@ instance NodeMethod ParticlesMaterial "set_color" '[Color] (IO ())
 
 {-# NOINLINE bindParticlesMaterial_set_color_ramp #-}
 
--- | Each particle's color will vary along this @GradientTexture@.
+-- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
 bindParticlesMaterial_set_color_ramp :: MethodBind
 bindParticlesMaterial_set_color_ramp
   = unsafePerformIO $
@@ -1183,7 +1410,7 @@ bindParticlesMaterial_set_color_ramp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Each particle's color will vary along this @GradientTexture@.
+-- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
 set_color_ramp ::
                  (ParticlesMaterial :< cls, Object :< cls) =>
                  cls -> Texture -> IO ()
@@ -1194,7 +1421,10 @@ set_color_ramp cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_color_ramp" '[Texture]
            (IO ())
@@ -1224,7 +1454,10 @@ set_direction cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_direction" '[Vector3]
            (IO ())
@@ -1255,7 +1488,10 @@ set_emission_box_extents cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_emission_box_extents"
            '[Vector3]
@@ -1287,7 +1523,10 @@ set_emission_color_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_emission_color_texture"
            '[Texture]
@@ -1320,7 +1559,10 @@ set_emission_normal_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_emission_normal_texture"
            '[Texture]
@@ -1352,7 +1594,10 @@ set_emission_point_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_emission_point_count"
            '[Int]
@@ -1384,7 +1629,10 @@ set_emission_point_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_emission_point_texture"
            '[Texture]
@@ -1392,6 +1640,145 @@ instance NodeMethod ParticlesMaterial "set_emission_point_texture"
          where
         nodeMethod
           = Godot.Core.ParticlesMaterial.set_emission_point_texture
+
+{-# NOINLINE bindParticlesMaterial_set_emission_ring_axis #-}
+
+-- | The axis of the ring when using the emitter @EMISSION_SHAPE_RING@.
+bindParticlesMaterial_set_emission_ring_axis :: MethodBind
+bindParticlesMaterial_set_emission_ring_axis
+  = unsafePerformIO $
+      withCString "ParticlesMaterial" $
+        \ clsNamePtr ->
+          withCString "set_emission_ring_axis" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The axis of the ring when using the emitter @EMISSION_SHAPE_RING@.
+set_emission_ring_axis ::
+                         (ParticlesMaterial :< cls, Object :< cls) =>
+                         cls -> Vector3 -> IO ()
+set_emission_ring_axis cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindParticlesMaterial_set_emission_ring_axis
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ParticlesMaterial "set_emission_ring_axis"
+           '[Vector3]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ParticlesMaterial.set_emission_ring_axis
+
+{-# NOINLINE bindParticlesMaterial_set_emission_ring_height #-}
+
+-- | The height of the ring when using the emitter @EMISSION_SHAPE_RING@.
+bindParticlesMaterial_set_emission_ring_height :: MethodBind
+bindParticlesMaterial_set_emission_ring_height
+  = unsafePerformIO $
+      withCString "ParticlesMaterial" $
+        \ clsNamePtr ->
+          withCString "set_emission_ring_height" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The height of the ring when using the emitter @EMISSION_SHAPE_RING@.
+set_emission_ring_height ::
+                           (ParticlesMaterial :< cls, Object :< cls) => cls -> Float -> IO ()
+set_emission_ring_height cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindParticlesMaterial_set_emission_ring_height
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ParticlesMaterial "set_emission_ring_height"
+           '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ParticlesMaterial.set_emission_ring_height
+
+{-# NOINLINE bindParticlesMaterial_set_emission_ring_inner_radius
+             #-}
+
+-- | The inner radius of the ring when using the emitter @EMISSION_SHAPE_RING@.
+bindParticlesMaterial_set_emission_ring_inner_radius :: MethodBind
+bindParticlesMaterial_set_emission_ring_inner_radius
+  = unsafePerformIO $
+      withCString "ParticlesMaterial" $
+        \ clsNamePtr ->
+          withCString "set_emission_ring_inner_radius" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The inner radius of the ring when using the emitter @EMISSION_SHAPE_RING@.
+set_emission_ring_inner_radius ::
+                                 (ParticlesMaterial :< cls, Object :< cls) => cls -> Float -> IO ()
+set_emission_ring_inner_radius cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindParticlesMaterial_set_emission_ring_inner_radius
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ParticlesMaterial
+           "set_emission_ring_inner_radius"
+           '[Float]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.ParticlesMaterial.set_emission_ring_inner_radius
+
+{-# NOINLINE bindParticlesMaterial_set_emission_ring_radius #-}
+
+-- | The radius of the ring when using the emitter @EMISSION_SHAPE_RING@.
+bindParticlesMaterial_set_emission_ring_radius :: MethodBind
+bindParticlesMaterial_set_emission_ring_radius
+  = unsafePerformIO $
+      withCString "ParticlesMaterial" $
+        \ clsNamePtr ->
+          withCString "set_emission_ring_radius" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The radius of the ring when using the emitter @EMISSION_SHAPE_RING@.
+set_emission_ring_radius ::
+                           (ParticlesMaterial :< cls, Object :< cls) => cls -> Float -> IO ()
+set_emission_ring_radius cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindParticlesMaterial_set_emission_ring_radius
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ParticlesMaterial "set_emission_ring_radius"
+           '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ParticlesMaterial.set_emission_ring_radius
 
 {-# NOINLINE bindParticlesMaterial_set_emission_shape #-}
 
@@ -1415,7 +1802,10 @@ set_emission_shape cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_emission_shape" '[Int]
            (IO ())
@@ -1445,7 +1835,10 @@ set_emission_sphere_radius cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_emission_sphere_radius"
            '[Float]
@@ -1476,7 +1869,10 @@ set_flag cls arg1 arg2
          godot_method_bind_call bindParticlesMaterial_set_flag (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_flag" '[Int, Bool]
            (IO ())
@@ -1485,7 +1881,7 @@ instance NodeMethod ParticlesMaterial "set_flag" '[Int, Bool]
 
 {-# NOINLINE bindParticlesMaterial_set_flatness #-}
 
--- | Amount of @spread@ in Y/Z plane. A value of @1@ restricts particles to X/Z plane.
+-- | Amount of @spread@ along the Y axis.
 bindParticlesMaterial_set_flatness :: MethodBind
 bindParticlesMaterial_set_flatness
   = unsafePerformIO $
@@ -1495,7 +1891,7 @@ bindParticlesMaterial_set_flatness
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount of @spread@ in Y/Z plane. A value of @1@ restricts particles to X/Z plane.
+-- | Amount of @spread@ along the Y axis.
 set_flatness ::
                (ParticlesMaterial :< cls, Object :< cls) => cls -> Float -> IO ()
 set_flatness cls arg1
@@ -1505,7 +1901,10 @@ set_flatness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_flatness" '[Float]
            (IO ())
@@ -1535,7 +1934,10 @@ set_gravity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_gravity" '[Vector3]
            (IO ())
@@ -1565,7 +1967,10 @@ set_lifetime_randomness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_lifetime_randomness"
            '[Float]
@@ -1595,7 +2000,10 @@ set_param cls arg1 arg2
          godot_method_bind_call bindParticlesMaterial_set_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_param" '[Int, Float]
            (IO ())
@@ -1625,7 +2033,10 @@ set_param_randomness cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_param_randomness"
            '[Int, Float]
@@ -1656,7 +2067,10 @@ set_param_texture cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_param_texture"
            '[Int, Texture]
@@ -1666,7 +2080,7 @@ instance NodeMethod ParticlesMaterial "set_param_texture"
 
 {-# NOINLINE bindParticlesMaterial_set_spread #-}
 
--- | Each particle's initial direction range from @+spread@ to @-spread@ degrees. Applied to X/Z plane and Y/Z planes.
+-- | Each particle's initial direction range from @+spread@ to @-spread@ degrees.
 bindParticlesMaterial_set_spread :: MethodBind
 bindParticlesMaterial_set_spread
   = unsafePerformIO $
@@ -1676,7 +2090,7 @@ bindParticlesMaterial_set_spread
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Each particle's initial direction range from @+spread@ to @-spread@ degrees. Applied to X/Z plane and Y/Z planes.
+-- | Each particle's initial direction range from @+spread@ to @-spread@ degrees.
 set_spread ::
              (ParticlesMaterial :< cls, Object :< cls) => cls -> Float -> IO ()
 set_spread cls arg1
@@ -1686,7 +2100,10 @@ set_spread cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_spread" '[Float] (IO ())
          where
@@ -1716,7 +2133,10 @@ set_trail_color_modifier cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_trail_color_modifier"
            '[GradientTexture]
@@ -1746,7 +2166,10 @@ set_trail_divisor cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_trail_divisor" '[Int]
            (IO ())
@@ -1777,7 +2200,10 @@ set_trail_size_modifier cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParticlesMaterial "set_trail_size_modifier"
            '[CurveTexture]

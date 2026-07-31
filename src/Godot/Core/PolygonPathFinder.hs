@@ -48,7 +48,10 @@ _get_data cls
          godot_method_bind_call bindPolygonPathFinder__get_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PolygonPathFinder "_get_data" '[]
            (IO Dictionary)
@@ -75,7 +78,10 @@ _set_data cls arg1
          godot_method_bind_call bindPolygonPathFinder__set_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PolygonPathFinder "_set_data" '[Dictionary]
            (IO ())
@@ -102,7 +108,10 @@ find_path cls arg1 arg2
          godot_method_bind_call bindPolygonPathFinder_find_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PolygonPathFinder "find_path"
            '[Vector2, Vector2]
@@ -130,7 +139,10 @@ get_bounds cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PolygonPathFinder "get_bounds" '[] (IO Rect2)
          where
@@ -157,7 +169,10 @@ get_closest_point cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PolygonPathFinder "get_closest_point"
            '[Vector2]
@@ -186,7 +201,10 @@ get_intersections cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PolygonPathFinder "get_intersections"
            '[Vector2, Vector2]
@@ -214,7 +232,10 @@ get_point_penalty cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PolygonPathFinder "get_point_penalty" '[Int]
            (IO Float)
@@ -242,7 +263,10 @@ is_point_inside cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PolygonPathFinder "is_point_inside" '[Vector2]
            (IO Bool)
@@ -270,7 +294,10 @@ set_point_penalty cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PolygonPathFinder "set_point_penalty"
            '[Int, Float]
@@ -298,7 +325,10 @@ setup cls arg1 arg2
          godot_method_bind_call bindPolygonPathFinder_setup (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PolygonPathFinder "setup"
            '[PoolVector2Array, PoolIntArray]

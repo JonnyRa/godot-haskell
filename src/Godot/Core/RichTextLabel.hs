@@ -49,6 +49,7 @@ module Godot.Core.RichTextLabel
         Godot.Core.RichTextLabel.get_visible_characters,
         Godot.Core.RichTextLabel.get_visible_line_count,
         Godot.Core.RichTextLabel.install_effect,
+        Godot.Core.RichTextLabel.is_fit_content_height_enabled,
         Godot.Core.RichTextLabel.is_meta_underlined,
         Godot.Core.RichTextLabel.is_overriding_selected_font_color,
         Godot.Core.RichTextLabel.is_scroll_active,
@@ -77,6 +78,7 @@ module Godot.Core.RichTextLabel
         Godot.Core.RichTextLabel.scroll_to_line,
         Godot.Core.RichTextLabel.set_bbcode,
         Godot.Core.RichTextLabel.set_effects,
+        Godot.Core.RichTextLabel.set_fit_content_height,
         Godot.Core.RichTextLabel.set_meta_underline,
         Godot.Core.RichTextLabel.set_override_selected_font_color,
         Godot.Core.RichTextLabel.set_percent_visible,
@@ -218,6 +220,13 @@ instance NodeProperty RichTextLabel "custom_effects" Array 'False
         nodeProperty
           = (get_effects, wrapDroppingSetter set_effects, Nothing)
 
+instance NodeProperty RichTextLabel "fit_content_height" Bool
+           'False
+         where
+        nodeProperty
+          = (is_fit_content_height_enabled,
+             wrapDroppingSetter set_fit_content_height, Nothing)
+
 instance NodeProperty RichTextLabel "meta_underlined" Bool 'False
          where
         nodeProperty
@@ -287,7 +296,10 @@ _gui_input cls arg1
          godot_method_bind_call bindRichTextLabel__gui_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "_gui_input" '[InputEvent]
            (IO ())
@@ -314,7 +326,10 @@ _scroll_changed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "_scroll_changed" '[Float]
            (IO ())
@@ -347,7 +362,10 @@ add_image cls arg1 arg2 arg3
          godot_method_bind_call bindRichTextLabel_add_image (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "add_image"
            '[Texture, Maybe Int, Maybe Int]
@@ -377,7 +395,10 @@ add_text cls arg1
          godot_method_bind_call bindRichTextLabel_add_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "add_text" '[GodotString] (IO ())
          where
@@ -386,6 +407,7 @@ instance NodeMethod RichTextLabel "add_text" '[GodotString] (IO ())
 {-# NOINLINE bindRichTextLabel_append_bbcode #-}
 
 -- | Parses @bbcode@ and adds tags to the tag stack as needed. Returns the result of the parsing, @OK@ if successful.
+--   				__Note:__ Using this method, you can't close a tag that was opened in a previous @method append_bbcode@ call. This is done to improve performance, especially when updating large RichTextLabels since rebuilding the whole BBCode every time would be slower. If you absolutely need to close a tag in a future method call, append the @bbcode_text@ instead of using @method append_bbcode@.
 bindRichTextLabel_append_bbcode :: MethodBind
 bindRichTextLabel_append_bbcode
   = unsafePerformIO $
@@ -396,6 +418,7 @@ bindRichTextLabel_append_bbcode
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Parses @bbcode@ and adds tags to the tag stack as needed. Returns the result of the parsing, @OK@ if successful.
+--   				__Note:__ Using this method, you can't close a tag that was opened in a previous @method append_bbcode@ call. This is done to improve performance, especially when updating large RichTextLabels since rebuilding the whole BBCode every time would be slower. If you absolutely need to close a tag in a future method call, append the @bbcode_text@ instead of using @method append_bbcode@.
 append_bbcode ::
                 (RichTextLabel :< cls, Object :< cls) =>
                 cls -> GodotString -> IO Int
@@ -405,7 +428,10 @@ append_bbcode cls arg1
          godot_method_bind_call bindRichTextLabel_append_bbcode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "append_bbcode" '[GodotString]
            (IO Int)
@@ -431,7 +457,10 @@ clear cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRichTextLabel_clear (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.clear
@@ -439,7 +468,7 @@ instance NodeMethod RichTextLabel "clear" '[] (IO ()) where
 {-# NOINLINE bindRichTextLabel_get_bbcode #-}
 
 -- | The label's text in BBCode format. Is not representative of manual modifications to the internal tag stack. Erases changes made by other methods when edited.
---   			__Note:__ It is unadvised to use @+=@ operator with @bbcode_text@ (e.g. @bbcode_text += "some string"@) as it replaces the whole text and can cause slowdowns. Use @method append_bbcode@ for adding text instead.
+--   			__Note:__ It is unadvised to use the @+=@ operator with @bbcode_text@ (e.g. @bbcode_text += "some string"@) as it replaces the whole text and can cause slowdowns. It will also erase all BBCode that was added to stack using @push_*@ methods. Use @method append_bbcode@ for adding text instead, unless you absolutely need to close a tag that was opened in an earlier method call.
 bindRichTextLabel_get_bbcode :: MethodBind
 bindRichTextLabel_get_bbcode
   = unsafePerformIO $
@@ -450,7 +479,7 @@ bindRichTextLabel_get_bbcode
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The label's text in BBCode format. Is not representative of manual modifications to the internal tag stack. Erases changes made by other methods when edited.
---   			__Note:__ It is unadvised to use @+=@ operator with @bbcode_text@ (e.g. @bbcode_text += "some string"@) as it replaces the whole text and can cause slowdowns. Use @method append_bbcode@ for adding text instead.
+--   			__Note:__ It is unadvised to use the @+=@ operator with @bbcode_text@ (e.g. @bbcode_text += "some string"@) as it replaces the whole text and can cause slowdowns. It will also erase all BBCode that was added to stack using @push_*@ methods. Use @method append_bbcode@ for adding text instead, unless you absolutely need to close a tag that was opened in an earlier method call.
 get_bbcode ::
              (RichTextLabel :< cls, Object :< cls) => cls -> IO GodotString
 get_bbcode cls
@@ -459,7 +488,10 @@ get_bbcode cls
          godot_method_bind_call bindRichTextLabel_get_bbcode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "get_bbcode" '[] (IO GodotString)
          where
@@ -487,7 +519,10 @@ get_content_height cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "get_content_height" '[] (IO Int)
          where
@@ -516,7 +551,10 @@ get_effects cls
          godot_method_bind_call bindRichTextLabel_get_effects (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "get_effects" '[] (IO Array)
          where
@@ -544,7 +582,10 @@ get_line_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "get_line_count" '[] (IO Int)
          where
@@ -574,7 +615,10 @@ get_percent_visible cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "get_percent_visible" '[]
            (IO Float)
@@ -602,7 +646,10 @@ get_tab_size cls
          godot_method_bind_call bindRichTextLabel_get_tab_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "get_tab_size" '[] (IO Int) where
         nodeMethod = Godot.Core.RichTextLabel.get_tab_size
@@ -630,7 +677,10 @@ get_text cls
          godot_method_bind_call bindRichTextLabel_get_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "get_text" '[] (IO GodotString)
          where
@@ -658,7 +708,10 @@ get_total_character_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "get_total_character_count" '[]
            (IO Int)
@@ -668,6 +721,7 @@ instance NodeMethod RichTextLabel "get_total_character_count" '[]
 {-# NOINLINE bindRichTextLabel_get_v_scroll #-}
 
 -- | Returns the vertical scrollbar.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindRichTextLabel_get_v_scroll :: MethodBind
 bindRichTextLabel_get_v_scroll
   = unsafePerformIO $
@@ -678,6 +732,7 @@ bindRichTextLabel_get_v_scroll
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the vertical scrollbar.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_v_scroll ::
                (RichTextLabel :< cls, Object :< cls) => cls -> IO VScrollBar
 get_v_scroll cls
@@ -686,7 +741,7 @@ get_v_scroll cls
          godot_method_bind_call bindRichTextLabel_get_v_scroll (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod RichTextLabel "get_v_scroll" '[]
            (IO VScrollBar)
@@ -696,6 +751,7 @@ instance NodeMethod RichTextLabel "get_v_scroll" '[]
 {-# NOINLINE bindRichTextLabel_get_visible_characters #-}
 
 -- | The restricted number of characters to display in the label. If @-1@, all characters will be displayed.
+--   			__Note:__ Setting this property updates @percent_visible@ based on current @method get_total_character_count@.
 bindRichTextLabel_get_visible_characters :: MethodBind
 bindRichTextLabel_get_visible_characters
   = unsafePerformIO $
@@ -706,6 +762,7 @@ bindRichTextLabel_get_visible_characters
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The restricted number of characters to display in the label. If @-1@, all characters will be displayed.
+--   			__Note:__ Setting this property updates @percent_visible@ based on current @method get_total_character_count@.
 get_visible_characters ::
                          (RichTextLabel :< cls, Object :< cls) => cls -> IO Int
 get_visible_characters cls
@@ -715,7 +772,10 @@ get_visible_characters cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "get_visible_characters" '[]
            (IO Int)
@@ -744,7 +804,10 @@ get_visible_line_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "get_visible_line_count" '[]
            (IO Int)
@@ -774,12 +837,51 @@ install_effect cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "install_effect" '[GodotVariant]
            (IO ())
          where
         nodeMethod = Godot.Core.RichTextLabel.install_effect
+
+{-# NOINLINE bindRichTextLabel_is_fit_content_height_enabled #-}
+
+-- | If @true@, the label's height will be automatically updated to fit its content.
+--   			__Note:__ This property is used as a workaround to fix issues with @RichTextLabel@ in @Container@s, but it's unreliable in some cases and will be removed in future versions.
+bindRichTextLabel_is_fit_content_height_enabled :: MethodBind
+bindRichTextLabel_is_fit_content_height_enabled
+  = unsafePerformIO $
+      withCString "RichTextLabel" $
+        \ clsNamePtr ->
+          withCString "is_fit_content_height_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the label's height will be automatically updated to fit its content.
+--   			__Note:__ This property is used as a workaround to fix issues with @RichTextLabel@ in @Container@s, but it's unreliable in some cases and will be removed in future versions.
+is_fit_content_height_enabled ::
+                                (RichTextLabel :< cls, Object :< cls) => cls -> IO Bool
+is_fit_content_height_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindRichTextLabel_is_fit_content_height_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RichTextLabel "is_fit_content_height_enabled"
+           '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.RichTextLabel.is_fit_content_height_enabled
 
 {-# NOINLINE bindRichTextLabel_is_meta_underlined #-}
 
@@ -803,7 +905,10 @@ is_meta_underlined cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "is_meta_underlined" '[]
            (IO Bool)
@@ -834,7 +939,10 @@ is_overriding_selected_font_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel
            "is_overriding_selected_font_color"
@@ -866,7 +974,10 @@ is_scroll_active cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "is_scroll_active" '[] (IO Bool)
          where
@@ -894,7 +1005,10 @@ is_scroll_following cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "is_scroll_following" '[]
            (IO Bool)
@@ -923,7 +1037,10 @@ is_selection_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "is_selection_enabled" '[]
            (IO Bool)
@@ -933,6 +1050,7 @@ instance NodeMethod RichTextLabel "is_selection_enabled" '[]
 {-# NOINLINE bindRichTextLabel_is_using_bbcode #-}
 
 -- | If @true@, the label uses BBCode formatting.
+--   			__Note:__ Trying to alter the @RichTextLabel@'s text with @method add_text@ will reset this to @false@. Use instead @method append_bbcode@ to preserve BBCode formatting.
 bindRichTextLabel_is_using_bbcode :: MethodBind
 bindRichTextLabel_is_using_bbcode
   = unsafePerformIO $
@@ -943,6 +1061,7 @@ bindRichTextLabel_is_using_bbcode
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the label uses BBCode formatting.
+--   			__Note:__ Trying to alter the @RichTextLabel@'s text with @method add_text@ will reset this to @false@. Use instead @method append_bbcode@ to preserve BBCode formatting.
 is_using_bbcode ::
                   (RichTextLabel :< cls, Object :< cls) => cls -> IO Bool
 is_using_bbcode cls
@@ -952,7 +1071,10 @@ is_using_bbcode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "is_using_bbcode" '[] (IO Bool)
          where
@@ -978,7 +1100,10 @@ newline cls
          godot_method_bind_call bindRichTextLabel_newline (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "newline" '[] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.newline
@@ -1005,7 +1130,10 @@ parse_bbcode cls arg1
          godot_method_bind_call bindRichTextLabel_parse_bbcode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "parse_bbcode" '[GodotString]
            (IO Int)
@@ -1036,7 +1164,10 @@ parse_expressions_for_values cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "parse_expressions_for_values"
            '[PoolStringArray]
@@ -1063,7 +1194,10 @@ pop cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRichTextLabel_pop (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "pop" '[] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.pop
@@ -1089,7 +1223,10 @@ push_align cls arg1
          godot_method_bind_call bindRichTextLabel_push_align (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_align" '[Int] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.push_align
@@ -1114,7 +1251,10 @@ push_bold cls
          godot_method_bind_call bindRichTextLabel_push_bold (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_bold" '[] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.push_bold
@@ -1141,7 +1281,10 @@ push_bold_italics cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_bold_italics" '[] (IO ())
          where
@@ -1167,7 +1310,10 @@ push_cell cls
          godot_method_bind_call bindRichTextLabel_push_cell (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_cell" '[] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.push_cell
@@ -1193,7 +1339,10 @@ push_color cls arg1
          godot_method_bind_call bindRichTextLabel_push_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_color" '[Color] (IO ())
          where
@@ -1220,7 +1369,10 @@ push_font cls arg1
          godot_method_bind_call bindRichTextLabel_push_font (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_font" '[Font] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.push_font
@@ -1246,7 +1398,10 @@ push_indent cls arg1
          godot_method_bind_call bindRichTextLabel_push_indent (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_indent" '[Int] (IO ())
          where
@@ -1273,7 +1428,10 @@ push_italics cls
          godot_method_bind_call bindRichTextLabel_push_italics (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_italics" '[] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.push_italics
@@ -1299,7 +1457,10 @@ push_list cls arg1
          godot_method_bind_call bindRichTextLabel_push_list (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_list" '[Int] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.push_list
@@ -1326,7 +1487,10 @@ push_meta cls arg1
          godot_method_bind_call bindRichTextLabel_push_meta (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_meta" '[GodotVariant]
            (IO ())
@@ -1353,7 +1517,10 @@ push_mono cls
          godot_method_bind_call bindRichTextLabel_push_mono (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_mono" '[] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.push_mono
@@ -1379,7 +1546,10 @@ push_normal cls
          godot_method_bind_call bindRichTextLabel_push_normal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_normal" '[] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.push_normal
@@ -1406,7 +1576,10 @@ push_strikethrough cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_strikethrough" '[] (IO ())
          where
@@ -1433,7 +1606,10 @@ push_table cls arg1
          godot_method_bind_call bindRichTextLabel_push_table (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_table" '[Int] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.push_table
@@ -1460,7 +1636,10 @@ push_underline cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "push_underline" '[] (IO ())
          where
@@ -1489,7 +1668,10 @@ remove_line cls arg1
          godot_method_bind_call bindRichTextLabel_remove_line (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "remove_line" '[Int] (IO Bool)
          where
@@ -1517,7 +1699,10 @@ scroll_to_line cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "scroll_to_line" '[Int] (IO ())
          where
@@ -1526,7 +1711,7 @@ instance NodeMethod RichTextLabel "scroll_to_line" '[Int] (IO ())
 {-# NOINLINE bindRichTextLabel_set_bbcode #-}
 
 -- | The label's text in BBCode format. Is not representative of manual modifications to the internal tag stack. Erases changes made by other methods when edited.
---   			__Note:__ It is unadvised to use @+=@ operator with @bbcode_text@ (e.g. @bbcode_text += "some string"@) as it replaces the whole text and can cause slowdowns. Use @method append_bbcode@ for adding text instead.
+--   			__Note:__ It is unadvised to use the @+=@ operator with @bbcode_text@ (e.g. @bbcode_text += "some string"@) as it replaces the whole text and can cause slowdowns. It will also erase all BBCode that was added to stack using @push_*@ methods. Use @method append_bbcode@ for adding text instead, unless you absolutely need to close a tag that was opened in an earlier method call.
 bindRichTextLabel_set_bbcode :: MethodBind
 bindRichTextLabel_set_bbcode
   = unsafePerformIO $
@@ -1537,7 +1722,7 @@ bindRichTextLabel_set_bbcode
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The label's text in BBCode format. Is not representative of manual modifications to the internal tag stack. Erases changes made by other methods when edited.
---   			__Note:__ It is unadvised to use @+=@ operator with @bbcode_text@ (e.g. @bbcode_text += "some string"@) as it replaces the whole text and can cause slowdowns. Use @method append_bbcode@ for adding text instead.
+--   			__Note:__ It is unadvised to use the @+=@ operator with @bbcode_text@ (e.g. @bbcode_text += "some string"@) as it replaces the whole text and can cause slowdowns. It will also erase all BBCode that was added to stack using @push_*@ methods. Use @method append_bbcode@ for adding text instead, unless you absolutely need to close a tag that was opened in an earlier method call.
 set_bbcode ::
              (RichTextLabel :< cls, Object :< cls) =>
              cls -> GodotString -> IO ()
@@ -1547,7 +1732,10 @@ set_bbcode cls arg1
          godot_method_bind_call bindRichTextLabel_set_bbcode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_bbcode" '[GodotString]
            (IO ())
@@ -1577,11 +1765,48 @@ set_effects cls arg1
          godot_method_bind_call bindRichTextLabel_set_effects (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_effects" '[Array] (IO ())
          where
         nodeMethod = Godot.Core.RichTextLabel.set_effects
+
+{-# NOINLINE bindRichTextLabel_set_fit_content_height #-}
+
+-- | If @true@, the label's height will be automatically updated to fit its content.
+--   			__Note:__ This property is used as a workaround to fix issues with @RichTextLabel@ in @Container@s, but it's unreliable in some cases and will be removed in future versions.
+bindRichTextLabel_set_fit_content_height :: MethodBind
+bindRichTextLabel_set_fit_content_height
+  = unsafePerformIO $
+      withCString "RichTextLabel" $
+        \ clsNamePtr ->
+          withCString "set_fit_content_height" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the label's height will be automatically updated to fit its content.
+--   			__Note:__ This property is used as a workaround to fix issues with @RichTextLabel@ in @Container@s, but it's unreliable in some cases and will be removed in future versions.
+set_fit_content_height ::
+                         (RichTextLabel :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_fit_content_height cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRichTextLabel_set_fit_content_height
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RichTextLabel "set_fit_content_height" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.RichTextLabel.set_fit_content_height
 
 {-# NOINLINE bindRichTextLabel_set_meta_underline #-}
 
@@ -1605,7 +1830,10 @@ set_meta_underline cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_meta_underline" '[Bool]
            (IO ())
@@ -1635,7 +1863,10 @@ set_override_selected_font_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel
            "set_override_selected_font_color"
@@ -1669,7 +1900,10 @@ set_percent_visible cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_percent_visible" '[Float]
            (IO ())
@@ -1698,7 +1932,10 @@ set_scroll_active cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_scroll_active" '[Bool]
            (IO ())
@@ -1727,7 +1964,10 @@ set_scroll_follow cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_scroll_follow" '[Bool]
            (IO ())
@@ -1756,7 +1996,10 @@ set_selection_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_selection_enabled" '[Bool]
            (IO ())
@@ -1784,7 +2027,10 @@ set_tab_size cls arg1
          godot_method_bind_call bindRichTextLabel_set_tab_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_tab_size" '[Int] (IO ())
          where
@@ -1817,7 +2063,10 @@ set_table_column_expand cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_table_column_expand"
            '[Int, Bool, Int]
@@ -1849,7 +2098,10 @@ set_text cls arg1
          godot_method_bind_call bindRichTextLabel_set_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_text" '[GodotString] (IO ())
          where
@@ -1858,6 +2110,7 @@ instance NodeMethod RichTextLabel "set_text" '[GodotString] (IO ())
 {-# NOINLINE bindRichTextLabel_set_use_bbcode #-}
 
 -- | If @true@, the label uses BBCode formatting.
+--   			__Note:__ Trying to alter the @RichTextLabel@'s text with @method add_text@ will reset this to @false@. Use instead @method append_bbcode@ to preserve BBCode formatting.
 bindRichTextLabel_set_use_bbcode :: MethodBind
 bindRichTextLabel_set_use_bbcode
   = unsafePerformIO $
@@ -1868,6 +2121,7 @@ bindRichTextLabel_set_use_bbcode
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the label uses BBCode formatting.
+--   			__Note:__ Trying to alter the @RichTextLabel@'s text with @method add_text@ will reset this to @false@. Use instead @method append_bbcode@ to preserve BBCode formatting.
 set_use_bbcode ::
                  (RichTextLabel :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_use_bbcode cls arg1
@@ -1877,7 +2131,10 @@ set_use_bbcode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_use_bbcode" '[Bool] (IO ())
          where
@@ -1886,6 +2143,7 @@ instance NodeMethod RichTextLabel "set_use_bbcode" '[Bool] (IO ())
 {-# NOINLINE bindRichTextLabel_set_visible_characters #-}
 
 -- | The restricted number of characters to display in the label. If @-1@, all characters will be displayed.
+--   			__Note:__ Setting this property updates @percent_visible@ based on current @method get_total_character_count@.
 bindRichTextLabel_set_visible_characters :: MethodBind
 bindRichTextLabel_set_visible_characters
   = unsafePerformIO $
@@ -1896,6 +2154,7 @@ bindRichTextLabel_set_visible_characters
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The restricted number of characters to display in the label. If @-1@, all characters will be displayed.
+--   			__Note:__ Setting this property updates @percent_visible@ based on current @method get_total_character_count@.
 set_visible_characters ::
                          (RichTextLabel :< cls, Object :< cls) => cls -> Int -> IO ()
 set_visible_characters cls arg1
@@ -1905,7 +2164,10 @@ set_visible_characters cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "set_visible_characters" '[Int]
            (IO ())

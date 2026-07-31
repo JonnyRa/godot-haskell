@@ -56,7 +56,10 @@ _commit cls arg1
          godot_method_bind_call bindEditorVCSInterface__commit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "_commit" '[GodotString]
            (IO ())
@@ -84,7 +87,10 @@ _get_file_diff cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "_get_file_diff"
            '[GodotString]
@@ -113,7 +119,10 @@ _get_modified_files_data cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "_get_modified_files_data"
            '[]
@@ -142,7 +151,10 @@ _get_project_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "_get_project_name" '[]
            (IO GodotString)
@@ -169,7 +181,10 @@ _get_vcs_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "_get_vcs_name" '[]
            (IO GodotString)
@@ -197,7 +212,10 @@ _initialize cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "_initialize" '[GodotString]
            (IO Bool)
@@ -224,7 +242,10 @@ _is_vcs_initialized cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "_is_vcs_initialized" '[]
            (IO Bool)
@@ -251,7 +272,10 @@ _shut_down cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "_shut_down" '[] (IO Bool)
          where
@@ -278,7 +302,10 @@ _stage_file cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "_stage_file" '[GodotString]
            (IO ())
@@ -306,7 +333,10 @@ _unstage_file cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "_unstage_file"
            '[GodotString]
@@ -336,7 +366,10 @@ commit cls arg1
          godot_method_bind_call bindEditorVCSInterface_commit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "commit" '[GodotString]
            (IO ())
@@ -380,7 +413,10 @@ get_file_diff cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "get_file_diff"
            '[GodotString]
@@ -390,7 +426,7 @@ instance NodeMethod EditorVCSInterface "get_file_diff"
 
 {-# NOINLINE bindEditorVCSInterface_get_modified_files_data #-}
 
--- | Returns a @Dictionary@ containing the path of the detected file change mapped to an integer signifying what kind of a change the corresponding file has experienced.
+-- | Returns a @Dictionary@ containing the path of the detected file change mapped to an integer signifying what kind of change the corresponding file has experienced.
 --   				The following integer values are being used to signify that the detected file is:
 --   				- @0@: New to the VCS working directory
 --   				- @1@: Modified
@@ -406,7 +442,7 @@ bindEditorVCSInterface_get_modified_files_data
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a @Dictionary@ containing the path of the detected file change mapped to an integer signifying what kind of a change the corresponding file has experienced.
+-- | Returns a @Dictionary@ containing the path of the detected file change mapped to an integer signifying what kind of change the corresponding file has experienced.
 --   				The following integer values are being used to signify that the detected file is:
 --   				- @0@: New to the VCS working directory
 --   				- @1@: Modified
@@ -423,7 +459,10 @@ get_modified_files_data cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "get_modified_files_data"
            '[]
@@ -453,7 +492,10 @@ get_project_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "get_project_name" '[]
            (IO GodotString)
@@ -482,7 +524,10 @@ get_vcs_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "get_vcs_name" '[]
            (IO GodotString)
@@ -512,7 +557,10 @@ initialize cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "initialize" '[GodotString]
            (IO Bool)
@@ -541,7 +589,10 @@ is_addon_ready cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "is_addon_ready" '[]
            (IO Bool)
@@ -570,7 +621,10 @@ is_vcs_initialized cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "is_vcs_initialized" '[]
            (IO Bool)
@@ -599,7 +653,10 @@ shut_down cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "shut_down" '[] (IO Bool)
          where
@@ -628,7 +685,10 @@ stage_file cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "stage_file" '[GodotString]
            (IO ())
@@ -658,7 +718,10 @@ unstage_file cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorVCSInterface "unstage_file"
            '[GodotString]

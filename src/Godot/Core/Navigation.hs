@@ -51,7 +51,10 @@ get_closest_point cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation "get_closest_point" '[Vector3]
            (IO Vector3)
@@ -80,7 +83,10 @@ get_closest_point_normal cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation "get_closest_point_normal"
            '[Vector3]
@@ -110,7 +116,7 @@ get_closest_point_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Navigation "get_closest_point_owner" '[Vector3]
            (IO Object)
@@ -142,7 +148,10 @@ get_closest_point_to_segment cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation "get_closest_point_to_segment"
            '[Vector3, Vector3, Maybe Bool]
@@ -153,6 +162,7 @@ instance NodeMethod Navigation "get_closest_point_to_segment"
 {-# NOINLINE bindNavigation_get_simple_path #-}
 
 -- | Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the agent properties associated with each @NavigationMesh@ (radius, height, etc.) are considered in the path calculation, otherwise they are ignored.
+--   				__Note:__ This method has known issues and will often return non-optimal paths. These issues will be fixed in Godot 4.0.
 bindNavigation_get_simple_path :: MethodBind
 bindNavigation_get_simple_path
   = unsafePerformIO $
@@ -163,6 +173,7 @@ bindNavigation_get_simple_path
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the agent properties associated with each @NavigationMesh@ (radius, height, etc.) are considered in the path calculation, otherwise they are ignored.
+--   				__Note:__ This method has known issues and will often return non-optimal paths. These issues will be fixed in Godot 4.0.
 get_simple_path ::
                   (Navigation :< cls, Object :< cls) =>
                   cls -> Vector3 -> Vector3 -> Maybe Bool -> IO PoolVector3Array
@@ -174,7 +185,10 @@ get_simple_path cls arg1 arg2 arg3
          godot_method_bind_call bindNavigation_get_simple_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation "get_simple_path"
            '[Vector3, Vector3, Maybe Bool]
@@ -203,7 +217,10 @@ get_up_vector cls
          godot_method_bind_call bindNavigation_get_up_vector (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation "get_up_vector" '[] (IO Vector3)
          where
@@ -232,7 +249,10 @@ navmesh_add cls arg1 arg2 arg3
          godot_method_bind_call bindNavigation_navmesh_add (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation "navmesh_add"
            '[NavigationMesh, Transform, Maybe Object]
@@ -261,7 +281,10 @@ navmesh_remove cls arg1
          godot_method_bind_call bindNavigation_navmesh_remove (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation "navmesh_remove" '[Int] (IO ())
          where
@@ -290,7 +313,10 @@ navmesh_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation "navmesh_set_transform"
            '[Int, Transform]
@@ -319,7 +345,10 @@ set_up_vector cls arg1
          godot_method_bind_call bindNavigation_set_up_vector (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation "set_up_vector" '[Vector3] (IO ())
          where

@@ -35,7 +35,7 @@ import Godot.Api.Types
 import Godot.Core.Reference()
 
 _FEATURE_FILESYSTEM_DOCK :: Int
-_FEATURE_FILESYSTEM_DOCK = 6
+_FEATURE_FILESYSTEM_DOCK = 5
 
 _FEATURE_3D :: Int
 _FEATURE_3D = 0
@@ -50,10 +50,10 @@ _FEATURE_SCENE_TREE :: Int
 _FEATURE_SCENE_TREE = 3
 
 _FEATURE_NODE_DOCK :: Int
-_FEATURE_NODE_DOCK = 5
+_FEATURE_NODE_DOCK = 4
 
 _FEATURE_IMPORT_DOCK :: Int
-_FEATURE_IMPORT_DOCK = 4
+_FEATURE_IMPORT_DOCK = 6
 
 _FEATURE_ASSET_LIB :: Int
 _FEATURE_ASSET_LIB = 2
@@ -81,7 +81,10 @@ get_feature_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile "get_feature_name" '[Int]
            (IO GodotString)
@@ -111,7 +114,10 @@ is_class_disabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile "is_class_disabled"
            '[GodotString]
@@ -143,7 +149,10 @@ is_class_editor_disabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile "is_class_editor_disabled"
            '[GodotString]
@@ -177,7 +186,10 @@ is_class_property_disabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile
            "is_class_property_disabled"
@@ -210,7 +222,10 @@ is_feature_disabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile "is_feature_disabled"
            '[Int]
@@ -241,7 +256,10 @@ load_from_file cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile "load_from_file"
            '[GodotString]
@@ -272,7 +290,10 @@ save_to_file cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile "save_to_file"
            '[GodotString]
@@ -303,7 +324,10 @@ set_disable_class cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile "set_disable_class"
            '[GodotString, Bool]
@@ -335,7 +359,10 @@ set_disable_class_editor cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile "set_disable_class_editor"
            '[GodotString, Bool]
@@ -369,7 +396,10 @@ set_disable_class_property cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile
            "set_disable_class_property"
@@ -402,7 +432,10 @@ set_disable_feature cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFeatureProfile "set_disable_feature"
            '[Int, Bool]

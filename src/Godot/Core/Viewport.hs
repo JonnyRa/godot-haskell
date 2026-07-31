@@ -33,7 +33,9 @@ module Godot.Core.Viewport
         Godot.Core.Viewport._MSAA_16X,
         Godot.Core.Viewport._SHADOW_ATLAS_QUADRANT_SUBDIV_4,
         Godot.Core.Viewport._USAGE_2D_NO_SAMPLING,
+        Godot.Core.Viewport._RENDER_INFO_2D_ITEMS_IN_FRAME,
         Godot.Core.Viewport._UPDATE_ONCE,
+        Godot.Core.Viewport._RENDER_INFO_2D_DRAW_CALLS_IN_FRAME,
         Godot.Core.Viewport._RENDER_INFO_SURFACE_CHANGES_IN_FRAME,
         Godot.Core.Viewport.sig_gui_focus_changed,
         Godot.Core.Viewport.sig_size_changed,
@@ -41,6 +43,7 @@ module Godot.Core.Viewport
         Godot.Core.Viewport._gui_show_tooltip,
         Godot.Core.Viewport._own_world_changed,
         Godot.Core.Viewport._post_gui_grab_click_focus,
+        Godot.Core.Viewport._process_picking,
         Godot.Core.Viewport._subwindow_visibility_changed,
         Godot.Core.Viewport._vp_input, Godot.Core.Viewport._vp_input_text,
         Godot.Core.Viewport._vp_unhandled_input,
@@ -60,11 +63,13 @@ module Godot.Core.Viewport
         Godot.Core.Viewport.get_render_info,
         Godot.Core.Viewport.get_shadow_atlas_quadrant_subdiv,
         Godot.Core.Viewport.get_shadow_atlas_size,
+        Godot.Core.Viewport.get_sharpen_intensity,
         Godot.Core.Viewport.get_size,
         Godot.Core.Viewport.get_size_override,
         Godot.Core.Viewport.get_texture,
         Godot.Core.Viewport.get_update_mode, Godot.Core.Viewport.get_usage,
-        Godot.Core.Viewport.get_vflip,
+        Godot.Core.Viewport.get_use_debanding,
+        Godot.Core.Viewport.get_use_fxaa, Godot.Core.Viewport.get_vflip,
         Godot.Core.Viewport.get_viewport_rid,
         Godot.Core.Viewport.get_visible_rect,
         Godot.Core.Viewport.get_world, Godot.Core.Viewport.get_world_2d,
@@ -100,6 +105,7 @@ module Godot.Core.Viewport
         Godot.Core.Viewport.set_physics_object_picking,
         Godot.Core.Viewport.set_shadow_atlas_quadrant_subdiv,
         Godot.Core.Viewport.set_shadow_atlas_size,
+        Godot.Core.Viewport.set_sharpen_intensity,
         Godot.Core.Viewport.set_size,
         Godot.Core.Viewport.set_size_override,
         Godot.Core.Viewport.set_size_override_stretch,
@@ -107,6 +113,8 @@ module Godot.Core.Viewport
         Godot.Core.Viewport.set_transparent_background,
         Godot.Core.Viewport.set_update_mode, Godot.Core.Viewport.set_usage,
         Godot.Core.Viewport.set_use_arvr,
+        Godot.Core.Viewport.set_use_debanding,
+        Godot.Core.Viewport.set_use_fxaa,
         Godot.Core.Viewport.set_use_own_world,
         Godot.Core.Viewport.set_use_render_direct_to_screen,
         Godot.Core.Viewport.set_vflip, Godot.Core.Viewport.set_world,
@@ -155,7 +163,7 @@ _RENDER_INFO_SHADER_CHANGES_IN_FRAME :: Int
 _RENDER_INFO_SHADER_CHANGES_IN_FRAME = 3
 
 _RENDER_INFO_MAX :: Int
-_RENDER_INFO_MAX = 6
+_RENDER_INFO_MAX = 8
 
 _CLEAR_MODE_NEVER :: Int
 _CLEAR_MODE_NEVER = 1
@@ -226,8 +234,14 @@ _SHADOW_ATLAS_QUADRANT_SUBDIV_4 = 2
 _USAGE_2D_NO_SAMPLING :: Int
 _USAGE_2D_NO_SAMPLING = 1
 
+_RENDER_INFO_2D_ITEMS_IN_FRAME :: Int
+_RENDER_INFO_2D_ITEMS_IN_FRAME = 6
+
 _UPDATE_ONCE :: Int
 _UPDATE_ONCE = 1
+
+_RENDER_INFO_2D_DRAW_CALLS_IN_FRAME :: Int
+_RENDER_INFO_2D_DRAW_CALLS_IN_FRAME = 7
 
 _RENDER_INFO_SURFACE_CHANGES_IN_FRAME :: Int
 _RENDER_INFO_SURFACE_CHANGES_IN_FRAME = 4
@@ -269,6 +283,11 @@ instance NodeProperty Viewport "canvas_transform" Transform2d
           = (get_canvas_transform, wrapDroppingSetter set_canvas_transform,
              Nothing)
 
+instance NodeProperty Viewport "debanding" Bool 'False where
+        nodeProperty
+          = (get_use_debanding, wrapDroppingSetter set_use_debanding,
+             Nothing)
+
 instance NodeProperty Viewport "debug_draw" Int 'False where
         nodeProperty
           = (get_debug_draw, wrapDroppingSetter set_debug_draw, Nothing)
@@ -276,6 +295,10 @@ instance NodeProperty Viewport "debug_draw" Int 'False where
 instance NodeProperty Viewport "disable_3d" Bool 'False where
         nodeProperty
           = (is_3d_disabled, wrapDroppingSetter set_disable_3d, Nothing)
+
+instance NodeProperty Viewport "fxaa" Bool 'False where
+        nodeProperty
+          = (get_use_fxaa, wrapDroppingSetter set_use_fxaa, Nothing)
 
 instance NodeProperty Viewport "global_canvas_transform"
            Transform2d
@@ -378,6 +401,12 @@ instance NodeProperty Viewport "shadow_atlas_size" Int 'False where
           = (get_shadow_atlas_size, wrapDroppingSetter set_shadow_atlas_size,
              Nothing)
 
+instance NodeProperty Viewport "sharpen_intensity" Float 'False
+         where
+        nodeProperty
+          = (get_sharpen_intensity, wrapDroppingSetter set_sharpen_intensity,
+             Nothing)
+
 instance NodeProperty Viewport "size" Vector2 'False where
         nodeProperty = (get_size, wrapDroppingSetter set_size, Nothing)
 
@@ -421,7 +450,10 @@ _gui_remove_focus cls
          godot_method_bind_call bindViewport__gui_remove_focus (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "_gui_remove_focus" '[] (IO ()) where
         nodeMethod = Godot.Core.Viewport._gui_remove_focus
@@ -445,7 +477,10 @@ _gui_show_tooltip cls
          godot_method_bind_call bindViewport__gui_show_tooltip (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "_gui_show_tooltip" '[] (IO ()) where
         nodeMethod = Godot.Core.Viewport._gui_show_tooltip
@@ -469,7 +504,10 @@ _own_world_changed cls
          godot_method_bind_call bindViewport__own_world_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "_own_world_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.Viewport._own_world_changed
@@ -494,12 +532,43 @@ _post_gui_grab_click_focus cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "_post_gui_grab_click_focus" '[]
            (IO ())
          where
         nodeMethod = Godot.Core.Viewport._post_gui_grab_click_focus
+
+{-# NOINLINE bindViewport__process_picking #-}
+
+bindViewport__process_picking :: MethodBind
+bindViewport__process_picking
+  = unsafePerformIO $
+      withCString "Viewport" $
+        \ clsNamePtr ->
+          withCString "_process_picking" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_process_picking ::
+                   (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
+_process_picking cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindViewport__process_picking (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Viewport "_process_picking" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.Viewport._process_picking
 
 {-# NOINLINE bindViewport__subwindow_visibility_changed #-}
 
@@ -521,7 +590,10 @@ _subwindow_visibility_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "_subwindow_visibility_changed" '[]
            (IO ())
@@ -546,7 +618,10 @@ _vp_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport__vp_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "_vp_input" '[InputEvent] (IO ())
          where
@@ -571,7 +646,10 @@ _vp_input_text cls arg1
          godot_method_bind_call bindViewport__vp_input_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "_vp_input_text" '[GodotString]
            (IO ())
@@ -598,7 +676,10 @@ _vp_unhandled_input cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "_vp_unhandled_input" '[InputEvent]
            (IO ())
@@ -607,7 +688,7 @@ instance NodeMethod Viewport "_vp_unhandled_input" '[InputEvent]
 
 {-# NOINLINE bindViewport_find_world #-}
 
--- | Returns the 3D world of the viewport, or if none the world of the parent viewport.
+-- | Returns the first valid @World@ for this viewport, searching the @world@ property of itself and any Viewport ancestor.
 bindViewport_find_world :: MethodBind
 bindViewport_find_world
   = unsafePerformIO $
@@ -617,21 +698,21 @@ bindViewport_find_world
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the 3D world of the viewport, or if none the world of the parent viewport.
+-- | Returns the first valid @World@ for this viewport, searching the @world@ property of itself and any Viewport ancestor.
 find_world :: (Viewport :< cls, Object :< cls) => cls -> IO World
 find_world cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_find_world (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Viewport "find_world" '[] (IO World) where
         nodeMethod = Godot.Core.Viewport.find_world
 
 {-# NOINLINE bindViewport_find_world_2d #-}
 
--- | Returns the 2D world of the viewport.
+-- | Returns the first valid @World2D@ for this viewport, searching the @world_2d@ property of itself and any Viewport ancestor.
 bindViewport_find_world_2d :: MethodBind
 bindViewport_find_world_2d
   = unsafePerformIO $
@@ -641,7 +722,7 @@ bindViewport_find_world_2d
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the 2D world of the viewport.
+-- | Returns the first valid @World2D@ for this viewport, searching the @world_2d@ property of itself and any Viewport ancestor.
 find_world_2d ::
                 (Viewport :< cls, Object :< cls) => cls -> IO World2D
 find_world_2d cls
@@ -650,7 +731,7 @@ find_world_2d cls
          godot_method_bind_call bindViewport_find_world_2d (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Viewport "find_world_2d" '[] (IO World2D) where
         nodeMethod = Godot.Core.Viewport.find_world_2d
@@ -674,7 +755,7 @@ get_camera cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_get_camera (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Viewport "get_camera" '[] (IO Camera) where
         nodeMethod = Godot.Core.Viewport.get_camera
@@ -701,7 +782,10 @@ get_canvas_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_canvas_transform" '[]
            (IO Transform2d)
@@ -730,7 +814,10 @@ get_clear_mode cls
          godot_method_bind_call bindViewport_get_clear_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_clear_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Viewport.get_clear_mode
@@ -755,7 +842,10 @@ get_debug_draw cls
          godot_method_bind_call bindViewport_get_debug_draw (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_debug_draw" '[] (IO Int) where
         nodeMethod = Godot.Core.Viewport.get_debug_draw
@@ -782,7 +872,10 @@ get_final_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_final_transform" '[]
            (IO Transform2d)
@@ -811,7 +904,10 @@ get_global_canvas_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_global_canvas_transform" '[]
            (IO Transform2d)
@@ -838,14 +934,17 @@ get_hdr cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_get_hdr (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_hdr" '[] (IO Bool) where
         nodeMethod = Godot.Core.Viewport.get_hdr
 
 {-# NOINLINE bindViewport_get_keep_3d_linear #-}
 
--- | If @true@, the result after 3D rendering will not have a linear to sRGB color conversion applied. This is important when the viewport is used as a render target where the result is used as a texture on a 3D object rendered in another viewport. It is also important if the viewport is used to create data that is not color based (noise, heightmaps, pickmaps, etc.). Do not enable this when the viewport is used as a texture on a 2D object or if the viewport is your final output.
+-- | If @true@, the result after 3D rendering will not have a linear to sRGB color conversion applied. This is important when the viewport is used as a render target where the result is used as a texture on a 3D object rendered in another viewport. It is also important if the viewport is used to create data that is not color based (noise, heightmaps, pickmaps, etc.). Do not enable this when the viewport is used as a texture on a 2D object or if the viewport is your final output. For the GLES2 driver this will convert the sRGB output to linear, this should only be used for VR plugins that require input in linear color space!
 bindViewport_get_keep_3d_linear :: MethodBind
 bindViewport_get_keep_3d_linear
   = unsafePerformIO $
@@ -855,7 +954,7 @@ bindViewport_get_keep_3d_linear
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the result after 3D rendering will not have a linear to sRGB color conversion applied. This is important when the viewport is used as a render target where the result is used as a texture on a 3D object rendered in another viewport. It is also important if the viewport is used to create data that is not color based (noise, heightmaps, pickmaps, etc.). Do not enable this when the viewport is used as a texture on a 2D object or if the viewport is your final output.
+-- | If @true@, the result after 3D rendering will not have a linear to sRGB color conversion applied. This is important when the viewport is used as a render target where the result is used as a texture on a 3D object rendered in another viewport. It is also important if the viewport is used to create data that is not color based (noise, heightmaps, pickmaps, etc.). Do not enable this when the viewport is used as a texture on a 2D object or if the viewport is your final output. For the GLES2 driver this will convert the sRGB output to linear, this should only be used for VR plugins that require input in linear color space!
 get_keep_3d_linear ::
                      (Viewport :< cls, Object :< cls) => cls -> IO Bool
 get_keep_3d_linear cls
@@ -864,7 +963,10 @@ get_keep_3d_linear cls
          godot_method_bind_call bindViewport_get_keep_3d_linear (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_keep_3d_linear" '[] (IO Bool)
          where
@@ -892,7 +994,7 @@ get_modal_stack_top cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Viewport "get_modal_stack_top" '[] (IO Control)
          where
@@ -919,7 +1021,10 @@ get_mouse_position cls
          godot_method_bind_call bindViewport_get_mouse_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_mouse_position" '[] (IO Vector2)
          where
@@ -944,7 +1049,10 @@ get_msaa cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_get_msaa (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_msaa" '[] (IO Int) where
         nodeMethod = Godot.Core.Viewport.get_msaa
@@ -971,7 +1079,10 @@ get_physics_object_picking cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_physics_object_picking" '[]
            (IO Bool)
@@ -999,7 +1110,10 @@ get_render_info cls arg1
          godot_method_bind_call bindViewport_get_render_info (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_render_info" '[Int] (IO Int)
          where
@@ -1028,7 +1142,10 @@ get_shadow_atlas_quadrant_subdiv cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_shadow_atlas_quadrant_subdiv"
            '[Int]
@@ -1060,15 +1177,49 @@ get_shadow_atlas_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_shadow_atlas_size" '[] (IO Int)
          where
         nodeMethod = Godot.Core.Viewport.get_shadow_atlas_size
 
+{-# NOINLINE bindViewport_get_sharpen_intensity #-}
+
+-- | If set to a value greater than @0.0@, contrast-adaptive sharpening will be applied to the 3D viewport. This has a low performance cost and can be used to recover some of the sharpness lost from using FXAA. Values around @0.5@ generally give the best results. See also @fxaa@.
+bindViewport_get_sharpen_intensity :: MethodBind
+bindViewport_get_sharpen_intensity
+  = unsafePerformIO $
+      withCString "Viewport" $
+        \ clsNamePtr ->
+          withCString "get_sharpen_intensity" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If set to a value greater than @0.0@, contrast-adaptive sharpening will be applied to the 3D viewport. This has a low performance cost and can be used to recover some of the sharpness lost from using FXAA. Values around @0.5@ generally give the best results. See also @fxaa@.
+get_sharpen_intensity ::
+                        (Viewport :< cls, Object :< cls) => cls -> IO Float
+get_sharpen_intensity cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindViewport_get_sharpen_intensity
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Viewport "get_sharpen_intensity" '[] (IO Float)
+         where
+        nodeMethod = Godot.Core.Viewport.get_sharpen_intensity
+
 {-# NOINLINE bindViewport_get_size #-}
 
--- | The width and height of viewport.
+-- | The width and height of viewport. Must be set to a value greater than or equal to 2 pixels on both dimensions. Otherwise, nothing will be displayed.
 bindViewport_get_size :: MethodBind
 bindViewport_get_size
   = unsafePerformIO $
@@ -1078,14 +1229,17 @@ bindViewport_get_size
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The width and height of viewport.
+-- | The width and height of viewport. Must be set to a value greater than or equal to 2 pixels on both dimensions. Otherwise, nothing will be displayed.
 get_size :: (Viewport :< cls, Object :< cls) => cls -> IO Vector2
 get_size cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_get_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_size" '[] (IO Vector2) where
         nodeMethod = Godot.Core.Viewport.get_size
@@ -1111,7 +1265,10 @@ get_size_override cls
          godot_method_bind_call bindViewport_get_size_override (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_size_override" '[] (IO Vector2)
          where
@@ -1153,7 +1310,7 @@ get_texture cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_get_texture (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Viewport "get_texture" '[] (IO ViewportTexture)
          where
@@ -1180,7 +1337,10 @@ get_update_mode cls
          godot_method_bind_call bindViewport_get_update_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_update_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Viewport.get_update_mode
@@ -1204,14 +1364,77 @@ get_usage cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_get_usage (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_usage" '[] (IO Int) where
         nodeMethod = Godot.Core.Viewport.get_usage
 
+{-# NOINLINE bindViewport_get_use_debanding #-}
+
+-- | If @true@, uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
+--   			__Note:__ Only available on the GLES3 backend. @hdr@ must also be @true@ for debanding to be effective.
+bindViewport_get_use_debanding :: MethodBind
+bindViewport_get_use_debanding
+  = unsafePerformIO $
+      withCString "Viewport" $
+        \ clsNamePtr ->
+          withCString "get_use_debanding" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
+--   			__Note:__ Only available on the GLES3 backend. @hdr@ must also be @true@ for debanding to be effective.
+get_use_debanding ::
+                    (Viewport :< cls, Object :< cls) => cls -> IO Bool
+get_use_debanding cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindViewport_get_use_debanding (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Viewport "get_use_debanding" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.Viewport.get_use_debanding
+
+{-# NOINLINE bindViewport_get_use_fxaa #-}
+
+-- | Enables fast approximate antialiasing. FXAA is a popular screen-space antialiasing method, which is fast but will make the image look blurry, especially at lower resolutions. It can still work relatively well at large resolutions such as 1440p and 4K. Some of the lost sharpness can be recovered by enabling contrast-adaptive sharpening (see @sharpen_intensity@).
+bindViewport_get_use_fxaa :: MethodBind
+bindViewport_get_use_fxaa
+  = unsafePerformIO $
+      withCString "Viewport" $
+        \ clsNamePtr ->
+          withCString "get_use_fxaa" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Enables fast approximate antialiasing. FXAA is a popular screen-space antialiasing method, which is fast but will make the image look blurry, especially at lower resolutions. It can still work relatively well at large resolutions such as 1440p and 4K. Some of the lost sharpness can be recovered by enabling contrast-adaptive sharpening (see @sharpen_intensity@).
+get_use_fxaa :: (Viewport :< cls, Object :< cls) => cls -> IO Bool
+get_use_fxaa cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindViewport_get_use_fxaa (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Viewport "get_use_fxaa" '[] (IO Bool) where
+        nodeMethod = Godot.Core.Viewport.get_use_fxaa
+
 {-# NOINLINE bindViewport_get_vflip #-}
 
--- | If @true@, the result of rendering will be flipped vertically.
+-- | If @true@, the result of rendering will be flipped vertically. Since Viewports in Godot 3.x render upside-down, it's recommended to set this to @true@ in most situations.
 bindViewport_get_vflip :: MethodBind
 bindViewport_get_vflip
   = unsafePerformIO $
@@ -1221,14 +1444,17 @@ bindViewport_get_vflip
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the result of rendering will be flipped vertically.
+-- | If @true@, the result of rendering will be flipped vertically. Since Viewports in Godot 3.x render upside-down, it's recommended to set this to @true@ in most situations.
 get_vflip :: (Viewport :< cls, Object :< cls) => cls -> IO Bool
 get_vflip cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_get_vflip (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_vflip" '[] (IO Bool) where
         nodeMethod = Godot.Core.Viewport.get_vflip
@@ -1254,7 +1480,10 @@ get_viewport_rid cls
          godot_method_bind_call bindViewport_get_viewport_rid (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_viewport_rid" '[] (IO Rid) where
         nodeMethod = Godot.Core.Viewport.get_viewport_rid
@@ -1280,7 +1509,10 @@ get_visible_rect cls
          godot_method_bind_call bindViewport_get_visible_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "get_visible_rect" '[] (IO Rect2)
          where
@@ -1305,7 +1537,7 @@ get_world cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_get_world (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Viewport "get_world" '[] (IO World) where
         nodeMethod = Godot.Core.Viewport.get_world
@@ -1331,7 +1563,7 @@ get_world_2d cls
          godot_method_bind_call bindViewport_get_world_2d (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Viewport "get_world_2d" '[] (IO World2D) where
         nodeMethod = Godot.Core.Viewport.get_world_2d
@@ -1357,7 +1589,7 @@ gui_get_drag_data cls
          godot_method_bind_call bindViewport_gui_get_drag_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Viewport "gui_get_drag_data" '[]
            (IO GodotVariant)
@@ -1386,7 +1618,10 @@ gui_has_modal_stack cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "gui_has_modal_stack" '[] (IO Bool)
          where
@@ -1413,7 +1648,10 @@ gui_is_dragging cls
          godot_method_bind_call bindViewport_gui_is_dragging (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "gui_is_dragging" '[] (IO Bool) where
         nodeMethod = Godot.Core.Viewport.gui_is_dragging
@@ -1440,7 +1678,10 @@ has_transparent_background cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "has_transparent_background" '[]
            (IO Bool)
@@ -1464,7 +1705,10 @@ input cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_input (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "input" '[InputEvent] (IO ()) where
         nodeMethod = Godot.Core.Viewport.input
@@ -1490,7 +1734,10 @@ is_3d_disabled cls
          godot_method_bind_call bindViewport_is_3d_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_3d_disabled" '[] (IO Bool) where
         nodeMethod = Godot.Core.Viewport.is_3d_disabled
@@ -1516,7 +1763,10 @@ is_audio_listener cls
          godot_method_bind_call bindViewport_is_audio_listener (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_audio_listener" '[] (IO Bool)
          where
@@ -1544,7 +1794,10 @@ is_audio_listener_2d cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_audio_listener_2d" '[] (IO Bool)
          where
@@ -1570,7 +1823,10 @@ is_handling_input_locally cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_handling_input_locally" '[]
            (IO Bool)
@@ -1579,7 +1835,7 @@ instance NodeMethod Viewport "is_handling_input_locally" '[]
 
 {-# NOINLINE bindViewport_is_input_disabled #-}
 
--- | If @true@, the viewport will not receive input event.
+-- | If @true@, the viewport will not receive input events.
 bindViewport_is_input_disabled :: MethodBind
 bindViewport_is_input_disabled
   = unsafePerformIO $
@@ -1589,7 +1845,7 @@ bindViewport_is_input_disabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the viewport will not receive input event.
+-- | If @true@, the viewport will not receive input events.
 is_input_disabled ::
                     (Viewport :< cls, Object :< cls) => cls -> IO Bool
 is_input_disabled cls
@@ -1598,7 +1854,10 @@ is_input_disabled cls
          godot_method_bind_call bindViewport_is_input_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_input_disabled" '[] (IO Bool)
          where
@@ -1623,7 +1882,10 @@ is_input_handled cls
          godot_method_bind_call bindViewport_is_input_handled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_input_handled" '[] (IO Bool) where
         nodeMethod = Godot.Core.Viewport.is_input_handled
@@ -1650,7 +1912,10 @@ is_size_override_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_size_override_enabled" '[]
            (IO Bool)
@@ -1680,7 +1945,10 @@ is_size_override_stretch_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_size_override_stretch_enabled" '[]
            (IO Bool)
@@ -1710,7 +1978,10 @@ is_snap_controls_to_pixels_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_snap_controls_to_pixels_enabled"
            '[]
@@ -1739,7 +2010,10 @@ is_using_own_world cls
          godot_method_bind_call bindViewport_is_using_own_world (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_using_own_world" '[] (IO Bool)
          where
@@ -1768,7 +2042,10 @@ is_using_render_direct_to_screen cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "is_using_render_direct_to_screen" '[]
            (IO Bool)
@@ -1797,7 +2074,10 @@ set_as_audio_listener cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_as_audio_listener" '[Bool]
            (IO ())
@@ -1826,7 +2106,10 @@ set_as_audio_listener_2d cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_as_audio_listener_2d" '[Bool]
            (IO ())
@@ -1855,7 +2138,10 @@ set_attach_to_screen_rect cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_attach_to_screen_rect" '[Rect2]
            (IO ())
@@ -1884,7 +2170,10 @@ set_canvas_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_canvas_transform" '[Transform2d]
            (IO ())
@@ -1914,7 +2203,10 @@ set_clear_mode cls arg1
          godot_method_bind_call bindViewport_set_clear_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_clear_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_clear_mode
@@ -1940,7 +2232,10 @@ set_debug_draw cls arg1
          godot_method_bind_call bindViewport_set_debug_draw (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_debug_draw" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_debug_draw
@@ -1966,14 +2261,17 @@ set_disable_3d cls arg1
          godot_method_bind_call bindViewport_set_disable_3d (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_disable_3d" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_disable_3d
 
 {-# NOINLINE bindViewport_set_disable_input #-}
 
--- | If @true@, the viewport will not receive input event.
+-- | If @true@, the viewport will not receive input events.
 bindViewport_set_disable_input :: MethodBind
 bindViewport_set_disable_input
   = unsafePerformIO $
@@ -1983,7 +2281,7 @@ bindViewport_set_disable_input
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the viewport will not receive input event.
+-- | If @true@, the viewport will not receive input events.
 set_disable_input ::
                     (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_disable_input cls arg1
@@ -1992,7 +2290,10 @@ set_disable_input cls arg1
          godot_method_bind_call bindViewport_set_disable_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_disable_input" '[Bool] (IO ())
          where
@@ -2020,7 +2321,10 @@ set_global_canvas_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_global_canvas_transform"
            '[Transform2d]
@@ -2048,7 +2352,10 @@ set_handle_input_locally cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_handle_input_locally" '[Bool]
            (IO ())
@@ -2075,7 +2382,10 @@ set_hdr cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_set_hdr (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_hdr" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_hdr
@@ -2102,7 +2412,10 @@ set_input_as_handled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_input_as_handled" '[] (IO ())
          where
@@ -2110,7 +2423,7 @@ instance NodeMethod Viewport "set_input_as_handled" '[] (IO ())
 
 {-# NOINLINE bindViewport_set_keep_3d_linear #-}
 
--- | If @true@, the result after 3D rendering will not have a linear to sRGB color conversion applied. This is important when the viewport is used as a render target where the result is used as a texture on a 3D object rendered in another viewport. It is also important if the viewport is used to create data that is not color based (noise, heightmaps, pickmaps, etc.). Do not enable this when the viewport is used as a texture on a 2D object or if the viewport is your final output.
+-- | If @true@, the result after 3D rendering will not have a linear to sRGB color conversion applied. This is important when the viewport is used as a render target where the result is used as a texture on a 3D object rendered in another viewport. It is also important if the viewport is used to create data that is not color based (noise, heightmaps, pickmaps, etc.). Do not enable this when the viewport is used as a texture on a 2D object or if the viewport is your final output. For the GLES2 driver this will convert the sRGB output to linear, this should only be used for VR plugins that require input in linear color space!
 bindViewport_set_keep_3d_linear :: MethodBind
 bindViewport_set_keep_3d_linear
   = unsafePerformIO $
@@ -2120,7 +2433,7 @@ bindViewport_set_keep_3d_linear
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the result after 3D rendering will not have a linear to sRGB color conversion applied. This is important when the viewport is used as a render target where the result is used as a texture on a 3D object rendered in another viewport. It is also important if the viewport is used to create data that is not color based (noise, heightmaps, pickmaps, etc.). Do not enable this when the viewport is used as a texture on a 2D object or if the viewport is your final output.
+-- | If @true@, the result after 3D rendering will not have a linear to sRGB color conversion applied. This is important when the viewport is used as a render target where the result is used as a texture on a 3D object rendered in another viewport. It is also important if the viewport is used to create data that is not color based (noise, heightmaps, pickmaps, etc.). Do not enable this when the viewport is used as a texture on a 2D object or if the viewport is your final output. For the GLES2 driver this will convert the sRGB output to linear, this should only be used for VR plugins that require input in linear color space!
 set_keep_3d_linear ::
                      (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_keep_3d_linear cls arg1
@@ -2129,7 +2442,10 @@ set_keep_3d_linear cls arg1
          godot_method_bind_call bindViewport_set_keep_3d_linear (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_keep_3d_linear" '[Bool] (IO ())
          where
@@ -2154,7 +2470,10 @@ set_msaa cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_set_msaa (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_msaa" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_msaa
@@ -2181,7 +2500,10 @@ set_physics_object_picking cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_physics_object_picking" '[Bool]
            (IO ())
@@ -2211,7 +2533,10 @@ set_shadow_atlas_quadrant_subdiv cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_shadow_atlas_quadrant_subdiv"
            '[Int, Int]
@@ -2243,15 +2568,50 @@ set_shadow_atlas_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_shadow_atlas_size" '[Int] (IO ())
          where
         nodeMethod = Godot.Core.Viewport.set_shadow_atlas_size
 
+{-# NOINLINE bindViewport_set_sharpen_intensity #-}
+
+-- | If set to a value greater than @0.0@, contrast-adaptive sharpening will be applied to the 3D viewport. This has a low performance cost and can be used to recover some of the sharpness lost from using FXAA. Values around @0.5@ generally give the best results. See also @fxaa@.
+bindViewport_set_sharpen_intensity :: MethodBind
+bindViewport_set_sharpen_intensity
+  = unsafePerformIO $
+      withCString "Viewport" $
+        \ clsNamePtr ->
+          withCString "set_sharpen_intensity" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If set to a value greater than @0.0@, contrast-adaptive sharpening will be applied to the 3D viewport. This has a low performance cost and can be used to recover some of the sharpness lost from using FXAA. Values around @0.5@ generally give the best results. See also @fxaa@.
+set_sharpen_intensity ::
+                        (Viewport :< cls, Object :< cls) => cls -> Float -> IO ()
+set_sharpen_intensity cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindViewport_set_sharpen_intensity
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Viewport "set_sharpen_intensity" '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Viewport.set_sharpen_intensity
+
 {-# NOINLINE bindViewport_set_size #-}
 
--- | The width and height of viewport.
+-- | The width and height of viewport. Must be set to a value greater than or equal to 2 pixels on both dimensions. Otherwise, nothing will be displayed.
 bindViewport_set_size :: MethodBind
 bindViewport_set_size
   = unsafePerformIO $
@@ -2261,7 +2621,7 @@ bindViewport_set_size
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The width and height of viewport.
+-- | The width and height of viewport. Must be set to a value greater than or equal to 2 pixels on both dimensions. Otherwise, nothing will be displayed.
 set_size ::
            (Viewport :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_size cls arg1
@@ -2269,7 +2629,10 @@ set_size cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_set_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_size" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_size
@@ -2299,7 +2662,10 @@ set_size_override cls arg1 arg2 arg3
          godot_method_bind_call bindViewport_set_size_override (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_size_override"
            '[Bool, Maybe Vector2, Maybe Vector2]
@@ -2329,7 +2695,10 @@ set_size_override_stretch cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_size_override_stretch" '[Bool]
            (IO ())
@@ -2358,7 +2727,10 @@ set_snap_controls_to_pixels cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_snap_controls_to_pixels" '[Bool]
            (IO ())
@@ -2387,7 +2759,10 @@ set_transparent_background cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_transparent_background" '[Bool]
            (IO ())
@@ -2415,7 +2790,10 @@ set_update_mode cls arg1
          godot_method_bind_call bindViewport_set_update_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_update_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_update_mode
@@ -2440,7 +2818,10 @@ set_usage cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_set_usage (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_usage" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_usage
@@ -2466,10 +2847,74 @@ set_use_arvr cls arg1
          godot_method_bind_call bindViewport_set_use_arvr (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_use_arvr" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_use_arvr
+
+{-# NOINLINE bindViewport_set_use_debanding #-}
+
+-- | If @true@, uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
+--   			__Note:__ Only available on the GLES3 backend. @hdr@ must also be @true@ for debanding to be effective.
+bindViewport_set_use_debanding :: MethodBind
+bindViewport_set_use_debanding
+  = unsafePerformIO $
+      withCString "Viewport" $
+        \ clsNamePtr ->
+          withCString "set_use_debanding" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
+--   			__Note:__ Only available on the GLES3 backend. @hdr@ must also be @true@ for debanding to be effective.
+set_use_debanding ::
+                    (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_use_debanding cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindViewport_set_use_debanding (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Viewport "set_use_debanding" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.Viewport.set_use_debanding
+
+{-# NOINLINE bindViewport_set_use_fxaa #-}
+
+-- | Enables fast approximate antialiasing. FXAA is a popular screen-space antialiasing method, which is fast but will make the image look blurry, especially at lower resolutions. It can still work relatively well at large resolutions such as 1440p and 4K. Some of the lost sharpness can be recovered by enabling contrast-adaptive sharpening (see @sharpen_intensity@).
+bindViewport_set_use_fxaa :: MethodBind
+bindViewport_set_use_fxaa
+  = unsafePerformIO $
+      withCString "Viewport" $
+        \ clsNamePtr ->
+          withCString "set_use_fxaa" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Enables fast approximate antialiasing. FXAA is a popular screen-space antialiasing method, which is fast but will make the image look blurry, especially at lower resolutions. It can still work relatively well at large resolutions such as 1440p and 4K. Some of the lost sharpness can be recovered by enabling contrast-adaptive sharpening (see @sharpen_intensity@).
+set_use_fxaa ::
+               (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_use_fxaa cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindViewport_set_use_fxaa (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Viewport "set_use_fxaa" '[Bool] (IO ()) where
+        nodeMethod = Godot.Core.Viewport.set_use_fxaa
 
 {-# NOINLINE bindViewport_set_use_own_world #-}
 
@@ -2492,7 +2937,10 @@ set_use_own_world cls arg1
          godot_method_bind_call bindViewport_set_use_own_world (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_use_own_world" '[Bool] (IO ())
          where
@@ -2520,7 +2968,10 @@ set_use_render_direct_to_screen cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_use_render_direct_to_screen"
            '[Bool]
@@ -2530,7 +2981,7 @@ instance NodeMethod Viewport "set_use_render_direct_to_screen"
 
 {-# NOINLINE bindViewport_set_vflip #-}
 
--- | If @true@, the result of rendering will be flipped vertically.
+-- | If @true@, the result of rendering will be flipped vertically. Since Viewports in Godot 3.x render upside-down, it's recommended to set this to @true@ in most situations.
 bindViewport_set_vflip :: MethodBind
 bindViewport_set_vflip
   = unsafePerformIO $
@@ -2540,7 +2991,7 @@ bindViewport_set_vflip
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the result of rendering will be flipped vertically.
+-- | If @true@, the result of rendering will be flipped vertically. Since Viewports in Godot 3.x render upside-down, it's recommended to set this to @true@ in most situations.
 set_vflip ::
             (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_vflip cls arg1
@@ -2548,7 +2999,10 @@ set_vflip cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_set_vflip (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_vflip" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_vflip
@@ -2573,7 +3027,10 @@ set_world cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_set_world (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_world" '[World] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_world
@@ -2599,7 +3056,10 @@ set_world_2d cls arg1
          godot_method_bind_call bindViewport_set_world_2d (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "set_world_2d" '[World2D] (IO ())
          where
@@ -2624,7 +3084,10 @@ unhandled_input cls arg1
          godot_method_bind_call bindViewport_unhandled_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "unhandled_input" '[InputEvent]
            (IO ())
@@ -2651,7 +3114,10 @@ update_worlds cls
          godot_method_bind_call bindViewport_update_worlds (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "update_worlds" '[] (IO ()) where
         nodeMethod = Godot.Core.Viewport.update_worlds
@@ -2675,7 +3141,10 @@ use_arvr cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_use_arvr (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "use_arvr" '[] (IO Bool) where
         nodeMethod = Godot.Core.Viewport.use_arvr
@@ -2700,7 +3169,10 @@ warp_mouse cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindViewport_warp_mouse (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Viewport "warp_mouse" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Viewport.warp_mouse

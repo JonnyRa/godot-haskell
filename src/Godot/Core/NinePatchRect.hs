@@ -102,7 +102,7 @@ instance NodeProperty NinePatchRect "texture" Texture 'False where
 
 {-# NOINLINE bindNinePatchRect_get_h_axis_stretch_mode #-}
 
--- | Doesn't do anything at the time of writing.
+-- | The stretch mode to use for horizontal stretching/tiling. See @enum NinePatchRect.AxisStretchMode@ for possible values.
 bindNinePatchRect_get_h_axis_stretch_mode :: MethodBind
 bindNinePatchRect_get_h_axis_stretch_mode
   = unsafePerformIO $
@@ -112,7 +112,7 @@ bindNinePatchRect_get_h_axis_stretch_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Doesn't do anything at the time of writing.
+-- | The stretch mode to use for horizontal stretching/tiling. See @enum NinePatchRect.AxisStretchMode@ for possible values.
 get_h_axis_stretch_mode ::
                           (NinePatchRect :< cls, Object :< cls) => cls -> IO Int
 get_h_axis_stretch_mode cls
@@ -122,7 +122,10 @@ get_h_axis_stretch_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "get_h_axis_stretch_mode" '[]
            (IO Int)
@@ -151,7 +154,10 @@ get_patch_margin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "get_patch_margin" '[Int]
            (IO Int)
@@ -180,7 +186,10 @@ get_region_rect cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "get_region_rect" '[] (IO Rect2)
          where
@@ -207,7 +216,7 @@ get_texture cls
          godot_method_bind_call bindNinePatchRect_get_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod NinePatchRect "get_texture" '[] (IO Texture)
          where
@@ -215,7 +224,7 @@ instance NodeMethod NinePatchRect "get_texture" '[] (IO Texture)
 
 {-# NOINLINE bindNinePatchRect_get_v_axis_stretch_mode #-}
 
--- | Doesn't do anything at the time of writing.
+-- | The stretch mode to use for vertical stretching/tiling. See @enum NinePatchRect.AxisStretchMode@ for possible values.
 bindNinePatchRect_get_v_axis_stretch_mode :: MethodBind
 bindNinePatchRect_get_v_axis_stretch_mode
   = unsafePerformIO $
@@ -225,7 +234,7 @@ bindNinePatchRect_get_v_axis_stretch_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Doesn't do anything at the time of writing.
+-- | The stretch mode to use for vertical stretching/tiling. See @enum NinePatchRect.AxisStretchMode@ for possible values.
 get_v_axis_stretch_mode ::
                           (NinePatchRect :< cls, Object :< cls) => cls -> IO Int
 get_v_axis_stretch_mode cls
@@ -235,7 +244,10 @@ get_v_axis_stretch_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "get_v_axis_stretch_mode" '[]
            (IO Int)
@@ -264,7 +276,10 @@ is_draw_center_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "is_draw_center_enabled" '[]
            (IO Bool)
@@ -293,7 +308,10 @@ set_draw_center cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "set_draw_center" '[Bool] (IO ())
          where
@@ -301,7 +319,7 @@ instance NodeMethod NinePatchRect "set_draw_center" '[Bool] (IO ())
 
 {-# NOINLINE bindNinePatchRect_set_h_axis_stretch_mode #-}
 
--- | Doesn't do anything at the time of writing.
+-- | The stretch mode to use for horizontal stretching/tiling. See @enum NinePatchRect.AxisStretchMode@ for possible values.
 bindNinePatchRect_set_h_axis_stretch_mode :: MethodBind
 bindNinePatchRect_set_h_axis_stretch_mode
   = unsafePerformIO $
@@ -311,7 +329,7 @@ bindNinePatchRect_set_h_axis_stretch_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Doesn't do anything at the time of writing.
+-- | The stretch mode to use for horizontal stretching/tiling. See @enum NinePatchRect.AxisStretchMode@ for possible values.
 set_h_axis_stretch_mode ::
                           (NinePatchRect :< cls, Object :< cls) => cls -> Int -> IO ()
 set_h_axis_stretch_mode cls arg1
@@ -321,7 +339,10 @@ set_h_axis_stretch_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "set_h_axis_stretch_mode" '[Int]
            (IO ())
@@ -350,7 +371,10 @@ set_patch_margin cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "set_patch_margin" '[Int, Int]
            (IO ())
@@ -379,7 +403,10 @@ set_region_rect cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "set_region_rect" '[Rect2]
            (IO ())
@@ -407,7 +434,10 @@ set_texture cls arg1
          godot_method_bind_call bindNinePatchRect_set_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "set_texture" '[Texture] (IO ())
          where
@@ -415,7 +445,7 @@ instance NodeMethod NinePatchRect "set_texture" '[Texture] (IO ())
 
 {-# NOINLINE bindNinePatchRect_set_v_axis_stretch_mode #-}
 
--- | Doesn't do anything at the time of writing.
+-- | The stretch mode to use for vertical stretching/tiling. See @enum NinePatchRect.AxisStretchMode@ for possible values.
 bindNinePatchRect_set_v_axis_stretch_mode :: MethodBind
 bindNinePatchRect_set_v_axis_stretch_mode
   = unsafePerformIO $
@@ -425,7 +455,7 @@ bindNinePatchRect_set_v_axis_stretch_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Doesn't do anything at the time of writing.
+-- | The stretch mode to use for vertical stretching/tiling. See @enum NinePatchRect.AxisStretchMode@ for possible values.
 set_v_axis_stretch_mode ::
                           (NinePatchRect :< cls, Object :< cls) => cls -> Int -> IO ()
 set_v_axis_stretch_mode cls arg1
@@ -435,7 +465,10 @@ set_v_axis_stretch_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NinePatchRect "set_v_axis_stretch_mode" '[Int]
            (IO ())

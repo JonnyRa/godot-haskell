@@ -177,7 +177,10 @@ _thread_done cls arg1
          godot_method_bind_call bindProceduralSky__thread_done (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "_thread_done" '[Image] (IO ())
          where
@@ -202,7 +205,10 @@ _update_sky cls
          godot_method_bind_call bindProceduralSky__update_sky (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "_update_sky" '[] (IO ()) where
         nodeMethod = Godot.Core.ProceduralSky._update_sky
@@ -229,7 +235,10 @@ get_ground_bottom_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_ground_bottom_color" '[]
            (IO Color)
@@ -258,7 +267,10 @@ get_ground_curve cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_ground_curve" '[] (IO Float)
          where
@@ -286,7 +298,10 @@ get_ground_energy cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_ground_energy" '[]
            (IO Float)
@@ -315,7 +330,10 @@ get_ground_horizon_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_ground_horizon_color" '[]
            (IO Color)
@@ -343,7 +361,10 @@ get_sky_curve cls
          godot_method_bind_call bindProceduralSky_get_sky_curve (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sky_curve" '[] (IO Float)
          where
@@ -371,7 +392,10 @@ get_sky_energy cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sky_energy" '[] (IO Float)
          where
@@ -399,7 +423,10 @@ get_sky_horizon_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sky_horizon_color" '[]
            (IO Color)
@@ -428,7 +455,10 @@ get_sky_top_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sky_top_color" '[]
            (IO Color)
@@ -457,7 +487,10 @@ get_sun_angle_max cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sun_angle_max" '[]
            (IO Float)
@@ -486,7 +519,10 @@ get_sun_angle_min cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sun_angle_min" '[]
            (IO Float)
@@ -514,7 +550,10 @@ get_sun_color cls
          godot_method_bind_call bindProceduralSky_get_sun_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sun_color" '[] (IO Color)
          where
@@ -541,7 +580,10 @@ get_sun_curve cls
          godot_method_bind_call bindProceduralSky_get_sun_curve (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sun_curve" '[] (IO Float)
          where
@@ -569,7 +611,10 @@ get_sun_energy cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sun_energy" '[] (IO Float)
          where
@@ -597,7 +642,10 @@ get_sun_latitude cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sun_latitude" '[] (IO Float)
          where
@@ -625,7 +673,10 @@ get_sun_longitude cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_sun_longitude" '[]
            (IO Float)
@@ -654,7 +705,10 @@ get_texture_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "get_texture_size" '[] (IO Int)
          where
@@ -682,7 +736,10 @@ set_ground_bottom_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_ground_bottom_color"
            '[Color]
@@ -712,7 +769,10 @@ set_ground_curve cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_ground_curve" '[Float]
            (IO ())
@@ -741,7 +801,10 @@ set_ground_energy cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_ground_energy" '[Float]
            (IO ())
@@ -770,7 +833,10 @@ set_ground_horizon_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_ground_horizon_color"
            '[Color]
@@ -799,7 +865,10 @@ set_sky_curve cls arg1
          godot_method_bind_call bindProceduralSky_set_sky_curve (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sky_curve" '[Float] (IO ())
          where
@@ -827,7 +896,10 @@ set_sky_energy cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sky_energy" '[Float] (IO ())
          where
@@ -855,7 +927,10 @@ set_sky_horizon_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sky_horizon_color" '[Color]
            (IO ())
@@ -884,7 +959,10 @@ set_sky_top_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sky_top_color" '[Color]
            (IO ())
@@ -913,7 +991,10 @@ set_sun_angle_max cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sun_angle_max" '[Float]
            (IO ())
@@ -942,7 +1023,10 @@ set_sun_angle_min cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sun_angle_min" '[Float]
            (IO ())
@@ -970,7 +1054,10 @@ set_sun_color cls arg1
          godot_method_bind_call bindProceduralSky_set_sun_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sun_color" '[Color] (IO ())
          where
@@ -997,7 +1084,10 @@ set_sun_curve cls arg1
          godot_method_bind_call bindProceduralSky_set_sun_curve (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sun_curve" '[Float] (IO ())
          where
@@ -1025,7 +1115,10 @@ set_sun_energy cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sun_energy" '[Float] (IO ())
          where
@@ -1053,7 +1146,10 @@ set_sun_latitude cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sun_latitude" '[Float]
            (IO ())
@@ -1082,7 +1178,10 @@ set_sun_longitude cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_sun_longitude" '[Float]
            (IO ())
@@ -1111,7 +1210,10 @@ set_texture_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProceduralSky "set_texture_size" '[Int] (IO ())
          where

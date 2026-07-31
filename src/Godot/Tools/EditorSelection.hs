@@ -51,7 +51,10 @@ _emit_change cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSelection "_emit_change" '[] (IO ())
          where
@@ -77,7 +80,10 @@ _node_removed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSelection "_node_removed" '[Node] (IO ())
          where
@@ -86,6 +92,7 @@ instance NodeMethod EditorSelection "_node_removed" '[Node] (IO ())
 {-# NOINLINE bindEditorSelection_add_node #-}
 
 -- | Adds a node to the selection.
+--   				__Note:__ The newly selected node will not be automatically edited in the inspector. If you want to edit a node, use @method EditorInterface.edit_node@.
 bindEditorSelection_add_node :: MethodBind
 bindEditorSelection_add_node
   = unsafePerformIO $
@@ -96,6 +103,7 @@ bindEditorSelection_add_node
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Adds a node to the selection.
+--   				__Note:__ The newly selected node will not be automatically edited in the inspector. If you want to edit a node, use @method EditorInterface.edit_node@.
 add_node ::
            (EditorSelection :< cls, Object :< cls) => cls -> Node -> IO ()
 add_node cls arg1
@@ -104,7 +112,10 @@ add_node cls arg1
          godot_method_bind_call bindEditorSelection_add_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSelection "add_node" '[Node] (IO ())
          where
@@ -130,7 +141,10 @@ clear cls
          godot_method_bind_call bindEditorSelection_clear (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSelection "clear" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorSelection.clear
@@ -157,7 +171,10 @@ get_selected_nodes cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSelection "get_selected_nodes" '[]
            (IO Array)
@@ -188,7 +205,10 @@ get_transformable_selected_nodes cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSelection
            "get_transformable_selected_nodes"
@@ -219,7 +239,10 @@ remove_node cls arg1
          godot_method_bind_call bindEditorSelection_remove_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSelection "remove_node" '[Node] (IO ())
          where

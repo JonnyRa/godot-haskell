@@ -204,7 +204,10 @@ get_color cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_get_color (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_color" '[] (IO Color) where
         nodeMethod = Godot.Core.Light2D.get_color
@@ -228,7 +231,10 @@ get_energy cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_get_energy (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_energy" '[] (IO Float) where
         nodeMethod = Godot.Core.Light2D.get_energy
@@ -252,7 +258,10 @@ get_height cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_get_height (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_height" '[] (IO Float) where
         nodeMethod = Godot.Core.Light2D.get_height
@@ -278,7 +287,10 @@ get_item_cull_mask cls
          godot_method_bind_call bindLight2D_get_item_cull_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_item_cull_mask" '[] (IO Int) where
         nodeMethod = Godot.Core.Light2D.get_item_cull_mask
@@ -305,7 +317,10 @@ get_item_shadow_cull_mask cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_item_shadow_cull_mask" '[]
            (IO Int)
@@ -333,7 +348,10 @@ get_layer_range_max cls
          godot_method_bind_call bindLight2D_get_layer_range_max (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_layer_range_max" '[] (IO Int)
          where
@@ -360,7 +378,10 @@ get_layer_range_min cls
          godot_method_bind_call bindLight2D_get_layer_range_min (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_layer_range_min" '[] (IO Int)
          where
@@ -384,7 +405,10 @@ get_mode cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_get_mode (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Light2D.get_mode
@@ -411,7 +435,10 @@ get_shadow_buffer_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_shadow_buffer_size" '[] (IO Int)
          where
@@ -438,7 +465,10 @@ get_shadow_color cls
          godot_method_bind_call bindLight2D_get_shadow_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_shadow_color" '[] (IO Color) where
         nodeMethod = Godot.Core.Light2D.get_shadow_color
@@ -464,7 +494,10 @@ get_shadow_filter cls
          godot_method_bind_call bindLight2D_get_shadow_filter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_shadow_filter" '[] (IO Int) where
         nodeMethod = Godot.Core.Light2D.get_shadow_filter
@@ -491,7 +524,10 @@ get_shadow_gradient_length cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_shadow_gradient_length" '[]
            (IO Float)
@@ -519,7 +555,10 @@ get_shadow_smooth cls
          godot_method_bind_call bindLight2D_get_shadow_smooth (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_shadow_smooth" '[] (IO Float)
          where
@@ -544,7 +583,7 @@ get_texture cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_get_texture (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Light2D "get_texture" '[] (IO Texture) where
         nodeMethod = Godot.Core.Light2D.get_texture
@@ -570,7 +609,10 @@ get_texture_offset cls
          godot_method_bind_call bindLight2D_get_texture_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_texture_offset" '[] (IO Vector2)
          where
@@ -597,7 +639,10 @@ get_texture_scale cls
          godot_method_bind_call bindLight2D_get_texture_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_texture_scale" '[] (IO Float)
          where
@@ -623,7 +668,10 @@ get_z_range_max cls
          godot_method_bind_call bindLight2D_get_z_range_max (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_z_range_max" '[] (IO Int) where
         nodeMethod = Godot.Core.Light2D.get_z_range_max
@@ -648,7 +696,10 @@ get_z_range_min cls
          godot_method_bind_call bindLight2D_get_z_range_min (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "get_z_range_min" '[] (IO Int) where
         nodeMethod = Godot.Core.Light2D.get_z_range_min
@@ -673,7 +724,10 @@ is_editor_only cls
          godot_method_bind_call bindLight2D_is_editor_only (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "is_editor_only" '[] (IO Bool) where
         nodeMethod = Godot.Core.Light2D.is_editor_only
@@ -697,7 +751,10 @@ is_enabled cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_is_enabled (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "is_enabled" '[] (IO Bool) where
         nodeMethod = Godot.Core.Light2D.is_enabled
@@ -723,7 +780,10 @@ is_shadow_enabled cls
          godot_method_bind_call bindLight2D_is_shadow_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "is_shadow_enabled" '[] (IO Bool) where
         nodeMethod = Godot.Core.Light2D.is_shadow_enabled
@@ -748,7 +808,10 @@ set_color cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_set_color (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_color" '[Color] (IO ()) where
         nodeMethod = Godot.Core.Light2D.set_color
@@ -774,7 +837,10 @@ set_editor_only cls arg1
          godot_method_bind_call bindLight2D_set_editor_only (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_editor_only" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Light2D.set_editor_only
@@ -799,7 +865,10 @@ set_enabled cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_set_enabled (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_enabled" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Light2D.set_enabled
@@ -824,7 +893,10 @@ set_energy cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_set_energy (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_energy" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Light2D.set_energy
@@ -849,7 +921,10 @@ set_height cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_set_height (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_height" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Light2D.set_height
@@ -875,7 +950,10 @@ set_item_cull_mask cls arg1
          godot_method_bind_call bindLight2D_set_item_cull_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_item_cull_mask" '[Int] (IO ())
          where
@@ -903,7 +981,10 @@ set_item_shadow_cull_mask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_item_shadow_cull_mask" '[Int]
            (IO ())
@@ -931,7 +1012,10 @@ set_layer_range_max cls arg1
          godot_method_bind_call bindLight2D_set_layer_range_max (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_layer_range_max" '[Int] (IO ())
          where
@@ -958,7 +1042,10 @@ set_layer_range_min cls arg1
          godot_method_bind_call bindLight2D_set_layer_range_min (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_layer_range_min" '[Int] (IO ())
          where
@@ -982,7 +1069,10 @@ set_mode cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_set_mode (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Light2D.set_mode
@@ -1009,7 +1099,10 @@ set_shadow_buffer_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_shadow_buffer_size" '[Int] (IO ())
          where
@@ -1036,7 +1129,10 @@ set_shadow_color cls arg1
          godot_method_bind_call bindLight2D_set_shadow_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_shadow_color" '[Color] (IO ())
          where
@@ -1063,7 +1159,10 @@ set_shadow_enabled cls arg1
          godot_method_bind_call bindLight2D_set_shadow_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_shadow_enabled" '[Bool] (IO ())
          where
@@ -1090,7 +1189,10 @@ set_shadow_filter cls arg1
          godot_method_bind_call bindLight2D_set_shadow_filter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_shadow_filter" '[Int] (IO ())
          where
@@ -1118,7 +1220,10 @@ set_shadow_gradient_length cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_shadow_gradient_length" '[Float]
            (IO ())
@@ -1146,7 +1251,10 @@ set_shadow_smooth cls arg1
          godot_method_bind_call bindLight2D_set_shadow_smooth (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_shadow_smooth" '[Float] (IO ())
          where
@@ -1172,7 +1280,10 @@ set_texture cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight2D_set_texture (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_texture" '[Texture] (IO ()) where
         nodeMethod = Godot.Core.Light2D.set_texture
@@ -1198,7 +1309,10 @@ set_texture_offset cls arg1
          godot_method_bind_call bindLight2D_set_texture_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_texture_offset" '[Vector2] (IO ())
          where
@@ -1225,7 +1339,10 @@ set_texture_scale cls arg1
          godot_method_bind_call bindLight2D_set_texture_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_texture_scale" '[Float] (IO ())
          where
@@ -1252,7 +1369,10 @@ set_z_range_max cls arg1
          godot_method_bind_call bindLight2D_set_z_range_max (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_z_range_max" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Light2D.set_z_range_max
@@ -1278,7 +1398,10 @@ set_z_range_min cls arg1
          godot_method_bind_call bindLight2D_set_z_range_min (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light2D "set_z_range_min" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Light2D.set_z_range_min

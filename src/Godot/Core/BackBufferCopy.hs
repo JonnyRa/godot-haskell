@@ -60,7 +60,10 @@ get_copy_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BackBufferCopy "get_copy_mode" '[] (IO Int)
          where
@@ -87,7 +90,10 @@ get_rect cls
          godot_method_bind_call bindBackBufferCopy_get_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BackBufferCopy "get_rect" '[] (IO Rect2) where
         nodeMethod = Godot.Core.BackBufferCopy.get_rect
@@ -114,7 +120,10 @@ set_copy_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BackBufferCopy "set_copy_mode" '[Int] (IO ())
          where
@@ -141,7 +150,10 @@ set_rect cls arg1
          godot_method_bind_call bindBackBufferCopy_set_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BackBufferCopy "set_rect" '[Rect2] (IO ())
          where

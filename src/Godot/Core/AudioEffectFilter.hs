@@ -76,7 +76,10 @@ get_cutoff cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioEffectFilter "get_cutoff" '[] (IO Float)
          where
@@ -101,7 +104,10 @@ get_db cls
          godot_method_bind_call bindAudioEffectFilter_get_db (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioEffectFilter "get_db" '[] (IO Int) where
         nodeMethod = Godot.Core.AudioEffectFilter.get_db
@@ -127,7 +133,10 @@ get_gain cls
          godot_method_bind_call bindAudioEffectFilter_get_gain (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioEffectFilter "get_gain" '[] (IO Float)
          where
@@ -155,7 +164,10 @@ get_resonance cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioEffectFilter "get_resonance" '[]
            (IO Float)
@@ -184,7 +196,10 @@ set_cutoff cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioEffectFilter "set_cutoff" '[Float] (IO ())
          where
@@ -209,7 +224,10 @@ set_db cls arg1
          godot_method_bind_call bindAudioEffectFilter_set_db (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioEffectFilter "set_db" '[Int] (IO ()) where
         nodeMethod = Godot.Core.AudioEffectFilter.set_db
@@ -235,7 +253,10 @@ set_gain cls arg1
          godot_method_bind_call bindAudioEffectFilter_set_gain (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioEffectFilter "set_gain" '[Float] (IO ())
          where
@@ -263,7 +284,10 @@ set_resonance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioEffectFilter "set_resonance" '[Float]
            (IO ())

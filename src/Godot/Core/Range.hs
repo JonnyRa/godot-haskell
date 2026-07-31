@@ -35,7 +35,8 @@ sig_changed = Godot.Internal.Dispatch.Signal "changed"
 
 instance NodeSignal Range "changed" '[]
 
--- | Emitted when @value@ changes.
+-- | Emitted when @value@ changes. When used on a @Slider@, this is called continuously while dragging (potentially every frame). If you are performing an expensive operation in a function connected to @signal value_changed@, consider using a @i@debouncing@/i@ @Timer@ to call the function less often.
+--   				__Note:__ Unlike signals such as @signal LineEdit.text_changed@, @signal value_changed@ is also emitted when @value@ is set directly via code.
 sig_value_changed :: Godot.Internal.Dispatch.Signal Range
 sig_value_changed = Godot.Internal.Dispatch.Signal "value_changed"
 
@@ -97,7 +98,10 @@ get_as_ratio cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_get_as_ratio (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "get_as_ratio" '[] (IO Float) where
         nodeMethod = Godot.Core.Range.get_as_ratio
@@ -120,7 +124,10 @@ get_max cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_get_max (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "get_max" '[] (IO Float) where
         nodeMethod = Godot.Core.Range.get_max
@@ -143,7 +150,10 @@ get_min cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_get_min (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "get_min" '[] (IO Float) where
         nodeMethod = Godot.Core.Range.get_min
@@ -166,7 +176,10 @@ get_page cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_get_page (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "get_page" '[] (IO Float) where
         nodeMethod = Godot.Core.Range.get_page
@@ -189,7 +202,10 @@ get_step cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_get_step (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "get_step" '[] (IO Float) where
         nodeMethod = Godot.Core.Range.get_step
@@ -212,7 +228,10 @@ get_value cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_get_value (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "get_value" '[] (IO Float) where
         nodeMethod = Godot.Core.Range.get_value
@@ -238,7 +257,10 @@ is_greater_allowed cls
          godot_method_bind_call bindRange_is_greater_allowed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "is_greater_allowed" '[] (IO Bool) where
         nodeMethod = Godot.Core.Range.is_greater_allowed
@@ -264,7 +286,10 @@ is_lesser_allowed cls
          godot_method_bind_call bindRange_is_lesser_allowed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "is_lesser_allowed" '[] (IO Bool) where
         nodeMethod = Godot.Core.Range.is_lesser_allowed
@@ -288,7 +313,10 @@ is_ratio_exp cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_is_ratio_exp (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "is_ratio_exp" '[] (IO Bool) where
         nodeMethod = Godot.Core.Range.is_ratio_exp
@@ -315,7 +343,10 @@ is_using_rounded_values cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "is_using_rounded_values" '[] (IO Bool)
          where
@@ -342,7 +373,10 @@ set_allow_greater cls arg1
          godot_method_bind_call bindRange_set_allow_greater (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "set_allow_greater" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Range.set_allow_greater
@@ -368,7 +402,10 @@ set_allow_lesser cls arg1
          godot_method_bind_call bindRange_set_allow_lesser (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "set_allow_lesser" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Range.set_allow_lesser
@@ -393,7 +430,10 @@ set_as_ratio cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_set_as_ratio (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "set_as_ratio" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Range.set_as_ratio
@@ -418,7 +458,10 @@ set_exp_ratio cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_set_exp_ratio (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "set_exp_ratio" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Range.set_exp_ratio
@@ -441,7 +484,10 @@ set_max cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_set_max (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "set_max" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Range.set_max
@@ -464,7 +510,10 @@ set_min cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_set_min (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "set_min" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Range.set_min
@@ -487,7 +536,10 @@ set_page cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_set_page (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "set_page" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Range.set_page
@@ -510,7 +562,10 @@ set_step cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_set_step (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "set_step" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Range.set_step
@@ -537,7 +592,10 @@ set_use_rounded_values cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "set_use_rounded_values" '[Bool] (IO ())
          where
@@ -561,14 +619,17 @@ set_value cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_set_value (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "set_value" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Range.set_value
 
 {-# NOINLINE bindRange_share #-}
 
--- | Binds two ranges together along with any ranges previously grouped with either of them. When any of range's member variables change, it will share the new value with all other ranges in its group.
+-- | Binds two @Range@s together along with any ranges previously grouped with either of them. When any of range's member variables change, it will share the new value with all other ranges in its group.
 bindRange_share :: MethodBind
 bindRange_share
   = unsafePerformIO $
@@ -578,20 +639,22 @@ bindRange_share
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Binds two ranges together along with any ranges previously grouped with either of them. When any of range's member variables change, it will share the new value with all other ranges in its group.
+-- | Binds two @Range@s together along with any ranges previously grouped with either of them. When any of range's member variables change, it will share the new value with all other ranges in its group.
 share :: (Range :< cls, Object :< cls) => cls -> Node -> IO ()
 share cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_share (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "share" '[Node] (IO ()) where
         nodeMethod = Godot.Core.Range.share
 
 {-# NOINLINE bindRange_unshare #-}
 
--- | Stops range from sharing its member variables with any other.
+-- | Stops the @Range@ from sharing its member variables with any other.
 bindRange_unshare :: MethodBind
 bindRange_unshare
   = unsafePerformIO $
@@ -601,13 +664,16 @@ bindRange_unshare
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Stops range from sharing its member variables with any other.
+-- | Stops the @Range@ from sharing its member variables with any other.
 unshare :: (Range :< cls, Object :< cls) => cls -> IO ()
 unshare cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRange_unshare (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Range "unshare" '[] (IO ()) where
         nodeMethod = Godot.Core.Range.unshare

@@ -54,14 +54,17 @@ _update cls
          godot_method_bind_call bindPrimitiveMesh__update (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrimitiveMesh "_update" '[] (IO ()) where
         nodeMethod = Godot.Core.PrimitiveMesh._update
 
 {-# NOINLINE bindPrimitiveMesh_get_custom_aabb #-}
 
--- | Overrides the @AABB@ with one defined by user for use with frustum culling. Especially useful to avoid unnexpected culling when  using a shader to offset vertices.
+-- | Overrides the @AABB@ with one defined by user for use with frustum culling. Especially useful to avoid unexpected culling when using a shader to offset vertices.
 bindPrimitiveMesh_get_custom_aabb :: MethodBind
 bindPrimitiveMesh_get_custom_aabb
   = unsafePerformIO $
@@ -71,7 +74,7 @@ bindPrimitiveMesh_get_custom_aabb
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Overrides the @AABB@ with one defined by user for use with frustum culling. Especially useful to avoid unnexpected culling when  using a shader to offset vertices.
+-- | Overrides the @AABB@ with one defined by user for use with frustum culling. Especially useful to avoid unexpected culling when using a shader to offset vertices.
 get_custom_aabb ::
                   (PrimitiveMesh :< cls, Object :< cls) => cls -> IO Aabb
 get_custom_aabb cls
@@ -81,7 +84,10 @@ get_custom_aabb cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrimitiveMesh "get_custom_aabb" '[] (IO Aabb)
          where
@@ -111,7 +117,10 @@ get_flip_faces cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrimitiveMesh "get_flip_faces" '[] (IO Bool)
          where
@@ -138,7 +147,7 @@ get_material cls
          godot_method_bind_call bindPrimitiveMesh_get_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod PrimitiveMesh "get_material" '[] (IO Material)
          where
@@ -182,7 +191,10 @@ get_mesh_arrays cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrimitiveMesh "get_mesh_arrays" '[] (IO Array)
          where
@@ -190,7 +202,7 @@ instance NodeMethod PrimitiveMesh "get_mesh_arrays" '[] (IO Array)
 
 {-# NOINLINE bindPrimitiveMesh_set_custom_aabb #-}
 
--- | Overrides the @AABB@ with one defined by user for use with frustum culling. Especially useful to avoid unnexpected culling when  using a shader to offset vertices.
+-- | Overrides the @AABB@ with one defined by user for use with frustum culling. Especially useful to avoid unexpected culling when using a shader to offset vertices.
 bindPrimitiveMesh_set_custom_aabb :: MethodBind
 bindPrimitiveMesh_set_custom_aabb
   = unsafePerformIO $
@@ -200,7 +212,7 @@ bindPrimitiveMesh_set_custom_aabb
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Overrides the @AABB@ with one defined by user for use with frustum culling. Especially useful to avoid unnexpected culling when  using a shader to offset vertices.
+-- | Overrides the @AABB@ with one defined by user for use with frustum culling. Especially useful to avoid unexpected culling when using a shader to offset vertices.
 set_custom_aabb ::
                   (PrimitiveMesh :< cls, Object :< cls) => cls -> Aabb -> IO ()
 set_custom_aabb cls arg1
@@ -210,7 +222,10 @@ set_custom_aabb cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrimitiveMesh "set_custom_aabb" '[Aabb] (IO ())
          where
@@ -240,7 +255,10 @@ set_flip_faces cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrimitiveMesh "set_flip_faces" '[Bool] (IO ())
          where
@@ -267,7 +285,10 @@ set_material cls arg1
          godot_method_bind_call bindPrimitiveMesh_set_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrimitiveMesh "set_material" '[Material]
            (IO ())

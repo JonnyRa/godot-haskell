@@ -65,7 +65,10 @@ get_height cls
          godot_method_bind_call bindCSGCylinder_get_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "get_height" '[] (IO Float) where
         nodeMethod = Godot.Core.CSGCylinder.get_height
@@ -89,7 +92,7 @@ get_material cls
          godot_method_bind_call bindCSGCylinder_get_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CSGCylinder "get_material" '[] (IO Material)
          where
@@ -114,7 +117,10 @@ get_radius cls
          godot_method_bind_call bindCSGCylinder_get_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "get_radius" '[] (IO Float) where
         nodeMethod = Godot.Core.CSGCylinder.get_radius
@@ -137,7 +143,10 @@ get_sides cls
          godot_method_bind_call bindCSGCylinder_get_sides (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "get_sides" '[] (IO Int) where
         nodeMethod = Godot.Core.CSGCylinder.get_sides
@@ -162,7 +171,10 @@ get_smooth_faces cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "get_smooth_faces" '[] (IO Bool)
          where
@@ -185,7 +197,10 @@ is_cone cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGCylinder_is_cone (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "is_cone" '[] (IO Bool) where
         nodeMethod = Godot.Core.CSGCylinder.is_cone
@@ -208,7 +223,10 @@ set_cone cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGCylinder_set_cone (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "set_cone" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.CSGCylinder.set_cone
@@ -232,7 +250,10 @@ set_height cls arg1
          godot_method_bind_call bindCSGCylinder_set_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "set_height" '[Float] (IO ()) where
         nodeMethod = Godot.Core.CSGCylinder.set_height
@@ -256,7 +277,10 @@ set_material cls arg1
          godot_method_bind_call bindCSGCylinder_set_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "set_material" '[Material] (IO ())
          where
@@ -281,7 +305,10 @@ set_radius cls arg1
          godot_method_bind_call bindCSGCylinder_set_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "set_radius" '[Float] (IO ()) where
         nodeMethod = Godot.Core.CSGCylinder.set_radius
@@ -305,7 +332,10 @@ set_sides cls arg1
          godot_method_bind_call bindCSGCylinder_set_sides (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "set_sides" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CSGCylinder.set_sides
@@ -330,7 +360,10 @@ set_smooth_faces cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGCylinder "set_smooth_faces" '[Bool] (IO ())
          where

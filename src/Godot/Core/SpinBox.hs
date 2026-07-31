@@ -56,7 +56,10 @@ _gui_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpinBox__gui_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "_gui_input" '[InputEvent] (IO ())
          where
@@ -82,7 +85,10 @@ _line_edit_focus_exit cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "_line_edit_focus_exit" '[] (IO ())
          where
@@ -107,7 +113,10 @@ _line_edit_input cls arg1
          godot_method_bind_call bindSpinBox__line_edit_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "_line_edit_input" '[InputEvent]
            (IO ())
@@ -134,7 +143,10 @@ _range_click_timeout cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "_range_click_timeout" '[] (IO ())
          where
@@ -159,7 +171,10 @@ _text_entered cls arg1
          godot_method_bind_call bindSpinBox__text_entered (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "_text_entered" '[GodotString] (IO ())
          where
@@ -183,7 +198,10 @@ apply cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpinBox_apply (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "apply" '[] (IO ()) where
         nodeMethod = Godot.Core.SpinBox.apply
@@ -207,7 +225,10 @@ get_align cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpinBox_get_align (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "get_align" '[] (IO Int) where
         nodeMethod = Godot.Core.SpinBox.get_align
@@ -215,6 +236,7 @@ instance NodeMethod SpinBox "get_align" '[] (IO Int) where
 {-# NOINLINE bindSpinBox_get_line_edit #-}
 
 -- | Returns the @LineEdit@ instance from this @SpinBox@. You can use it to access properties and methods of @LineEdit@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindSpinBox_get_line_edit :: MethodBind
 bindSpinBox_get_line_edit
   = unsafePerformIO $
@@ -225,6 +247,7 @@ bindSpinBox_get_line_edit
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the @LineEdit@ instance from this @SpinBox@. You can use it to access properties and methods of @LineEdit@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_line_edit ::
                 (SpinBox :< cls, Object :< cls) => cls -> IO LineEdit
 get_line_edit cls
@@ -233,7 +256,7 @@ get_line_edit cls
          godot_method_bind_call bindSpinBox_get_line_edit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod SpinBox "get_line_edit" '[] (IO LineEdit) where
         nodeMethod = Godot.Core.SpinBox.get_line_edit
@@ -258,7 +281,10 @@ get_prefix cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpinBox_get_prefix (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "get_prefix" '[] (IO GodotString) where
         nodeMethod = Godot.Core.SpinBox.get_prefix
@@ -283,7 +309,10 @@ get_suffix cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpinBox_get_suffix (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "get_suffix" '[] (IO GodotString) where
         nodeMethod = Godot.Core.SpinBox.get_suffix
@@ -307,7 +336,10 @@ is_editable cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpinBox_is_editable (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "is_editable" '[] (IO Bool) where
         nodeMethod = Godot.Core.SpinBox.is_editable
@@ -331,7 +363,10 @@ set_align cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpinBox_set_align (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "set_align" '[Int] (IO ()) where
         nodeMethod = Godot.Core.SpinBox.set_align
@@ -356,7 +391,10 @@ set_editable cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpinBox_set_editable (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "set_editable" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.SpinBox.set_editable
@@ -381,7 +419,10 @@ set_prefix cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpinBox_set_prefix (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "set_prefix" '[GodotString] (IO ())
          where
@@ -407,7 +448,10 @@ set_suffix cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpinBox_set_suffix (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpinBox "set_suffix" '[GodotString] (IO ())
          where

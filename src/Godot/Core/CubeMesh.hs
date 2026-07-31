@@ -60,7 +60,10 @@ get_size cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCubeMesh_get_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMesh "get_size" '[] (IO Vector3) where
         nodeMethod = Godot.Core.CubeMesh.get_size
@@ -87,7 +90,10 @@ get_subdivide_depth cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMesh "get_subdivide_depth" '[] (IO Int)
          where
@@ -115,7 +121,10 @@ get_subdivide_height cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMesh "get_subdivide_height" '[] (IO Int)
          where
@@ -143,7 +152,10 @@ get_subdivide_width cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMesh "get_subdivide_width" '[] (IO Int)
          where
@@ -169,7 +181,10 @@ set_size cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCubeMesh_set_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMesh "set_size" '[Vector3] (IO ()) where
         nodeMethod = Godot.Core.CubeMesh.set_size
@@ -196,7 +211,10 @@ set_subdivide_depth cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMesh "set_subdivide_depth" '[Int] (IO ())
          where
@@ -224,7 +242,10 @@ set_subdivide_height cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMesh "set_subdivide_height" '[Int] (IO ())
          where
@@ -252,7 +273,10 @@ set_subdivide_width cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMesh "set_subdivide_width" '[Int] (IO ())
          where

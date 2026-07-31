@@ -73,7 +73,10 @@ get_class_documentation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "get_class_documentation" '[]
            (IO GodotString)
@@ -99,7 +102,10 @@ get_class_name cls
          godot_method_bind_call bindNativeScript_get_class_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "get_class_name" '[]
            (IO GodotString)
@@ -125,7 +131,7 @@ get_library cls
          godot_method_bind_call bindNativeScript_get_library (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod NativeScript "get_library" '[]
            (IO GDNativeLibrary)
@@ -153,7 +159,10 @@ get_method_documentation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "get_method_documentation"
            '[GodotString]
@@ -182,7 +191,10 @@ get_property_documentation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "get_property_documentation"
            '[GodotString]
@@ -210,7 +222,10 @@ get_script_class_icon_path cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "get_script_class_icon_path" '[]
            (IO GodotString)
@@ -237,7 +252,10 @@ get_script_class_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "get_script_class_name" '[]
            (IO GodotString)
@@ -265,7 +283,10 @@ get_signal_documentation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "get_signal_documentation"
            '[GodotString]
@@ -291,7 +312,7 @@ new cls varargs
   = withVariantArray ([] ++ varargs)
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNativeScript_new (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod NativeScript "new" '[[Variant 'GodotTy]]
            (IO GodotVariant)
@@ -317,7 +338,10 @@ set_class_name cls arg1
          godot_method_bind_call bindNativeScript_set_class_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "set_class_name" '[GodotString]
            (IO ())
@@ -344,7 +368,10 @@ set_library cls arg1
          godot_method_bind_call bindNativeScript_set_library (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "set_library" '[GDNativeLibrary]
            (IO ())
@@ -371,7 +398,10 @@ set_script_class_icon_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "set_script_class_icon_path"
            '[GodotString]
@@ -399,7 +429,10 @@ set_script_class_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod NativeScript "set_script_class_name"
            '[GodotString]

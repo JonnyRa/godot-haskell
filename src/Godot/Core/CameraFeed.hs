@@ -85,7 +85,10 @@ _allocate_texture cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "_allocate_texture"
            '[Int, Int, Int, Int, Int]
@@ -112,7 +115,10 @@ _set_RGB_img cls arg1
          godot_method_bind_call bindCameraFeed__set_RGB_img (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "_set_RGB_img" '[Image] (IO ())
          where
@@ -137,7 +143,10 @@ _set_YCbCr_img cls arg1
          godot_method_bind_call bindCameraFeed__set_YCbCr_img (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "_set_YCbCr_img" '[Image] (IO ())
          where
@@ -163,7 +172,10 @@ _set_YCbCr_imgs cls arg1 arg2
          godot_method_bind_call bindCameraFeed__set_YCbCr_imgs (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "_set_YCbCr_imgs" '[Image, Image]
            (IO ())
@@ -188,7 +200,10 @@ _set_name cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCameraFeed__set_name (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "_set_name" '[GodotString] (IO ())
          where
@@ -213,7 +228,10 @@ _set_position cls arg1
          godot_method_bind_call bindCameraFeed__set_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "_set_position" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CameraFeed._set_position
@@ -237,7 +255,10 @@ get_id cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCameraFeed_get_id (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "get_id" '[] (IO Int) where
         nodeMethod = Godot.Core.CameraFeed.get_id
@@ -262,7 +283,10 @@ get_name cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCameraFeed_get_name (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "get_name" '[] (IO GodotString)
          where
@@ -288,7 +312,10 @@ get_position cls
          godot_method_bind_call bindCameraFeed_get_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "get_position" '[] (IO Int) where
         nodeMethod = Godot.Core.CameraFeed.get_position
@@ -314,7 +341,10 @@ get_transform cls
          godot_method_bind_call bindCameraFeed_get_transform (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "get_transform" '[] (IO Transform2d)
          where
@@ -339,7 +369,10 @@ is_active cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCameraFeed_is_active (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "is_active" '[] (IO Bool) where
         nodeMethod = Godot.Core.CameraFeed.is_active
@@ -365,7 +398,10 @@ set_active cls arg1
          godot_method_bind_call bindCameraFeed_set_active (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "set_active" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.CameraFeed.set_active
@@ -391,7 +427,10 @@ set_transform cls arg1
          godot_method_bind_call bindCameraFeed_set_transform (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CameraFeed "set_transform" '[Transform2d]
            (IO ())

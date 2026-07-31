@@ -82,7 +82,10 @@ get_display_to_lens cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "get_display_to_lens" '[]
            (IO Float)
@@ -109,7 +112,10 @@ get_display_width cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "get_display_width" '[]
            (IO Float)
@@ -136,7 +142,10 @@ get_eye_height cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "get_eye_height" '[]
            (IO Float)
@@ -162,7 +171,10 @@ get_iod cls
          godot_method_bind_call bindMobileVRInterface_get_iod (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "get_iod" '[] (IO Float)
          where
@@ -187,7 +199,10 @@ get_k1 cls
          godot_method_bind_call bindMobileVRInterface_get_k1 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "get_k1" '[] (IO Float) where
         nodeMethod = Godot.Core.MobileVRInterface.get_k1
@@ -211,7 +226,10 @@ get_k2 cls
          godot_method_bind_call bindMobileVRInterface_get_k2 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "get_k2" '[] (IO Float) where
         nodeMethod = Godot.Core.MobileVRInterface.get_k2
@@ -236,7 +254,10 @@ get_oversample cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "get_oversample" '[]
            (IO Float)
@@ -263,7 +284,10 @@ set_display_to_lens cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "set_display_to_lens"
            '[Float]
@@ -291,7 +315,10 @@ set_display_width cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "set_display_width" '[Float]
            (IO ())
@@ -318,7 +345,10 @@ set_eye_height cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "set_eye_height" '[Float]
            (IO ())
@@ -344,7 +374,10 @@ set_iod cls arg1
          godot_method_bind_call bindMobileVRInterface_set_iod (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "set_iod" '[Float] (IO ())
          where
@@ -369,7 +402,10 @@ set_k1 cls arg1
          godot_method_bind_call bindMobileVRInterface_set_k1 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "set_k1" '[Float] (IO ())
          where
@@ -394,7 +430,10 @@ set_k2 cls arg1
          godot_method_bind_call bindMobileVRInterface_set_k2 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "set_k2" '[Float] (IO ())
          where
@@ -420,7 +459,10 @@ set_oversample cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MobileVRInterface "set_oversample" '[Float]
            (IO ())

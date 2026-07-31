@@ -148,7 +148,10 @@ _get_lower_limit cls
          godot_method_bind_call bindHingeJoint__get_lower_limit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HingeJoint "_get_lower_limit" '[] (IO Float)
          where
@@ -175,7 +178,10 @@ _get_upper_limit cls
          godot_method_bind_call bindHingeJoint__get_upper_limit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HingeJoint "_get_upper_limit" '[] (IO Float)
          where
@@ -202,7 +208,10 @@ _set_lower_limit cls arg1
          godot_method_bind_call bindHingeJoint__set_lower_limit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HingeJoint "_set_lower_limit" '[Float] (IO ())
          where
@@ -229,7 +238,10 @@ _set_upper_limit cls arg1
          godot_method_bind_call bindHingeJoint__set_upper_limit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HingeJoint "_set_upper_limit" '[Float] (IO ())
          where
@@ -255,7 +267,10 @@ get_flag cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindHingeJoint_get_flag (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HingeJoint "get_flag" '[Int] (IO Bool) where
         nodeMethod = Godot.Core.HingeJoint.get_flag
@@ -280,7 +295,10 @@ get_param cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindHingeJoint_get_param (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HingeJoint "get_param" '[Int] (IO Float) where
         nodeMethod = Godot.Core.HingeJoint.get_param
@@ -305,7 +323,10 @@ set_flag cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindHingeJoint_set_flag (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HingeJoint "set_flag" '[Int, Bool] (IO ())
          where
@@ -331,7 +352,10 @@ set_param cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindHingeJoint_set_param (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HingeJoint "set_param" '[Int, Float] (IO ())
          where

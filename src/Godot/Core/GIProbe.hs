@@ -88,6 +88,8 @@ instance NodeProperty GIProbe "subdiv" Int 'False where
 {-# NOINLINE bindGIProbe_bake #-}
 
 -- | Bakes the effect from all @GeometryInstance@s marked with @GeometryInstance.use_in_baked_light@ and @Light@s marked with either @Light.BAKE_INDIRECT@ or @Light.BAKE_ALL@. If @create_visual_debug@ is @true@, after baking the light, this will generate a @MultiMesh@ that has a cube representing each solid cell with each cube colored to the cell's albedo color. This can be used to visualize the @GIProbe@'s data and debug any issues that may be occurring.
+--   				__Note:__ @method bake@ works from the editor and in exported projects. This makes it suitable for procedurally generated or user-built levels. Baking a @GIProbe@ generally takes from 5 to 20 seconds in most scenes. Reducing @subdiv@ can speed up baking.
+--   				__Note:__ @GeometryInstance@s and @Light@s must be fully ready before @method bake@ is called. If you are procedurally creating those and some meshes or lights are missing from your baked @GIProbe@, use @call_deferred("bake")@ instead of calling @method bake@ directly.
 bindGIProbe_bake :: MethodBind
 bindGIProbe_bake
   = unsafePerformIO $
@@ -98,6 +100,8 @@ bindGIProbe_bake
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Bakes the effect from all @GeometryInstance@s marked with @GeometryInstance.use_in_baked_light@ and @Light@s marked with either @Light.BAKE_INDIRECT@ or @Light.BAKE_ALL@. If @create_visual_debug@ is @true@, after baking the light, this will generate a @MultiMesh@ that has a cube representing each solid cell with each cube colored to the cell's albedo color. This can be used to visualize the @GIProbe@'s data and debug any issues that may be occurring.
+--   				__Note:__ @method bake@ works from the editor and in exported projects. This makes it suitable for procedurally generated or user-built levels. Baking a @GIProbe@ generally takes from 5 to 20 seconds in most scenes. Reducing @subdiv@ can speed up baking.
+--   				__Note:__ @GeometryInstance@s and @Light@s must be fully ready before @method bake@ is called. If you are procedurally creating those and some meshes or lights are missing from your baked @GIProbe@, use @call_deferred("bake")@ instead of calling @method bake@ directly.
 bake ::
        (GIProbe :< cls, Object :< cls) =>
        cls -> Maybe Node -> Maybe Bool -> IO ()
@@ -107,7 +111,9 @@ bake cls arg1 arg2
        maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_bake (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "bake" '[Maybe Node, Maybe Bool]
            (IO ())
@@ -133,7 +139,10 @@ debug_bake cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_debug_bake (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "debug_bake" '[] (IO ()) where
         nodeMethod = Godot.Core.GIProbe.debug_bake
@@ -158,7 +167,10 @@ get_bias cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_get_bias (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "get_bias" '[] (IO Float) where
         nodeMethod = Godot.Core.GIProbe.get_bias
@@ -184,7 +196,10 @@ get_dynamic_range cls
          godot_method_bind_call bindGIProbe_get_dynamic_range (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "get_dynamic_range" '[] (IO Int) where
         nodeMethod = Godot.Core.GIProbe.get_dynamic_range
@@ -208,7 +223,10 @@ get_energy cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_get_energy (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "get_energy" '[] (IO Float) where
         nodeMethod = Godot.Core.GIProbe.get_energy
@@ -232,7 +250,10 @@ get_extents cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_get_extents (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "get_extents" '[] (IO Vector3) where
         nodeMethod = Godot.Core.GIProbe.get_extents
@@ -258,7 +279,10 @@ get_normal_bias cls
          godot_method_bind_call bindGIProbe_get_normal_bias (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "get_normal_bias" '[] (IO Float) where
         nodeMethod = Godot.Core.GIProbe.get_normal_bias
@@ -284,7 +308,7 @@ get_probe_data cls
          godot_method_bind_call bindGIProbe_get_probe_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod GIProbe "get_probe_data" '[] (IO GIProbeData)
          where
@@ -311,7 +335,10 @@ get_propagation cls
          godot_method_bind_call bindGIProbe_get_propagation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "get_propagation" '[] (IO Float) where
         nodeMethod = Godot.Core.GIProbe.get_propagation
@@ -335,14 +362,17 @@ get_subdiv cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_get_subdiv (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "get_subdiv" '[] (IO Int) where
         nodeMethod = Godot.Core.GIProbe.get_subdiv
 
 {-# NOINLINE bindGIProbe_is_compressed #-}
 
--- | If @true@, the data for this @GIProbe@ will be compressed. Compression saves space, but results in far worse visual quality.
+-- | @i@Deprecated.@/i@ This property has been deprecated due to known bugs and no longer has any effect when enabled.
 bindGIProbe_is_compressed :: MethodBind
 bindGIProbe_is_compressed
   = unsafePerformIO $
@@ -352,7 +382,7 @@ bindGIProbe_is_compressed
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the data for this @GIProbe@ will be compressed. Compression saves space, but results in far worse visual quality.
+-- | @i@Deprecated.@/i@ This property has been deprecated due to known bugs and no longer has any effect when enabled.
 is_compressed :: (GIProbe :< cls, Object :< cls) => cls -> IO Bool
 is_compressed cls
   = withVariantArray []
@@ -360,7 +390,10 @@ is_compressed cls
          godot_method_bind_call bindGIProbe_is_compressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "is_compressed" '[] (IO Bool) where
         nodeMethod = Godot.Core.GIProbe.is_compressed
@@ -384,7 +417,10 @@ is_interior cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_is_interior (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "is_interior" '[] (IO Bool) where
         nodeMethod = Godot.Core.GIProbe.is_interior
@@ -410,14 +446,17 @@ set_bias cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_set_bias (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "set_bias" '[Float] (IO ()) where
         nodeMethod = Godot.Core.GIProbe.set_bias
 
 {-# NOINLINE bindGIProbe_set_compress #-}
 
--- | If @true@, the data for this @GIProbe@ will be compressed. Compression saves space, but results in far worse visual quality.
+-- | @i@Deprecated.@/i@ This property has been deprecated due to known bugs and no longer has any effect when enabled.
 bindGIProbe_set_compress :: MethodBind
 bindGIProbe_set_compress
   = unsafePerformIO $
@@ -427,7 +466,7 @@ bindGIProbe_set_compress
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the data for this @GIProbe@ will be compressed. Compression saves space, but results in far worse visual quality.
+-- | @i@Deprecated.@/i@ This property has been deprecated due to known bugs and no longer has any effect when enabled.
 set_compress ::
                (GIProbe :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_compress cls arg1
@@ -435,7 +474,10 @@ set_compress cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_set_compress (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "set_compress" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.GIProbe.set_compress
@@ -461,7 +503,10 @@ set_dynamic_range cls arg1
          godot_method_bind_call bindGIProbe_set_dynamic_range (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "set_dynamic_range" '[Int] (IO ())
          where
@@ -487,7 +532,10 @@ set_energy cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_set_energy (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "set_energy" '[Float] (IO ()) where
         nodeMethod = Godot.Core.GIProbe.set_energy
@@ -512,7 +560,10 @@ set_extents cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_set_extents (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "set_extents" '[Vector3] (IO ()) where
         nodeMethod = Godot.Core.GIProbe.set_extents
@@ -537,7 +588,10 @@ set_interior cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_set_interior (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "set_interior" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.GIProbe.set_interior
@@ -563,7 +617,10 @@ set_normal_bias cls arg1
          godot_method_bind_call bindGIProbe_set_normal_bias (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "set_normal_bias" '[Float] (IO ())
          where
@@ -590,7 +647,10 @@ set_probe_data cls arg1
          godot_method_bind_call bindGIProbe_set_probe_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "set_probe_data" '[GIProbeData] (IO ())
          where
@@ -617,7 +677,10 @@ set_propagation cls arg1
          godot_method_bind_call bindGIProbe_set_propagation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "set_propagation" '[Float] (IO ())
          where
@@ -643,7 +706,10 @@ set_subdiv cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbe_set_subdiv (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbe "set_subdiv" '[Int] (IO ()) where
         nodeMethod = Godot.Core.GIProbe.set_subdiv

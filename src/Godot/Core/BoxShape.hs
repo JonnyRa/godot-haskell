@@ -40,7 +40,10 @@ get_extents cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBoxShape_get_extents (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BoxShape "get_extents" '[] (IO Vector3) where
         nodeMethod = Godot.Core.BoxShape.get_extents
@@ -65,7 +68,10 @@ set_extents cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBoxShape_set_extents (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BoxShape "set_extents" '[Vector3] (IO ()) where
         nodeMethod = Godot.Core.BoxShape.set_extents

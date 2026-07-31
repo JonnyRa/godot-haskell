@@ -14,7 +14,6 @@ module Godot.Core.BitmapFont
         Godot.Core.BitmapFont.add_kerning_pair,
         Godot.Core.BitmapFont.add_texture, Godot.Core.BitmapFont.clear,
         Godot.Core.BitmapFont.create_from_fnt,
-        Godot.Core.BitmapFont.get_char_size,
         Godot.Core.BitmapFont.get_fallback,
         Godot.Core.BitmapFont.get_kerning_pair,
         Godot.Core.BitmapFont.get_texture,
@@ -56,7 +55,10 @@ get_ascent cls
          godot_method_bind_call bindBitmapFont_get_ascent (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "get_ascent" '[] (IO Float) where
         nodeMethod = Godot.Core.BitmapFont.get_ascent
@@ -89,7 +91,10 @@ is_distance_field_hint cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "is_distance_field_hint" '[]
            (IO Bool)
@@ -125,7 +130,10 @@ get_height cls
          godot_method_bind_call bindBitmapFont_get_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "get_height" '[] (IO Float) where
         nodeMethod = Godot.Core.BitmapFont.get_height
@@ -161,7 +169,10 @@ _get_chars cls
          godot_method_bind_call bindBitmapFont__get_chars (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "_get_chars" '[] (IO PoolIntArray)
          where
@@ -186,7 +197,10 @@ _get_kernings cls
          godot_method_bind_call bindBitmapFont__get_kernings (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "_get_kernings" '[]
            (IO PoolIntArray)
@@ -212,7 +226,10 @@ _get_textures cls
          godot_method_bind_call bindBitmapFont__get_textures (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "_get_textures" '[] (IO Array) where
         nodeMethod = Godot.Core.BitmapFont._get_textures
@@ -236,7 +253,10 @@ _set_chars cls arg1
          godot_method_bind_call bindBitmapFont__set_chars (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "_set_chars" '[PoolIntArray] (IO ())
          where
@@ -261,7 +281,10 @@ _set_kernings cls arg1
          godot_method_bind_call bindBitmapFont__set_kernings (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "_set_kernings" '[PoolIntArray]
            (IO ())
@@ -287,7 +310,10 @@ _set_textures cls arg1
          godot_method_bind_call bindBitmapFont__set_textures (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "_set_textures" '[Array] (IO ())
          where
@@ -317,7 +343,10 @@ add_char cls arg1 arg2 arg3 arg4 arg5
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBitmapFont_add_char (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "add_char"
            '[Int, Int, Rect2, Maybe Vector2, Maybe Float]
@@ -347,7 +376,10 @@ add_kerning_pair cls arg1 arg2 arg3
          godot_method_bind_call bindBitmapFont_add_kerning_pair (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "add_kerning_pair" '[Int, Int, Int]
            (IO ())
@@ -375,7 +407,10 @@ add_texture cls arg1
          godot_method_bind_call bindBitmapFont_add_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "add_texture" '[Texture] (IO ())
          where
@@ -399,7 +434,10 @@ clear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBitmapFont_clear (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.BitmapFont.clear
@@ -425,40 +463,15 @@ create_from_fnt cls arg1
          godot_method_bind_call bindBitmapFont_create_from_fnt (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "create_from_fnt" '[GodotString]
            (IO Int)
          where
         nodeMethod = Godot.Core.BitmapFont.create_from_fnt
-
-{-# NOINLINE bindBitmapFont_get_char_size #-}
-
-bindBitmapFont_get_char_size :: MethodBind
-bindBitmapFont_get_char_size
-  = unsafePerformIO $
-      withCString "BitmapFont" $
-        \ clsNamePtr ->
-          withCString "get_char_size" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
-get_char_size ::
-                (BitmapFont :< cls, Object :< cls) =>
-                cls -> Int -> Maybe Int -> IO Vector2
-get_char_size cls arg1 arg2
-  = withVariantArray
-      [toVariant arg1, maybe (VariantInt (0)) toVariant arg2]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindBitmapFont_get_char_size (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod BitmapFont "get_char_size" '[Int, Maybe Int]
-           (IO Vector2)
-         where
-        nodeMethod = Godot.Core.BitmapFont.get_char_size
 
 {-# NOINLINE bindBitmapFont_get_fallback #-}
 
@@ -481,7 +494,7 @@ get_fallback cls
          godot_method_bind_call bindBitmapFont_get_fallback (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod BitmapFont "get_fallback" '[] (IO BitmapFont)
          where
@@ -508,7 +521,10 @@ get_kerning_pair cls arg1 arg2
          godot_method_bind_call bindBitmapFont_get_kerning_pair (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "get_kerning_pair" '[Int, Int]
            (IO Int)
@@ -536,7 +552,7 @@ get_texture cls arg1
          godot_method_bind_call bindBitmapFont_get_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod BitmapFont "get_texture" '[Int] (IO Texture)
          where
@@ -564,7 +580,10 @@ get_texture_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "get_texture_count" '[] (IO Int)
          where
@@ -591,7 +610,10 @@ set_ascent cls arg1
          godot_method_bind_call bindBitmapFont_set_ascent (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "set_ascent" '[Float] (IO ()) where
         nodeMethod = Godot.Core.BitmapFont.set_ascent
@@ -618,7 +640,10 @@ set_distance_field_hint cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "set_distance_field_hint" '[Bool]
            (IO ())
@@ -646,7 +671,10 @@ set_fallback cls arg1
          godot_method_bind_call bindBitmapFont_set_fallback (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "set_fallback" '[BitmapFont] (IO ())
          where
@@ -673,7 +701,10 @@ set_height cls arg1
          godot_method_bind_call bindBitmapFont_set_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitmapFont "set_height" '[Float] (IO ()) where
         nodeMethod = Godot.Core.BitmapFont.set_height

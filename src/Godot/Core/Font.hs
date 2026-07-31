@@ -3,8 +3,9 @@
   MultiParamTypeClasses #-}
 module Godot.Core.Font
        (Godot.Core.Font.draw, Godot.Core.Font.draw_char,
-        Godot.Core.Font.get_ascent, Godot.Core.Font.get_descent,
-        Godot.Core.Font.get_height, Godot.Core.Font.get_string_size,
+        Godot.Core.Font.get_ascent, Godot.Core.Font.get_char_size,
+        Godot.Core.Font.get_descent, Godot.Core.Font.get_height,
+        Godot.Core.Font.get_string_size,
         Godot.Core.Font.get_wordwrap_string_size,
         Godot.Core.Font.has_outline,
         Godot.Core.Font.is_distance_field_hint,
@@ -51,7 +52,9 @@ draw cls arg1 arg2 arg3 arg4 arg5 arg6
        defaultedVariant VariantColor (withOpacity (sRGB 1 1 1) 1) arg6]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFont_draw (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Font "draw"
            '[Rid, Vector2, GodotString, Maybe Color, Maybe Int, Maybe Color]
@@ -86,7 +89,10 @@ draw_char cls arg1 arg2 arg3 arg4 arg5 arg6
        maybe (VariantBool False) toVariant arg6]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFont_draw_char (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Font "draw_char"
            '[Rid, Vector2, Int, Maybe Int, Maybe Color, Maybe Bool]
@@ -112,10 +118,45 @@ get_ascent cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFont_get_ascent (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Font "get_ascent" '[] (IO Float) where
         nodeMethod = Godot.Core.Font.get_ascent
+
+{-# NOINLINE bindFont_get_char_size #-}
+
+-- | Returns the size of a character, optionally taking kerning into account if the next character is provided. Note that the height returned is the font height (see @method get_height@) and has no relation to the glyph height.
+bindFont_get_char_size :: MethodBind
+bindFont_get_char_size
+  = unsafePerformIO $
+      withCString "Font" $
+        \ clsNamePtr ->
+          withCString "get_char_size" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the size of a character, optionally taking kerning into account if the next character is provided. Note that the height returned is the font height (see @method get_height@) and has no relation to the glyph height.
+get_char_size ::
+                (Font :< cls, Object :< cls) =>
+                cls -> Int -> Maybe Int -> IO Vector2
+get_char_size cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (0)) toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindFont_get_char_size (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Font "get_char_size" '[Int, Maybe Int]
+           (IO Vector2)
+         where
+        nodeMethod = Godot.Core.Font.get_char_size
 
 {-# NOINLINE bindFont_get_descent #-}
 
@@ -135,7 +176,10 @@ get_descent cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFont_get_descent (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Font "get_descent" '[] (IO Float) where
         nodeMethod = Godot.Core.Font.get_descent
@@ -158,14 +202,17 @@ get_height cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFont_get_height (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Font "get_height" '[] (IO Float) where
         nodeMethod = Godot.Core.Font.get_height
 
 {-# NOINLINE bindFont_get_string_size #-}
 
--- | Returns the size of a string, taking kerning and advance into account.
+-- | Returns the size of a string, taking kerning and advance into account. Note that the height returned is the font height (see @method get_height@) and has no relation to the string.
 bindFont_get_string_size :: MethodBind
 bindFont_get_string_size
   = unsafePerformIO $
@@ -175,7 +222,7 @@ bindFont_get_string_size
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the size of a string, taking kerning and advance into account.
+-- | Returns the size of a string, taking kerning and advance into account. Note that the height returned is the font height (see @method get_height@) and has no relation to the string.
 get_string_size ::
                   (Font :< cls, Object :< cls) => cls -> GodotString -> IO Vector2
 get_string_size cls arg1
@@ -183,7 +230,10 @@ get_string_size cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFont_get_string_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Font "get_string_size" '[GodotString]
            (IO Vector2)
@@ -213,7 +263,10 @@ get_wordwrap_string_size cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Font "get_wordwrap_string_size"
            '[GodotString, Float]
@@ -239,7 +292,10 @@ has_outline cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFont_has_outline (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Font "has_outline" '[] (IO Bool) where
         nodeMethod = Godot.Core.Font.has_outline
@@ -263,7 +319,10 @@ is_distance_field_hint cls
          godot_method_bind_call bindFont_is_distance_field_hint (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Font "is_distance_field_hint" '[] (IO Bool)
          where
@@ -288,7 +347,10 @@ update_changes cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFont_update_changes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Font "update_changes" '[] (IO ()) where
         nodeMethod = Godot.Core.Font.update_changes

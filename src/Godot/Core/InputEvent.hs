@@ -51,7 +51,10 @@ accumulate cls arg1
          godot_method_bind_call bindInputEvent_accumulate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEvent "accumulate" '[InputEvent] (IO Bool)
          where
@@ -77,7 +80,10 @@ as_text cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputEvent_as_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEvent "as_text" '[] (IO GodotString) where
         nodeMethod = Godot.Core.InputEvent.as_text
@@ -85,6 +91,7 @@ instance NodeMethod InputEvent "as_text" '[] (IO GodotString) where
 {-# NOINLINE bindInputEvent_get_action_strength #-}
 
 -- | Returns a value between 0.0 and 1.0 depending on the given actions' state. Useful for getting the value of events of type @InputEventJoypadMotion@.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 bindInputEvent_get_action_strength :: MethodBind
 bindInputEvent_get_action_strength
   = unsafePerformIO $
@@ -95,19 +102,25 @@ bindInputEvent_get_action_strength
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns a value between 0.0 and 1.0 depending on the given actions' state. Useful for getting the value of events of type @InputEventJoypadMotion@.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 get_action_strength ::
                       (InputEvent :< cls, Object :< cls) =>
-                      cls -> GodotString -> IO Float
-get_action_strength cls arg1
-  = withVariantArray [toVariant arg1]
+                      cls -> GodotString -> Maybe Bool -> IO Float
+get_action_strength cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputEvent_get_action_strength
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod InputEvent "get_action_strength" '[GodotString]
+instance NodeMethod InputEvent "get_action_strength"
+           '[GodotString, Maybe Bool]
            (IO Float)
          where
         nodeMethod = Godot.Core.InputEvent.get_action_strength
@@ -134,7 +147,10 @@ get_device cls
          godot_method_bind_call bindInputEvent_get_device (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEvent "get_device" '[] (IO Int) where
         nodeMethod = Godot.Core.InputEvent.get_device
@@ -142,6 +158,7 @@ instance NodeMethod InputEvent "get_device" '[] (IO Int) where
 {-# NOINLINE bindInputEvent_is_action #-}
 
 -- | Returns @true@ if this input event matches a pre-defined action of any type.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 bindInputEvent_is_action :: MethodBind
 bindInputEvent_is_action
   = unsafePerformIO $
@@ -152,22 +169,32 @@ bindInputEvent_is_action
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ if this input event matches a pre-defined action of any type.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 is_action ::
-            (InputEvent :< cls, Object :< cls) => cls -> GodotString -> IO Bool
-is_action cls arg1
-  = withVariantArray [toVariant arg1]
+            (InputEvent :< cls, Object :< cls) =>
+            cls -> GodotString -> Maybe Bool -> IO Bool
+is_action cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputEvent_is_action (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod InputEvent "is_action" '[GodotString] (IO Bool)
+instance NodeMethod InputEvent "is_action"
+           '[GodotString, Maybe Bool]
+           (IO Bool)
          where
         nodeMethod = Godot.Core.InputEvent.is_action
 
 {-# NOINLINE bindInputEvent_is_action_pressed #-}
 
 -- | Returns @true@ if the given action is being pressed (and is not an echo event for @InputEventKey@ events, unless @allow_echo@ is @true@). Not relevant for events of type @InputEventMouseMotion@ or @InputEventScreenDrag@.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 bindInputEvent_is_action_pressed :: MethodBind
 bindInputEvent_is_action_pressed
   = unsafePerformIO $
@@ -178,21 +205,27 @@ bindInputEvent_is_action_pressed
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ if the given action is being pressed (and is not an echo event for @InputEventKey@ events, unless @allow_echo@ is @true@). Not relevant for events of type @InputEventMouseMotion@ or @InputEventScreenDrag@.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 is_action_pressed ::
                     (InputEvent :< cls, Object :< cls) =>
-                    cls -> GodotString -> Maybe Bool -> IO Bool
-is_action_pressed cls arg1 arg2
+                    cls -> GodotString -> Maybe Bool -> Maybe Bool -> IO Bool
+is_action_pressed cls arg1 arg2 arg3
   = withVariantArray
-      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2,
+       maybe (VariantBool False) toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputEvent_is_action_pressed
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEvent "is_action_pressed"
-           '[GodotString, Maybe Bool]
+           '[GodotString, Maybe Bool, Maybe Bool]
            (IO Bool)
          where
         nodeMethod = Godot.Core.InputEvent.is_action_pressed
@@ -200,6 +233,7 @@ instance NodeMethod InputEvent "is_action_pressed"
 {-# NOINLINE bindInputEvent_is_action_released #-}
 
 -- | Returns @true@ if the given action is released (i.e. not pressed). Not relevant for events of type @InputEventMouseMotion@ or @InputEventScreenDrag@.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 bindInputEvent_is_action_released :: MethodBind
 bindInputEvent_is_action_released
   = unsafePerformIO $
@@ -210,18 +244,25 @@ bindInputEvent_is_action_released
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ if the given action is released (i.e. not pressed). Not relevant for events of type @InputEventMouseMotion@ or @InputEventScreenDrag@.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 is_action_released ::
-                     (InputEvent :< cls, Object :< cls) => cls -> GodotString -> IO Bool
-is_action_released cls arg1
-  = withVariantArray [toVariant arg1]
+                     (InputEvent :< cls, Object :< cls) =>
+                     cls -> GodotString -> Maybe Bool -> IO Bool
+is_action_released cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputEvent_is_action_released
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod InputEvent "is_action_released" '[GodotString]
+instance NodeMethod InputEvent "is_action_released"
+           '[GodotString, Maybe Bool]
            (IO Bool)
          where
         nodeMethod = Godot.Core.InputEvent.is_action_released
@@ -247,7 +288,10 @@ is_action_type cls
          godot_method_bind_call bindInputEvent_is_action_type (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEvent "is_action_type" '[] (IO Bool) where
         nodeMethod = Godot.Core.InputEvent.is_action_type
@@ -271,7 +315,10 @@ is_echo cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputEvent_is_echo (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEvent "is_echo" '[] (IO Bool) where
         nodeMethod = Godot.Core.InputEvent.is_echo
@@ -279,6 +326,7 @@ instance NodeMethod InputEvent "is_echo" '[] (IO Bool) where
 {-# NOINLINE bindInputEvent_is_pressed #-}
 
 -- | Returns @true@ if this input event is pressed. Not relevant for events of type @InputEventMouseMotion@ or @InputEventScreenDrag@.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 bindInputEvent_is_pressed :: MethodBind
 bindInputEvent_is_pressed
   = unsafePerformIO $
@@ -289,6 +337,7 @@ bindInputEvent_is_pressed
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ if this input event is pressed. Not relevant for events of type @InputEventMouseMotion@ or @InputEventScreenDrag@.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 is_pressed :: (InputEvent :< cls, Object :< cls) => cls -> IO Bool
 is_pressed cls
   = withVariantArray []
@@ -296,7 +345,10 @@ is_pressed cls
          godot_method_bind_call bindInputEvent_is_pressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEvent "is_pressed" '[] (IO Bool) where
         nodeMethod = Godot.Core.InputEvent.is_pressed
@@ -324,14 +376,18 @@ set_device cls arg1
          godot_method_bind_call bindInputEvent_set_device (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEvent "set_device" '[Int] (IO ()) where
         nodeMethod = Godot.Core.InputEvent.set_device
 
 {-# NOINLINE bindInputEvent_shortcut_match #-}
 
--- | Returns @true@ if the given input event is checking for the same key (@InputEventKey@), button (@InputEventJoypadButton@) or action (@InputEventAction@).
+-- | Returns @true@ if the specified @event@ matches this event. Only valid for action events i.e key (@InputEventKey@), button (@InputEventMouseButton@ or @InputEventJoypadButton@), axis @InputEventJoypadMotion@ or action (@InputEventAction@) events.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 bindInputEvent_shortcut_match :: MethodBind
 bindInputEvent_shortcut_match
   = unsafePerformIO $
@@ -341,18 +397,25 @@ bindInputEvent_shortcut_match
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if the given input event is checking for the same key (@InputEventKey@), button (@InputEventJoypadButton@) or action (@InputEventAction@).
+-- | Returns @true@ if the specified @event@ matches this event. Only valid for action events i.e key (@InputEventKey@), button (@InputEventMouseButton@ or @InputEventJoypadButton@), axis @InputEventJoypadMotion@ or action (@InputEventAction@) events.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 shortcut_match ::
-                 (InputEvent :< cls, Object :< cls) => cls -> InputEvent -> IO Bool
-shortcut_match cls arg1
-  = withVariantArray [toVariant arg1]
+                 (InputEvent :< cls, Object :< cls) =>
+                 cls -> InputEvent -> Maybe Bool -> IO Bool
+shortcut_match cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool True) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputEvent_shortcut_match (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod InputEvent "shortcut_match" '[InputEvent]
+instance NodeMethod InputEvent "shortcut_match"
+           '[InputEvent, Maybe Bool]
            (IO Bool)
          where
         nodeMethod = Godot.Core.InputEvent.shortcut_match
@@ -380,7 +443,7 @@ xformed_by cls arg1 arg2
          godot_method_bind_call bindInputEvent_xformed_by (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod InputEvent "xformed_by"
            '[Transform2d, Maybe Vector2]

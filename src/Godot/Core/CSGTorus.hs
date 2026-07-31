@@ -67,7 +67,10 @@ get_inner_radius cls
          godot_method_bind_call bindCSGTorus_get_inner_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "get_inner_radius" '[] (IO Float)
          where
@@ -92,7 +95,7 @@ get_material cls
          godot_method_bind_call bindCSGTorus_get_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CSGTorus "get_material" '[] (IO Material) where
         nodeMethod = Godot.Core.CSGTorus.get_material
@@ -116,7 +119,10 @@ get_outer_radius cls
          godot_method_bind_call bindCSGTorus_get_outer_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "get_outer_radius" '[] (IO Float)
          where
@@ -140,7 +146,10 @@ get_ring_sides cls
          godot_method_bind_call bindCSGTorus_get_ring_sides (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "get_ring_sides" '[] (IO Int) where
         nodeMethod = Godot.Core.CSGTorus.get_ring_sides
@@ -162,7 +171,10 @@ get_sides cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGTorus_get_sides (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "get_sides" '[] (IO Int) where
         nodeMethod = Godot.Core.CSGTorus.get_sides
@@ -186,7 +198,10 @@ get_smooth_faces cls
          godot_method_bind_call bindCSGTorus_get_smooth_faces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "get_smooth_faces" '[] (IO Bool) where
         nodeMethod = Godot.Core.CSGTorus.get_smooth_faces
@@ -210,7 +225,10 @@ set_inner_radius cls arg1
          godot_method_bind_call bindCSGTorus_set_inner_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "set_inner_radius" '[Float] (IO ())
          where
@@ -235,7 +253,10 @@ set_material cls arg1
          godot_method_bind_call bindCSGTorus_set_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "set_material" '[Material] (IO ())
          where
@@ -260,7 +281,10 @@ set_outer_radius cls arg1
          godot_method_bind_call bindCSGTorus_set_outer_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "set_outer_radius" '[Float] (IO ())
          where
@@ -285,7 +309,10 @@ set_ring_sides cls arg1
          godot_method_bind_call bindCSGTorus_set_ring_sides (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "set_ring_sides" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CSGTorus.set_ring_sides
@@ -308,7 +335,10 @@ set_sides cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGTorus_set_sides (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "set_sides" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CSGTorus.set_sides
@@ -332,7 +362,10 @@ set_smooth_faces cls arg1
          godot_method_bind_call bindCSGTorus_set_smooth_faces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGTorus "set_smooth_faces" '[Bool] (IO ())
          where

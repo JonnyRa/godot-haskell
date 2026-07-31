@@ -89,7 +89,10 @@ _clear_caches cls
          godot_method_bind_call bindAnimationTree__clear_caches (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "_clear_caches" '[] (IO ()) where
         nodeMethod = Godot.Core.AnimationTree._clear_caches
@@ -113,7 +116,10 @@ _node_removed cls arg1
          godot_method_bind_call bindAnimationTree__node_removed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "_node_removed" '[Node] (IO ())
          where
@@ -138,7 +144,10 @@ _tree_changed cls
          godot_method_bind_call bindAnimationTree__tree_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "_tree_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.AnimationTree._tree_changed
@@ -163,7 +172,10 @@ _update_properties cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "_update_properties" '[] (IO ())
          where
@@ -190,7 +202,10 @@ advance cls arg1
          godot_method_bind_call bindAnimationTree_advance (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "advance" '[Float] (IO ()) where
         nodeMethod = Godot.Core.AnimationTree.advance
@@ -217,7 +232,10 @@ get_animation_player cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "get_animation_player" '[]
            (IO NodePath)
@@ -246,7 +264,10 @@ get_process_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "get_process_mode" '[] (IO Int)
          where
@@ -255,7 +276,7 @@ instance NodeMethod AnimationTree "get_process_mode" '[] (IO Int)
 {-# NOINLINE bindAnimationTree_get_root_motion_track #-}
 
 -- | The path to the Animation track used for root motion. Paths must be valid scene-tree paths to a node, and must be specified starting from the parent node of the node that will reproduce the animation. To specify a track that controls properties or bones, append its name after the path, separated by @":"@. For example, @"character/skeleton:ankle"@ or @"character/mesh:transform/local"@.
---   			If the track has type @Animation.TYPE_TRANSFORM@, the transformation will be cancelled visually, and the animation will appear to stay in place.
+--   			If the track has type @Animation.TYPE_TRANSFORM@, the transformation will be cancelled visually, and the animation will appear to stay in place. See also @method get_root_motion_transform@ and @RootMotionView@.
 bindAnimationTree_get_root_motion_track :: MethodBind
 bindAnimationTree_get_root_motion_track
   = unsafePerformIO $
@@ -266,7 +287,7 @@ bindAnimationTree_get_root_motion_track
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The path to the Animation track used for root motion. Paths must be valid scene-tree paths to a node, and must be specified starting from the parent node of the node that will reproduce the animation. To specify a track that controls properties or bones, append its name after the path, separated by @":"@. For example, @"character/skeleton:ankle"@ or @"character/mesh:transform/local"@.
---   			If the track has type @Animation.TYPE_TRANSFORM@, the transformation will be cancelled visually, and the animation will appear to stay in place.
+--   			If the track has type @Animation.TYPE_TRANSFORM@, the transformation will be cancelled visually, and the animation will appear to stay in place. See also @method get_root_motion_transform@ and @RootMotionView@.
 get_root_motion_track ::
                         (AnimationTree :< cls, Object :< cls) => cls -> IO NodePath
 get_root_motion_track cls
@@ -276,7 +297,10 @@ get_root_motion_track cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "get_root_motion_track" '[]
            (IO NodePath)
@@ -285,7 +309,7 @@ instance NodeMethod AnimationTree "get_root_motion_track" '[]
 
 {-# NOINLINE bindAnimationTree_get_root_motion_transform #-}
 
--- | Retrieve the motion of the @root_motion_track@ as a @Transform@ that can be used elsewhere. If @root_motion_track@ is not a path to a track of type @Animation.TYPE_TRANSFORM@, returns an identity transformation.
+-- | Retrieve the motion of the @root_motion_track@ as a @Transform@ that can be used elsewhere. If @root_motion_track@ is not a path to a track of type @Animation.TYPE_TRANSFORM@, returns an identity transformation. See also @root_motion_track@ and @RootMotionView@.
 bindAnimationTree_get_root_motion_transform :: MethodBind
 bindAnimationTree_get_root_motion_transform
   = unsafePerformIO $
@@ -295,7 +319,7 @@ bindAnimationTree_get_root_motion_transform
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Retrieve the motion of the @root_motion_track@ as a @Transform@ that can be used elsewhere. If @root_motion_track@ is not a path to a track of type @Animation.TYPE_TRANSFORM@, returns an identity transformation.
+-- | Retrieve the motion of the @root_motion_track@ as a @Transform@ that can be used elsewhere. If @root_motion_track@ is not a path to a track of type @Animation.TYPE_TRANSFORM@, returns an identity transformation. See also @root_motion_track@ and @RootMotionView@.
 get_root_motion_transform ::
                             (AnimationTree :< cls, Object :< cls) => cls -> IO Transform
 get_root_motion_transform cls
@@ -305,7 +329,10 @@ get_root_motion_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "get_root_motion_transform" '[]
            (IO Transform)
@@ -333,7 +360,7 @@ get_tree_root cls
          godot_method_bind_call bindAnimationTree_get_tree_root (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AnimationTree "get_tree_root" '[]
            (IO AnimationNode)
@@ -361,7 +388,10 @@ is_active cls
          godot_method_bind_call bindAnimationTree_is_active (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "is_active" '[] (IO Bool) where
         nodeMethod = Godot.Core.AnimationTree.is_active
@@ -387,7 +417,10 @@ rename_parameter cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "rename_parameter"
            '[GodotString, GodotString]
@@ -416,7 +449,10 @@ set_active cls arg1
          godot_method_bind_call bindAnimationTree_set_active (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "set_active" '[Bool] (IO ())
          where
@@ -444,7 +480,10 @@ set_animation_player cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "set_animation_player"
            '[NodePath]
@@ -474,7 +513,10 @@ set_process_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "set_process_mode" '[Int] (IO ())
          where
@@ -483,7 +525,7 @@ instance NodeMethod AnimationTree "set_process_mode" '[Int] (IO ())
 {-# NOINLINE bindAnimationTree_set_root_motion_track #-}
 
 -- | The path to the Animation track used for root motion. Paths must be valid scene-tree paths to a node, and must be specified starting from the parent node of the node that will reproduce the animation. To specify a track that controls properties or bones, append its name after the path, separated by @":"@. For example, @"character/skeleton:ankle"@ or @"character/mesh:transform/local"@.
---   			If the track has type @Animation.TYPE_TRANSFORM@, the transformation will be cancelled visually, and the animation will appear to stay in place.
+--   			If the track has type @Animation.TYPE_TRANSFORM@, the transformation will be cancelled visually, and the animation will appear to stay in place. See also @method get_root_motion_transform@ and @RootMotionView@.
 bindAnimationTree_set_root_motion_track :: MethodBind
 bindAnimationTree_set_root_motion_track
   = unsafePerformIO $
@@ -494,7 +536,7 @@ bindAnimationTree_set_root_motion_track
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The path to the Animation track used for root motion. Paths must be valid scene-tree paths to a node, and must be specified starting from the parent node of the node that will reproduce the animation. To specify a track that controls properties or bones, append its name after the path, separated by @":"@. For example, @"character/skeleton:ankle"@ or @"character/mesh:transform/local"@.
---   			If the track has type @Animation.TYPE_TRANSFORM@, the transformation will be cancelled visually, and the animation will appear to stay in place.
+--   			If the track has type @Animation.TYPE_TRANSFORM@, the transformation will be cancelled visually, and the animation will appear to stay in place. See also @method get_root_motion_transform@ and @RootMotionView@.
 set_root_motion_track ::
                         (AnimationTree :< cls, Object :< cls) => cls -> NodePath -> IO ()
 set_root_motion_track cls arg1
@@ -504,7 +546,10 @@ set_root_motion_track cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "set_root_motion_track"
            '[NodePath]
@@ -534,7 +579,10 @@ set_tree_root cls arg1
          godot_method_bind_call bindAnimationTree_set_tree_root (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationTree "set_tree_root" '[AnimationNode]
            (IO ())

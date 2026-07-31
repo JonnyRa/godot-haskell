@@ -69,7 +69,10 @@ get_left_to_right cls
          godot_method_bind_call bindPrismMesh_get_left_to_right (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrismMesh "get_left_to_right" '[] (IO Float)
          where
@@ -94,7 +97,10 @@ get_size cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPrismMesh_get_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrismMesh "get_size" '[] (IO Vector3) where
         nodeMethod = Godot.Core.PrismMesh.get_size
@@ -121,7 +127,10 @@ get_subdivide_depth cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrismMesh "get_subdivide_depth" '[] (IO Int)
          where
@@ -149,7 +158,10 @@ get_subdivide_height cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrismMesh "get_subdivide_height" '[] (IO Int)
          where
@@ -177,7 +189,10 @@ get_subdivide_width cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrismMesh "get_subdivide_width" '[] (IO Int)
          where
@@ -204,7 +219,10 @@ set_left_to_right cls arg1
          godot_method_bind_call bindPrismMesh_set_left_to_right (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrismMesh "set_left_to_right" '[Float] (IO ())
          where
@@ -230,7 +248,10 @@ set_size cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPrismMesh_set_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrismMesh "set_size" '[Vector3] (IO ()) where
         nodeMethod = Godot.Core.PrismMesh.set_size
@@ -257,7 +278,10 @@ set_subdivide_depth cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrismMesh "set_subdivide_depth" '[Int] (IO ())
          where
@@ -285,7 +309,10 @@ set_subdivide_height cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrismMesh "set_subdivide_height" '[Int] (IO ())
          where
@@ -313,7 +340,10 @@ set_subdivide_width cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PrismMesh "set_subdivide_width" '[Int] (IO ())
          where

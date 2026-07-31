@@ -11,11 +11,15 @@ module Godot.Core.Generic6DOFJoint
         Godot.Core.Generic6DOFJoint._FLAG_ENABLE_ANGULAR_LIMIT,
         Godot.Core.Generic6DOFJoint._PARAM_LINEAR_LIMIT_SOFTNESS,
         Godot.Core.Generic6DOFJoint._PARAM_ANGULAR_MOTOR_TARGET_VELOCITY,
+        Godot.Core.Generic6DOFJoint._PARAM_ANGULAR_SPRING_DAMPING,
         Godot.Core.Generic6DOFJoint._PARAM_LINEAR_LOWER_LIMIT,
+        Godot.Core.Generic6DOFJoint._PARAM_LINEAR_SPRING_EQUILIBRIUM_POINT,
         Godot.Core.Generic6DOFJoint._PARAM_ANGULAR_MOTOR_FORCE_LIMIT,
         Godot.Core.Generic6DOFJoint._PARAM_LINEAR_RESTITUTION,
         Godot.Core.Generic6DOFJoint._FLAG_ENABLE_ANGULAR_SPRING,
         Godot.Core.Generic6DOFJoint._PARAM_MAX,
+        Godot.Core.Generic6DOFJoint._PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT,
+        Godot.Core.Generic6DOFJoint._PARAM_LINEAR_SPRING_DAMPING,
         Godot.Core.Generic6DOFJoint._FLAG_MAX,
         Godot.Core.Generic6DOFJoint._PARAM_ANGULAR_LIMIT_SOFTNESS,
         Godot.Core.Generic6DOFJoint._PARAM_LINEAR_UPPER_LIMIT,
@@ -23,7 +27,9 @@ module Godot.Core.Generic6DOFJoint
         Godot.Core.Generic6DOFJoint._FLAG_ENABLE_LINEAR_LIMIT,
         Godot.Core.Generic6DOFJoint._PARAM_ANGULAR_UPPER_LIMIT,
         Godot.Core.Generic6DOFJoint._FLAG_ENABLE_LINEAR_SPRING,
+        Godot.Core.Generic6DOFJoint._PARAM_ANGULAR_SPRING_STIFFNESS,
         Godot.Core.Generic6DOFJoint._FLAG_ENABLE_MOTOR,
+        Godot.Core.Generic6DOFJoint._PARAM_LINEAR_SPRING_STIFFNESS,
         Godot.Core.Generic6DOFJoint._PARAM_LINEAR_MOTOR_FORCE_LIMIT,
         Godot.Core.Generic6DOFJoint._PARAM_ANGULAR_RESTITUTION,
         Godot.Core.Generic6DOFJoint._get_angular_hi_limit_x,
@@ -44,14 +50,12 @@ module Godot.Core.Generic6DOFJoint
         Godot.Core.Generic6DOFJoint.get_param_x,
         Godot.Core.Generic6DOFJoint.get_param_y,
         Godot.Core.Generic6DOFJoint.get_param_z,
-        Godot.Core.Generic6DOFJoint.get_precision,
         Godot.Core.Generic6DOFJoint.set_flag_x,
         Godot.Core.Generic6DOFJoint.set_flag_y,
         Godot.Core.Generic6DOFJoint.set_flag_z,
         Godot.Core.Generic6DOFJoint.set_param_x,
         Godot.Core.Generic6DOFJoint.set_param_y,
-        Godot.Core.Generic6DOFJoint.set_param_z,
-        Godot.Core.Generic6DOFJoint.set_precision)
+        Godot.Core.Generic6DOFJoint.set_param_z)
        where
 import Data.Coerce
 import Foreign.C
@@ -92,8 +96,14 @@ _PARAM_LINEAR_LIMIT_SOFTNESS = 2
 _PARAM_ANGULAR_MOTOR_TARGET_VELOCITY :: Int
 _PARAM_ANGULAR_MOTOR_TARGET_VELOCITY = 17
 
+_PARAM_ANGULAR_SPRING_DAMPING :: Int
+_PARAM_ANGULAR_SPRING_DAMPING = 20
+
 _PARAM_LINEAR_LOWER_LIMIT :: Int
 _PARAM_LINEAR_LOWER_LIMIT = 0
+
+_PARAM_LINEAR_SPRING_EQUILIBRIUM_POINT :: Int
+_PARAM_LINEAR_SPRING_EQUILIBRIUM_POINT = 9
 
 _PARAM_ANGULAR_MOTOR_FORCE_LIMIT :: Int
 _PARAM_ANGULAR_MOTOR_FORCE_LIMIT = 18
@@ -106,6 +116,12 @@ _FLAG_ENABLE_ANGULAR_SPRING = 2
 
 _PARAM_MAX :: Int
 _PARAM_MAX = 22
+
+_PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT :: Int
+_PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT = 21
+
+_PARAM_LINEAR_SPRING_DAMPING :: Int
+_PARAM_LINEAR_SPRING_DAMPING = 8
 
 _FLAG_MAX :: Int
 _FLAG_MAX = 6
@@ -128,8 +144,14 @@ _PARAM_ANGULAR_UPPER_LIMIT = 11
 _FLAG_ENABLE_LINEAR_SPRING :: Int
 _FLAG_ENABLE_LINEAR_SPRING = 3
 
+_PARAM_ANGULAR_SPRING_STIFFNESS :: Int
+_PARAM_ANGULAR_SPRING_STIFFNESS = 19
+
 _FLAG_ENABLE_MOTOR :: Int
 _FLAG_ENABLE_MOTOR = 4
+
+_PARAM_LINEAR_SPRING_STIFFNESS :: Int
+_PARAM_LINEAR_SPRING_STIFFNESS = 7
 
 _PARAM_LINEAR_MOTOR_FORCE_LIMIT :: Int
 _PARAM_LINEAR_MOTOR_FORCE_LIMIT = 6
@@ -839,10 +861,6 @@ instance NodeProperty Generic6DOFJoint "linear_spring_z/stiffness"
           = (wrapIndexedGetter 7 get_param_z,
              wrapIndexedSetter 7 set_param_z, Nothing)
 
-instance NodeProperty Generic6DOFJoint "precision" Int 'False where
-        nodeProperty
-          = (get_precision, wrapDroppingSetter set_precision, Nothing)
-
 {-# NOINLINE bindGeneric6DOFJoint__get_angular_hi_limit_x #-}
 
 -- | The minimum rotation in positive direction to break loose and rotate around the X axis.
@@ -865,7 +883,10 @@ _get_angular_hi_limit_x cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_get_angular_hi_limit_x" '[]
            (IO Float)
@@ -894,7 +915,10 @@ _get_angular_hi_limit_y cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_get_angular_hi_limit_y" '[]
            (IO Float)
@@ -923,7 +947,10 @@ _get_angular_hi_limit_z cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_get_angular_hi_limit_z" '[]
            (IO Float)
@@ -952,7 +979,10 @@ _get_angular_lo_limit_x cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_get_angular_lo_limit_x" '[]
            (IO Float)
@@ -981,7 +1011,10 @@ _get_angular_lo_limit_y cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_get_angular_lo_limit_y" '[]
            (IO Float)
@@ -1010,7 +1043,10 @@ _get_angular_lo_limit_z cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_get_angular_lo_limit_z" '[]
            (IO Float)
@@ -1039,7 +1075,10 @@ _set_angular_hi_limit_x cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_set_angular_hi_limit_x"
            '[Float]
@@ -1069,7 +1108,10 @@ _set_angular_hi_limit_y cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_set_angular_hi_limit_y"
            '[Float]
@@ -1099,7 +1141,10 @@ _set_angular_hi_limit_z cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_set_angular_hi_limit_z"
            '[Float]
@@ -1129,7 +1174,10 @@ _set_angular_lo_limit_x cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_set_angular_lo_limit_x"
            '[Float]
@@ -1159,7 +1207,10 @@ _set_angular_lo_limit_y cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_set_angular_lo_limit_y"
            '[Float]
@@ -1189,7 +1240,10 @@ _set_angular_lo_limit_z cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "_set_angular_lo_limit_z"
            '[Float]
@@ -1218,7 +1272,10 @@ get_flag_x cls arg1
          godot_method_bind_call bindGeneric6DOFJoint_get_flag_x (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "get_flag_x" '[Int] (IO Bool)
          where
@@ -1245,7 +1302,10 @@ get_flag_y cls arg1
          godot_method_bind_call bindGeneric6DOFJoint_get_flag_y (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "get_flag_y" '[Int] (IO Bool)
          where
@@ -1272,7 +1332,10 @@ get_flag_z cls arg1
          godot_method_bind_call bindGeneric6DOFJoint_get_flag_z (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "get_flag_z" '[Int] (IO Bool)
          where
@@ -1302,7 +1365,10 @@ get_param_x cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "get_param_x" '[Int]
            (IO Float)
@@ -1331,7 +1397,10 @@ get_param_y cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "get_param_y" '[Int]
            (IO Float)
@@ -1360,38 +1429,15 @@ get_param_z cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "get_param_z" '[Int]
            (IO Float)
          where
         nodeMethod = Godot.Core.Generic6DOFJoint.get_param_z
-
-{-# NOINLINE bindGeneric6DOFJoint_get_precision #-}
-
-bindGeneric6DOFJoint_get_precision :: MethodBind
-bindGeneric6DOFJoint_get_precision
-  = unsafePerformIO $
-      withCString "Generic6DOFJoint" $
-        \ clsNamePtr ->
-          withCString "get_precision" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
-get_precision ::
-                (Generic6DOFJoint :< cls, Object :< cls) => cls -> IO Int
-get_precision cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindGeneric6DOFJoint_get_precision
-           (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Generic6DOFJoint "get_precision" '[] (IO Int)
-         where
-        nodeMethod = Godot.Core.Generic6DOFJoint.get_precision
 
 {-# NOINLINE bindGeneric6DOFJoint_set_flag_x #-}
 
@@ -1415,7 +1461,10 @@ set_flag_x cls arg1 arg2
          godot_method_bind_call bindGeneric6DOFJoint_set_flag_x (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "set_flag_x" '[Int, Bool]
            (IO ())
@@ -1444,7 +1493,10 @@ set_flag_y cls arg1 arg2
          godot_method_bind_call bindGeneric6DOFJoint_set_flag_y (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "set_flag_y" '[Int, Bool]
            (IO ())
@@ -1473,7 +1525,10 @@ set_flag_z cls arg1 arg2
          godot_method_bind_call bindGeneric6DOFJoint_set_flag_z (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "set_flag_z" '[Int, Bool]
            (IO ())
@@ -1505,7 +1560,10 @@ set_param_x cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "set_param_x" '[Int, Float]
            (IO ())
@@ -1535,7 +1593,10 @@ set_param_y cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "set_param_y" '[Int, Float]
            (IO ())
@@ -1565,35 +1626,12 @@ set_param_z cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Generic6DOFJoint "set_param_z" '[Int, Float]
            (IO ())
          where
         nodeMethod = Godot.Core.Generic6DOFJoint.set_param_z
-
-{-# NOINLINE bindGeneric6DOFJoint_set_precision #-}
-
-bindGeneric6DOFJoint_set_precision :: MethodBind
-bindGeneric6DOFJoint_set_precision
-  = unsafePerformIO $
-      withCString "Generic6DOFJoint" $
-        \ clsNamePtr ->
-          withCString "set_precision" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
-set_precision ::
-                (Generic6DOFJoint :< cls, Object :< cls) => cls -> Int -> IO ()
-set_precision cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindGeneric6DOFJoint_set_precision
-           (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Generic6DOFJoint "set_precision" '[Int] (IO ())
-         where
-        nodeMethod = Godot.Core.Generic6DOFJoint.set_precision

@@ -36,7 +36,10 @@ get_length cls
          godot_method_bind_call bindAudioStream_get_length (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStream "get_length" '[] (IO Float) where
         nodeMethod = Godot.Core.AudioStream.get_length

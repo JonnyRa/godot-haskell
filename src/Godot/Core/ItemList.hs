@@ -214,7 +214,10 @@ _get_items cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindItemList__get_items (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "_get_items" '[] (IO Array) where
         nodeMethod = Godot.Core.ItemList._get_items
@@ -237,7 +240,10 @@ _gui_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindItemList__gui_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "_gui_input" '[InputEvent] (IO ())
          where
@@ -262,7 +268,10 @@ _scroll_changed cls arg1
          godot_method_bind_call bindItemList__scroll_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "_scroll_changed" '[Float] (IO ())
          where
@@ -286,7 +295,10 @@ _set_items cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindItemList__set_items (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "_set_items" '[Array] (IO ()) where
         nodeMethod = Godot.Core.ItemList._set_items
@@ -314,7 +326,10 @@ add_icon_item cls arg1 arg2
          godot_method_bind_call bindItemList_add_icon_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "add_icon_item" '[Texture, Maybe Bool]
            (IO ())
@@ -346,7 +361,10 @@ add_item cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindItemList_add_item (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "add_item"
            '[GodotString, Maybe Texture, Maybe Bool]
@@ -372,7 +390,10 @@ clear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindItemList_clear (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.ItemList.clear
@@ -399,7 +420,10 @@ ensure_current_is_visible cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "ensure_current_is_visible" '[]
            (IO ())
@@ -427,7 +451,10 @@ get_allow_reselect cls
          godot_method_bind_call bindItemList_get_allow_reselect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_allow_reselect" '[] (IO Bool)
          where
@@ -455,7 +482,10 @@ get_allow_rmb_select cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_allow_rmb_select" '[] (IO Bool)
          where
@@ -485,7 +515,10 @@ get_fixed_column_width cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_fixed_column_width" '[] (IO Int)
          where
@@ -515,7 +548,10 @@ get_fixed_icon_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_fixed_icon_size" '[] (IO Vector2)
          where
@@ -541,7 +577,10 @@ get_icon_mode cls
          godot_method_bind_call bindItemList_get_icon_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_icon_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.ItemList.get_icon_mode
@@ -567,7 +606,10 @@ get_icon_scale cls
          godot_method_bind_call bindItemList_get_icon_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_icon_scale" '[] (IO Float) where
         nodeMethod = Godot.Core.ItemList.get_icon_scale
@@ -598,7 +640,10 @@ get_item_at_position cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_item_at_position"
            '[Vector2, Maybe Bool]
@@ -626,7 +671,10 @@ get_item_count cls
          godot_method_bind_call bindItemList_get_item_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_item_count" '[] (IO Int) where
         nodeMethod = Godot.Core.ItemList.get_item_count
@@ -653,7 +701,10 @@ get_item_custom_bg_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_item_custom_bg_color" '[Int]
            (IO Color)
@@ -682,7 +733,10 @@ get_item_custom_fg_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_item_custom_fg_color" '[Int]
            (IO Color)
@@ -710,7 +764,7 @@ get_item_icon cls arg1
          godot_method_bind_call bindItemList_get_item_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ItemList "get_item_icon" '[Int] (IO Texture)
          where
@@ -738,7 +792,10 @@ get_item_icon_modulate cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_item_icon_modulate" '[Int]
            (IO Color)
@@ -767,7 +824,10 @@ get_item_icon_region cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_item_icon_region" '[Int]
            (IO Rect2)
@@ -795,7 +855,7 @@ get_item_metadata cls arg1
          godot_method_bind_call bindItemList_get_item_metadata (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod ItemList "get_item_metadata" '[Int]
            (IO GodotVariant)
@@ -823,7 +883,10 @@ get_item_text cls arg1
          godot_method_bind_call bindItemList_get_item_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_item_text" '[Int]
            (IO GodotString)
@@ -851,7 +914,10 @@ get_item_tooltip cls arg1
          godot_method_bind_call bindItemList_get_item_tooltip (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_item_tooltip" '[Int]
            (IO GodotString)
@@ -883,7 +949,10 @@ get_max_columns cls
          godot_method_bind_call bindItemList_get_max_columns (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_max_columns" '[] (IO Int) where
         nodeMethod = Godot.Core.ItemList.get_max_columns
@@ -911,7 +980,10 @@ get_max_text_lines cls
          godot_method_bind_call bindItemList_get_max_text_lines (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_max_text_lines" '[] (IO Int)
          where
@@ -938,7 +1010,10 @@ get_select_mode cls
          godot_method_bind_call bindItemList_get_select_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_select_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.ItemList.get_select_mode
@@ -964,7 +1039,10 @@ get_selected_items cls
          godot_method_bind_call bindItemList_get_selected_items (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "get_selected_items" '[]
            (IO PoolIntArray)
@@ -973,7 +1051,8 @@ instance NodeMethod ItemList "get_selected_items" '[]
 
 {-# NOINLINE bindItemList_get_v_scroll #-}
 
--- | Returns the @Object@ ID associated with the list.
+-- | Returns the vertical scrollbar.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindItemList_get_v_scroll :: MethodBind
 bindItemList_get_v_scroll
   = unsafePerformIO $
@@ -983,7 +1062,8 @@ bindItemList_get_v_scroll
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the @Object@ ID associated with the list.
+-- | Returns the vertical scrollbar.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_v_scroll ::
                (ItemList :< cls, Object :< cls) => cls -> IO VScrollBar
 get_v_scroll cls
@@ -992,7 +1072,7 @@ get_v_scroll cls
          godot_method_bind_call bindItemList_get_v_scroll (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ItemList "get_v_scroll" '[] (IO VScrollBar)
          where
@@ -1019,7 +1099,10 @@ has_auto_height cls
          godot_method_bind_call bindItemList_has_auto_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "has_auto_height" '[] (IO Bool) where
         nodeMethod = Godot.Core.ItemList.has_auto_height
@@ -1046,7 +1129,10 @@ is_anything_selected cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "is_anything_selected" '[] (IO Bool)
          where
@@ -1073,7 +1159,10 @@ is_item_disabled cls arg1
          godot_method_bind_call bindItemList_is_item_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "is_item_disabled" '[Int] (IO Bool)
          where
@@ -1101,7 +1190,10 @@ is_item_icon_transposed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "is_item_icon_transposed" '[Int]
            (IO Bool)
@@ -1129,7 +1221,10 @@ is_item_selectable cls arg1
          godot_method_bind_call bindItemList_is_item_selectable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "is_item_selectable" '[Int] (IO Bool)
          where
@@ -1157,7 +1252,10 @@ is_item_tooltip_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "is_item_tooltip_enabled" '[Int]
            (IO Bool)
@@ -1188,7 +1286,10 @@ is_same_column_width cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "is_same_column_width" '[] (IO Bool)
          where
@@ -1214,7 +1315,10 @@ is_selected cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindItemList_is_selected (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "is_selected" '[Int] (IO Bool) where
         nodeMethod = Godot.Core.ItemList.is_selected
@@ -1239,7 +1343,10 @@ move_item cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindItemList_move_item (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "move_item" '[Int, Int] (IO ()) where
         nodeMethod = Godot.Core.ItemList.move_item
@@ -1264,7 +1371,10 @@ remove_item cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindItemList_remove_item (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "remove_item" '[Int] (IO ()) where
         nodeMethod = Godot.Core.ItemList.remove_item
@@ -1292,7 +1402,10 @@ select cls arg1 arg2
       [toVariant arg1, maybe (VariantBool True) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindItemList_select (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "select" '[Int, Maybe Bool] (IO ())
          where
@@ -1319,7 +1432,10 @@ set_allow_reselect cls arg1
          godot_method_bind_call bindItemList_set_allow_reselect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_allow_reselect" '[Bool] (IO ())
          where
@@ -1347,7 +1463,10 @@ set_allow_rmb_select cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_allow_rmb_select" '[Bool] (IO ())
          where
@@ -1374,7 +1493,10 @@ set_auto_height cls arg1
          godot_method_bind_call bindItemList_set_auto_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_auto_height" '[Bool] (IO ())
          where
@@ -1404,7 +1526,10 @@ set_fixed_column_width cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_fixed_column_width" '[Int]
            (IO ())
@@ -1435,7 +1560,10 @@ set_fixed_icon_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_fixed_icon_size" '[Vector2]
            (IO ())
@@ -1463,7 +1591,10 @@ set_icon_mode cls arg1
          godot_method_bind_call bindItemList_set_icon_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_icon_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.ItemList.set_icon_mode
@@ -1489,7 +1620,10 @@ set_icon_scale cls arg1
          godot_method_bind_call bindItemList_set_icon_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_icon_scale" '[Float] (IO ())
          where
@@ -1498,13 +1632,6 @@ instance NodeMethod ItemList "set_icon_scale" '[Float] (IO ())
 {-# NOINLINE bindItemList_set_item_custom_bg_color #-}
 
 -- | Sets the background color of the item specified by @idx@ index to the specified @Color@.
---   				
---   @
---   
---   				var some_string = "Some text"
---   				some_string.set_item_custom_bg_color(0,Color(1, 0, 0, 1) # This will set the background color of the first item of the control to red.
---   				
---   @
 bindItemList_set_item_custom_bg_color :: MethodBind
 bindItemList_set_item_custom_bg_color
   = unsafePerformIO $
@@ -1515,13 +1642,6 @@ bindItemList_set_item_custom_bg_color
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets the background color of the item specified by @idx@ index to the specified @Color@.
---   				
---   @
---   
---   				var some_string = "Some text"
---   				some_string.set_item_custom_bg_color(0,Color(1, 0, 0, 1) # This will set the background color of the first item of the control to red.
---   				
---   @
 set_item_custom_bg_color ::
                            (ItemList :< cls, Object :< cls) => cls -> Int -> Color -> IO ()
 set_item_custom_bg_color cls arg1 arg2
@@ -1531,7 +1651,10 @@ set_item_custom_bg_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_custom_bg_color"
            '[Int, Color]
@@ -1542,13 +1665,6 @@ instance NodeMethod ItemList "set_item_custom_bg_color"
 {-# NOINLINE bindItemList_set_item_custom_fg_color #-}
 
 -- | Sets the foreground color of the item specified by @idx@ index to the specified @Color@.
---   				
---   @
---   
---   				var some_string = "Some text"
---   				some_string.set_item_custom_fg_color(0,Color(1, 0, 0, 1) # This will set the foreground color of the first item of the control to red.
---   				
---   @
 bindItemList_set_item_custom_fg_color :: MethodBind
 bindItemList_set_item_custom_fg_color
   = unsafePerformIO $
@@ -1559,13 +1675,6 @@ bindItemList_set_item_custom_fg_color
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets the foreground color of the item specified by @idx@ index to the specified @Color@.
---   				
---   @
---   
---   				var some_string = "Some text"
---   				some_string.set_item_custom_fg_color(0,Color(1, 0, 0, 1) # This will set the foreground color of the first item of the control to red.
---   				
---   @
 set_item_custom_fg_color ::
                            (ItemList :< cls, Object :< cls) => cls -> Int -> Color -> IO ()
 set_item_custom_fg_color cls arg1 arg2
@@ -1575,7 +1684,10 @@ set_item_custom_fg_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_custom_fg_color"
            '[Int, Color]
@@ -1606,7 +1718,10 @@ set_item_disabled cls arg1 arg2
          godot_method_bind_call bindItemList_set_item_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_disabled" '[Int, Bool]
            (IO ())
@@ -1634,7 +1749,10 @@ set_item_icon cls arg1 arg2
          godot_method_bind_call bindItemList_set_item_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_icon" '[Int, Texture]
            (IO ())
@@ -1663,7 +1781,10 @@ set_item_icon_modulate cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_icon_modulate" '[Int, Color]
            (IO ())
@@ -1692,7 +1813,10 @@ set_item_icon_region cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_icon_region" '[Int, Rect2]
            (IO ())
@@ -1721,7 +1845,10 @@ set_item_icon_transposed cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_icon_transposed"
            '[Int, Bool]
@@ -1751,7 +1878,10 @@ set_item_metadata cls arg1 arg2
          godot_method_bind_call bindItemList_set_item_metadata (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_metadata"
            '[Int, GodotVariant]
@@ -1781,7 +1911,10 @@ set_item_selectable cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_selectable" '[Int, Bool]
            (IO ())
@@ -1810,7 +1943,10 @@ set_item_text cls arg1 arg2
          godot_method_bind_call bindItemList_set_item_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_text" '[Int, GodotString]
            (IO ())
@@ -1839,7 +1975,10 @@ set_item_tooltip cls arg1 arg2
          godot_method_bind_call bindItemList_set_item_tooltip (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_tooltip" '[Int, GodotString]
            (IO ())
@@ -1868,7 +2007,10 @@ set_item_tooltip_enabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_item_tooltip_enabled"
            '[Int, Bool]
@@ -1901,7 +2043,10 @@ set_max_columns cls arg1
          godot_method_bind_call bindItemList_set_max_columns (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_max_columns" '[Int] (IO ()) where
         nodeMethod = Godot.Core.ItemList.set_max_columns
@@ -1929,7 +2074,10 @@ set_max_text_lines cls arg1
          godot_method_bind_call bindItemList_set_max_text_lines (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_max_text_lines" '[Int] (IO ())
          where
@@ -1959,7 +2107,10 @@ set_same_column_width cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_same_column_width" '[Bool]
            (IO ())
@@ -1987,7 +2138,10 @@ set_select_mode cls arg1
          godot_method_bind_call bindItemList_set_select_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "set_select_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.ItemList.set_select_mode
@@ -2013,7 +2167,10 @@ sort_items_by_text cls
          godot_method_bind_call bindItemList_sort_items_by_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "sort_items_by_text" '[] (IO ()) where
         nodeMethod = Godot.Core.ItemList.sort_items_by_text
@@ -2037,7 +2194,10 @@ unselect cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindItemList_unselect (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "unselect" '[Int] (IO ()) where
         nodeMethod = Godot.Core.ItemList.unselect
@@ -2062,7 +2222,10 @@ unselect_all cls
          godot_method_bind_call bindItemList_unselect_all (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ItemList "unselect_all" '[] (IO ()) where
         nodeMethod = Godot.Core.ItemList.unselect_all

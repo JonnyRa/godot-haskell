@@ -70,7 +70,10 @@ get_font_path cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFontData "get_font_path" '[]
            (IO GodotString)
@@ -98,7 +101,10 @@ get_hinting cls
          godot_method_bind_call bindDynamicFontData_get_hinting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFontData "get_hinting" '[] (IO Int)
          where
@@ -126,7 +132,10 @@ is_antialiased cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFontData "is_antialiased" '[] (IO Bool)
          where
@@ -154,7 +163,10 @@ set_antialiased cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFontData "set_antialiased" '[Bool]
            (IO ())
@@ -184,7 +196,10 @@ set_font_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFontData "set_font_path" '[GodotString]
            (IO ())
@@ -212,7 +227,10 @@ set_hinting cls arg1
          godot_method_bind_call bindDynamicFontData_set_hinting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFontData "set_hinting" '[Int] (IO ())
          where

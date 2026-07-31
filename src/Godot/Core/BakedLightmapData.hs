@@ -5,6 +5,7 @@ module Godot.Core.BakedLightmapData
        (Godot.Core.BakedLightmapData._get_user_data,
         Godot.Core.BakedLightmapData._set_user_data,
         Godot.Core.BakedLightmapData.add_user,
+        Godot.Core.BakedLightmapData.clear_data,
         Godot.Core.BakedLightmapData.clear_users,
         Godot.Core.BakedLightmapData.get_bounds,
         Godot.Core.BakedLightmapData.get_cell_space_transform,
@@ -14,10 +15,12 @@ module Godot.Core.BakedLightmapData
         Godot.Core.BakedLightmapData.get_user_count,
         Godot.Core.BakedLightmapData.get_user_lightmap,
         Godot.Core.BakedLightmapData.get_user_path,
+        Godot.Core.BakedLightmapData.is_interior,
         Godot.Core.BakedLightmapData.set_bounds,
         Godot.Core.BakedLightmapData.set_cell_space_transform,
         Godot.Core.BakedLightmapData.set_cell_subdiv,
         Godot.Core.BakedLightmapData.set_energy,
+        Godot.Core.BakedLightmapData.set_interior,
         Godot.Core.BakedLightmapData.set_octree)
        where
 import Data.Coerce
@@ -51,6 +54,11 @@ instance NodeProperty BakedLightmapData "cell_subdiv" Int 'False
 instance NodeProperty BakedLightmapData "energy" Float 'False where
         nodeProperty = (get_energy, wrapDroppingSetter set_energy, Nothing)
 
+instance NodeProperty BakedLightmapData "interior" Bool 'False
+         where
+        nodeProperty
+          = (is_interior, wrapDroppingSetter set_interior, Nothing)
+
 instance NodeProperty BakedLightmapData "octree" PoolByteArray
            'False
          where
@@ -81,7 +89,10 @@ _get_user_data cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "_get_user_data" '[]
            (IO Array)
@@ -108,7 +119,10 @@ _set_user_data cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "_set_user_data" '[Array]
            (IO ())
@@ -128,20 +142,54 @@ bindBakedLightmapData_add_user
 
 add_user ::
            (BakedLightmapData :< cls, Object :< cls) =>
-           cls -> NodePath -> Texture -> Int -> IO ()
-add_user cls arg1 arg2 arg3
-  = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
+           cls -> NodePath -> Resource -> Int -> Rect2 -> Int -> IO ()
+add_user cls arg1 arg2 arg3 arg4 arg5
+  = withVariantArray
+      [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4,
+       toVariant arg5]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBakedLightmapData_add_user (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "add_user"
-           '[NodePath, Texture, Int]
+           '[NodePath, Resource, Int, Rect2, Int]
            (IO ())
          where
         nodeMethod = Godot.Core.BakedLightmapData.add_user
+
+{-# NOINLINE bindBakedLightmapData_clear_data #-}
+
+bindBakedLightmapData_clear_data :: MethodBind
+bindBakedLightmapData_clear_data
+  = unsafePerformIO $
+      withCString "BakedLightmapData" $
+        \ clsNamePtr ->
+          withCString "clear_data" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+clear_data ::
+             (BakedLightmapData :< cls, Object :< cls) => cls -> IO ()
+clear_data cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindBakedLightmapData_clear_data
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod BakedLightmapData "clear_data" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.BakedLightmapData.clear_data
 
 {-# NOINLINE bindBakedLightmapData_clear_users #-}
 
@@ -163,7 +211,10 @@ clear_users cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "clear_users" '[] (IO ())
          where
@@ -189,7 +240,10 @@ get_bounds cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "get_bounds" '[] (IO Aabb)
          where
@@ -216,7 +270,10 @@ get_cell_space_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "get_cell_space_transform"
            '[]
@@ -244,7 +301,10 @@ get_cell_subdiv cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "get_cell_subdiv" '[]
            (IO Int)
@@ -253,6 +313,8 @@ instance NodeMethod BakedLightmapData "get_cell_subdiv" '[]
 
 {-# NOINLINE bindBakedLightmapData_get_energy #-}
 
+-- | Global energy multiplier for baked and dynamic capture objects. This can be changed at run-time without having to bake lightmaps again.
+--   			To adjust only the energy of indirect lighting (without affecting direct lighting or emissive materials), adjust @BakedLightmap.bounce_indirect_energy@ and bake lightmaps again.
 bindBakedLightmapData_get_energy :: MethodBind
 bindBakedLightmapData_get_energy
   = unsafePerformIO $
@@ -262,6 +324,8 @@ bindBakedLightmapData_get_energy
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Global energy multiplier for baked and dynamic capture objects. This can be changed at run-time without having to bake lightmaps again.
+--   			To adjust only the energy of indirect lighting (without affecting direct lighting or emissive materials), adjust @BakedLightmap.bounce_indirect_energy@ and bake lightmaps again.
 get_energy ::
              (BakedLightmapData :< cls, Object :< cls) => cls -> IO Float
 get_energy cls
@@ -271,7 +335,10 @@ get_energy cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "get_energy" '[] (IO Float)
          where
@@ -298,7 +365,10 @@ get_octree cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "get_octree" '[]
            (IO PoolByteArray)
@@ -325,7 +395,10 @@ get_user_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "get_user_count" '[] (IO Int)
          where
@@ -344,7 +417,7 @@ bindBakedLightmapData_get_user_lightmap
 
 get_user_lightmap ::
                     (BakedLightmapData :< cls, Object :< cls) =>
-                    cls -> Int -> IO Texture
+                    cls -> Int -> IO Resource
 get_user_lightmap cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
@@ -352,10 +425,10 @@ get_user_lightmap cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod BakedLightmapData "get_user_lightmap" '[Int]
-           (IO Texture)
+           (IO Resource)
          where
         nodeMethod = Godot.Core.BakedLightmapData.get_user_lightmap
 
@@ -380,12 +453,46 @@ get_user_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "get_user_path" '[Int]
            (IO NodePath)
          where
         nodeMethod = Godot.Core.BakedLightmapData.get_user_path
+
+{-# NOINLINE bindBakedLightmapData_is_interior #-}
+
+-- | Controls whether dynamic capture objects receive environment lighting or not.
+bindBakedLightmapData_is_interior :: MethodBind
+bindBakedLightmapData_is_interior
+  = unsafePerformIO $
+      withCString "BakedLightmapData" $
+        \ clsNamePtr ->
+          withCString "is_interior" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Controls whether dynamic capture objects receive environment lighting or not.
+is_interior ::
+              (BakedLightmapData :< cls, Object :< cls) => cls -> IO Bool
+is_interior cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindBakedLightmapData_is_interior
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod BakedLightmapData "is_interior" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.BakedLightmapData.is_interior
 
 {-# NOINLINE bindBakedLightmapData_set_bounds #-}
 
@@ -407,7 +514,10 @@ set_bounds cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "set_bounds" '[Aabb] (IO ())
          where
@@ -435,7 +545,10 @@ set_cell_space_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "set_cell_space_transform"
            '[Transform]
@@ -463,7 +576,10 @@ set_cell_subdiv cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "set_cell_subdiv" '[Int]
            (IO ())
@@ -472,6 +588,8 @@ instance NodeMethod BakedLightmapData "set_cell_subdiv" '[Int]
 
 {-# NOINLINE bindBakedLightmapData_set_energy #-}
 
+-- | Global energy multiplier for baked and dynamic capture objects. This can be changed at run-time without having to bake lightmaps again.
+--   			To adjust only the energy of indirect lighting (without affecting direct lighting or emissive materials), adjust @BakedLightmap.bounce_indirect_energy@ and bake lightmaps again.
 bindBakedLightmapData_set_energy :: MethodBind
 bindBakedLightmapData_set_energy
   = unsafePerformIO $
@@ -481,6 +599,8 @@ bindBakedLightmapData_set_energy
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Global energy multiplier for baked and dynamic capture objects. This can be changed at run-time without having to bake lightmaps again.
+--   			To adjust only the energy of indirect lighting (without affecting direct lighting or emissive materials), adjust @BakedLightmap.bounce_indirect_energy@ and bake lightmaps again.
 set_energy ::
              (BakedLightmapData :< cls, Object :< cls) => cls -> Float -> IO ()
 set_energy cls arg1
@@ -490,11 +610,46 @@ set_energy cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "set_energy" '[Float] (IO ())
          where
         nodeMethod = Godot.Core.BakedLightmapData.set_energy
+
+{-# NOINLINE bindBakedLightmapData_set_interior #-}
+
+-- | Controls whether dynamic capture objects receive environment lighting or not.
+bindBakedLightmapData_set_interior :: MethodBind
+bindBakedLightmapData_set_interior
+  = unsafePerformIO $
+      withCString "BakedLightmapData" $
+        \ clsNamePtr ->
+          withCString "set_interior" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Controls whether dynamic capture objects receive environment lighting or not.
+set_interior ::
+               (BakedLightmapData :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_interior cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindBakedLightmapData_set_interior
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod BakedLightmapData "set_interior" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.BakedLightmapData.set_interior
 
 {-# NOINLINE bindBakedLightmapData_set_octree #-}
 
@@ -517,7 +672,10 @@ set_octree cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BakedLightmapData "set_octree" '[PoolByteArray]
            (IO ())

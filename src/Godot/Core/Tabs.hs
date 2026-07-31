@@ -18,6 +18,7 @@ module Godot.Core.Tabs
         Godot.Core.Tabs.get_current_tab,
         Godot.Core.Tabs.get_drag_to_rearrange_enabled,
         Godot.Core.Tabs.get_offset_buttons_visible,
+        Godot.Core.Tabs.get_previous_tab,
         Godot.Core.Tabs.get_scrolling_enabled,
         Godot.Core.Tabs.get_select_with_rmb, Godot.Core.Tabs.get_tab_align,
         Godot.Core.Tabs.get_tab_close_display_policy,
@@ -151,7 +152,10 @@ _gui_input cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs__gui_input (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "_gui_input" '[InputEvent] (IO ()) where
         nodeMethod = Godot.Core.Tabs._gui_input
@@ -174,7 +178,10 @@ _on_mouse_exited cls
          godot_method_bind_call bindTabs__on_mouse_exited (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "_on_mouse_exited" '[] (IO ()) where
         nodeMethod = Godot.Core.Tabs._on_mouse_exited
@@ -196,7 +203,10 @@ _update_hover cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs__update_hover (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "_update_hover" '[] (IO ()) where
         nodeMethod = Godot.Core.Tabs._update_hover
@@ -223,7 +233,9 @@ add_tab cls arg1 arg2
        maybe VariantNil toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_add_tab (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "add_tab"
            '[Maybe GodotString, Maybe Texture]
@@ -252,7 +264,10 @@ ensure_tab_visible cls arg1
          godot_method_bind_call bindTabs_ensure_tab_visible (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "ensure_tab_visible" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tabs.ensure_tab_visible
@@ -276,7 +291,10 @@ get_current_tab cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_get_current_tab (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_current_tab" '[] (IO Int) where
         nodeMethod = Godot.Core.Tabs.get_current_tab
@@ -303,7 +321,10 @@ get_drag_to_rearrange_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_drag_to_rearrange_enabled" '[]
            (IO Bool)
@@ -332,15 +353,46 @@ get_offset_buttons_visible cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_offset_buttons_visible" '[] (IO Bool)
          where
         nodeMethod = Godot.Core.Tabs.get_offset_buttons_visible
 
+{-# NOINLINE bindTabs_get_previous_tab #-}
+
+-- | Returns the previously active tab index.
+bindTabs_get_previous_tab :: MethodBind
+bindTabs_get_previous_tab
+  = unsafePerformIO $
+      withCString "Tabs" $
+        \ clsNamePtr ->
+          withCString "get_previous_tab" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the previously active tab index.
+get_previous_tab :: (Tabs :< cls, Object :< cls) => cls -> IO Int
+get_previous_tab cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabs_get_previous_tab (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Tabs "get_previous_tab" '[] (IO Int) where
+        nodeMethod = Godot.Core.Tabs.get_previous_tab
+
 {-# NOINLINE bindTabs_get_scrolling_enabled #-}
 
--- | if @true@, the mouse's scroll wheel cab be used to navigate the scroll view.
+-- | if @true@, the mouse's scroll wheel can be used to navigate the scroll view.
 bindTabs_get_scrolling_enabled :: MethodBind
 bindTabs_get_scrolling_enabled
   = unsafePerformIO $
@@ -350,7 +402,7 @@ bindTabs_get_scrolling_enabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | if @true@, the mouse's scroll wheel cab be used to navigate the scroll view.
+-- | if @true@, the mouse's scroll wheel can be used to navigate the scroll view.
 get_scrolling_enabled ::
                         (Tabs :< cls, Object :< cls) => cls -> IO Bool
 get_scrolling_enabled cls
@@ -359,7 +411,10 @@ get_scrolling_enabled cls
          godot_method_bind_call bindTabs_get_scrolling_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_scrolling_enabled" '[] (IO Bool)
          where
@@ -386,7 +441,10 @@ get_select_with_rmb cls
          godot_method_bind_call bindTabs_get_select_with_rmb (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_select_with_rmb" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tabs.get_select_with_rmb
@@ -410,7 +468,10 @@ get_tab_align cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_get_tab_align (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_tab_align" '[] (IO Int) where
         nodeMethod = Godot.Core.Tabs.get_tab_align
@@ -437,7 +498,10 @@ get_tab_close_display_policy cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_tab_close_display_policy" '[]
            (IO Int)
@@ -463,7 +527,10 @@ get_tab_count cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_get_tab_count (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_tab_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Tabs.get_tab_count
@@ -489,7 +556,10 @@ get_tab_disabled cls arg1
          godot_method_bind_call bindTabs_get_tab_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_tab_disabled" '[Int] (IO Bool) where
         nodeMethod = Godot.Core.Tabs.get_tab_disabled
@@ -514,7 +584,7 @@ get_tab_icon cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_get_tab_icon (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Tabs "get_tab_icon" '[Int] (IO Texture) where
         nodeMethod = Godot.Core.Tabs.get_tab_icon
@@ -538,7 +608,10 @@ get_tab_offset cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_get_tab_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_tab_offset" '[] (IO Int) where
         nodeMethod = Godot.Core.Tabs.get_tab_offset
@@ -563,14 +636,17 @@ get_tab_rect cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_get_tab_rect (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_tab_rect" '[Int] (IO Rect2) where
         nodeMethod = Godot.Core.Tabs.get_tab_rect
 
 {-# NOINLINE bindTabs_get_tab_title #-}
 
--- | Returns the title of the tab at index @tab_idx@. Tab titles default to the name of the indexed child node, but this can be overridden with @method set_tab_title@.
+-- | Returns the title of the tab at index @tab_idx@.
 bindTabs_get_tab_title :: MethodBind
 bindTabs_get_tab_title
   = unsafePerformIO $
@@ -580,7 +656,7 @@ bindTabs_get_tab_title
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the title of the tab at index @tab_idx@. Tab titles default to the name of the indexed child node, but this can be overridden with @method set_tab_title@.
+-- | Returns the title of the tab at index @tab_idx@.
 get_tab_title ::
                 (Tabs :< cls, Object :< cls) => cls -> Int -> IO GodotString
 get_tab_title cls arg1
@@ -588,7 +664,10 @@ get_tab_title cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_get_tab_title (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_tab_title" '[Int] (IO GodotString)
          where
@@ -616,7 +695,10 @@ get_tabs_rearrange_group cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "get_tabs_rearrange_group" '[] (IO Int)
          where
@@ -641,7 +723,10 @@ move_tab cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_move_tab (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "move_tab" '[Int, Int] (IO ()) where
         nodeMethod = Godot.Core.Tabs.move_tab
@@ -664,7 +749,10 @@ remove_tab cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_remove_tab (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "remove_tab" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tabs.remove_tab
@@ -689,7 +777,10 @@ set_current_tab cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_set_current_tab (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "set_current_tab" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tabs.set_current_tab
@@ -716,7 +807,10 @@ set_drag_to_rearrange_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "set_drag_to_rearrange_enabled" '[Bool]
            (IO ())
@@ -725,7 +819,7 @@ instance NodeMethod Tabs "set_drag_to_rearrange_enabled" '[Bool]
 
 {-# NOINLINE bindTabs_set_scrolling_enabled #-}
 
--- | if @true@, the mouse's scroll wheel cab be used to navigate the scroll view.
+-- | if @true@, the mouse's scroll wheel can be used to navigate the scroll view.
 bindTabs_set_scrolling_enabled :: MethodBind
 bindTabs_set_scrolling_enabled
   = unsafePerformIO $
@@ -735,7 +829,7 @@ bindTabs_set_scrolling_enabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | if @true@, the mouse's scroll wheel cab be used to navigate the scroll view.
+-- | if @true@, the mouse's scroll wheel can be used to navigate the scroll view.
 set_scrolling_enabled ::
                         (Tabs :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_scrolling_enabled cls arg1
@@ -744,7 +838,10 @@ set_scrolling_enabled cls arg1
          godot_method_bind_call bindTabs_set_scrolling_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "set_scrolling_enabled" '[Bool] (IO ())
          where
@@ -771,7 +868,10 @@ set_select_with_rmb cls arg1
          godot_method_bind_call bindTabs_set_select_with_rmb (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "set_select_with_rmb" '[Bool] (IO ())
          where
@@ -797,7 +897,10 @@ set_tab_align cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_set_tab_align (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "set_tab_align" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tabs.set_tab_align
@@ -824,7 +927,10 @@ set_tab_close_display_policy cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "set_tab_close_display_policy" '[Int]
            (IO ())
@@ -833,8 +939,7 @@ instance NodeMethod Tabs "set_tab_close_display_policy" '[Int]
 
 {-# NOINLINE bindTabs_set_tab_disabled #-}
 
--- | If @disabled@ is @false@, hides the tab at index @tab_idx@.
---   				__Note:__ Its title text will remain unless it is also removed with @method set_tab_title@.
+-- | If @disabled@ is @true@, disables the tab at index @tab_idx@, making it non-interactable.
 bindTabs_set_tab_disabled :: MethodBind
 bindTabs_set_tab_disabled
   = unsafePerformIO $
@@ -844,8 +949,7 @@ bindTabs_set_tab_disabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @disabled@ is @false@, hides the tab at index @tab_idx@.
---   				__Note:__ Its title text will remain unless it is also removed with @method set_tab_title@.
+-- | If @disabled@ is @true@, disables the tab at index @tab_idx@, making it non-interactable.
 set_tab_disabled ::
                    (Tabs :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
 set_tab_disabled cls arg1 arg2
@@ -854,7 +958,10 @@ set_tab_disabled cls arg1 arg2
          godot_method_bind_call bindTabs_set_tab_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "set_tab_disabled" '[Int, Bool] (IO ())
          where
@@ -880,7 +987,10 @@ set_tab_icon cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_set_tab_icon (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "set_tab_icon" '[Int, Texture] (IO ())
          where
@@ -906,7 +1016,10 @@ set_tab_title cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTabs_set_tab_title (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "set_tab_title" '[Int, GodotString]
            (IO ())
@@ -915,7 +1028,7 @@ instance NodeMethod Tabs "set_tab_title" '[Int, GodotString]
 
 {-# NOINLINE bindTabs_set_tabs_rearrange_group #-}
 
--- | Defines the rearrange group ID. Choose for each @Tabs@ the same value to dragging tabs between @Tabs@. Enable drag with @set_drag_to_rearrange_enabled(true)@.
+-- | Defines the rearrange group ID. Choose for each @Tabs@ the same value to dragging tabs between @Tabs@. Enable drag with @drag_to_rearrange_enabled@.
 bindTabs_set_tabs_rearrange_group :: MethodBind
 bindTabs_set_tabs_rearrange_group
   = unsafePerformIO $
@@ -925,7 +1038,7 @@ bindTabs_set_tabs_rearrange_group
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Defines the rearrange group ID. Choose for each @Tabs@ the same value to dragging tabs between @Tabs@. Enable drag with @set_drag_to_rearrange_enabled(true)@.
+-- | Defines the rearrange group ID. Choose for each @Tabs@ the same value to dragging tabs between @Tabs@. Enable drag with @drag_to_rearrange_enabled@.
 set_tabs_rearrange_group ::
                            (Tabs :< cls, Object :< cls) => cls -> Int -> IO ()
 set_tabs_rearrange_group cls arg1
@@ -935,7 +1048,10 @@ set_tabs_rearrange_group cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tabs "set_tabs_rearrange_group" '[Int] (IO ())
          where

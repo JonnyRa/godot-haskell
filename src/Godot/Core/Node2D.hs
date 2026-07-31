@@ -81,7 +81,10 @@ get_global_transform cls
          godot_method_bind_call bindNode2D_get_global_transform (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_global_transform" '[]
            (IO Transform2d)
@@ -130,7 +133,10 @@ get_transform cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_get_transform (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_transform" '[] (IO Transform2d)
          where
@@ -168,7 +174,10 @@ apply_scale cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_apply_scale (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "apply_scale" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Node2D.apply_scale
@@ -176,6 +185,7 @@ instance NodeMethod Node2D "apply_scale" '[Vector2] (IO ()) where
 {-# NOINLINE bindNode2D_get_angle_to #-}
 
 -- | Returns the angle between the node and the @point@ in radians.
+--   				@url=https://raw.githubusercontent.com/godotengine/godot-docs/master/img/node2d_get_angle_to.png@Illustration of the returned angle.@/url@
 bindNode2D_get_angle_to :: MethodBind
 bindNode2D_get_angle_to
   = unsafePerformIO $
@@ -186,6 +196,7 @@ bindNode2D_get_angle_to
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the angle between the node and the @point@ in radians.
+--   				@url=https://raw.githubusercontent.com/godotengine/godot-docs/master/img/node2d_get_angle_to.png@Illustration of the returned angle.@/url@
 get_angle_to ::
                (Node2D :< cls, Object :< cls) => cls -> Vector2 -> IO Float
 get_angle_to cls arg1
@@ -193,7 +204,10 @@ get_angle_to cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_get_angle_to (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_angle_to" '[Vector2] (IO Float)
          where
@@ -220,7 +234,10 @@ get_global_position cls
          godot_method_bind_call bindNode2D_get_global_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_global_position" '[] (IO Vector2)
          where
@@ -247,7 +264,10 @@ get_global_rotation cls
          godot_method_bind_call bindNode2D_get_global_rotation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_global_rotation" '[] (IO Float)
          where
@@ -275,7 +295,10 @@ get_global_rotation_degrees cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_global_rotation_degrees" '[]
            (IO Float)
@@ -303,7 +326,10 @@ get_global_scale cls
          godot_method_bind_call bindNode2D_get_global_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_global_scale" '[] (IO Vector2)
          where
@@ -328,7 +354,10 @@ get_position cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_get_position (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_position" '[] (IO Vector2) where
         nodeMethod = Godot.Core.Node2D.get_position
@@ -355,7 +384,10 @@ get_relative_transform_to_parent cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_relative_transform_to_parent"
            '[Node]
@@ -382,7 +414,10 @@ get_rotation cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_get_rotation (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_rotation" '[] (IO Float) where
         nodeMethod = Godot.Core.Node2D.get_rotation
@@ -408,7 +443,10 @@ get_rotation_degrees cls
          godot_method_bind_call bindNode2D_get_rotation_degrees (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_rotation_degrees" '[] (IO Float)
          where
@@ -432,14 +470,17 @@ get_scale cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_get_scale (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_scale" '[] (IO Vector2) where
         nodeMethod = Godot.Core.Node2D.get_scale
 
 {-# NOINLINE bindNode2D_get_z_index #-}
 
--- | Z index. Controls the order in which the nodes render. A node with a higher Z index will display in front of others.
+-- | Z index. Controls the order in which the nodes render. A node with a higher Z index will display in front of others. Must be between @VisualServer.CANVAS_ITEM_Z_MIN@ and @VisualServer.CANVAS_ITEM_Z_MAX@ (inclusive).
 bindNode2D_get_z_index :: MethodBind
 bindNode2D_get_z_index
   = unsafePerformIO $
@@ -449,14 +490,17 @@ bindNode2D_get_z_index
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Z index. Controls the order in which the nodes render. A node with a higher Z index will display in front of others.
+-- | Z index. Controls the order in which the nodes render. A node with a higher Z index will display in front of others. Must be between @VisualServer.CANVAS_ITEM_Z_MIN@ and @VisualServer.CANVAS_ITEM_Z_MAX@ (inclusive).
 get_z_index :: (Node2D :< cls, Object :< cls) => cls -> IO Int
 get_z_index cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_get_z_index (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "get_z_index" '[] (IO Int) where
         nodeMethod = Godot.Core.Node2D.get_z_index
@@ -482,7 +526,10 @@ global_translate cls arg1
          godot_method_bind_call bindNode2D_global_translate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "global_translate" '[Vector2] (IO ())
          where
@@ -507,7 +554,10 @@ is_z_relative cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_is_z_relative (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "is_z_relative" '[] (IO Bool) where
         nodeMethod = Godot.Core.Node2D.is_z_relative
@@ -531,7 +581,10 @@ look_at cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_look_at (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "look_at" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Node2D.look_at
@@ -558,7 +611,10 @@ move_local_x cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_move_local_x (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "move_local_x" '[Float, Maybe Bool]
            (IO ())
@@ -587,7 +643,10 @@ move_local_y cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_move_local_y (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "move_local_y" '[Float, Maybe Bool]
            (IO ())
@@ -612,7 +671,10 @@ rotate cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_rotate (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "rotate" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Node2D.rotate
@@ -638,7 +700,10 @@ set_global_position cls arg1
          godot_method_bind_call bindNode2D_set_global_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_global_position" '[Vector2] (IO ())
          where
@@ -665,7 +730,10 @@ set_global_rotation cls arg1
          godot_method_bind_call bindNode2D_set_global_rotation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_global_rotation" '[Float] (IO ())
          where
@@ -693,7 +761,10 @@ set_global_rotation_degrees cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_global_rotation_degrees" '[Float]
            (IO ())
@@ -721,7 +792,10 @@ set_global_scale cls arg1
          godot_method_bind_call bindNode2D_set_global_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_global_scale" '[Vector2] (IO ())
          where
@@ -748,7 +822,10 @@ set_global_transform cls arg1
          godot_method_bind_call bindNode2D_set_global_transform (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_global_transform" '[Transform2d]
            (IO ())
@@ -775,7 +852,10 @@ set_position cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_set_position (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_position" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Node2D.set_position
@@ -800,7 +880,10 @@ set_rotation cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_set_rotation (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_rotation" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Node2D.set_rotation
@@ -826,7 +909,10 @@ set_rotation_degrees cls arg1
          godot_method_bind_call bindNode2D_set_rotation_degrees (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_rotation_degrees" '[Float] (IO ())
          where
@@ -851,7 +937,10 @@ set_scale cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_set_scale (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_scale" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Node2D.set_scale
@@ -876,7 +965,10 @@ set_transform cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_set_transform (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_transform" '[Transform2d] (IO ())
          where
@@ -903,7 +995,10 @@ set_z_as_relative cls arg1
          godot_method_bind_call bindNode2D_set_z_as_relative (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_z_as_relative" '[Bool] (IO ())
          where
@@ -911,7 +1006,7 @@ instance NodeMethod Node2D "set_z_as_relative" '[Bool] (IO ())
 
 {-# NOINLINE bindNode2D_set_z_index #-}
 
--- | Z index. Controls the order in which the nodes render. A node with a higher Z index will display in front of others.
+-- | Z index. Controls the order in which the nodes render. A node with a higher Z index will display in front of others. Must be between @VisualServer.CANVAS_ITEM_Z_MIN@ and @VisualServer.CANVAS_ITEM_Z_MAX@ (inclusive).
 bindNode2D_set_z_index :: MethodBind
 bindNode2D_set_z_index
   = unsafePerformIO $
@@ -921,7 +1016,7 @@ bindNode2D_set_z_index
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Z index. Controls the order in which the nodes render. A node with a higher Z index will display in front of others.
+-- | Z index. Controls the order in which the nodes render. A node with a higher Z index will display in front of others. Must be between @VisualServer.CANVAS_ITEM_Z_MIN@ and @VisualServer.CANVAS_ITEM_Z_MAX@ (inclusive).
 set_z_index ::
               (Node2D :< cls, Object :< cls) => cls -> Int -> IO ()
 set_z_index cls arg1
@@ -929,7 +1024,10 @@ set_z_index cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_set_z_index (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "set_z_index" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Node2D.set_z_index
@@ -953,7 +1051,10 @@ to_global cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_to_global (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "to_global" '[Vector2] (IO Vector2)
          where
@@ -978,7 +1079,10 @@ to_local cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_to_local (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "to_local" '[Vector2] (IO Vector2) where
         nodeMethod = Godot.Core.Node2D.to_local
@@ -1002,7 +1106,10 @@ translate cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode2D_translate (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node2D "translate" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Node2D.translate

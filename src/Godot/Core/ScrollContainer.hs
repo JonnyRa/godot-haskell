@@ -4,10 +4,11 @@
 module Godot.Core.ScrollContainer
        (Godot.Core.ScrollContainer.sig_scroll_ended,
         Godot.Core.ScrollContainer.sig_scroll_started,
-        Godot.Core.ScrollContainer._ensure_focused_visible,
+        Godot.Core.ScrollContainer._gui_focus_changed,
         Godot.Core.ScrollContainer._gui_input,
         Godot.Core.ScrollContainer._scroll_moved,
         Godot.Core.ScrollContainer._update_scrollbar_position,
+        Godot.Core.ScrollContainer.ensure_control_visible,
         Godot.Core.ScrollContainer.get_deadzone,
         Godot.Core.ScrollContainer.get_h_scroll,
         Godot.Core.ScrollContainer.get_h_scrollbar,
@@ -87,33 +88,35 @@ instance NodeProperty ScrollContainer "scroll_vertical_enabled"
           = (is_v_scroll_enabled, wrapDroppingSetter set_enable_v_scroll,
              Nothing)
 
-{-# NOINLINE bindScrollContainer__ensure_focused_visible #-}
+{-# NOINLINE bindScrollContainer__gui_focus_changed #-}
 
-bindScrollContainer__ensure_focused_visible :: MethodBind
-bindScrollContainer__ensure_focused_visible
+bindScrollContainer__gui_focus_changed :: MethodBind
+bindScrollContainer__gui_focus_changed
   = unsafePerformIO $
       withCString "ScrollContainer" $
         \ clsNamePtr ->
-          withCString "_ensure_focused_visible" $
+          withCString "_gui_focus_changed" $
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
-_ensure_focused_visible ::
-                          (ScrollContainer :< cls, Object :< cls) => cls -> Control -> IO ()
-_ensure_focused_visible cls arg1
+_gui_focus_changed ::
+                     (ScrollContainer :< cls, Object :< cls) => cls -> Control -> IO ()
+_gui_focus_changed cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
-         godot_method_bind_call bindScrollContainer__ensure_focused_visible
+         godot_method_bind_call bindScrollContainer__gui_focus_changed
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod ScrollContainer "_ensure_focused_visible"
-           '[Control]
+instance NodeMethod ScrollContainer "_gui_focus_changed" '[Control]
            (IO ())
          where
-        nodeMethod = Godot.Core.ScrollContainer._ensure_focused_visible
+        nodeMethod = Godot.Core.ScrollContainer._gui_focus_changed
 
 {-# NOINLINE bindScrollContainer__gui_input #-}
 
@@ -135,7 +138,10 @@ _gui_input cls arg1
          godot_method_bind_call bindScrollContainer__gui_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "_gui_input" '[InputEvent]
            (IO ())
@@ -162,7 +168,10 @@ _scroll_moved cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "_scroll_moved" '[Float]
            (IO ())
@@ -190,13 +199,67 @@ _update_scrollbar_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "_update_scrollbar_position"
            '[]
            (IO ())
          where
         nodeMethod = Godot.Core.ScrollContainer._update_scrollbar_position
+
+{-# NOINLINE bindScrollContainer_ensure_control_visible #-}
+
+-- | Ensures the given @control@ is visible (must be a direct or indirect child of the ScrollContainer). Used by @follow_focus@.
+--   				__Note:__ This will not work on a node that was just added during the same frame. If you want to scroll to a newly added child, you must wait until the next frame using @signal SceneTree.idle_frame@:
+--   				
+--   @
+--   
+--   				add_child(child_node)
+--   				yield(get_tree(), "idle_frame")
+--   				ensure_control_visible(child_node)
+--   				
+--   @
+bindScrollContainer_ensure_control_visible :: MethodBind
+bindScrollContainer_ensure_control_visible
+  = unsafePerformIO $
+      withCString "ScrollContainer" $
+        \ clsNamePtr ->
+          withCString "ensure_control_visible" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Ensures the given @control@ is visible (must be a direct or indirect child of the ScrollContainer). Used by @follow_focus@.
+--   				__Note:__ This will not work on a node that was just added during the same frame. If you want to scroll to a newly added child, you must wait until the next frame using @signal SceneTree.idle_frame@:
+--   				
+--   @
+--   
+--   				add_child(child_node)
+--   				yield(get_tree(), "idle_frame")
+--   				ensure_control_visible(child_node)
+--   				
+--   @
+ensure_control_visible ::
+                         (ScrollContainer :< cls, Object :< cls) => cls -> Control -> IO ()
+ensure_control_visible cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindScrollContainer_ensure_control_visible
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ScrollContainer "ensure_control_visible"
+           '[Control]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ScrollContainer.ensure_control_visible
 
 {-# NOINLINE bindScrollContainer_get_deadzone #-}
 
@@ -218,7 +281,10 @@ get_deadzone cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "get_deadzone" '[] (IO Int)
          where
@@ -246,7 +312,10 @@ get_h_scroll cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "get_h_scroll" '[] (IO Int)
          where
@@ -255,6 +324,7 @@ instance NodeMethod ScrollContainer "get_h_scroll" '[] (IO Int)
 {-# NOINLINE bindScrollContainer_get_h_scrollbar #-}
 
 -- | Returns the horizontal scrollbar @HScrollBar@ of this @ScrollContainer@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to disable the horizontal scrollbar, use @scroll_horizontal_enabled@. If you want to only hide it instead, use its @CanvasItem.visible@ property.
 bindScrollContainer_get_h_scrollbar :: MethodBind
 bindScrollContainer_get_h_scrollbar
   = unsafePerformIO $
@@ -265,6 +335,7 @@ bindScrollContainer_get_h_scrollbar
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the horizontal scrollbar @HScrollBar@ of this @ScrollContainer@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to disable the horizontal scrollbar, use @scroll_horizontal_enabled@. If you want to only hide it instead, use its @CanvasItem.visible@ property.
 get_h_scrollbar ::
                   (ScrollContainer :< cls, Object :< cls) => cls -> IO HScrollBar
 get_h_scrollbar cls
@@ -274,7 +345,7 @@ get_h_scrollbar cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ScrollContainer "get_h_scrollbar" '[]
            (IO HScrollBar)
@@ -303,7 +374,10 @@ get_v_scroll cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "get_v_scroll" '[] (IO Int)
          where
@@ -312,6 +386,7 @@ instance NodeMethod ScrollContainer "get_v_scroll" '[] (IO Int)
 {-# NOINLINE bindScrollContainer_get_v_scrollbar #-}
 
 -- | Returns the vertical scrollbar @VScrollBar@ of this @ScrollContainer@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to disable the vertical scrollbar, use @scroll_vertical_enabled@. If you want to only hide it instead, use its @CanvasItem.visible@ property.
 bindScrollContainer_get_v_scrollbar :: MethodBind
 bindScrollContainer_get_v_scrollbar
   = unsafePerformIO $
@@ -322,6 +397,7 @@ bindScrollContainer_get_v_scrollbar
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the vertical scrollbar @VScrollBar@ of this @ScrollContainer@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to disable the vertical scrollbar, use @scroll_vertical_enabled@. If you want to only hide it instead, use its @CanvasItem.visible@ property.
 get_v_scrollbar ::
                   (ScrollContainer :< cls, Object :< cls) => cls -> IO VScrollBar
 get_v_scrollbar cls
@@ -331,7 +407,7 @@ get_v_scrollbar cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ScrollContainer "get_v_scrollbar" '[]
            (IO VScrollBar)
@@ -360,7 +436,10 @@ is_following_focus cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "is_following_focus" '[]
            (IO Bool)
@@ -389,7 +468,10 @@ is_h_scroll_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "is_h_scroll_enabled" '[]
            (IO Bool)
@@ -418,7 +500,10 @@ is_v_scroll_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "is_v_scroll_enabled" '[]
            (IO Bool)
@@ -445,7 +530,10 @@ set_deadzone cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "set_deadzone" '[Int] (IO ())
          where
@@ -473,7 +561,10 @@ set_enable_h_scroll cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "set_enable_h_scroll" '[Bool]
            (IO ())
@@ -502,7 +593,10 @@ set_enable_v_scroll cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "set_enable_v_scroll" '[Bool]
            (IO ())
@@ -531,7 +625,10 @@ set_follow_focus cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "set_follow_focus" '[Bool]
            (IO ())
@@ -560,7 +657,10 @@ set_h_scroll cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "set_h_scroll" '[Int] (IO ())
          where
@@ -588,7 +688,10 @@ set_v_scroll cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollContainer "set_v_scroll" '[Int] (IO ())
          where

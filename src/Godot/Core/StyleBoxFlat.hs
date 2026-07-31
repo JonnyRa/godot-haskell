@@ -52,7 +52,8 @@ instance NodeProperty StyleBoxFlat "anti_aliasing" Bool 'False
         nodeProperty
           = (is_anti_aliased, wrapDroppingSetter set_anti_aliased, Nothing)
 
-instance NodeProperty StyleBoxFlat "anti_aliasing_size" Int 'False
+instance NodeProperty StyleBoxFlat "anti_aliasing_size" Float
+           'False
          where
         nodeProperty
           = (get_aa_size, wrapDroppingSetter set_aa_size, Nothing)
@@ -188,16 +189,19 @@ bindStyleBoxFlat_get_aa_size
 
 -- | This changes the size of the faded ring. Higher values can be used to achieve a "blurry" effect.
 get_aa_size ::
-              (StyleBoxFlat :< cls, Object :< cls) => cls -> IO Int
+              (StyleBoxFlat :< cls, Object :< cls) => cls -> IO Float
 get_aa_size cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStyleBoxFlat_get_aa_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod StyleBoxFlat "get_aa_size" '[] (IO Int) where
+instance NodeMethod StyleBoxFlat "get_aa_size" '[] (IO Float) where
         nodeMethod = Godot.Core.StyleBoxFlat.get_aa_size
 
 {-# NOINLINE bindStyleBoxFlat_get_bg_color #-}
@@ -221,7 +225,10 @@ get_bg_color cls
          godot_method_bind_call bindStyleBoxFlat_get_bg_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_bg_color" '[] (IO Color)
          where
@@ -249,7 +256,10 @@ get_border_blend cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_border_blend" '[] (IO Bool)
          where
@@ -277,7 +287,10 @@ get_border_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_border_color" '[] (IO Color)
          where
@@ -305,7 +318,10 @@ get_border_width cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_border_width" '[Int] (IO Int)
          where
@@ -333,7 +349,10 @@ get_border_width_min cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_border_width_min" '[]
            (IO Int)
@@ -342,8 +361,8 @@ instance NodeMethod StyleBoxFlat "get_border_width_min" '[]
 
 {-# NOINLINE bindStyleBoxFlat_get_corner_detail #-}
 
--- | This sets the amount of vertices used for each corner. Higher values result in rounder corners but take more processing power to compute. When choosing a value, you should take the corner radius (@method set_corner_radius_all@) into account.
---   			For corner radii smaller than 10, @4@ or @5@ should be enough. For corner radii smaller than 30, values between @8@ and @12@ should be enough.
+-- | This sets the number of vertices used for each corner. Higher values result in rounder corners but take more processing power to compute. When choosing a value, you should take the corner radius (@method set_corner_radius_all@) into account.
+--   			For corner radii less than 10, @4@ or @5@ should be enough. For corner radii less than 30, values between @8@ and @12@ should be enough.
 --   			A corner detail of @1@ will result in chamfered corners instead of rounded corners, which is useful for some artistic effects.
 bindStyleBoxFlat_get_corner_detail :: MethodBind
 bindStyleBoxFlat_get_corner_detail
@@ -354,8 +373,8 @@ bindStyleBoxFlat_get_corner_detail
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | This sets the amount of vertices used for each corner. Higher values result in rounder corners but take more processing power to compute. When choosing a value, you should take the corner radius (@method set_corner_radius_all@) into account.
---   			For corner radii smaller than 10, @4@ or @5@ should be enough. For corner radii smaller than 30, values between @8@ and @12@ should be enough.
+-- | This sets the number of vertices used for each corner. Higher values result in rounder corners but take more processing power to compute. When choosing a value, you should take the corner radius (@method set_corner_radius_all@) into account.
+--   			For corner radii less than 10, @4@ or @5@ should be enough. For corner radii less than 30, values between @8@ and @12@ should be enough.
 --   			A corner detail of @1@ will result in chamfered corners instead of rounded corners, which is useful for some artistic effects.
 get_corner_detail ::
                     (StyleBoxFlat :< cls, Object :< cls) => cls -> IO Int
@@ -366,7 +385,10 @@ get_corner_detail cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_corner_detail" '[] (IO Int)
          where
@@ -394,7 +416,10 @@ get_corner_radius cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_corner_radius" '[Int]
            (IO Int)
@@ -423,7 +448,10 @@ get_expand_margin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_expand_margin" '[Int]
            (IO Float)
@@ -452,7 +480,10 @@ get_shadow_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_shadow_color" '[] (IO Color)
          where
@@ -480,7 +511,10 @@ get_shadow_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_shadow_offset" '[]
            (IO Vector2)
@@ -509,7 +543,10 @@ get_shadow_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "get_shadow_size" '[] (IO Int)
          where
@@ -518,6 +555,7 @@ instance NodeMethod StyleBoxFlat "get_shadow_size" '[] (IO Int)
 {-# NOINLINE bindStyleBoxFlat_is_anti_aliased #-}
 
 -- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners.
+--   			__Note:__ When using beveled corners with 45-degree angles (@corner_detail@ = 1), it is recommended to set @anti_aliasing@ to @false@ to ensure crisp visuals and avoid possible visual glitches.
 bindStyleBoxFlat_is_anti_aliased :: MethodBind
 bindStyleBoxFlat_is_anti_aliased
   = unsafePerformIO $
@@ -528,6 +566,7 @@ bindStyleBoxFlat_is_anti_aliased
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners.
+--   			__Note:__ When using beveled corners with 45-degree angles (@corner_detail@ = 1), it is recommended to set @anti_aliasing@ to @false@ to ensure crisp visuals and avoid possible visual glitches.
 is_anti_aliased ::
                   (StyleBoxFlat :< cls, Object :< cls) => cls -> IO Bool
 is_anti_aliased cls
@@ -537,7 +576,10 @@ is_anti_aliased cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "is_anti_aliased" '[] (IO Bool)
          where
@@ -565,7 +607,10 @@ is_draw_center_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "is_draw_center_enabled" '[]
            (IO Bool)
@@ -586,21 +631,26 @@ bindStyleBoxFlat_set_aa_size
 
 -- | This changes the size of the faded ring. Higher values can be used to achieve a "blurry" effect.
 set_aa_size ::
-              (StyleBoxFlat :< cls, Object :< cls) => cls -> Int -> IO ()
+              (StyleBoxFlat :< cls, Object :< cls) => cls -> Float -> IO ()
 set_aa_size cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStyleBoxFlat_set_aa_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod StyleBoxFlat "set_aa_size" '[Int] (IO ()) where
+instance NodeMethod StyleBoxFlat "set_aa_size" '[Float] (IO ())
+         where
         nodeMethod = Godot.Core.StyleBoxFlat.set_aa_size
 
 {-# NOINLINE bindStyleBoxFlat_set_anti_aliased #-}
 
 -- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners.
+--   			__Note:__ When using beveled corners with 45-degree angles (@corner_detail@ = 1), it is recommended to set @anti_aliasing@ to @false@ to ensure crisp visuals and avoid possible visual glitches.
 bindStyleBoxFlat_set_anti_aliased :: MethodBind
 bindStyleBoxFlat_set_anti_aliased
   = unsafePerformIO $
@@ -611,6 +661,7 @@ bindStyleBoxFlat_set_anti_aliased
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners.
+--   			__Note:__ When using beveled corners with 45-degree angles (@corner_detail@ = 1), it is recommended to set @anti_aliasing@ to @false@ to ensure crisp visuals and avoid possible visual glitches.
 set_anti_aliased ::
                    (StyleBoxFlat :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_anti_aliased cls arg1
@@ -620,7 +671,10 @@ set_anti_aliased cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_anti_aliased" '[Bool] (IO ())
          where
@@ -647,7 +701,10 @@ set_bg_color cls arg1
          godot_method_bind_call bindStyleBoxFlat_set_bg_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_bg_color" '[Color] (IO ())
          where
@@ -675,7 +732,10 @@ set_border_blend cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_border_blend" '[Bool] (IO ())
          where
@@ -703,7 +763,10 @@ set_border_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_border_color" '[Color]
            (IO ())
@@ -732,7 +795,10 @@ set_border_width cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_border_width" '[Int, Int]
            (IO ())
@@ -761,7 +827,10 @@ set_border_width_all cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_border_width_all" '[Int]
            (IO ())
@@ -770,8 +839,8 @@ instance NodeMethod StyleBoxFlat "set_border_width_all" '[Int]
 
 {-# NOINLINE bindStyleBoxFlat_set_corner_detail #-}
 
--- | This sets the amount of vertices used for each corner. Higher values result in rounder corners but take more processing power to compute. When choosing a value, you should take the corner radius (@method set_corner_radius_all@) into account.
---   			For corner radii smaller than 10, @4@ or @5@ should be enough. For corner radii smaller than 30, values between @8@ and @12@ should be enough.
+-- | This sets the number of vertices used for each corner. Higher values result in rounder corners but take more processing power to compute. When choosing a value, you should take the corner radius (@method set_corner_radius_all@) into account.
+--   			For corner radii less than 10, @4@ or @5@ should be enough. For corner radii less than 30, values between @8@ and @12@ should be enough.
 --   			A corner detail of @1@ will result in chamfered corners instead of rounded corners, which is useful for some artistic effects.
 bindStyleBoxFlat_set_corner_detail :: MethodBind
 bindStyleBoxFlat_set_corner_detail
@@ -782,8 +851,8 @@ bindStyleBoxFlat_set_corner_detail
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | This sets the amount of vertices used for each corner. Higher values result in rounder corners but take more processing power to compute. When choosing a value, you should take the corner radius (@method set_corner_radius_all@) into account.
---   			For corner radii smaller than 10, @4@ or @5@ should be enough. For corner radii smaller than 30, values between @8@ and @12@ should be enough.
+-- | This sets the number of vertices used for each corner. Higher values result in rounder corners but take more processing power to compute. When choosing a value, you should take the corner radius (@method set_corner_radius_all@) into account.
+--   			For corner radii less than 10, @4@ or @5@ should be enough. For corner radii less than 30, values between @8@ and @12@ should be enough.
 --   			A corner detail of @1@ will result in chamfered corners instead of rounded corners, which is useful for some artistic effects.
 set_corner_detail ::
                     (StyleBoxFlat :< cls, Object :< cls) => cls -> Int -> IO ()
@@ -794,7 +863,10 @@ set_corner_detail cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_corner_detail" '[Int] (IO ())
          where
@@ -822,7 +894,10 @@ set_corner_radius cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_corner_radius" '[Int, Int]
            (IO ())
@@ -851,7 +926,10 @@ set_corner_radius_all cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_corner_radius_all" '[Int]
            (IO ())
@@ -883,7 +961,10 @@ set_corner_radius_individual cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_corner_radius_individual"
            '[Int, Int, Int, Int]
@@ -913,7 +994,10 @@ set_draw_center cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_draw_center" '[Bool] (IO ())
          where
@@ -942,7 +1026,10 @@ set_expand_margin cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_expand_margin" '[Int, Float]
            (IO ())
@@ -971,7 +1058,10 @@ set_expand_margin_all cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_expand_margin_all" '[Float]
            (IO ())
@@ -1003,7 +1093,10 @@ set_expand_margin_individual cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_expand_margin_individual"
            '[Float, Float, Float, Float]
@@ -1033,7 +1126,10 @@ set_shadow_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_shadow_color" '[Color]
            (IO ())
@@ -1062,7 +1158,10 @@ set_shadow_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_shadow_offset" '[Vector2]
            (IO ())
@@ -1091,7 +1190,10 @@ set_shadow_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxFlat "set_shadow_size" '[Int] (IO ())
          where

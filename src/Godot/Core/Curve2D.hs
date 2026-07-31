@@ -58,7 +58,10 @@ _get_data cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve2D__get_data (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "_get_data" '[] (IO Dictionary) where
         nodeMethod = Godot.Core.Curve2D._get_data
@@ -81,14 +84,17 @@ _set_data cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve2D__set_data (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "_set_data" '[Dictionary] (IO ()) where
         nodeMethod = Godot.Core.Curve2D._set_data
 
 {-# NOINLINE bindCurve2D_add_point #-}
 
--- | Adds a point to a curve at @position@, with control points @in@ and @out@.
+-- | Adds a point to a curve at @position@ relative to the @Curve2D@'s position, with control points @in@ and @out@.
 --   				If @at_position@ is given, the point is inserted before the point number @at_position@, moving that point (and every point after) after the inserted point. If @at_position@ is not given, or is an illegal value (@at_position <0@ or @at_position >= @method get_point_count@@), the point will be appended at the end of the point list.
 bindCurve2D_add_point :: MethodBind
 bindCurve2D_add_point
@@ -99,7 +105,7 @@ bindCurve2D_add_point
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a point to a curve at @position@, with control points @in@ and @out@.
+-- | Adds a point to a curve at @position@ relative to the @Curve2D@'s position, with control points @in@ and @out@.
 --   				If @at_position@ is given, the point is inserted before the point number @at_position@, moving that point (and every point after) after the inserted point. If @at_position@ is not given, or is an illegal value (@at_position <0@ or @at_position >= @method get_point_count@@), the point will be appended at the end of the point list.
 add_point ::
             (Curve2D :< cls, Object :< cls) =>
@@ -113,7 +119,10 @@ add_point cls arg1 arg2 arg3 arg4
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve2D_add_point (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "add_point"
            '[Vector2, Maybe Vector2, Maybe Vector2, Maybe Int]
@@ -140,7 +149,10 @@ clear_points cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve2D_clear_points (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "clear_points" '[] (IO ()) where
         nodeMethod = Godot.Core.Curve2D.clear_points
@@ -166,7 +178,10 @@ get_bake_interval cls
          godot_method_bind_call bindCurve2D_get_bake_interval (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "get_bake_interval" '[] (IO Float)
          where
@@ -193,7 +208,10 @@ get_baked_length cls
          godot_method_bind_call bindCurve2D_get_baked_length (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "get_baked_length" '[] (IO Float) where
         nodeMethod = Godot.Core.Curve2D.get_baked_length
@@ -219,7 +237,10 @@ get_baked_points cls
          godot_method_bind_call bindCurve2D_get_baked_points (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "get_baked_points" '[]
            (IO PoolVector2Array)
@@ -249,7 +270,10 @@ get_closest_offset cls arg1
          godot_method_bind_call bindCurve2D_get_closest_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "get_closest_offset" '[Vector2]
            (IO Float)
@@ -258,7 +282,7 @@ instance NodeMethod Curve2D "get_closest_offset" '[Vector2]
 
 {-# NOINLINE bindCurve2D_get_closest_point #-}
 
--- | Returns the closest point (in curve's local space) to @to_point@.
+-- | Returns the closest baked point (in curve's local space) to @to_point@.
 --   				@to_point@ must be in this curve's local space.
 bindCurve2D_get_closest_point :: MethodBind
 bindCurve2D_get_closest_point
@@ -269,7 +293,7 @@ bindCurve2D_get_closest_point
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the closest point (in curve's local space) to @to_point@.
+-- | Returns the closest baked point (in curve's local space) to @to_point@.
 --   				@to_point@ must be in this curve's local space.
 get_closest_point ::
                     (Curve2D :< cls, Object :< cls) => cls -> Vector2 -> IO Vector2
@@ -279,7 +303,10 @@ get_closest_point cls arg1
          godot_method_bind_call bindCurve2D_get_closest_point (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "get_closest_point" '[Vector2]
            (IO Vector2)
@@ -306,14 +333,17 @@ get_point_count cls
          godot_method_bind_call bindCurve2D_get_point_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "get_point_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Curve2D.get_point_count
 
 {-# NOINLINE bindCurve2D_get_point_in #-}
 
--- | Returns the position of the control point leading to the vertex @idx@. If the index is out of bounds, the function sends an error to the console, and returns @(0, 0)@.
+-- | Returns the position of the control point leading to the vertex @idx@. The returned position is relative to the vertex @idx@. If the index is out of bounds, the function sends an error to the console, and returns @(0, 0)@.
 bindCurve2D_get_point_in :: MethodBind
 bindCurve2D_get_point_in
   = unsafePerformIO $
@@ -323,7 +353,7 @@ bindCurve2D_get_point_in
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the position of the control point leading to the vertex @idx@. If the index is out of bounds, the function sends an error to the console, and returns @(0, 0)@.
+-- | Returns the position of the control point leading to the vertex @idx@. The returned position is relative to the vertex @idx@. If the index is out of bounds, the function sends an error to the console, and returns @(0, 0)@.
 get_point_in ::
                (Curve2D :< cls, Object :< cls) => cls -> Int -> IO Vector2
 get_point_in cls arg1
@@ -331,7 +361,10 @@ get_point_in cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve2D_get_point_in (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "get_point_in" '[Int] (IO Vector2)
          where
@@ -339,7 +372,7 @@ instance NodeMethod Curve2D "get_point_in" '[Int] (IO Vector2)
 
 {-# NOINLINE bindCurve2D_get_point_out #-}
 
--- | Returns the position of the control point leading out of the vertex @idx@. If the index is out of bounds, the function sends an error to the console, and returns @(0, 0)@.
+-- | Returns the position of the control point leading out of the vertex @idx@. The returned position is relative to the vertex @idx@. If the index is out of bounds, the function sends an error to the console, and returns @(0, 0)@.
 bindCurve2D_get_point_out :: MethodBind
 bindCurve2D_get_point_out
   = unsafePerformIO $
@@ -349,7 +382,7 @@ bindCurve2D_get_point_out
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the position of the control point leading out of the vertex @idx@. If the index is out of bounds, the function sends an error to the console, and returns @(0, 0)@.
+-- | Returns the position of the control point leading out of the vertex @idx@. The returned position is relative to the vertex @idx@. If the index is out of bounds, the function sends an error to the console, and returns @(0, 0)@.
 get_point_out ::
                 (Curve2D :< cls, Object :< cls) => cls -> Int -> IO Vector2
 get_point_out cls arg1
@@ -358,7 +391,10 @@ get_point_out cls arg1
          godot_method_bind_call bindCurve2D_get_point_out (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "get_point_out" '[Int] (IO Vector2)
          where
@@ -385,7 +421,10 @@ get_point_position cls arg1
          godot_method_bind_call bindCurve2D_get_point_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "get_point_position" '[Int]
            (IO Vector2)
@@ -415,7 +454,10 @@ interpolate cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve2D_interpolate (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "interpolate" '[Int, Float]
            (IO Vector2)
@@ -449,7 +491,10 @@ interpolate_baked cls arg1 arg2
          godot_method_bind_call bindCurve2D_interpolate_baked (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "interpolate_baked"
            '[Float, Maybe Bool]
@@ -477,7 +522,10 @@ interpolatef cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve2D_interpolatef (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "interpolatef" '[Float] (IO Vector2)
          where
@@ -503,7 +551,10 @@ remove_point cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve2D_remove_point (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "remove_point" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Curve2D.remove_point
@@ -529,7 +580,10 @@ set_bake_interval cls arg1
          godot_method_bind_call bindCurve2D_set_bake_interval (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "set_bake_interval" '[Float] (IO ())
          where
@@ -537,7 +591,7 @@ instance NodeMethod Curve2D "set_bake_interval" '[Float] (IO ())
 
 {-# NOINLINE bindCurve2D_set_point_in #-}
 
--- | Sets the position of the control point leading to the vertex @idx@. If the index is out of bounds, the function sends an error to the console.
+-- | Sets the position of the control point leading to the vertex @idx@. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.
 bindCurve2D_set_point_in :: MethodBind
 bindCurve2D_set_point_in
   = unsafePerformIO $
@@ -547,7 +601,7 @@ bindCurve2D_set_point_in
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the position of the control point leading to the vertex @idx@. If the index is out of bounds, the function sends an error to the console.
+-- | Sets the position of the control point leading to the vertex @idx@. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.
 set_point_in ::
                (Curve2D :< cls, Object :< cls) => cls -> Int -> Vector2 -> IO ()
 set_point_in cls arg1 arg2
@@ -555,7 +609,10 @@ set_point_in cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve2D_set_point_in (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "set_point_in" '[Int, Vector2] (IO ())
          where
@@ -563,7 +620,7 @@ instance NodeMethod Curve2D "set_point_in" '[Int, Vector2] (IO ())
 
 {-# NOINLINE bindCurve2D_set_point_out #-}
 
--- | Sets the position of the control point leading out of the vertex @idx@. If the index is out of bounds, the function sends an error to the console.
+-- | Sets the position of the control point leading out of the vertex @idx@. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.
 bindCurve2D_set_point_out :: MethodBind
 bindCurve2D_set_point_out
   = unsafePerformIO $
@@ -573,7 +630,7 @@ bindCurve2D_set_point_out
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the position of the control point leading out of the vertex @idx@. If the index is out of bounds, the function sends an error to the console.
+-- | Sets the position of the control point leading out of the vertex @idx@. If the index is out of bounds, the function sends an error to the console. The position is relative to the vertex.
 set_point_out ::
                 (Curve2D :< cls, Object :< cls) => cls -> Int -> Vector2 -> IO ()
 set_point_out cls arg1 arg2
@@ -582,7 +639,10 @@ set_point_out cls arg1 arg2
          godot_method_bind_call bindCurve2D_set_point_out (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "set_point_out" '[Int, Vector2] (IO ())
          where
@@ -609,7 +669,10 @@ set_point_position cls arg1 arg2
          godot_method_bind_call bindCurve2D_set_point_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "set_point_position" '[Int, Vector2]
            (IO ())
@@ -645,7 +708,10 @@ tessellate cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve2D_tessellate (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve2D "tessellate" '[Maybe Int, Maybe Float]
            (IO PoolVector2Array)

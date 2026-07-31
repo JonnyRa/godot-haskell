@@ -35,7 +35,10 @@ get_as_byte_code cls
          godot_method_bind_call bindGDScript_get_as_byte_code (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GDScript "get_as_byte_code" '[]
            (IO PoolByteArray)
@@ -60,7 +63,7 @@ new cls varargs
   = withVariantArray ([] ++ varargs)
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGDScript_new (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod GDScript "new" '[[Variant 'GodotTy]]
            (IO GodotVariant)

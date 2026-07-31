@@ -13,11 +13,15 @@ module Godot.Core.VisualScriptCustomNode
         Godot.Core.VisualScriptCustomNode._get_caption,
         Godot.Core.VisualScriptCustomNode._get_category,
         Godot.Core.VisualScriptCustomNode._get_input_value_port_count,
+        Godot.Core.VisualScriptCustomNode._get_input_value_port_hint,
+        Godot.Core.VisualScriptCustomNode._get_input_value_port_hint_string,
         Godot.Core.VisualScriptCustomNode._get_input_value_port_name,
         Godot.Core.VisualScriptCustomNode._get_input_value_port_type,
         Godot.Core.VisualScriptCustomNode._get_output_sequence_port_count,
         Godot.Core.VisualScriptCustomNode._get_output_sequence_port_text,
         Godot.Core.VisualScriptCustomNode._get_output_value_port_count,
+        Godot.Core.VisualScriptCustomNode._get_output_value_port_hint,
+        Godot.Core.VisualScriptCustomNode._get_output_value_port_hint_string,
         Godot.Core.VisualScriptCustomNode._get_output_value_port_name,
         Godot.Core.VisualScriptCustomNode._get_output_value_port_type,
         Godot.Core.VisualScriptCustomNode._get_text,
@@ -83,7 +87,10 @@ _get_caption cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode "_get_caption" '[]
            (IO GodotString)
@@ -111,7 +118,10 @@ _get_category cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode "_get_category" '[]
            (IO GodotString)
@@ -141,7 +151,10 @@ _get_input_value_port_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode
            "_get_input_value_port_count"
@@ -150,6 +163,79 @@ instance NodeMethod VisualScriptCustomNode
          where
         nodeMethod
           = Godot.Core.VisualScriptCustomNode._get_input_value_port_count
+
+{-# NOINLINE bindVisualScriptCustomNode__get_input_value_port_hint
+             #-}
+
+bindVisualScriptCustomNode__get_input_value_port_hint :: MethodBind
+bindVisualScriptCustomNode__get_input_value_port_hint
+  = unsafePerformIO $
+      withCString "VisualScriptCustomNode" $
+        \ clsNamePtr ->
+          withCString "_get_input_value_port_hint" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_get_input_value_port_hint ::
+                             (VisualScriptCustomNode :< cls, Object :< cls) =>
+                             cls -> Int -> IO Int
+_get_input_value_port_hint cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualScriptCustomNode__get_input_value_port_hint
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualScriptCustomNode
+           "_get_input_value_port_hint"
+           '[Int]
+           (IO Int)
+         where
+        nodeMethod
+          = Godot.Core.VisualScriptCustomNode._get_input_value_port_hint
+
+{-# NOINLINE bindVisualScriptCustomNode__get_input_value_port_hint_string
+             #-}
+
+bindVisualScriptCustomNode__get_input_value_port_hint_string ::
+                                                             MethodBind
+bindVisualScriptCustomNode__get_input_value_port_hint_string
+  = unsafePerformIO $
+      withCString "VisualScriptCustomNode" $
+        \ clsNamePtr ->
+          withCString "_get_input_value_port_hint_string" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_get_input_value_port_hint_string ::
+                                    (VisualScriptCustomNode :< cls, Object :< cls) =>
+                                    cls -> Int -> IO GodotString
+_get_input_value_port_hint_string cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualScriptCustomNode__get_input_value_port_hint_string
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualScriptCustomNode
+           "_get_input_value_port_hint_string"
+           '[Int]
+           (IO GodotString)
+         where
+        nodeMethod
+          = Godot.Core.VisualScriptCustomNode._get_input_value_port_hint_string
 
 {-# NOINLINE bindVisualScriptCustomNode__get_input_value_port_name
              #-}
@@ -174,7 +260,10 @@ _get_input_value_port_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode
            "_get_input_value_port_name"
@@ -207,7 +296,10 @@ _get_input_value_port_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode
            "_get_input_value_port_type"
@@ -240,7 +332,10 @@ _get_output_sequence_port_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode
            "_get_output_sequence_port_count"
@@ -274,7 +369,10 @@ _get_output_sequence_port_text cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode
            "_get_output_sequence_port_text"
@@ -307,7 +405,10 @@ _get_output_value_port_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode
            "_get_output_value_port_count"
@@ -316,6 +417,80 @@ instance NodeMethod VisualScriptCustomNode
          where
         nodeMethod
           = Godot.Core.VisualScriptCustomNode._get_output_value_port_count
+
+{-# NOINLINE bindVisualScriptCustomNode__get_output_value_port_hint
+             #-}
+
+bindVisualScriptCustomNode__get_output_value_port_hint ::
+                                                       MethodBind
+bindVisualScriptCustomNode__get_output_value_port_hint
+  = unsafePerformIO $
+      withCString "VisualScriptCustomNode" $
+        \ clsNamePtr ->
+          withCString "_get_output_value_port_hint" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_get_output_value_port_hint ::
+                              (VisualScriptCustomNode :< cls, Object :< cls) =>
+                              cls -> Int -> IO Int
+_get_output_value_port_hint cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualScriptCustomNode__get_output_value_port_hint
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualScriptCustomNode
+           "_get_output_value_port_hint"
+           '[Int]
+           (IO Int)
+         where
+        nodeMethod
+          = Godot.Core.VisualScriptCustomNode._get_output_value_port_hint
+
+{-# NOINLINE bindVisualScriptCustomNode__get_output_value_port_hint_string
+             #-}
+
+bindVisualScriptCustomNode__get_output_value_port_hint_string ::
+                                                              MethodBind
+bindVisualScriptCustomNode__get_output_value_port_hint_string
+  = unsafePerformIO $
+      withCString "VisualScriptCustomNode" $
+        \ clsNamePtr ->
+          withCString "_get_output_value_port_hint_string" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_get_output_value_port_hint_string ::
+                                     (VisualScriptCustomNode :< cls, Object :< cls) =>
+                                     cls -> Int -> IO GodotString
+_get_output_value_port_hint_string cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualScriptCustomNode__get_output_value_port_hint_string
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualScriptCustomNode
+           "_get_output_value_port_hint_string"
+           '[Int]
+           (IO GodotString)
+         where
+        nodeMethod
+          = Godot.Core.VisualScriptCustomNode._get_output_value_port_hint_string
 
 {-# NOINLINE bindVisualScriptCustomNode__get_output_value_port_name
              #-}
@@ -341,7 +516,10 @@ _get_output_value_port_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode
            "_get_output_value_port_name"
@@ -375,7 +553,10 @@ _get_output_value_port_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode
            "_get_output_value_port_type"
@@ -406,7 +587,10 @@ _get_text cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode "_get_text" '[]
            (IO GodotString)
@@ -435,7 +619,10 @@ _get_working_memory_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode
            "_get_working_memory_size"
@@ -467,7 +654,10 @@ _has_input_sequence_port cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode
            "_has_input_sequence_port"
@@ -497,7 +687,10 @@ _script_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptCustomNode "_script_changed" '[]
            (IO ())
@@ -526,7 +719,7 @@ _step cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod VisualScriptCustomNode "_step"
            '[Array, Array, Int, Array]

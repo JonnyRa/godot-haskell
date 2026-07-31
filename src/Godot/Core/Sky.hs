@@ -56,7 +56,7 @@ instance NodeProperty Sky "radiance_size" Int 'False where
 
 -- | The @Sky@'s radiance map size. The higher the radiance map size, the more detailed the lighting from the @Sky@ will be.
 --   			See @enum RadianceSize@ constants for values.
---   			__Note:__ Some hardware will have trouble with higher radiance sizes, especially @RADIANCE_SIZE_512@ and above. Only use such high values on high-end hardware.
+--   			__Note:__ You will only benefit from high radiance sizes if you have perfectly sharp reflective surfaces in your project and are not using @ReflectionProbe@s or @GIProbe@s. For most projects, keeping @radiance_size@ to the default value is the best compromise between visuals and performance. Be careful when using high radiance size values as these can cause crashes on low-end GPUs.
 bindSky_get_radiance_size :: MethodBind
 bindSky_get_radiance_size
   = unsafePerformIO $
@@ -68,7 +68,7 @@ bindSky_get_radiance_size
 
 -- | The @Sky@'s radiance map size. The higher the radiance map size, the more detailed the lighting from the @Sky@ will be.
 --   			See @enum RadianceSize@ constants for values.
---   			__Note:__ Some hardware will have trouble with higher radiance sizes, especially @RADIANCE_SIZE_512@ and above. Only use such high values on high-end hardware.
+--   			__Note:__ You will only benefit from high radiance sizes if you have perfectly sharp reflective surfaces in your project and are not using @ReflectionProbe@s or @GIProbe@s. For most projects, keeping @radiance_size@ to the default value is the best compromise between visuals and performance. Be careful when using high radiance size values as these can cause crashes on low-end GPUs.
 get_radiance_size :: (Sky :< cls, Object :< cls) => cls -> IO Int
 get_radiance_size cls
   = withVariantArray []
@@ -76,7 +76,10 @@ get_radiance_size cls
          godot_method_bind_call bindSky_get_radiance_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sky "get_radiance_size" '[] (IO Int) where
         nodeMethod = Godot.Core.Sky.get_radiance_size
@@ -85,7 +88,7 @@ instance NodeMethod Sky "get_radiance_size" '[] (IO Int) where
 
 -- | The @Sky@'s radiance map size. The higher the radiance map size, the more detailed the lighting from the @Sky@ will be.
 --   			See @enum RadianceSize@ constants for values.
---   			__Note:__ Some hardware will have trouble with higher radiance sizes, especially @RADIANCE_SIZE_512@ and above. Only use such high values on high-end hardware.
+--   			__Note:__ You will only benefit from high radiance sizes if you have perfectly sharp reflective surfaces in your project and are not using @ReflectionProbe@s or @GIProbe@s. For most projects, keeping @radiance_size@ to the default value is the best compromise between visuals and performance. Be careful when using high radiance size values as these can cause crashes on low-end GPUs.
 bindSky_set_radiance_size :: MethodBind
 bindSky_set_radiance_size
   = unsafePerformIO $
@@ -97,7 +100,7 @@ bindSky_set_radiance_size
 
 -- | The @Sky@'s radiance map size. The higher the radiance map size, the more detailed the lighting from the @Sky@ will be.
 --   			See @enum RadianceSize@ constants for values.
---   			__Note:__ Some hardware will have trouble with higher radiance sizes, especially @RADIANCE_SIZE_512@ and above. Only use such high values on high-end hardware.
+--   			__Note:__ You will only benefit from high radiance sizes if you have perfectly sharp reflective surfaces in your project and are not using @ReflectionProbe@s or @GIProbe@s. For most projects, keeping @radiance_size@ to the default value is the best compromise between visuals and performance. Be careful when using high radiance size values as these can cause crashes on low-end GPUs.
 set_radiance_size ::
                     (Sky :< cls, Object :< cls) => cls -> Int -> IO ()
 set_radiance_size cls arg1
@@ -106,7 +109,10 @@ set_radiance_size cls arg1
          godot_method_bind_call bindSky_set_radiance_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sky "set_radiance_size" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Sky.set_radiance_size

@@ -105,7 +105,10 @@ connect_to_url cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketClient "connect_to_url"
            '[GodotString, Maybe PoolStringArray, Maybe Bool,
@@ -137,7 +140,10 @@ disconnect_from_host cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketClient "disconnect_from_host"
            '[Maybe Int, Maybe GodotString]
@@ -165,7 +171,10 @@ get_connected_host cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketClient "get_connected_host" '[]
            (IO GodotString)
@@ -192,7 +201,10 @@ get_connected_port cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketClient "get_connected_port" '[]
            (IO Int)
@@ -221,7 +233,7 @@ get_trusted_ssl_certificate cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod WebSocketClient "get_trusted_ssl_certificate"
            '[]
@@ -249,7 +261,10 @@ is_verify_ssl_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketClient "is_verify_ssl_enabled" '[]
            (IO Bool)
@@ -278,7 +293,10 @@ set_trusted_ssl_certificate cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketClient "set_trusted_ssl_certificate"
            '[X509Certificate]
@@ -306,7 +324,10 @@ set_verify_ssl_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketClient "set_verify_ssl_enabled"
            '[Bool]

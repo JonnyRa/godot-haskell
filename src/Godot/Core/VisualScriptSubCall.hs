@@ -36,7 +36,7 @@ _subcall cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod VisualScriptSubCall "_subcall" '[GodotVariant]
            (IO GodotVariant)

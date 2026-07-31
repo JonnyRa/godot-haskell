@@ -3,6 +3,7 @@
   MultiParamTypeClasses #-}
 module Godot.Core.HTTPRequest
        (Godot.Core.HTTPRequest._RESULT_DOWNLOAD_FILE_CANT_OPEN,
+        Godot.Core.HTTPRequest._RESULT_BODY_DECOMPRESS_FAILED,
         Godot.Core.HTTPRequest._RESULT_SUCCESS,
         Godot.Core.HTTPRequest._RESULT_NO_RESPONSE,
         Godot.Core.HTTPRequest._RESULT_REQUEST_FAILED,
@@ -28,8 +29,10 @@ module Godot.Core.HTTPRequest
         Godot.Core.HTTPRequest.get_http_client_status,
         Godot.Core.HTTPRequest.get_max_redirects,
         Godot.Core.HTTPRequest.get_timeout,
+        Godot.Core.HTTPRequest.is_accepting_gzip,
         Godot.Core.HTTPRequest.is_using_threads,
-        Godot.Core.HTTPRequest.request,
+        Godot.Core.HTTPRequest.request, Godot.Core.HTTPRequest.request_raw,
+        Godot.Core.HTTPRequest.set_accept_gzip,
         Godot.Core.HTTPRequest.set_body_size_limit,
         Godot.Core.HTTPRequest.set_download_chunk_size,
         Godot.Core.HTTPRequest.set_download_file,
@@ -50,7 +53,10 @@ import Godot.Api.Types
 import Godot.Core.Node()
 
 _RESULT_DOWNLOAD_FILE_CANT_OPEN :: Int
-_RESULT_DOWNLOAD_FILE_CANT_OPEN = 9
+_RESULT_DOWNLOAD_FILE_CANT_OPEN = 10
+
+_RESULT_BODY_DECOMPRESS_FAILED :: Int
+_RESULT_BODY_DECOMPRESS_FAILED = 8
 
 _RESULT_SUCCESS :: Int
 _RESULT_SUCCESS = 0
@@ -59,7 +65,7 @@ _RESULT_NO_RESPONSE :: Int
 _RESULT_NO_RESPONSE = 6
 
 _RESULT_REQUEST_FAILED :: Int
-_RESULT_REQUEST_FAILED = 8
+_RESULT_REQUEST_FAILED = 9
 
 _RESULT_CONNECTION_ERROR :: Int
 _RESULT_CONNECTION_ERROR = 4
@@ -74,7 +80,7 @@ _RESULT_BODY_SIZE_LIMIT_EXCEEDED :: Int
 _RESULT_BODY_SIZE_LIMIT_EXCEEDED = 7
 
 _RESULT_REDIRECT_LIMIT_REACHED :: Int
-_RESULT_REDIRECT_LIMIT_REACHED = 11
+_RESULT_REDIRECT_LIMIT_REACHED = 12
 
 _RESULT_SSL_HANDSHAKE_ERROR :: Int
 _RESULT_SSL_HANDSHAKE_ERROR = 5
@@ -83,10 +89,10 @@ _RESULT_CANT_RESOLVE :: Int
 _RESULT_CANT_RESOLVE = 3
 
 _RESULT_TIMEOUT :: Int
-_RESULT_TIMEOUT = 12
+_RESULT_TIMEOUT = 13
 
 _RESULT_DOWNLOAD_FILE_WRITE_ERROR :: Int
-_RESULT_DOWNLOAD_FILE_WRITE_ERROR = 10
+_RESULT_DOWNLOAD_FILE_WRITE_ERROR = 11
 
 -- | Emitted when a request is completed.
 sig_request_completed :: Godot.Internal.Dispatch.Signal HTTPRequest
@@ -95,6 +101,10 @@ sig_request_completed
 
 instance NodeSignal HTTPRequest "request_completed"
            '[Int, Int, PoolStringArray, PoolByteArray]
+
+instance NodeProperty HTTPRequest "accept_gzip" Bool 'False where
+        nodeProperty
+          = (is_accepting_gzip, wrapDroppingSetter set_accept_gzip, Nothing)
 
 instance NodeProperty HTTPRequest "body_size_limit" Int 'False
          where
@@ -148,7 +158,10 @@ _redirect_request cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "_redirect_request" '[GodotString]
            (IO ())
@@ -176,7 +189,10 @@ _request_done cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindHTTPRequest__request_done (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "_request_done"
            '[Int, Int, PoolStringArray, PoolByteArray]
@@ -201,7 +217,10 @@ _timeout cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindHTTPRequest__timeout (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "_timeout" '[] (IO ()) where
         nodeMethod = Godot.Core.HTTPRequest._timeout
@@ -227,7 +246,10 @@ cancel_request cls
          godot_method_bind_call bindHTTPRequest_cancel_request (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "cancel_request" '[] (IO ()) where
         nodeMethod = Godot.Core.HTTPRequest.cancel_request
@@ -255,7 +277,10 @@ get_body_size cls
          godot_method_bind_call bindHTTPRequest_get_body_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "get_body_size" '[] (IO Int) where
         nodeMethod = Godot.Core.HTTPRequest.get_body_size
@@ -282,7 +307,10 @@ get_body_size_limit cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "get_body_size_limit" '[] (IO Int)
          where
@@ -291,7 +319,7 @@ instance NodeMethod HTTPRequest "get_body_size_limit" '[] (IO Int)
 {-# NOINLINE bindHTTPRequest_get_download_chunk_size #-}
 
 -- | The size of the buffer used and maximum bytes to read per iteration. See @HTTPClient.read_chunk_size@.
---   			Set this to a higher value (e.g. 65536 for 64 KiB) when downloading large files to achieve better speeds at the cost of memory.
+--   			Set this to a lower value (e.g. 4096 for 4 KiB) when downloading small files to decrease memory usage at the cost of download speeds.
 bindHTTPRequest_get_download_chunk_size :: MethodBind
 bindHTTPRequest_get_download_chunk_size
   = unsafePerformIO $
@@ -302,7 +330,7 @@ bindHTTPRequest_get_download_chunk_size
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The size of the buffer used and maximum bytes to read per iteration. See @HTTPClient.read_chunk_size@.
---   			Set this to a higher value (e.g. 65536 for 64 KiB) when downloading large files to achieve better speeds at the cost of memory.
+--   			Set this to a lower value (e.g. 4096 for 4 KiB) when downloading small files to decrease memory usage at the cost of download speeds.
 get_download_chunk_size ::
                           (HTTPRequest :< cls, Object :< cls) => cls -> IO Int
 get_download_chunk_size cls
@@ -312,7 +340,10 @@ get_download_chunk_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "get_download_chunk_size" '[]
            (IO Int)
@@ -341,7 +372,10 @@ get_download_file cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "get_download_file" '[]
            (IO GodotString)
@@ -370,7 +404,10 @@ get_downloaded_bytes cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "get_downloaded_bytes" '[] (IO Int)
          where
@@ -398,7 +435,10 @@ get_http_client_status cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "get_http_client_status" '[]
            (IO Int)
@@ -427,7 +467,10 @@ get_max_redirects cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "get_max_redirects" '[] (IO Int)
          where
@@ -451,10 +494,42 @@ get_timeout cls
          godot_method_bind_call bindHTTPRequest_get_timeout (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "get_timeout" '[] (IO Int) where
         nodeMethod = Godot.Core.HTTPRequest.get_timeout
+
+{-# NOINLINE bindHTTPRequest_is_accepting_gzip #-}
+
+bindHTTPRequest_is_accepting_gzip :: MethodBind
+bindHTTPRequest_is_accepting_gzip
+  = unsafePerformIO $
+      withCString "HTTPRequest" $
+        \ clsNamePtr ->
+          withCString "is_accepting_gzip" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+is_accepting_gzip ::
+                    (HTTPRequest :< cls, Object :< cls) => cls -> IO Bool
+is_accepting_gzip cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindHTTPRequest_is_accepting_gzip
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod HTTPRequest "is_accepting_gzip" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.HTTPRequest.is_accepting_gzip
 
 {-# NOINLINE bindHTTPRequest_is_using_threads #-}
 
@@ -478,7 +553,10 @@ is_using_threads cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "is_using_threads" '[] (IO Bool)
          where
@@ -488,7 +566,7 @@ instance NodeMethod HTTPRequest "is_using_threads" '[] (IO Bool)
 
 -- | Creates request on the underlying @HTTPClient@. If there is no configuration errors, it tries to connect using @method HTTPClient.connect_to_host@ and passes parameters onto @method HTTPClient.request@.
 --   				Returns @OK@ if request is successfully created. (Does not imply that the server has responded), @ERR_UNCONFIGURED@ if not in the tree, @ERR_BUSY@ if still processing previous request, @ERR_INVALID_PARAMETER@ if given string is not a valid URL format, or @ERR_CANT_CONNECT@ if not using thread and the @HTTPClient@ cannot connect to host.
---   				__Note:__ The @request_data@ parameter is ignored if @method@ is @HTTPClient.METHOD_GET@. This is because GET methods can't contain request data. As a workaround, you can pass request data as a query string in the URL. See @method String.http_escape@ for an example.
+--   				__Note:__ When @method@ is @HTTPClient.METHOD_GET@, the payload sent via @request_data@ might be ignored by the server or even cause the server to reject the request (check @url=https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1@RFC 7231 section 4.3.1@/url@ for more details). As a workaround, you can send data as a query string in the URL. See @method String.http_escape@ for an example.
 bindHTTPRequest_request :: MethodBind
 bindHTTPRequest_request
   = unsafePerformIO $
@@ -500,7 +578,7 @@ bindHTTPRequest_request
 
 -- | Creates request on the underlying @HTTPClient@. If there is no configuration errors, it tries to connect using @method HTTPClient.connect_to_host@ and passes parameters onto @method HTTPClient.request@.
 --   				Returns @OK@ if request is successfully created. (Does not imply that the server has responded), @ERR_UNCONFIGURED@ if not in the tree, @ERR_BUSY@ if still processing previous request, @ERR_INVALID_PARAMETER@ if given string is not a valid URL format, or @ERR_CANT_CONNECT@ if not using thread and the @HTTPClient@ cannot connect to host.
---   				__Note:__ The @request_data@ parameter is ignored if @method@ is @HTTPClient.METHOD_GET@. This is because GET methods can't contain request data. As a workaround, you can pass request data as a query string in the URL. See @method String.http_escape@ for an example.
+--   				__Note:__ When @method@ is @HTTPClient.METHOD_GET@, the payload sent via @request_data@ might be ignored by the server or even cause the server to reject the request (check @url=https://datatracker.ietf.org/doc/html/rfc7231#section-4.3.1@RFC 7231 section 4.3.1@/url@ for more details). As a workaround, you can send data as a query string in the URL. See @method String.http_escape@ for an example.
 request ::
           (HTTPRequest :< cls, Object :< cls) =>
           cls ->
@@ -517,7 +595,10 @@ request cls arg1 arg2 arg3 arg4 arg5
       (\ (arrPtr, len) ->
          godot_method_bind_call bindHTTPRequest_request (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "request"
            '[GodotString, Maybe PoolStringArray, Maybe Bool, Maybe Int,
@@ -525,6 +606,78 @@ instance NodeMethod HTTPRequest "request"
            (IO Int)
          where
         nodeMethod = Godot.Core.HTTPRequest.request
+
+{-# NOINLINE bindHTTPRequest_request_raw #-}
+
+-- | Creates request on the underlying @HTTPClient@ using a raw array of bytes for the request body. If there is no configuration errors, it tries to connect using @method HTTPClient.connect_to_host@ and passes parameters onto @method HTTPClient.request@.
+--   				Returns @OK@ if request is successfully created. (Does not imply that the server has responded), @ERR_UNCONFIGURED@ if not in the tree, @ERR_BUSY@ if still processing previous request, @ERR_INVALID_PARAMETER@ if given string is not a valid URL format, or @ERR_CANT_CONNECT@ if not using thread and the @HTTPClient@ cannot connect to host.
+bindHTTPRequest_request_raw :: MethodBind
+bindHTTPRequest_request_raw
+  = unsafePerformIO $
+      withCString "HTTPRequest" $
+        \ clsNamePtr ->
+          withCString "request_raw" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Creates request on the underlying @HTTPClient@ using a raw array of bytes for the request body. If there is no configuration errors, it tries to connect using @method HTTPClient.connect_to_host@ and passes parameters onto @method HTTPClient.request@.
+--   				Returns @OK@ if request is successfully created. (Does not imply that the server has responded), @ERR_UNCONFIGURED@ if not in the tree, @ERR_BUSY@ if still processing previous request, @ERR_INVALID_PARAMETER@ if given string is not a valid URL format, or @ERR_CANT_CONNECT@ if not using thread and the @HTTPClient@ cannot connect to host.
+request_raw ::
+              (HTTPRequest :< cls, Object :< cls) =>
+              cls ->
+                GodotString ->
+                  Maybe PoolStringArray ->
+                    Maybe Bool -> Maybe Int -> Maybe PoolByteArray -> IO Int
+request_raw cls arg1 arg2 arg3 arg4 arg5
+  = withVariantArray
+      [toVariant arg1,
+       defaultedVariant VariantPoolStringArray V.empty arg2,
+       maybe (VariantBool True) toVariant arg3,
+       maybe (VariantInt (0)) toVariant arg4,
+       defaultedVariant VariantPoolByteArray V.empty arg5]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindHTTPRequest_request_raw (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod HTTPRequest "request_raw"
+           '[GodotString, Maybe PoolStringArray, Maybe Bool, Maybe Int,
+             Maybe PoolByteArray]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.HTTPRequest.request_raw
+
+{-# NOINLINE bindHTTPRequest_set_accept_gzip #-}
+
+bindHTTPRequest_set_accept_gzip :: MethodBind
+bindHTTPRequest_set_accept_gzip
+  = unsafePerformIO $
+      withCString "HTTPRequest" $
+        \ clsNamePtr ->
+          withCString "set_accept_gzip" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_accept_gzip ::
+                  (HTTPRequest :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_accept_gzip cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindHTTPRequest_set_accept_gzip (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod HTTPRequest "set_accept_gzip" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.HTTPRequest.set_accept_gzip
 
 {-# NOINLINE bindHTTPRequest_set_body_size_limit #-}
 
@@ -548,7 +701,10 @@ set_body_size_limit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "set_body_size_limit" '[Int]
            (IO ())
@@ -558,7 +714,7 @@ instance NodeMethod HTTPRequest "set_body_size_limit" '[Int]
 {-# NOINLINE bindHTTPRequest_set_download_chunk_size #-}
 
 -- | The size of the buffer used and maximum bytes to read per iteration. See @HTTPClient.read_chunk_size@.
---   			Set this to a higher value (e.g. 65536 for 64 KiB) when downloading large files to achieve better speeds at the cost of memory.
+--   			Set this to a lower value (e.g. 4096 for 4 KiB) when downloading small files to decrease memory usage at the cost of download speeds.
 bindHTTPRequest_set_download_chunk_size :: MethodBind
 bindHTTPRequest_set_download_chunk_size
   = unsafePerformIO $
@@ -569,7 +725,7 @@ bindHTTPRequest_set_download_chunk_size
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The size of the buffer used and maximum bytes to read per iteration. See @HTTPClient.read_chunk_size@.
---   			Set this to a higher value (e.g. 65536 for 64 KiB) when downloading large files to achieve better speeds at the cost of memory.
+--   			Set this to a lower value (e.g. 4096 for 4 KiB) when downloading small files to decrease memory usage at the cost of download speeds.
 set_download_chunk_size ::
                           (HTTPRequest :< cls, Object :< cls) => cls -> Int -> IO ()
 set_download_chunk_size cls arg1
@@ -579,7 +735,10 @@ set_download_chunk_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "set_download_chunk_size" '[Int]
            (IO ())
@@ -608,7 +767,10 @@ set_download_file cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "set_download_file" '[GodotString]
            (IO ())
@@ -637,7 +799,10 @@ set_max_redirects cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "set_max_redirects" '[Int] (IO ())
          where
@@ -662,7 +827,10 @@ set_timeout cls arg1
          godot_method_bind_call bindHTTPRequest_set_timeout (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "set_timeout" '[Int] (IO ()) where
         nodeMethod = Godot.Core.HTTPRequest.set_timeout
@@ -688,7 +856,10 @@ set_use_threads cls arg1
          godot_method_bind_call bindHTTPRequest_set_use_threads (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPRequest "set_use_threads" '[Bool] (IO ())
          where

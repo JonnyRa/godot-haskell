@@ -59,16 +59,18 @@ module Godot.Core.Image
         Godot.Core.Image.get_width, Godot.Core.Image.has_mipmaps,
         Godot.Core.Image.is_compressed, Godot.Core.Image.is_empty,
         Godot.Core.Image.is_invisible, Godot.Core.Image.load,
+        Godot.Core.Image.load_bmp_from_buffer,
         Godot.Core.Image.load_jpg_from_buffer,
         Godot.Core.Image.load_png_from_buffer,
+        Godot.Core.Image.load_tga_from_buffer,
         Godot.Core.Image.load_webp_from_buffer, Godot.Core.Image.lock,
         Godot.Core.Image.normalmap_to_xy,
         Godot.Core.Image.premultiply_alpha, Godot.Core.Image.resize,
         Godot.Core.Image.resize_to_po2, Godot.Core.Image.rgbe_to_srgb,
         Godot.Core.Image.save_exr, Godot.Core.Image.save_png,
-        Godot.Core.Image.set_pixel, Godot.Core.Image.set_pixelv,
-        Godot.Core.Image.shrink_x2, Godot.Core.Image.srgb_to_linear,
-        Godot.Core.Image.unlock)
+        Godot.Core.Image.save_png_to_buffer, Godot.Core.Image.set_pixel,
+        Godot.Core.Image.set_pixelv, Godot.Core.Image.shrink_x2,
+        Godot.Core.Image.srgb_to_linear, Godot.Core.Image.unlock)
        where
 import Data.Coerce
 import Foreign.C
@@ -255,7 +257,7 @@ instance NodeProperty Image "data" Dictionary 'False where
 
 {-# NOINLINE bindImage__get_data #-}
 
--- | Holds all of the image's color data in a given format. See @enum Format@ constants.
+-- | Holds all the image's color data in a given format. See @enum Format@ constants.
 bindImage__get_data :: MethodBind
 bindImage__get_data
   = unsafePerformIO $
@@ -265,20 +267,23 @@ bindImage__get_data
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Holds all of the image's color data in a given format. See @enum Format@ constants.
+-- | Holds all the image's color data in a given format. See @enum Format@ constants.
 _get_data :: (Image :< cls, Object :< cls) => cls -> IO Dictionary
 _get_data cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage__get_data (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "_get_data" '[] (IO Dictionary) where
         nodeMethod = Godot.Core.Image._get_data
 
 {-# NOINLINE bindImage__set_data #-}
 
--- | Holds all of the image's color data in a given format. See @enum Format@ constants.
+-- | Holds all the image's color data in a given format. See @enum Format@ constants.
 bindImage__set_data :: MethodBind
 bindImage__set_data
   = unsafePerformIO $
@@ -288,14 +293,17 @@ bindImage__set_data
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Holds all of the image's color data in a given format. See @enum Format@ constants.
+-- | Holds all the image's color data in a given format. See @enum Format@ constants.
 _set_data ::
             (Image :< cls, Object :< cls) => cls -> Dictionary -> IO ()
 _set_data cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage__set_data (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "_set_data" '[Dictionary] (IO ()) where
         nodeMethod = Godot.Core.Image._set_data
@@ -320,7 +328,10 @@ blend_rect cls arg1 arg2 arg3
   = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_blend_rect (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "blend_rect" '[Image, Rect2, Vector2]
            (IO ())
@@ -350,7 +361,10 @@ blend_rect_mask cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindImage_blend_rect_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "blend_rect_mask"
            '[Image, Image, Rect2, Vector2]
@@ -378,7 +392,10 @@ blit_rect cls arg1 arg2 arg3
   = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_blit_rect (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "blit_rect" '[Image, Rect2, Vector2]
            (IO ())
@@ -407,7 +424,10 @@ blit_rect_mask cls arg1 arg2 arg3 arg4
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_blit_rect_mask (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "blit_rect_mask"
            '[Image, Image, Rect2, Vector2]
@@ -436,7 +456,10 @@ bumpmap_to_normalmap cls arg1
          godot_method_bind_call bindImage_bumpmap_to_normalmap (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "bumpmap_to_normalmap" '[Maybe Float]
            (IO ())
@@ -462,7 +485,10 @@ clear_mipmaps cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_clear_mipmaps (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "clear_mipmaps" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.clear_mipmaps
@@ -487,7 +513,10 @@ compress cls arg1 arg2 arg3
   = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_compress (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "compress" '[Int, Int, Float] (IO Int)
          where
@@ -511,7 +540,10 @@ convert cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_convert (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "convert" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Image.convert
@@ -534,7 +566,10 @@ copy_from cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_copy_from (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "copy_from" '[Image] (IO ()) where
         nodeMethod = Godot.Core.Image.copy_from
@@ -560,7 +595,9 @@ create cls arg1 arg2 arg3 arg4
       [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_create (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "create" '[Int, Int, Bool, Int] (IO ())
          where
@@ -590,7 +627,10 @@ create_from_data cls arg1 arg2 arg3 arg4 arg5
          godot_method_bind_call bindImage_create_from_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "create_from_data"
            '[Int, Int, Bool, Int, PoolByteArray]
@@ -616,7 +656,9 @@ crop cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_crop (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "crop" '[Int, Int] (IO ()) where
         nodeMethod = Godot.Core.Image.crop
@@ -639,7 +681,10 @@ decompress cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_decompress (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "decompress" '[] (IO Int) where
         nodeMethod = Godot.Core.Image.decompress
@@ -663,7 +708,10 @@ detect_alpha cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_detect_alpha (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "detect_alpha" '[] (IO Int) where
         nodeMethod = Godot.Core.Image.detect_alpha
@@ -687,7 +735,10 @@ expand_x2_hq2x cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_expand_x2_hq2x (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "expand_x2_hq2x" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.expand_x2_hq2x
@@ -710,7 +761,9 @@ fill cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_fill (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "fill" '[Color] (IO ()) where
         nodeMethod = Godot.Core.Image.fill
@@ -735,7 +788,10 @@ fix_alpha_edges cls
          godot_method_bind_call bindImage_fix_alpha_edges (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "fix_alpha_edges" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.fix_alpha_edges
@@ -758,7 +814,9 @@ flip_x cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_flip_x (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "flip_x" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.flip_x
@@ -781,14 +839,17 @@ flip_y cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_flip_y (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "flip_y" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.flip_y
 
 {-# NOINLINE bindImage_generate_mipmaps #-}
 
--- | Generates mipmaps for the image. Mipmaps are pre-calculated and lower resolution copies of the image. Mipmaps are automatically used if the image needs to be scaled down when rendered. This improves image quality and the performance of the rendering. Returns an error if the image is compressed, in a custom format or if the image's width/height is 0.
+-- | Generates mipmaps for the image. Mipmaps are precalculated lower-resolution copies of the image that are automatically used if the image needs to be scaled down when rendered. They help improve image quality and performance when rendering. This method returns an error if the image is compressed, in a custom format, or if the image's width/height is @0@.
+--   				__Note:__ Mipmap generation is done on the CPU, is single-threaded and is @i@always@/i@ done on the main thread. This means generating mipmaps will result in noticeable stuttering during gameplay, even if @method generate_mipmaps@ is called from a @Thread@.
 bindImage_generate_mipmaps :: MethodBind
 bindImage_generate_mipmaps
   = unsafePerformIO $
@@ -798,7 +859,8 @@ bindImage_generate_mipmaps
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Generates mipmaps for the image. Mipmaps are pre-calculated and lower resolution copies of the image. Mipmaps are automatically used if the image needs to be scaled down when rendered. This improves image quality and the performance of the rendering. Returns an error if the image is compressed, in a custom format or if the image's width/height is 0.
+-- | Generates mipmaps for the image. Mipmaps are precalculated lower-resolution copies of the image that are automatically used if the image needs to be scaled down when rendered. They help improve image quality and performance when rendering. This method returns an error if the image is compressed, in a custom format, or if the image's width/height is @0@.
+--   				__Note:__ Mipmap generation is done on the CPU, is single-threaded and is @i@always@/i@ done on the main thread. This means generating mipmaps will result in noticeable stuttering during gameplay, even if @method generate_mipmaps@ is called from a @Thread@.
 generate_mipmaps ::
                    (Image :< cls, Object :< cls) => cls -> Maybe Bool -> IO Int
 generate_mipmaps cls arg1
@@ -807,7 +869,10 @@ generate_mipmaps cls arg1
          godot_method_bind_call bindImage_generate_mipmaps (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "generate_mipmaps" '[Maybe Bool] (IO Int)
          where
@@ -832,7 +897,10 @@ get_data cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_get_data (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "get_data" '[] (IO PoolByteArray) where
         nodeMethod = Godot.Core.Image.get_data
@@ -855,7 +923,10 @@ get_format cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_get_format (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "get_format" '[] (IO Int) where
         nodeMethod = Godot.Core.Image.get_format
@@ -878,7 +949,10 @@ get_height cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_get_height (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "get_height" '[] (IO Int) where
         nodeMethod = Godot.Core.Image.get_height
@@ -904,7 +978,10 @@ get_mipmap_offset cls arg1
          godot_method_bind_call bindImage_get_mipmap_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "get_mipmap_offset" '[Int] (IO Int) where
         nodeMethod = Godot.Core.Image.get_mipmap_offset
@@ -928,7 +1005,10 @@ get_pixel cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_get_pixel (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "get_pixel" '[Int, Int] (IO Color) where
         nodeMethod = Godot.Core.Image.get_pixel
@@ -952,7 +1032,10 @@ get_pixelv cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_get_pixelv (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "get_pixelv" '[Vector2] (IO Color) where
         nodeMethod = Godot.Core.Image.get_pixelv
@@ -976,7 +1059,7 @@ get_rect cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_get_rect (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Image "get_rect" '[Rect2] (IO Image) where
         nodeMethod = Godot.Core.Image.get_rect
@@ -999,7 +1082,10 @@ get_size cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_get_size (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "get_size" '[] (IO Vector2) where
         nodeMethod = Godot.Core.Image.get_size
@@ -1023,7 +1109,10 @@ get_used_rect cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_get_used_rect (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "get_used_rect" '[] (IO Rect2) where
         nodeMethod = Godot.Core.Image.get_used_rect
@@ -1046,7 +1135,10 @@ get_width cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_get_width (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "get_width" '[] (IO Int) where
         nodeMethod = Godot.Core.Image.get_width
@@ -1070,7 +1162,10 @@ has_mipmaps cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_has_mipmaps (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "has_mipmaps" '[] (IO Bool) where
         nodeMethod = Godot.Core.Image.has_mipmaps
@@ -1094,7 +1189,10 @@ is_compressed cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_is_compressed (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "is_compressed" '[] (IO Bool) where
         nodeMethod = Godot.Core.Image.is_compressed
@@ -1117,7 +1215,10 @@ is_empty cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_is_empty (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "is_empty" '[] (IO Bool) where
         nodeMethod = Godot.Core.Image.is_empty
@@ -1141,14 +1242,19 @@ is_invisible cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_is_invisible (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "is_invisible" '[] (IO Bool) where
         nodeMethod = Godot.Core.Image.is_invisible
 
 {-# NOINLINE bindImage_load #-}
 
--- | Loads an image from file @path@. See @url=https://docs.godotengine.org/en/latest/getting_started/workflow/assets/importing_images.html#supported-image-formats@Supported image formats@/url@ for a list of supported image formats and limitations.
+-- | Loads an image from file @path@. See @url=https://docs.godotengine.org/en/3.4/tutorials/assets_pipeline/importing_images.html#supported-image-formats@Supported image formats@/url@ for a list of supported image formats and limitations.
+--   				__Warning:__ This method should only be used in the editor or in cases when you need to load external images at run-time, such as images located at the @user://@ directory, and may not work in exported projects.
+--   				See also @ImageTexture@ description for usage examples.
 bindImage_load :: MethodBind
 bindImage_load
   = unsafePerformIO $
@@ -1158,17 +1264,54 @@ bindImage_load
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Loads an image from file @path@. See @url=https://docs.godotengine.org/en/latest/getting_started/workflow/assets/importing_images.html#supported-image-formats@Supported image formats@/url@ for a list of supported image formats and limitations.
+-- | Loads an image from file @path@. See @url=https://docs.godotengine.org/en/3.4/tutorials/assets_pipeline/importing_images.html#supported-image-formats@Supported image formats@/url@ for a list of supported image formats and limitations.
+--   				__Warning:__ This method should only be used in the editor or in cases when you need to load external images at run-time, such as images located at the @user://@ directory, and may not work in exported projects.
+--   				See also @ImageTexture@ description for usage examples.
 load ::
        (Image :< cls, Object :< cls) => cls -> GodotString -> IO Int
 load cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_load (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "load" '[GodotString] (IO Int) where
         nodeMethod = Godot.Core.Image.load
+
+{-# NOINLINE bindImage_load_bmp_from_buffer #-}
+
+-- | Loads an image from the binary contents of a BMP file.
+--   				__Note:__ Godot's BMP module doesn't support 16-bit per pixel images. Only 1-bit, 4-bit, 8-bit, 24-bit, and 32-bit per pixel images are supported.
+bindImage_load_bmp_from_buffer :: MethodBind
+bindImage_load_bmp_from_buffer
+  = unsafePerformIO $
+      withCString "Image" $
+        \ clsNamePtr ->
+          withCString "load_bmp_from_buffer" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Loads an image from the binary contents of a BMP file.
+--   				__Note:__ Godot's BMP module doesn't support 16-bit per pixel images. Only 1-bit, 4-bit, 8-bit, 24-bit, and 32-bit per pixel images are supported.
+load_bmp_from_buffer ::
+                       (Image :< cls, Object :< cls) => cls -> PoolByteArray -> IO Int
+load_bmp_from_buffer cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindImage_load_bmp_from_buffer (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Image "load_bmp_from_buffer" '[PoolByteArray]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.Image.load_bmp_from_buffer
 
 {-# NOINLINE bindImage_load_jpg_from_buffer #-}
 
@@ -1191,7 +1334,10 @@ load_jpg_from_buffer cls arg1
          godot_method_bind_call bindImage_load_jpg_from_buffer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "load_jpg_from_buffer" '[PoolByteArray]
            (IO Int)
@@ -1219,12 +1365,46 @@ load_png_from_buffer cls arg1
          godot_method_bind_call bindImage_load_png_from_buffer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "load_png_from_buffer" '[PoolByteArray]
            (IO Int)
          where
         nodeMethod = Godot.Core.Image.load_png_from_buffer
+
+{-# NOINLINE bindImage_load_tga_from_buffer #-}
+
+-- | Loads an image from the binary contents of a TGA file.
+bindImage_load_tga_from_buffer :: MethodBind
+bindImage_load_tga_from_buffer
+  = unsafePerformIO $
+      withCString "Image" $
+        \ clsNamePtr ->
+          withCString "load_tga_from_buffer" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Loads an image from the binary contents of a TGA file.
+load_tga_from_buffer ::
+                       (Image :< cls, Object :< cls) => cls -> PoolByteArray -> IO Int
+load_tga_from_buffer cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindImage_load_tga_from_buffer (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Image "load_tga_from_buffer" '[PoolByteArray]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.Image.load_tga_from_buffer
 
 {-# NOINLINE bindImage_load_webp_from_buffer #-}
 
@@ -1247,7 +1427,10 @@ load_webp_from_buffer cls arg1
          godot_method_bind_call bindImage_load_webp_from_buffer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "load_webp_from_buffer" '[PoolByteArray]
            (IO Int)
@@ -1272,7 +1455,9 @@ lock cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_lock (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "lock" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.lock
@@ -1297,7 +1482,10 @@ normalmap_to_xy cls
          godot_method_bind_call bindImage_normalmap_to_xy (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "normalmap_to_xy" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.normalmap_to_xy
@@ -1322,14 +1510,17 @@ premultiply_alpha cls
          godot_method_bind_call bindImage_premultiply_alpha (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "premultiply_alpha" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.premultiply_alpha
 
 {-# NOINLINE bindImage_resize #-}
 
--- | Resizes the image to the given @width@ and @height@. New pixels are calculated using @interpolation@. See @interpolation@ constants.
+-- | Resizes the image to the given @width@ and @height@. New pixels are calculated using the @interpolation@ mode defined via @enum Interpolation@ constants.
 bindImage_resize :: MethodBind
 bindImage_resize
   = unsafePerformIO $
@@ -1339,7 +1530,7 @@ bindImage_resize
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Resizes the image to the given @width@ and @height@. New pixels are calculated using @interpolation@. See @interpolation@ constants.
+-- | Resizes the image to the given @width@ and @height@. New pixels are calculated using the @interpolation@ mode defined via @enum Interpolation@ constants.
 resize ::
          (Image :< cls, Object :< cls) =>
          cls -> Int -> Int -> Maybe Int -> IO ()
@@ -1349,7 +1540,9 @@ resize cls arg1 arg2 arg3
        maybe (VariantInt (1)) toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_resize (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "resize" '[Int, Int, Maybe Int] (IO ())
          where
@@ -1357,7 +1550,7 @@ instance NodeMethod Image "resize" '[Int, Int, Maybe Int] (IO ())
 
 {-# NOINLINE bindImage_resize_to_po2 #-}
 
--- | Resizes the image to the nearest power of 2 for the width and height. If @square@ is @true@ then set width and height to be the same.
+-- | Resizes the image to the nearest power of 2 for the width and height. If @square@ is @true@ then set width and height to be the same. New pixels are calculated using the @interpolation@ mode defined via @enum Interpolation@ constants.
 bindImage_resize_to_po2 :: MethodBind
 bindImage_resize_to_po2
   = unsafePerformIO $
@@ -1367,17 +1560,24 @@ bindImage_resize_to_po2
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Resizes the image to the nearest power of 2 for the width and height. If @square@ is @true@ then set width and height to be the same.
+-- | Resizes the image to the nearest power of 2 for the width and height. If @square@ is @true@ then set width and height to be the same. New pixels are calculated using the @interpolation@ mode defined via @enum Interpolation@ constants.
 resize_to_po2 ::
-                (Image :< cls, Object :< cls) => cls -> Maybe Bool -> IO ()
-resize_to_po2 cls arg1
-  = withVariantArray [maybe (VariantBool False) toVariant arg1]
+                (Image :< cls, Object :< cls) =>
+                cls -> Maybe Bool -> Maybe Int -> IO ()
+resize_to_po2 cls arg1 arg2
+  = withVariantArray
+      [maybe (VariantBool False) toVariant arg1,
+       maybe (VariantInt (1)) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_resize_to_po2 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod Image "resize_to_po2" '[Maybe Bool] (IO ())
+instance NodeMethod Image "resize_to_po2" '[Maybe Bool, Maybe Int]
+           (IO ())
          where
         nodeMethod = Godot.Core.Image.resize_to_po2
 
@@ -1400,7 +1600,7 @@ rgbe_to_srgb cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_rgbe_to_srgb (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Image "rgbe_to_srgb" '[] (IO Image) where
         nodeMethod = Godot.Core.Image.rgbe_to_srgb
@@ -1408,6 +1608,7 @@ instance NodeMethod Image "rgbe_to_srgb" '[] (IO Image) where
 {-# NOINLINE bindImage_save_exr #-}
 
 -- | Saves the image as an EXR file to @path@. If @grayscale@ is @true@ and the image has only one channel, it will be saved explicitly as monochrome rather than one red channel. This function will return @ERR_UNAVAILABLE@ if Godot was compiled without the TinyEXR module.
+--   				__Note:__ The TinyEXR module is disabled in non-editor builds, which means @method save_exr@ will return @ERR_UNAVAILABLE@ when it is called from an exported project.
 bindImage_save_exr :: MethodBind
 bindImage_save_exr
   = unsafePerformIO $
@@ -1418,6 +1619,7 @@ bindImage_save_exr
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Saves the image as an EXR file to @path@. If @grayscale@ is @true@ and the image has only one channel, it will be saved explicitly as monochrome rather than one red channel. This function will return @ERR_UNAVAILABLE@ if Godot was compiled without the TinyEXR module.
+--   				__Note:__ The TinyEXR module is disabled in non-editor builds, which means @method save_exr@ will return @ERR_UNAVAILABLE@ when it is called from an exported project.
 save_exr ::
            (Image :< cls, Object :< cls) =>
            cls -> GodotString -> Maybe Bool -> IO Int
@@ -1426,7 +1628,10 @@ save_exr cls arg1 arg2
       [toVariant arg1, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_save_exr (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "save_exr" '[GodotString, Maybe Bool]
            (IO Int)
@@ -1452,10 +1657,42 @@ save_png cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_save_png (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "save_png" '[GodotString] (IO Int) where
         nodeMethod = Godot.Core.Image.save_png
+
+{-# NOINLINE bindImage_save_png_to_buffer #-}
+
+bindImage_save_png_to_buffer :: MethodBind
+bindImage_save_png_to_buffer
+  = unsafePerformIO $
+      withCString "Image" $
+        \ clsNamePtr ->
+          withCString "save_png_to_buffer" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+save_png_to_buffer ::
+                     (Image :< cls, Object :< cls) => cls -> IO PoolByteArray
+save_png_to_buffer cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindImage_save_png_to_buffer (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Image "save_png_to_buffer" '[]
+           (IO PoolByteArray)
+         where
+        nodeMethod = Godot.Core.Image.save_png_to_buffer
 
 {-# NOINLINE bindImage_set_pixel #-}
 
@@ -1499,7 +1736,10 @@ set_pixel cls arg1 arg2 arg3
   = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_set_pixel (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "set_pixel" '[Int, Int, Color] (IO ())
          where
@@ -1546,7 +1786,10 @@ set_pixelv cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_set_pixelv (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "set_pixelv" '[Vector2, Color] (IO ())
          where
@@ -1570,7 +1813,10 @@ shrink_x2 cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_shrink_x2 (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "shrink_x2" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.shrink_x2
@@ -1594,7 +1840,10 @@ srgb_to_linear cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_srgb_to_linear (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "srgb_to_linear" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.srgb_to_linear
@@ -1617,7 +1866,9 @@ unlock cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindImage_unlock (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Image "unlock" '[] (IO ()) where
         nodeMethod = Godot.Core.Image.unlock

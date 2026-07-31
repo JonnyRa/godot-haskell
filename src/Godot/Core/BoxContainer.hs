@@ -55,7 +55,10 @@ add_spacer cls arg1
          godot_method_bind_call bindBoxContainer_add_spacer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BoxContainer "add_spacer" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.BoxContainer.add_spacer
@@ -81,7 +84,10 @@ get_alignment cls
          godot_method_bind_call bindBoxContainer_get_alignment (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BoxContainer "get_alignment" '[] (IO Int) where
         nodeMethod = Godot.Core.BoxContainer.get_alignment
@@ -107,7 +113,10 @@ set_alignment cls arg1
          godot_method_bind_call bindBoxContainer_set_alignment (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BoxContainer "set_alignment" '[Int] (IO ())
          where

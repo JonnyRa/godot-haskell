@@ -4,13 +4,17 @@
 module Godot.Core.ClassDB
        (Godot.Core.ClassDB.can_instance, Godot.Core.ClassDB.class_exists,
         Godot.Core.ClassDB.class_get_category,
+        Godot.Core.ClassDB.class_get_enum_constants,
+        Godot.Core.ClassDB.class_get_enum_list,
         Godot.Core.ClassDB.class_get_integer_constant,
+        Godot.Core.ClassDB.class_get_integer_constant_enum,
         Godot.Core.ClassDB.class_get_integer_constant_list,
         Godot.Core.ClassDB.class_get_method_list,
         Godot.Core.ClassDB.class_get_property,
         Godot.Core.ClassDB.class_get_property_list,
         Godot.Core.ClassDB.class_get_signal,
         Godot.Core.ClassDB.class_get_signal_list,
+        Godot.Core.ClassDB.class_has_enum,
         Godot.Core.ClassDB.class_has_integer_constant,
         Godot.Core.ClassDB.class_has_method,
         Godot.Core.ClassDB.class_has_signal,
@@ -53,7 +57,10 @@ can_instance cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindClassDB_can_instance (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "can_instance" '[GodotString] (IO Bool)
          where
@@ -79,7 +86,10 @@ class_exists cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindClassDB_class_exists (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_exists" '[GodotString] (IO Bool)
          where
@@ -107,12 +117,86 @@ class_get_category cls arg1
          godot_method_bind_call bindClassDB_class_get_category (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_get_category" '[GodotString]
            (IO GodotString)
          where
         nodeMethod = Godot.Core.ClassDB.class_get_category
+
+{-# NOINLINE bindClassDB_class_get_enum_constants #-}
+
+-- | Returns an array with all the keys in @enum@ of @class@ or its ancestry.
+bindClassDB_class_get_enum_constants :: MethodBind
+bindClassDB_class_get_enum_constants
+  = unsafePerformIO $
+      withCString "_ClassDB" $
+        \ clsNamePtr ->
+          withCString "class_get_enum_constants" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns an array with all the keys in @enum@ of @class@ or its ancestry.
+class_get_enum_constants ::
+                           (ClassDB :< cls, Object :< cls) =>
+                           cls ->
+                             GodotString -> GodotString -> Maybe Bool -> IO PoolStringArray
+class_get_enum_constants cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, toVariant arg2,
+       maybe (VariantBool False) toVariant arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindClassDB_class_get_enum_constants
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ClassDB "class_get_enum_constants"
+           '[GodotString, GodotString, Maybe Bool]
+           (IO PoolStringArray)
+         where
+        nodeMethod = Godot.Core.ClassDB.class_get_enum_constants
+
+{-# NOINLINE bindClassDB_class_get_enum_list #-}
+
+-- | Returns an array with all the enums of @class@ or its ancestry.
+bindClassDB_class_get_enum_list :: MethodBind
+bindClassDB_class_get_enum_list
+  = unsafePerformIO $
+      withCString "_ClassDB" $
+        \ clsNamePtr ->
+          withCString "class_get_enum_list" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns an array with all the enums of @class@ or its ancestry.
+class_get_enum_list ::
+                      (ClassDB :< cls, Object :< cls) =>
+                      cls -> GodotString -> Maybe Bool -> IO PoolStringArray
+class_get_enum_list cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindClassDB_class_get_enum_list (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ClassDB "class_get_enum_list"
+           '[GodotString, Maybe Bool]
+           (IO PoolStringArray)
+         where
+        nodeMethod = Godot.Core.ClassDB.class_get_enum_list
 
 {-# NOINLINE bindClassDB_class_get_integer_constant #-}
 
@@ -137,13 +221,52 @@ class_get_integer_constant cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_get_integer_constant"
            '[GodotString, GodotString]
            (IO Int)
          where
         nodeMethod = Godot.Core.ClassDB.class_get_integer_constant
+
+{-# NOINLINE bindClassDB_class_get_integer_constant_enum #-}
+
+-- | Returns which enum the integer constant @name@ of @class@ or its ancestry belongs to.
+bindClassDB_class_get_integer_constant_enum :: MethodBind
+bindClassDB_class_get_integer_constant_enum
+  = unsafePerformIO $
+      withCString "_ClassDB" $
+        \ clsNamePtr ->
+          withCString "class_get_integer_constant_enum" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns which enum the integer constant @name@ of @class@ or its ancestry belongs to.
+class_get_integer_constant_enum ::
+                                  (ClassDB :< cls, Object :< cls) =>
+                                  cls -> GodotString -> GodotString -> Maybe Bool -> IO GodotString
+class_get_integer_constant_enum cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, toVariant arg2,
+       maybe (VariantBool False) toVariant arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindClassDB_class_get_integer_constant_enum
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ClassDB "class_get_integer_constant_enum"
+           '[GodotString, GodotString, Maybe Bool]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.ClassDB.class_get_integer_constant_enum
 
 {-# NOINLINE bindClassDB_class_get_integer_constant_list #-}
 
@@ -169,7 +292,10 @@ class_get_integer_constant_list cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_get_integer_constant_list"
            '[GodotString, Maybe Bool]
@@ -180,6 +306,7 @@ instance NodeMethod ClassDB "class_get_integer_constant_list"
 {-# NOINLINE bindClassDB_class_get_method_list #-}
 
 -- | Returns an array with all the methods of @class@ or its ancestry if @no_inheritance@ is @false@. Every element of the array is a @Dictionary@ with the following keys: @args@, @default_args@, @flags@, @id@, @name@, @return: (class_name, hint, hint_string, name, type, usage)@.
+--   				__Note:__ In exported release builds the debug info is not available, so the returned dictionaries will contain only method names.
 bindClassDB_class_get_method_list :: MethodBind
 bindClassDB_class_get_method_list
   = unsafePerformIO $
@@ -190,6 +317,7 @@ bindClassDB_class_get_method_list
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns an array with all the methods of @class@ or its ancestry if @no_inheritance@ is @false@. Every element of the array is a @Dictionary@ with the following keys: @args@, @default_args@, @flags@, @id@, @name@, @return: (class_name, hint, hint_string, name, type, usage)@.
+--   				__Note:__ In exported release builds the debug info is not available, so the returned dictionaries will contain only method names.
 class_get_method_list ::
                         (ClassDB :< cls, Object :< cls) =>
                         cls -> GodotString -> Maybe Bool -> IO Array
@@ -201,7 +329,10 @@ class_get_method_list cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_get_method_list"
            '[GodotString, Maybe Bool]
@@ -231,7 +362,7 @@ class_get_property cls arg1 arg2
          godot_method_bind_call bindClassDB_class_get_property (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod ClassDB "class_get_property"
            '[Object, GodotString]
@@ -263,7 +394,10 @@ class_get_property_list cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_get_property_list"
            '[GodotString, Maybe Bool]
@@ -293,7 +427,10 @@ class_get_signal cls arg1 arg2
          godot_method_bind_call bindClassDB_class_get_signal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_get_signal"
            '[GodotString, GodotString]
@@ -325,13 +462,51 @@ class_get_signal_list cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_get_signal_list"
            '[GodotString, Maybe Bool]
            (IO Array)
          where
         nodeMethod = Godot.Core.ClassDB.class_get_signal_list
+
+{-# NOINLINE bindClassDB_class_has_enum #-}
+
+-- | Returns whether @class@ or its ancestry has an enum called @name@ or not.
+bindClassDB_class_has_enum :: MethodBind
+bindClassDB_class_has_enum
+  = unsafePerformIO $
+      withCString "_ClassDB" $
+        \ clsNamePtr ->
+          withCString "class_has_enum" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns whether @class@ or its ancestry has an enum called @name@ or not.
+class_has_enum ::
+                 (ClassDB :< cls, Object :< cls) =>
+                 cls -> GodotString -> GodotString -> Maybe Bool -> IO Bool
+class_has_enum cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, toVariant arg2,
+       maybe (VariantBool False) toVariant arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindClassDB_class_has_enum (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ClassDB "class_has_enum"
+           '[GodotString, GodotString, Maybe Bool]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.ClassDB.class_has_enum
 
 {-# NOINLINE bindClassDB_class_has_integer_constant #-}
 
@@ -356,7 +531,10 @@ class_has_integer_constant cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_has_integer_constant"
            '[GodotString, GodotString]
@@ -388,7 +566,10 @@ class_has_method cls arg1 arg2 arg3
          godot_method_bind_call bindClassDB_class_has_method (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_has_method"
            '[GodotString, GodotString, Maybe Bool]
@@ -418,7 +599,10 @@ class_has_signal cls arg1 arg2
          godot_method_bind_call bindClassDB_class_has_signal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_has_signal"
            '[GodotString, GodotString]
@@ -448,7 +632,10 @@ class_set_property cls arg1 arg2 arg3
          godot_method_bind_call bindClassDB_class_set_property (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "class_set_property"
            '[Object, GodotString, GodotVariant]
@@ -477,7 +664,10 @@ get_class_list cls
          godot_method_bind_call bindClassDB_get_class_list (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "get_class_list" '[]
            (IO PoolStringArray)
@@ -507,7 +697,10 @@ get_inheriters_from_class cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "get_inheriters_from_class"
            '[GodotString]
@@ -537,7 +730,10 @@ get_parent_class cls arg1
          godot_method_bind_call bindClassDB_get_parent_class (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "get_parent_class" '[GodotString]
            (IO GodotString)
@@ -565,7 +761,7 @@ instance' cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindClassDB_instance' (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod ClassDB "instance" '[GodotString]
            (IO GodotVariant)
@@ -593,7 +789,10 @@ is_class_enabled cls arg1
          godot_method_bind_call bindClassDB_is_class_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "is_class_enabled" '[GodotString]
            (IO Bool)
@@ -622,7 +821,10 @@ is_parent_class cls arg1 arg2
          godot_method_bind_call bindClassDB_is_parent_class (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClassDB "is_parent_class"
            '[GodotString, GodotString]

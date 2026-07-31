@@ -55,7 +55,10 @@ _gui_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSlider__gui_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Slider "_gui_input" '[InputEvent] (IO ()) where
         nodeMethod = Godot.Core.Slider._gui_input
@@ -78,7 +81,10 @@ get_ticks cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSlider_get_ticks (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Slider "get_ticks" '[] (IO Int) where
         nodeMethod = Godot.Core.Slider.get_ticks
@@ -104,7 +110,10 @@ get_ticks_on_borders cls
          godot_method_bind_call bindSlider_get_ticks_on_borders (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Slider "get_ticks_on_borders" '[] (IO Bool)
          where
@@ -129,7 +138,10 @@ is_editable cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSlider_is_editable (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Slider "is_editable" '[] (IO Bool) where
         nodeMethod = Godot.Core.Slider.is_editable
@@ -153,7 +165,10 @@ is_scrollable cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSlider_is_scrollable (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Slider "is_scrollable" '[] (IO Bool) where
         nodeMethod = Godot.Core.Slider.is_scrollable
@@ -178,7 +193,10 @@ set_editable cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSlider_set_editable (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Slider "set_editable" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Slider.set_editable
@@ -204,7 +222,10 @@ set_scrollable cls arg1
          godot_method_bind_call bindSlider_set_scrollable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Slider "set_scrollable" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Slider.set_scrollable
@@ -227,7 +248,10 @@ set_ticks cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSlider_set_ticks (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Slider "set_ticks" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Slider.set_ticks
@@ -253,7 +277,10 @@ set_ticks_on_borders cls arg1
          godot_method_bind_call bindSlider_set_ticks_on_borders (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Slider "set_ticks_on_borders" '[Bool] (IO ())
          where

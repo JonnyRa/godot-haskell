@@ -41,7 +41,10 @@ _get_data cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBitMap__get_data (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "_get_data" '[] (IO Dictionary) where
         nodeMethod = Godot.Core.BitMap._get_data
@@ -63,7 +66,10 @@ _set_data cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBitMap__set_data (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "_set_data" '[Dictionary] (IO ()) where
         nodeMethod = Godot.Core.BitMap._set_data
@@ -86,7 +92,10 @@ create cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBitMap_create (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "create" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.BitMap.create
@@ -115,7 +124,10 @@ create_from_image_alpha cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "create_from_image_alpha"
            '[Image, Maybe Float]
@@ -142,7 +154,10 @@ get_bit cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBitMap_get_bit (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "get_bit" '[Vector2] (IO Bool) where
         nodeMethod = Godot.Core.BitMap.get_bit
@@ -165,7 +180,10 @@ get_size cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBitMap_get_size (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "get_size" '[] (IO Vector2) where
         nodeMethod = Godot.Core.BitMap.get_size
@@ -191,14 +209,17 @@ get_true_bit_count cls
          godot_method_bind_call bindBitMap_get_true_bit_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "get_true_bit_count" '[] (IO Int) where
         nodeMethod = Godot.Core.BitMap.get_true_bit_count
 
 {-# NOINLINE bindBitMap_grow_mask #-}
 
--- | Applies morphological dilation to the bitmap. The first argument is the dilation amount, Rect2 is the area where the dilation will be applied.
+-- | Applies morphological dilation or erosion to the bitmap. If @pixels@ is positive, dilation is applied to the bitmap. If @pixels@ is negative, erosion is applied to the bitmap. @rect@ defines the area where the morphological operation is applied. Pixels located outside the @rect@ are unaffected by @method grow_mask@.
 bindBitMap_grow_mask :: MethodBind
 bindBitMap_grow_mask
   = unsafePerformIO $
@@ -208,14 +229,17 @@ bindBitMap_grow_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Applies morphological dilation to the bitmap. The first argument is the dilation amount, Rect2 is the area where the dilation will be applied.
+-- | Applies morphological dilation or erosion to the bitmap. If @pixels@ is positive, dilation is applied to the bitmap. If @pixels@ is negative, erosion is applied to the bitmap. @rect@ defines the area where the morphological operation is applied. Pixels located outside the @rect@ are unaffected by @method grow_mask@.
 grow_mask ::
             (BitMap :< cls, Object :< cls) => cls -> Int -> Rect2 -> IO ()
 grow_mask cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBitMap_grow_mask (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "grow_mask" '[Int, Rect2] (IO ()) where
         nodeMethod = Godot.Core.BitMap.grow_mask
@@ -241,7 +265,10 @@ opaque_to_polygons cls arg1 arg2
          godot_method_bind_call bindBitMap_opaque_to_polygons (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "opaque_to_polygons"
            '[Rect2, Maybe Float]
@@ -268,7 +295,10 @@ set_bit cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBitMap_set_bit (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "set_bit" '[Vector2, Bool] (IO ()) where
         nodeMethod = Godot.Core.BitMap.set_bit
@@ -293,7 +323,10 @@ set_bit_rect cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBitMap_set_bit_rect (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BitMap "set_bit_rect" '[Rect2, Bool] (IO ())
          where

@@ -75,6 +75,7 @@ module Godot.Core.Animation
         Godot.Core.Animation.transform_track_interpolate,
         Godot.Core.Animation.value_track_get_key_indices,
         Godot.Core.Animation.value_track_get_update_mode,
+        Godot.Core.Animation.value_track_interpolate,
         Godot.Core.Animation.value_track_set_update_mode)
        where
 import Data.Coerce
@@ -166,7 +167,10 @@ add_track cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_add_track (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "add_track" '[Int, Maybe Int]
            (IO Int)
@@ -197,7 +201,10 @@ animation_track_get_key_animation cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "animation_track_get_key_animation"
            '[Int, Int]
@@ -228,7 +235,10 @@ animation_track_insert_key cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "animation_track_insert_key"
            '[Int, Float, GodotString]
@@ -260,7 +270,10 @@ animation_track_set_key_animation cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "animation_track_set_key_animation"
            '[Int, Int, GodotString]
@@ -292,7 +305,10 @@ audio_track_get_key_end_offset cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "audio_track_get_key_end_offset"
            '[Int, Int]
@@ -326,7 +342,10 @@ audio_track_get_key_start_offset cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "audio_track_get_key_start_offset"
            '[Int, Int]
@@ -357,7 +376,7 @@ audio_track_get_key_stream cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Animation "audio_track_get_key_stream"
            '[Int, Int]
@@ -394,7 +413,10 @@ audio_track_insert_key cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "audio_track_insert_key"
            '[Int, Float, Resource, Maybe Float, Maybe Float]
@@ -425,7 +447,10 @@ audio_track_set_key_end_offset cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "audio_track_set_key_end_offset"
            '[Int, Int, Float]
@@ -457,7 +482,10 @@ audio_track_set_key_start_offset cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "audio_track_set_key_start_offset"
            '[Int, Int, Float]
@@ -467,7 +495,7 @@ instance NodeMethod Animation "audio_track_set_key_start_offset"
 
 {-# NOINLINE bindAnimation_audio_track_set_key_stream #-}
 
--- | Sets the stream of the key identified by @key_idx@ to value @offset@. The @track_idx@ must be the index of an Audio Track.
+-- | Sets the stream of the key identified by @key_idx@ to value @stream@. The @track_idx@ must be the index of an Audio Track.
 bindAnimation_audio_track_set_key_stream :: MethodBind
 bindAnimation_audio_track_set_key_stream
   = unsafePerformIO $
@@ -477,7 +505,7 @@ bindAnimation_audio_track_set_key_stream
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the stream of the key identified by @key_idx@ to value @offset@. The @track_idx@ must be the index of an Audio Track.
+-- | Sets the stream of the key identified by @key_idx@ to value @stream@. The @track_idx@ must be the index of an Audio Track.
 audio_track_set_key_stream ::
                              (Animation :< cls, Object :< cls) =>
                              cls -> Int -> Int -> Resource -> IO ()
@@ -488,7 +516,10 @@ audio_track_set_key_stream cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "audio_track_set_key_stream"
            '[Int, Int, Resource]
@@ -519,7 +550,10 @@ bezier_track_get_key_in_handle cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "bezier_track_get_key_in_handle"
            '[Int, Int]
@@ -551,7 +585,10 @@ bezier_track_get_key_out_handle cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "bezier_track_get_key_out_handle"
            '[Int, Int]
@@ -581,7 +618,10 @@ bezier_track_get_key_value cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "bezier_track_get_key_value"
            '[Int, Int]
@@ -618,7 +658,10 @@ bezier_track_insert_key cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "bezier_track_insert_key"
            '[Int, Float, Float, Maybe Vector2, Maybe Vector2]
@@ -649,7 +692,10 @@ bezier_track_interpolate cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "bezier_track_interpolate"
            '[Int, Float]
@@ -680,7 +726,10 @@ bezier_track_set_key_in_handle cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "bezier_track_set_key_in_handle"
            '[Int, Int, Vector2]
@@ -712,7 +761,10 @@ bezier_track_set_key_out_handle cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "bezier_track_set_key_out_handle"
            '[Int, Int, Vector2]
@@ -743,7 +795,10 @@ bezier_track_set_key_value cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "bezier_track_set_key_value"
            '[Int, Int, Float]
@@ -769,7 +824,10 @@ clear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_clear (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.Animation.clear
@@ -795,7 +853,10 @@ copy_track cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_copy_track (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "copy_track" '[Int, Animation]
            (IO ())
@@ -822,7 +883,10 @@ find_track cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_find_track (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "find_track" '[NodePath] (IO Int)
          where
@@ -849,7 +913,10 @@ get_length cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_get_length (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "get_length" '[] (IO Float) where
         nodeMethod = Godot.Core.Animation.get_length
@@ -873,7 +940,10 @@ get_step cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_get_step (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "get_step" '[] (IO Float) where
         nodeMethod = Godot.Core.Animation.get_step
@@ -899,14 +969,17 @@ get_track_count cls
          godot_method_bind_call bindAnimation_get_track_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "get_track_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Animation.get_track_count
 
 {-# NOINLINE bindAnimation_has_loop #-}
 
--- | A flag indicating that the animation must loop. This is uses for correct interpolation of animation cycles, and for hinting the player that it must restart the animation.
+-- | A flag indicating that the animation must loop. This is used for correct interpolation of animation cycles, and for hinting the player that it must restart the animation.
 bindAnimation_has_loop :: MethodBind
 bindAnimation_has_loop
   = unsafePerformIO $
@@ -916,14 +989,17 @@ bindAnimation_has_loop
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | A flag indicating that the animation must loop. This is uses for correct interpolation of animation cycles, and for hinting the player that it must restart the animation.
+-- | A flag indicating that the animation must loop. This is used for correct interpolation of animation cycles, and for hinting the player that it must restart the animation.
 has_loop :: (Animation :< cls, Object :< cls) => cls -> IO Bool
 has_loop cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_has_loop (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "has_loop" '[] (IO Bool) where
         nodeMethod = Godot.Core.Animation.has_loop
@@ -951,7 +1027,10 @@ method_track_get_key_indices cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "method_track_get_key_indices"
            '[Int, Float, Float]
@@ -982,7 +1061,10 @@ method_track_get_name cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "method_track_get_name" '[Int, Int]
            (IO GodotString)
@@ -1011,7 +1093,10 @@ method_track_get_params cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "method_track_get_params" '[Int, Int]
            (IO Array)
@@ -1039,7 +1124,10 @@ remove_track cls arg1
          godot_method_bind_call bindAnimation_remove_track (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "remove_track" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Animation.remove_track
@@ -1066,14 +1154,17 @@ set_length cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_set_length (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "set_length" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Animation.set_length
 
 {-# NOINLINE bindAnimation_set_loop #-}
 
--- | A flag indicating that the animation must loop. This is uses for correct interpolation of animation cycles, and for hinting the player that it must restart the animation.
+-- | A flag indicating that the animation must loop. This is used for correct interpolation of animation cycles, and for hinting the player that it must restart the animation.
 bindAnimation_set_loop :: MethodBind
 bindAnimation_set_loop
   = unsafePerformIO $
@@ -1083,7 +1174,7 @@ bindAnimation_set_loop
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | A flag indicating that the animation must loop. This is uses for correct interpolation of animation cycles, and for hinting the player that it must restart the animation.
+-- | A flag indicating that the animation must loop. This is used for correct interpolation of animation cycles, and for hinting the player that it must restart the animation.
 set_loop ::
            (Animation :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_loop cls arg1
@@ -1091,7 +1182,10 @@ set_loop cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_set_loop (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "set_loop" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Animation.set_loop
@@ -1116,7 +1210,10 @@ set_step cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_set_step (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "set_step" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Animation.set_step
@@ -1145,7 +1242,10 @@ track_find_key cls arg1 arg2 arg3
          godot_method_bind_call bindAnimation_track_find_key (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_find_key"
            '[Int, Float, Maybe Bool]
@@ -1176,7 +1276,10 @@ track_get_interpolation_loop_wrap cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_get_interpolation_loop_wrap"
            '[Int]
@@ -1206,7 +1309,10 @@ track_get_interpolation_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_get_interpolation_type" '[Int]
            (IO Int)
@@ -1235,7 +1341,10 @@ track_get_key_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_get_key_count" '[Int] (IO Int)
          where
@@ -1263,7 +1372,10 @@ track_get_key_time cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_get_key_time" '[Int, Int]
            (IO Float)
@@ -1292,7 +1404,10 @@ track_get_key_transition cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_get_key_transition"
            '[Int, Int]
@@ -1323,7 +1438,7 @@ track_get_key_value cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Animation "track_get_key_value" '[Int, Int]
            (IO GodotVariant)
@@ -1351,7 +1466,10 @@ track_get_path cls arg1
          godot_method_bind_call bindAnimation_track_get_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_get_path" '[Int] (IO NodePath)
          where
@@ -1378,7 +1496,10 @@ track_get_type cls arg1
          godot_method_bind_call bindAnimation_track_get_type (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_get_type" '[Int] (IO Int)
          where
@@ -1408,7 +1529,10 @@ track_insert_key cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindAnimation_track_insert_key (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_insert_key"
            '[Int, Float, GodotVariant, Maybe Float]
@@ -1437,7 +1561,10 @@ track_is_enabled cls arg1
          godot_method_bind_call bindAnimation_track_is_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_is_enabled" '[Int] (IO Bool)
          where
@@ -1464,7 +1591,10 @@ track_is_imported cls arg1
          godot_method_bind_call bindAnimation_track_is_imported (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_is_imported" '[Int] (IO Bool)
          where
@@ -1491,7 +1621,10 @@ track_move_down cls arg1
          godot_method_bind_call bindAnimation_track_move_down (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_move_down" '[Int] (IO ())
          where
@@ -1518,7 +1651,10 @@ track_move_to cls arg1 arg2
          godot_method_bind_call bindAnimation_track_move_to (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_move_to" '[Int, Int] (IO ())
          where
@@ -1545,7 +1681,10 @@ track_move_up cls arg1
          godot_method_bind_call bindAnimation_track_move_up (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_move_up" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Animation.track_move_up
@@ -1571,7 +1710,10 @@ track_remove_key cls arg1 arg2
          godot_method_bind_call bindAnimation_track_remove_key (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_remove_key" '[Int, Int]
            (IO ())
@@ -1600,7 +1742,10 @@ track_remove_key_at_position cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_remove_key_at_position"
            '[Int, Float]
@@ -1629,7 +1774,10 @@ track_set_enabled cls arg1 arg2
          godot_method_bind_call bindAnimation_track_set_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_set_enabled" '[Int, Bool]
            (IO ())
@@ -1658,7 +1806,10 @@ track_set_imported cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_set_imported" '[Int, Bool]
            (IO ())
@@ -1688,7 +1839,10 @@ track_set_interpolation_loop_wrap cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_set_interpolation_loop_wrap"
            '[Int, Bool]
@@ -1718,7 +1872,10 @@ track_set_interpolation_type cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_set_interpolation_type"
            '[Int, Int]
@@ -1749,7 +1906,10 @@ track_set_key_time cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_set_key_time"
            '[Int, Int, Float]
@@ -1780,7 +1940,10 @@ track_set_key_transition cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_set_key_transition"
            '[Int, Int, Float]
@@ -1811,7 +1974,10 @@ track_set_key_value cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_set_key_value"
            '[Int, Int, GodotVariant]
@@ -1821,7 +1987,7 @@ instance NodeMethod Animation "track_set_key_value"
 
 {-# NOINLINE bindAnimation_track_set_path #-}
 
--- | Sets the path of a track. Paths must be valid scene-tree paths to a node, and must be specified starting from the parent node of the node that will reproduce the animation. Tracks that control properties or bones must append their name after the path, separated by @":"@.
+-- | Sets the path of a track. Paths must be valid scene-tree paths to a node and must be specified starting from the parent node of the node that will reproduce the animation. Tracks that control properties or bones must append their name after the path, separated by @":"@.
 --   				For example, @"character/skeleton:ankle"@ or @"character/mesh:transform/local"@.
 bindAnimation_track_set_path :: MethodBind
 bindAnimation_track_set_path
@@ -1832,7 +1998,7 @@ bindAnimation_track_set_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the path of a track. Paths must be valid scene-tree paths to a node, and must be specified starting from the parent node of the node that will reproduce the animation. Tracks that control properties or bones must append their name after the path, separated by @":"@.
+-- | Sets the path of a track. Paths must be valid scene-tree paths to a node and must be specified starting from the parent node of the node that will reproduce the animation. Tracks that control properties or bones must append their name after the path, separated by @":"@.
 --   				For example, @"character/skeleton:ankle"@ or @"character/mesh:transform/local"@.
 track_set_path ::
                  (Animation :< cls, Object :< cls) =>
@@ -1843,7 +2009,10 @@ track_set_path cls arg1 arg2
          godot_method_bind_call bindAnimation_track_set_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_set_path" '[Int, NodePath]
            (IO ())
@@ -1870,7 +2039,10 @@ track_swap cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimation_track_swap (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "track_swap" '[Int, Int] (IO ())
          where
@@ -1901,7 +2073,10 @@ transform_track_insert_key cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "transform_track_insert_key"
            '[Int, Float, Vector3, Quat, Vector3]
@@ -1932,7 +2107,10 @@ transform_track_interpolate cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "transform_track_interpolate"
            '[Int, Float]
@@ -1963,7 +2141,10 @@ value_track_get_key_indices cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "value_track_get_key_indices"
            '[Int, Float, Float]
@@ -1993,12 +2174,46 @@ value_track_get_update_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "value_track_get_update_mode" '[Int]
            (IO Int)
          where
         nodeMethod = Godot.Core.Animation.value_track_get_update_mode
+
+{-# NOINLINE bindAnimation_value_track_interpolate #-}
+
+-- | Returns the interpolated value at the given time (in seconds). The @track_idx@ must be the index of a value track.
+bindAnimation_value_track_interpolate :: MethodBind
+bindAnimation_value_track_interpolate
+  = unsafePerformIO $
+      withCString "Animation" $
+        \ clsNamePtr ->
+          withCString "value_track_interpolate" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the interpolated value at the given time (in seconds). The @track_idx@ must be the index of a value track.
+value_track_interpolate ::
+                          (Animation :< cls, Object :< cls) =>
+                          cls -> Int -> Float -> IO GodotVariant
+value_track_interpolate cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindAnimation_value_track_interpolate
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> return var)
+
+instance NodeMethod Animation "value_track_interpolate"
+           '[Int, Float]
+           (IO GodotVariant)
+         where
+        nodeMethod = Godot.Core.Animation.value_track_interpolate
 
 {-# NOINLINE bindAnimation_value_track_set_update_mode #-}
 
@@ -2022,7 +2237,10 @@ value_track_set_update_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Animation "value_track_set_update_mode"
            '[Int, Int]

@@ -37,6 +37,7 @@ module Godot.Tools.ScriptEditor
         Godot.Tools.ScriptEditor._on_find_in_files_requested,
         Godot.Tools.ScriptEditor._on_find_in_files_result_selected,
         Godot.Tools.ScriptEditor._open_recent_script,
+        Godot.Tools.ScriptEditor._queue_close_tabs,
         Godot.Tools.ScriptEditor._reload_scripts,
         Godot.Tools.ScriptEditor._request_help,
         Godot.Tools.ScriptEditor._res_saved_callback,
@@ -114,7 +115,10 @@ _add_callback cls arg1 arg2 arg3
          godot_method_bind_call bindScriptEditor__add_callback (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_add_callback"
            '[Object, GodotString, PoolStringArray]
@@ -142,7 +146,10 @@ _autosave_scripts cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_autosave_scripts" '[] (IO ())
          where
@@ -168,7 +175,10 @@ _breaked cls arg1 arg2
          godot_method_bind_call bindScriptEditor__breaked (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_breaked" '[Bool, Bool] (IO ())
          where
@@ -194,7 +204,10 @@ _clear_execution cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_clear_execution" '[Reference]
            (IO ())
@@ -221,7 +234,10 @@ _close_all_tabs cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_close_all_tabs" '[] (IO ())
          where
@@ -239,17 +255,21 @@ bindScriptEditor__close_current_tab
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 _close_current_tab ::
-                     (ScriptEditor :< cls, Object :< cls) => cls -> IO ()
-_close_current_tab cls
-  = withVariantArray []
+                     (ScriptEditor :< cls, Object :< cls) => cls -> Bool -> IO ()
+_close_current_tab cls arg1
+  = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindScriptEditor__close_current_tab
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod ScriptEditor "_close_current_tab" '[] (IO ())
+instance NodeMethod ScriptEditor "_close_current_tab" '[Bool]
+           (IO ())
          where
         nodeMethod = Godot.Tools.ScriptEditor._close_current_tab
 
@@ -273,7 +293,10 @@ _close_discard_current_tab cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_close_discard_current_tab"
            '[GodotString]
@@ -301,7 +324,10 @@ _close_docs_tab cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_close_docs_tab" '[] (IO ())
          where
@@ -327,7 +353,10 @@ _close_other_tabs cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_close_other_tabs" '[] (IO ())
          where
@@ -353,7 +382,10 @@ _copy_script_path cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_copy_script_path" '[] (IO ())
          where
@@ -378,7 +410,10 @@ _editor_pause cls
          godot_method_bind_call bindScriptEditor__editor_pause (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_editor_pause" '[] (IO ()) where
         nodeMethod = Godot.Tools.ScriptEditor._editor_pause
@@ -402,7 +437,10 @@ _editor_play cls
          godot_method_bind_call bindScriptEditor__editor_play (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_editor_play" '[] (IO ()) where
         nodeMethod = Godot.Tools.ScriptEditor._editor_play
@@ -427,7 +465,10 @@ _editor_settings_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_editor_settings_changed" '[]
            (IO ())
@@ -453,7 +494,10 @@ _editor_stop cls
          godot_method_bind_call bindScriptEditor__editor_stop (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_editor_stop" '[] (IO ()) where
         nodeMethod = Godot.Tools.ScriptEditor._editor_stop
@@ -478,7 +522,10 @@ _file_dialog_action cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_file_dialog_action"
            '[GodotString]
@@ -507,7 +554,10 @@ _filter_methods_text_changed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_filter_methods_text_changed"
            '[GodotString]
@@ -536,7 +586,10 @@ _filter_scripts_text_changed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_filter_scripts_text_changed"
            '[GodotString]
@@ -565,7 +618,10 @@ _get_debug_tooltip cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_get_debug_tooltip"
            '[GodotString, Node]
@@ -594,7 +650,10 @@ _goto_script_line cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_goto_script_line"
            '[Reference, Int]
@@ -622,7 +681,10 @@ _goto_script_line2 cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_goto_script_line2" '[Int]
            (IO ())
@@ -649,7 +711,10 @@ _help_class_goto cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_help_class_goto" '[GodotString]
            (IO ())
@@ -676,7 +741,10 @@ _help_class_open cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_help_class_open" '[GodotString]
            (IO ())
@@ -703,7 +771,10 @@ _help_overview_selected cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_help_overview_selected" '[Int]
            (IO ())
@@ -729,7 +800,10 @@ _help_search cls arg1
          godot_method_bind_call bindScriptEditor__help_search (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_help_search" '[GodotString]
            (IO ())
@@ -755,7 +829,10 @@ _history_back cls
          godot_method_bind_call bindScriptEditor__history_back (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_history_back" '[] (IO ()) where
         nodeMethod = Godot.Tools.ScriptEditor._history_back
@@ -780,7 +857,10 @@ _history_forward cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_history_forward" '[] (IO ())
          where
@@ -807,7 +887,10 @@ _live_auto_reload_running_scripts cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor
            "_live_auto_reload_running_scripts"
@@ -837,7 +920,10 @@ _members_overview_selected cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_members_overview_selected"
            '[Int]
@@ -864,7 +950,10 @@ _menu_option cls arg1
          godot_method_bind_call bindScriptEditor__menu_option (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_menu_option" '[Int] (IO ())
          where
@@ -892,7 +981,10 @@ _on_find_in_files_modified_files cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_on_find_in_files_modified_files"
            '[PoolStringArray]
@@ -921,7 +1013,10 @@ _on_find_in_files_requested cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_on_find_in_files_requested"
            '[GodotString]
@@ -952,7 +1047,10 @@ _on_find_in_files_result_selected cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor
            "_on_find_in_files_result_selected"
@@ -982,12 +1080,44 @@ _open_recent_script cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_open_recent_script" '[Int]
            (IO ())
          where
         nodeMethod = Godot.Tools.ScriptEditor._open_recent_script
+
+{-# NOINLINE bindScriptEditor__queue_close_tabs #-}
+
+bindScriptEditor__queue_close_tabs :: MethodBind
+bindScriptEditor__queue_close_tabs
+  = unsafePerformIO $
+      withCString "ScriptEditor" $
+        \ clsNamePtr ->
+          withCString "_queue_close_tabs" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_queue_close_tabs ::
+                    (ScriptEditor :< cls, Object :< cls) => cls -> IO ()
+_queue_close_tabs cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindScriptEditor__queue_close_tabs
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ScriptEditor "_queue_close_tabs" '[] (IO ())
+         where
+        nodeMethod = Godot.Tools.ScriptEditor._queue_close_tabs
 
 {-# NOINLINE bindScriptEditor__reload_scripts #-}
 
@@ -1009,7 +1139,10 @@ _reload_scripts cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_reload_scripts" '[] (IO ())
          where
@@ -1034,7 +1167,10 @@ _request_help cls arg1
          godot_method_bind_call bindScriptEditor__request_help (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_request_help" '[GodotString]
            (IO ())
@@ -1061,7 +1197,10 @@ _res_saved_callback cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_res_saved_callback" '[Resource]
            (IO ())
@@ -1088,7 +1227,10 @@ _resave_scripts cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_resave_scripts" '[GodotString]
            (IO ())
@@ -1114,7 +1256,10 @@ _save_history cls
          godot_method_bind_call bindScriptEditor__save_history (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_save_history" '[] (IO ()) where
         nodeMethod = Godot.Tools.ScriptEditor._save_history
@@ -1139,7 +1284,10 @@ _script_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_script_changed" '[] (IO ())
          where
@@ -1165,7 +1313,10 @@ _script_created cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_script_created" '[Script]
            (IO ())
@@ -1192,7 +1343,10 @@ _script_list_gui_input cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_script_list_gui_input"
            '[InputEvent]
@@ -1220,7 +1374,10 @@ _script_selected cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_script_selected" '[Int] (IO ())
          where
@@ -1246,7 +1403,10 @@ _script_split_dragged cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_script_split_dragged" '[Float]
            (IO ())
@@ -1273,7 +1433,10 @@ _set_execution cls arg1 arg2
          godot_method_bind_call bindScriptEditor__set_execution (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_set_execution" '[Reference, Int]
            (IO ())
@@ -1299,7 +1462,10 @@ _show_debugger cls arg1
          godot_method_bind_call bindScriptEditor__show_debugger (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_show_debugger" '[Bool] (IO ())
          where
@@ -1325,7 +1491,10 @@ _start_find_in_files cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_start_find_in_files" '[Bool]
            (IO ())
@@ -1351,7 +1520,10 @@ _tab_changed cls arg1
          godot_method_bind_call bindScriptEditor__tab_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_tab_changed" '[Int] (IO ())
          where
@@ -1376,7 +1548,10 @@ _theme_option cls arg1
          godot_method_bind_call bindScriptEditor__theme_option (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_theme_option" '[Int] (IO ())
          where
@@ -1404,7 +1579,10 @@ _toggle_members_overview_alpha_sort cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor
            "_toggle_members_overview_alpha_sort"
@@ -1433,7 +1611,10 @@ _tree_changed cls
          godot_method_bind_call bindScriptEditor__tree_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_tree_changed" '[] (IO ()) where
         nodeMethod = Godot.Tools.ScriptEditor._tree_changed
@@ -1458,7 +1639,10 @@ _unhandled_input cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_unhandled_input" '[InputEvent]
            (IO ())
@@ -1485,7 +1669,10 @@ _update_autosave_timer cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_update_autosave_timer" '[]
            (IO ())
@@ -1512,7 +1699,10 @@ _update_members_overview cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_update_members_overview" '[]
            (IO ())
@@ -1539,7 +1729,10 @@ _update_recent_scripts cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_update_recent_scripts" '[]
            (IO ())
@@ -1566,7 +1759,10 @@ _update_script_connections cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_update_script_connections" '[]
            (IO ())
@@ -1593,7 +1789,10 @@ _update_script_names cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "_update_script_names" '[] (IO ())
          where
@@ -1620,7 +1819,10 @@ can_drop_data_fw cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "can_drop_data_fw"
            '[Vector2, GodotVariant, Control]
@@ -1648,7 +1850,10 @@ drop_data_fw cls arg1 arg2 arg3
          godot_method_bind_call bindScriptEditor_drop_data_fw (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "drop_data_fw"
            '[Vector2, GodotVariant, Control]
@@ -1678,7 +1883,7 @@ get_current_script cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ScriptEditor "get_current_script" '[]
            (IO Script)
@@ -1706,7 +1911,7 @@ get_drag_data_fw cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod ScriptEditor "get_drag_data_fw"
            '[Vector2, Control]
@@ -1736,7 +1941,10 @@ get_open_scripts cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "get_open_scripts" '[] (IO Array)
          where
@@ -1763,13 +1971,17 @@ goto_line cls arg1
          godot_method_bind_call bindScriptEditor_goto_line (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "goto_line" '[Int] (IO ()) where
         nodeMethod = Godot.Tools.ScriptEditor.goto_line
 
 {-# NOINLINE bindScriptEditor_open_script_create_dialog #-}
 
+-- | Opens the script create dialog. The script will extend @base_name@. The file extension can be omitted from @base_path@. It will be added based on the selected scripting language.
 bindScriptEditor_open_script_create_dialog :: MethodBind
 bindScriptEditor_open_script_create_dialog
   = unsafePerformIO $
@@ -1779,6 +1991,7 @@ bindScriptEditor_open_script_create_dialog
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Opens the script create dialog. The script will extend @base_name@. The file extension can be omitted from @base_path@. It will be added based on the selected scripting language.
 open_script_create_dialog ::
                             (ScriptEditor :< cls, Object :< cls) =>
                             cls -> GodotString -> GodotString -> IO ()
@@ -1789,7 +2002,10 @@ open_script_create_dialog cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScriptEditor "open_script_create_dialog"
            '[GodotString, GodotString]

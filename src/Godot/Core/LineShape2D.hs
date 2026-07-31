@@ -42,7 +42,10 @@ get_d cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineShape2D_get_d (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineShape2D "get_d" '[] (IO Float) where
         nodeMethod = Godot.Core.LineShape2D.get_d
@@ -68,7 +71,10 @@ get_normal cls
          godot_method_bind_call bindLineShape2D_get_normal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineShape2D "get_normal" '[] (IO Vector2) where
         nodeMethod = Godot.Core.LineShape2D.get_normal
@@ -93,7 +99,10 @@ set_d cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLineShape2D_set_d (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineShape2D "set_d" '[Float] (IO ()) where
         nodeMethod = Godot.Core.LineShape2D.set_d
@@ -119,7 +128,10 @@ set_normal cls arg1
          godot_method_bind_call bindLineShape2D_set_normal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LineShape2D "set_normal" '[Vector2] (IO ())
          where

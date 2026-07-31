@@ -55,7 +55,10 @@ _compute_cost cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar__compute_cost (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "_compute_cost" '[Int, Int] (IO Float)
          where
@@ -83,7 +86,10 @@ _estimate_cost cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar__estimate_cost (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "_estimate_cost" '[Int, Int] (IO Float)
          where
@@ -91,7 +97,8 @@ instance NodeMethod AStar "_estimate_cost" '[Int, Int] (IO Float)
 
 {-# NOINLINE bindAStar_add_point #-}
 
--- | Adds a new point at the given position with the given identifier. The algorithm prefers points with lower @weight_scale@ to form a path. The @id@ must be 0 or larger, and the @weight_scale@ must be 1 or larger.
+-- | Adds a new point at the given position with the given identifier. The @id@ must be 0 or larger, and the @weight_scale@ must be 1 or larger.
+--   				The @weight_scale@ is multiplied by the result of @method _compute_cost@ when determining the overall cost of traveling across a segment from a neighboring point to this point. Thus, all else being equal, the algorithm prefers points with lower @weight_scale@s to form a path.
 --   				
 --   @
 --   
@@ -110,7 +117,8 @@ bindAStar_add_point
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a new point at the given position with the given identifier. The algorithm prefers points with lower @weight_scale@ to form a path. The @id@ must be 0 or larger, and the @weight_scale@ must be 1 or larger.
+-- | Adds a new point at the given position with the given identifier. The @id@ must be 0 or larger, and the @weight_scale@ must be 1 or larger.
+--   				The @weight_scale@ is multiplied by the result of @method _compute_cost@ when determining the overall cost of traveling across a segment from a neighboring point to this point. Thus, all else being equal, the algorithm prefers points with lower @weight_scale@s to form a path.
 --   				
 --   @
 --   
@@ -129,7 +137,10 @@ add_point cls arg1 arg2 arg3
        maybe (VariantReal (1)) toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar_add_point (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "add_point" '[Int, Vector3, Maybe Float]
            (IO ())
@@ -160,7 +171,10 @@ are_points_connected cls arg1 arg2 arg3
          godot_method_bind_call bindAStar_are_points_connected (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "are_points_connected"
            '[Int, Int, Maybe Bool]
@@ -186,7 +200,9 @@ clear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar_clear (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.AStar.clear
@@ -232,7 +248,10 @@ connect_points cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar_connect_points (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "connect_points" '[Int, Int, Maybe Bool]
            (IO ())
@@ -263,7 +282,10 @@ disconnect_points cls arg1 arg2 arg3
          godot_method_bind_call bindAStar_disconnect_points (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "disconnect_points"
            '[Int, Int, Maybe Bool]
@@ -293,7 +315,10 @@ get_available_point_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_available_point_id" '[] (IO Int)
          where
@@ -324,7 +349,10 @@ get_closest_point cls arg1 arg2
          godot_method_bind_call bindAStar_get_closest_point (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_closest_point"
            '[Vector3, Maybe Bool]
@@ -378,7 +406,10 @@ get_closest_position_in_segment cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_closest_position_in_segment"
            '[Vector3]
@@ -445,7 +476,10 @@ get_id_path cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar_get_id_path (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_id_path" '[Int, Int]
            (IO PoolIntArray)
@@ -473,7 +507,10 @@ get_point_capacity cls
          godot_method_bind_call bindAStar_get_point_capacity (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_point_capacity" '[] (IO Int) where
         nodeMethod = Godot.Core.AStar.get_point_capacity
@@ -529,7 +566,10 @@ get_point_connections cls arg1
          godot_method_bind_call bindAStar_get_point_connections (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_point_connections" '[Int]
            (IO PoolIntArray)
@@ -556,7 +596,10 @@ get_point_count cls
          godot_method_bind_call bindAStar_get_point_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_point_count" '[] (IO Int) where
         nodeMethod = Godot.Core.AStar.get_point_count
@@ -564,6 +607,7 @@ instance NodeMethod AStar "get_point_count" '[] (IO Int) where
 {-# NOINLINE bindAStar_get_point_path #-}
 
 -- | Returns an array with the points that are in the path found by AStar between the given points. The array is ordered from the starting point to the ending point of the path.
+--   				__Note:__ This method is not thread-safe. If called from a @Thread@, it will return an empty @PoolVector3Array@ and will print an error message.
 bindAStar_get_point_path :: MethodBind
 bindAStar_get_point_path
   = unsafePerformIO $
@@ -574,6 +618,7 @@ bindAStar_get_point_path
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns an array with the points that are in the path found by AStar between the given points. The array is ordered from the starting point to the ending point of the path.
+--   				__Note:__ This method is not thread-safe. If called from a @Thread@, it will return an empty @PoolVector3Array@ and will print an error message.
 get_point_path ::
                  (AStar :< cls, Object :< cls) =>
                  cls -> Int -> Int -> IO PoolVector3Array
@@ -582,7 +627,10 @@ get_point_path cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar_get_point_path (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_point_path" '[Int, Int]
            (IO PoolVector3Array)
@@ -610,7 +658,10 @@ get_point_position cls arg1
          godot_method_bind_call bindAStar_get_point_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_point_position" '[Int] (IO Vector3)
          where
@@ -638,7 +689,10 @@ get_point_weight_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_point_weight_scale" '[Int]
            (IO Float)
@@ -663,7 +717,10 @@ get_points cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar_get_points (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "get_points" '[] (IO Array) where
         nodeMethod = Godot.Core.AStar.get_points
@@ -686,7 +743,10 @@ has_point cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar_has_point (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "has_point" '[Int] (IO Bool) where
         nodeMethod = Godot.Core.AStar.has_point
@@ -712,7 +772,10 @@ is_point_disabled cls arg1
          godot_method_bind_call bindAStar_is_point_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "is_point_disabled" '[Int] (IO Bool)
          where
@@ -738,7 +801,10 @@ remove_point cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar_remove_point (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "remove_point" '[Int] (IO ()) where
         nodeMethod = Godot.Core.AStar.remove_point
@@ -763,7 +829,10 @@ reserve_space cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar_reserve_space (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "reserve_space" '[Int] (IO ()) where
         nodeMethod = Godot.Core.AStar.reserve_space
@@ -790,7 +859,10 @@ set_point_disabled cls arg1 arg2
          godot_method_bind_call bindAStar_set_point_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "set_point_disabled" '[Int, Maybe Bool]
            (IO ())
@@ -818,7 +890,10 @@ set_point_position cls arg1 arg2
          godot_method_bind_call bindAStar_set_point_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "set_point_position" '[Int, Vector3]
            (IO ())
@@ -827,7 +902,7 @@ instance NodeMethod AStar "set_point_position" '[Int, Vector3]
 
 {-# NOINLINE bindAStar_set_point_weight_scale #-}
 
--- | Sets the @weight_scale@ for the point with the given @id@.
+-- | Sets the @weight_scale@ for the point with the given @id@. The @weight_scale@ is multiplied by the result of @method _compute_cost@ when determining the overall cost of traveling across a segment from a neighboring point to this point.
 bindAStar_set_point_weight_scale :: MethodBind
 bindAStar_set_point_weight_scale
   = unsafePerformIO $
@@ -837,7 +912,7 @@ bindAStar_set_point_weight_scale
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the @weight_scale@ for the point with the given @id@.
+-- | Sets the @weight_scale@ for the point with the given @id@. The @weight_scale@ is multiplied by the result of @method _compute_cost@ when determining the overall cost of traveling across a segment from a neighboring point to this point.
 set_point_weight_scale ::
                          (AStar :< cls, Object :< cls) => cls -> Int -> Float -> IO ()
 set_point_weight_scale cls arg1 arg2
@@ -847,7 +922,10 @@ set_point_weight_scale cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AStar "set_point_weight_scale" '[Int, Float]
            (IO ())

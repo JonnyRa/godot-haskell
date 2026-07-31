@@ -2,7 +2,8 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.AnimatedSprite3D
-       (Godot.Core.AnimatedSprite3D.sig_frame_changed,
+       (Godot.Core.AnimatedSprite3D.sig_animation_finished,
+        Godot.Core.AnimatedSprite3D.sig_frame_changed,
         Godot.Core.AnimatedSprite3D._is_playing,
         Godot.Core.AnimatedSprite3D._res_changed,
         Godot.Core.AnimatedSprite3D._set_playing,
@@ -27,6 +28,14 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.SpriteBase3D()
+
+-- | Emitted when the animation is finished (when it plays the last frame). If the animation is looping, this signal is emitted every time the last frame is drawn.
+sig_animation_finished ::
+                       Godot.Internal.Dispatch.Signal AnimatedSprite3D
+sig_animation_finished
+  = Godot.Internal.Dispatch.Signal "animation_finished"
+
+instance NodeSignal AnimatedSprite3D "animation_finished" '[]
 
 -- | Emitted when @frame@ changed.
 sig_frame_changed ::
@@ -76,7 +85,10 @@ _is_playing cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "_is_playing" '[] (IO Bool)
          where
@@ -102,7 +114,10 @@ _res_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "_res_changed" '[] (IO ())
          where
@@ -130,7 +145,10 @@ _set_playing cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "_set_playing" '[Bool] (IO ())
          where
@@ -158,7 +176,10 @@ get_animation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "get_animation" '[]
            (IO GodotString)
@@ -186,7 +207,10 @@ get_frame cls
          godot_method_bind_call bindAnimatedSprite3D_get_frame (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "get_frame" '[] (IO Int) where
         nodeMethod = Godot.Core.AnimatedSprite3D.get_frame
@@ -213,7 +237,7 @@ get_sprite_frames cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AnimatedSprite3D "get_sprite_frames" '[]
            (IO SpriteFrames)
@@ -241,7 +265,10 @@ is_playing cls
          godot_method_bind_call bindAnimatedSprite3D_is_playing (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "is_playing" '[] (IO Bool)
          where
@@ -269,7 +296,10 @@ play cls arg1
          godot_method_bind_call bindAnimatedSprite3D_play (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "play" '[Maybe GodotString]
            (IO ())
@@ -299,7 +329,10 @@ set_animation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "set_animation" '[GodotString]
            (IO ())
@@ -327,7 +360,10 @@ set_frame cls arg1
          godot_method_bind_call bindAnimatedSprite3D_set_frame (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "set_frame" '[Int] (IO ())
          where
@@ -356,7 +392,10 @@ set_sprite_frames cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "set_sprite_frames"
            '[SpriteFrames]
@@ -384,7 +423,10 @@ stop cls
          godot_method_bind_call bindAnimatedSprite3D_stop (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimatedSprite3D "stop" '[] (IO ()) where
         nodeMethod = Godot.Core.AnimatedSprite3D.stop

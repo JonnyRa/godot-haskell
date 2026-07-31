@@ -16,7 +16,7 @@ module Godot.Core.Light
         Godot.Core.Light._PARAM_ATTENUATION,
         Godot.Core.Light._PARAM_ENERGY,
         Godot.Core.Light._PARAM_SHADOW_SPLIT_3_OFFSET,
-        Godot.Core.Light._BAKE_INDIRECT,
+        Godot.Core.Light._PARAM_SIZE, Godot.Core.Light._BAKE_INDIRECT,
         Godot.Core.Light._PARAM_SHADOW_BIAS, Godot.Core.Light._BAKE_ALL,
         Godot.Core.Light._PARAM_CONTACT_SHADOW_SIZE,
         Godot.Core.Light._PARAM_SPOT_ANGLE, Godot.Core.Light.get_bake_mode,
@@ -44,61 +44,64 @@ import Godot.Api.Types
 import Godot.Core.VisualInstance()
 
 _PARAM_SHADOW_NORMAL_BIAS :: Int
-_PARAM_SHADOW_NORMAL_BIAS = 12
+_PARAM_SHADOW_NORMAL_BIAS = 13
 
 _PARAM_SHADOW_SPLIT_2_OFFSET :: Int
-_PARAM_SHADOW_SPLIT_2_OFFSET = 10
+_PARAM_SHADOW_SPLIT_2_OFFSET = 11
 
 _PARAM_SPECULAR :: Int
-_PARAM_SPECULAR = 2
+_PARAM_SPECULAR = 3
 
 _PARAM_SHADOW_SPLIT_1_OFFSET :: Int
-_PARAM_SHADOW_SPLIT_1_OFFSET = 9
+_PARAM_SHADOW_SPLIT_1_OFFSET = 10
 
 _PARAM_INDIRECT_ENERGY :: Int
 _PARAM_INDIRECT_ENERGY = 1
 
 _PARAM_RANGE :: Int
-_PARAM_RANGE = 3
+_PARAM_RANGE = 4
 
 _PARAM_SPOT_ATTENUATION :: Int
-_PARAM_SPOT_ATTENUATION = 6
+_PARAM_SPOT_ATTENUATION = 7
 
 _PARAM_SHADOW_MAX_DISTANCE :: Int
-_PARAM_SHADOW_MAX_DISTANCE = 8
+_PARAM_SHADOW_MAX_DISTANCE = 9
 
 _PARAM_MAX :: Int
-_PARAM_MAX = 15
+_PARAM_MAX = 16
 
 _PARAM_SHADOW_BIAS_SPLIT_SCALE :: Int
-_PARAM_SHADOW_BIAS_SPLIT_SCALE = 14
+_PARAM_SHADOW_BIAS_SPLIT_SCALE = 15
 
 _BAKE_DISABLED :: Int
 _BAKE_DISABLED = 0
 
 _PARAM_ATTENUATION :: Int
-_PARAM_ATTENUATION = 4
+_PARAM_ATTENUATION = 5
 
 _PARAM_ENERGY :: Int
 _PARAM_ENERGY = 0
 
 _PARAM_SHADOW_SPLIT_3_OFFSET :: Int
-_PARAM_SHADOW_SPLIT_3_OFFSET = 11
+_PARAM_SHADOW_SPLIT_3_OFFSET = 12
+
+_PARAM_SIZE :: Int
+_PARAM_SIZE = 2
 
 _BAKE_INDIRECT :: Int
 _BAKE_INDIRECT = 1
 
 _PARAM_SHADOW_BIAS :: Int
-_PARAM_SHADOW_BIAS = 13
+_PARAM_SHADOW_BIAS = 14
 
 _BAKE_ALL :: Int
 _BAKE_ALL = 2
 
 _PARAM_CONTACT_SHADOW_SIZE :: Int
-_PARAM_CONTACT_SHADOW_SIZE = 7
+_PARAM_CONTACT_SHADOW_SIZE = 8
 
 _PARAM_SPOT_ANGLE :: Int
-_PARAM_SPOT_ANGLE = 5
+_PARAM_SPOT_ANGLE = 6
 
 instance NodeProperty Light "editor_only" Bool 'False where
         nodeProperty
@@ -130,14 +133,19 @@ instance NodeProperty Light "light_negative" Bool 'False where
         nodeProperty
           = (is_negative, wrapDroppingSetter set_negative, Nothing)
 
-instance NodeProperty Light "light_specular" Float 'False where
+instance NodeProperty Light "light_size" Float 'False where
         nodeProperty
           = (wrapIndexedGetter 2 get_param, wrapIndexedSetter 2 set_param,
              Nothing)
 
+instance NodeProperty Light "light_specular" Float 'False where
+        nodeProperty
+          = (wrapIndexedGetter 3 get_param, wrapIndexedSetter 3 set_param,
+             Nothing)
+
 instance NodeProperty Light "shadow_bias" Float 'False where
         nodeProperty
-          = (wrapIndexedGetter 13 get_param, wrapIndexedSetter 13 set_param,
+          = (wrapIndexedGetter 14 get_param, wrapIndexedSetter 14 set_param,
              Nothing)
 
 instance NodeProperty Light "shadow_color" Color 'False where
@@ -146,7 +154,7 @@ instance NodeProperty Light "shadow_color" Color 'False where
 
 instance NodeProperty Light "shadow_contact" Float 'False where
         nodeProperty
-          = (wrapIndexedGetter 7 get_param, wrapIndexedSetter 7 set_param,
+          = (wrapIndexedGetter 8 get_param, wrapIndexedSetter 8 set_param,
              Nothing)
 
 instance NodeProperty Light "shadow_enabled" Bool 'False where
@@ -177,7 +185,10 @@ get_bake_mode cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_get_bake_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "get_bake_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Light.get_bake_mode
@@ -200,7 +211,10 @@ get_color cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_get_color (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "get_color" '[] (IO Color) where
         nodeMethod = Godot.Core.Light.get_color
@@ -224,7 +238,10 @@ get_cull_mask cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_get_cull_mask (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "get_cull_mask" '[] (IO Int) where
         nodeMethod = Godot.Core.Light.get_cull_mask
@@ -248,7 +265,10 @@ get_param cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_get_param (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "get_param" '[Int] (IO Float) where
         nodeMethod = Godot.Core.Light.get_param
@@ -274,7 +294,10 @@ get_shadow_color cls
          godot_method_bind_call bindLight_get_shadow_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "get_shadow_color" '[] (IO Color) where
         nodeMethod = Godot.Core.Light.get_shadow_color
@@ -301,7 +324,10 @@ get_shadow_reverse_cull_face cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "get_shadow_reverse_cull_face" '[]
            (IO Bool)
@@ -326,7 +352,10 @@ has_shadow cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_has_shadow (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "has_shadow" '[] (IO Bool) where
         nodeMethod = Godot.Core.Light.has_shadow
@@ -350,7 +379,10 @@ is_editor_only cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_is_editor_only (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "is_editor_only" '[] (IO Bool) where
         nodeMethod = Godot.Core.Light.is_editor_only
@@ -374,7 +406,10 @@ is_negative cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_is_negative (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "is_negative" '[] (IO Bool) where
         nodeMethod = Godot.Core.Light.is_negative
@@ -399,7 +434,10 @@ set_bake_mode cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_set_bake_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "set_bake_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Light.set_bake_mode
@@ -422,7 +460,10 @@ set_color cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_set_color (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "set_color" '[Color] (IO ()) where
         nodeMethod = Godot.Core.Light.set_color
@@ -447,7 +488,10 @@ set_cull_mask cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_set_cull_mask (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "set_cull_mask" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Light.set_cull_mask
@@ -473,7 +517,10 @@ set_editor_only cls arg1
          godot_method_bind_call bindLight_set_editor_only (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "set_editor_only" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Light.set_editor_only
@@ -498,7 +545,10 @@ set_negative cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_set_negative (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "set_negative" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Light.set_negative
@@ -522,7 +572,10 @@ set_param cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_set_param (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "set_param" '[Int, Float] (IO ()) where
         nodeMethod = Godot.Core.Light.set_param
@@ -545,7 +598,10 @@ set_shadow cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLight_set_shadow (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "set_shadow" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Light.set_shadow
@@ -571,7 +627,10 @@ set_shadow_color cls arg1
          godot_method_bind_call bindLight_set_shadow_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "set_shadow_color" '[Color] (IO ()) where
         nodeMethod = Godot.Core.Light.set_shadow_color
@@ -598,7 +657,10 @@ set_shadow_reverse_cull_face cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Light "set_shadow_reverse_cull_face" '[Bool]
            (IO ())

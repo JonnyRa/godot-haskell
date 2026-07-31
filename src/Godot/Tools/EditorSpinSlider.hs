@@ -61,7 +61,10 @@ _grabber_gui_input cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "_grabber_gui_input"
            '[InputEvent]
@@ -89,7 +92,10 @@ _grabber_mouse_entered cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "_grabber_mouse_entered" '[]
            (IO ())
@@ -116,7 +122,10 @@ _grabber_mouse_exited cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "_grabber_mouse_exited" '[]
            (IO ())
@@ -143,7 +152,10 @@ _gui_input cls arg1
          godot_method_bind_call bindEditorSpinSlider__gui_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "_gui_input" '[InputEvent]
            (IO ())
@@ -170,7 +182,10 @@ _value_focus_exited cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "_value_focus_exited" '[]
            (IO ())
@@ -197,7 +212,10 @@ _value_input_closed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "_value_input_closed" '[]
            (IO ())
@@ -225,7 +243,10 @@ _value_input_entered cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "_value_input_entered"
            '[GodotString]
@@ -252,7 +273,10 @@ get_label cls
          godot_method_bind_call bindEditorSpinSlider_get_label (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "get_label" '[]
            (IO GodotString)
@@ -278,7 +302,10 @@ is_flat cls
          godot_method_bind_call bindEditorSpinSlider_is_flat (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "is_flat" '[] (IO Bool) where
         nodeMethod = Godot.Tools.EditorSpinSlider.is_flat
@@ -303,7 +330,10 @@ is_read_only cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "is_read_only" '[] (IO Bool)
          where
@@ -328,7 +358,10 @@ set_flat cls arg1
          godot_method_bind_call bindEditorSpinSlider_set_flat (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "set_flat" '[Bool] (IO ())
          where
@@ -354,7 +387,10 @@ set_label cls arg1
          godot_method_bind_call bindEditorSpinSlider_set_label (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "set_label" '[GodotString]
            (IO ())
@@ -381,7 +417,10 @@ set_read_only cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpinSlider "set_read_only" '[Bool]
            (IO ())

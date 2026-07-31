@@ -26,6 +26,7 @@ module Godot.Core.MultiplayerAPI
         Godot.Core.MultiplayerAPI.get_network_connected_peers,
         Godot.Core.MultiplayerAPI.get_network_peer,
         Godot.Core.MultiplayerAPI.get_network_unique_id,
+        Godot.Core.MultiplayerAPI.get_root_node,
         Godot.Core.MultiplayerAPI.get_rpc_sender_id,
         Godot.Core.MultiplayerAPI.has_network_peer,
         Godot.Core.MultiplayerAPI.is_network_server,
@@ -150,6 +151,10 @@ instance NodeProperty MultiplayerAPI
           = (is_refusing_new_network_connections,
              wrapDroppingSetter set_refuse_new_network_connections, Nothing)
 
+instance NodeProperty MultiplayerAPI "root_node" Node 'False where
+        nodeProperty
+          = (get_root_node, wrapDroppingSetter set_root_node, Nothing)
+
 {-# NOINLINE bindMultiplayerAPI__add_peer #-}
 
 bindMultiplayerAPI__add_peer :: MethodBind
@@ -169,7 +174,10 @@ _add_peer cls arg1
          godot_method_bind_call bindMultiplayerAPI__add_peer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "_add_peer" '[Int] (IO ()) where
         nodeMethod = Godot.Core.MultiplayerAPI._add_peer
@@ -194,7 +202,10 @@ _connected_to_server cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "_connected_to_server" '[]
            (IO ())
@@ -221,7 +232,10 @@ _connection_failed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "_connection_failed" '[] (IO ())
          where
@@ -246,7 +260,10 @@ _del_peer cls arg1
          godot_method_bind_call bindMultiplayerAPI__del_peer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "_del_peer" '[Int] (IO ()) where
         nodeMethod = Godot.Core.MultiplayerAPI._del_peer
@@ -271,7 +288,10 @@ _server_disconnected cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "_server_disconnected" '[]
            (IO ())
@@ -297,7 +317,10 @@ clear cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMultiplayerAPI_clear (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.MultiplayerAPI.clear
@@ -325,7 +348,10 @@ get_network_connected_peers cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "get_network_connected_peers"
            '[]
@@ -356,7 +382,7 @@ get_network_peer cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MultiplayerAPI "get_network_peer" '[]
            (IO NetworkedMultiplayerPeer)
@@ -385,12 +411,45 @@ get_network_unique_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "get_network_unique_id" '[]
            (IO Int)
          where
         nodeMethod = Godot.Core.MultiplayerAPI.get_network_unique_id
+
+{-# NOINLINE bindMultiplayerAPI_get_root_node #-}
+
+-- | The root node to use for RPCs. Instead of an absolute path, a relative path will be used to find the node upon which the RPC should be executed.
+--   			This effectively allows to have different branches of the scene tree to be managed by different MultiplayerAPI, allowing for example to run both client and server in the same scene.
+bindMultiplayerAPI_get_root_node :: MethodBind
+bindMultiplayerAPI_get_root_node
+  = unsafePerformIO $
+      withCString "MultiplayerAPI" $
+        \ clsNamePtr ->
+          withCString "get_root_node" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The root node to use for RPCs. Instead of an absolute path, a relative path will be used to find the node upon which the RPC should be executed.
+--   			This effectively allows to have different branches of the scene tree to be managed by different MultiplayerAPI, allowing for example to run both client and server in the same scene.
+get_root_node ::
+                (MultiplayerAPI :< cls, Object :< cls) => cls -> IO Node
+get_root_node cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindMultiplayerAPI_get_root_node
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod MultiplayerAPI "get_root_node" '[] (IO Node)
+         where
+        nodeMethod = Godot.Core.MultiplayerAPI.get_root_node
 
 {-# NOINLINE bindMultiplayerAPI_get_rpc_sender_id #-}
 
@@ -416,7 +475,10 @@ get_rpc_sender_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "get_rpc_sender_id" '[] (IO Int)
          where
@@ -444,7 +506,10 @@ has_network_peer cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "has_network_peer" '[] (IO Bool)
          where
@@ -472,7 +537,10 @@ is_network_server cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "is_network_server" '[]
            (IO Bool)
@@ -504,7 +572,10 @@ is_object_decoding_allowed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "is_object_decoding_allowed" '[]
            (IO Bool)
@@ -536,7 +607,10 @@ is_refusing_new_network_connections cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI
            "is_refusing_new_network_connections"
@@ -567,7 +641,10 @@ poll cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMultiplayerAPI_poll (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "poll" '[] (IO ()) where
         nodeMethod = Godot.Core.MultiplayerAPI.poll
@@ -596,7 +673,10 @@ send_bytes cls arg1 arg2 arg3
          godot_method_bind_call bindMultiplayerAPI_send_bytes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "send_bytes"
            '[PoolByteArray, Maybe Int, Maybe Int]
@@ -628,7 +708,10 @@ set_allow_object_decoding cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "set_allow_object_decoding"
            '[Bool]
@@ -659,7 +742,10 @@ set_network_peer cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "set_network_peer"
            '[NetworkedMultiplayerPeer]
@@ -691,7 +777,10 @@ set_refuse_new_network_connections cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI
            "set_refuse_new_network_connections"
@@ -703,8 +792,8 @@ instance NodeMethod MultiplayerAPI
 
 {-# NOINLINE bindMultiplayerAPI_set_root_node #-}
 
--- | Sets the base root node to use for RPCs. Instead of an absolute path, a relative path will be used to find the node upon which the RPC should be executed.
---   				This effectively allows to have different branches of the scene tree to be managed by different MultiplayerAPI, allowing for example to run both client and server in the same scene.
+-- | The root node to use for RPCs. Instead of an absolute path, a relative path will be used to find the node upon which the RPC should be executed.
+--   			This effectively allows to have different branches of the scene tree to be managed by different MultiplayerAPI, allowing for example to run both client and server in the same scene.
 bindMultiplayerAPI_set_root_node :: MethodBind
 bindMultiplayerAPI_set_root_node
   = unsafePerformIO $
@@ -714,8 +803,8 @@ bindMultiplayerAPI_set_root_node
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the base root node to use for RPCs. Instead of an absolute path, a relative path will be used to find the node upon which the RPC should be executed.
---   				This effectively allows to have different branches of the scene tree to be managed by different MultiplayerAPI, allowing for example to run both client and server in the same scene.
+-- | The root node to use for RPCs. Instead of an absolute path, a relative path will be used to find the node upon which the RPC should be executed.
+--   			This effectively allows to have different branches of the scene tree to be managed by different MultiplayerAPI, allowing for example to run both client and server in the same scene.
 set_root_node ::
                 (MultiplayerAPI :< cls, Object :< cls) => cls -> Node -> IO ()
 set_root_node cls arg1
@@ -725,7 +814,10 @@ set_root_node cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiplayerAPI "set_root_node" '[Node] (IO ())
          where

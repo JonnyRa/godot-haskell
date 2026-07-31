@@ -170,7 +170,10 @@ get_expand_margin_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "get_expand_margin_size" '[Int]
            (IO Float)
@@ -199,7 +202,10 @@ get_h_axis_stretch_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "get_h_axis_stretch_mode" '[]
            (IO Int)
@@ -228,7 +234,10 @@ get_margin_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "get_margin_size" '[Int]
            (IO Float)
@@ -257,7 +266,10 @@ get_modulate cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "get_modulate" '[] (IO Color)
          where
@@ -287,7 +299,7 @@ get_normal_map cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod StyleBoxTexture "get_normal_map" '[]
            (IO Texture)
@@ -318,7 +330,10 @@ get_region_rect cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "get_region_rect" '[]
            (IO Rect2)
@@ -346,7 +361,7 @@ get_texture cls
          godot_method_bind_call bindStyleBoxTexture_get_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod StyleBoxTexture "get_texture" '[] (IO Texture)
          where
@@ -374,7 +389,10 @@ get_v_axis_stretch_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "get_v_axis_stretch_mode" '[]
            (IO Int)
@@ -403,7 +421,10 @@ is_draw_center_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "is_draw_center_enabled" '[]
            (IO Bool)
@@ -432,7 +453,10 @@ set_draw_center cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_draw_center" '[Bool]
            (IO ())
@@ -461,7 +485,10 @@ set_expand_margin_all cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_expand_margin_all"
            '[Float]
@@ -494,7 +521,10 @@ set_expand_margin_individual cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_expand_margin_individual"
            '[Float, Float, Float, Float]
@@ -526,7 +556,10 @@ set_expand_margin_size cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_expand_margin_size"
            '[Int, Float]
@@ -556,7 +589,10 @@ set_h_axis_stretch_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_h_axis_stretch_mode"
            '[Int]
@@ -587,7 +623,10 @@ set_margin_size cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_margin_size" '[Int, Float]
            (IO ())
@@ -616,7 +655,10 @@ set_modulate cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_modulate" '[Color] (IO ())
          where
@@ -646,7 +688,10 @@ set_normal_map cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_normal_map" '[Texture]
            (IO ())
@@ -677,7 +722,10 @@ set_region_rect cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_region_rect" '[Rect2]
            (IO ())
@@ -705,7 +753,10 @@ set_texture cls arg1
          godot_method_bind_call bindStyleBoxTexture_set_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_texture" '[Texture]
            (IO ())
@@ -734,7 +785,10 @@ set_v_axis_stretch_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxTexture "set_v_axis_stretch_mode"
            '[Int]

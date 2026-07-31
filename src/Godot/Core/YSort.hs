@@ -41,7 +41,10 @@ is_sort_enabled cls
          godot_method_bind_call bindYSort_is_sort_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod YSort "is_sort_enabled" '[] (IO Bool) where
         nodeMethod = Godot.Core.YSort.is_sort_enabled
@@ -67,7 +70,10 @@ set_sort_enabled cls arg1
          godot_method_bind_call bindYSort_set_sort_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod YSort "set_sort_enabled" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.YSort.set_sort_enabled

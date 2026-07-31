@@ -40,7 +40,10 @@ _is_dictionary cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PackedDataContainerRef "_is_dictionary" '[]
            (IO Bool)
@@ -68,7 +71,7 @@ _iter_get cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod PackedDataContainerRef "_iter_get"
            '[GodotVariant]
@@ -97,7 +100,7 @@ _iter_init cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod PackedDataContainerRef "_iter_init" '[Array]
            (IO GodotVariant)
@@ -125,7 +128,7 @@ _iter_next cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod PackedDataContainerRef "_iter_next" '[Array]
            (IO GodotVariant)
@@ -151,7 +154,10 @@ size cls
          godot_method_bind_call bindPackedDataContainerRef_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PackedDataContainerRef "size" '[] (IO Int)
          where

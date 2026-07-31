@@ -47,6 +47,8 @@ module Godot.Tools.EditorPlugin
         Godot.Tools.EditorPlugin.forward_canvas_draw_over_viewport,
         Godot.Tools.EditorPlugin.forward_canvas_force_draw_over_viewport,
         Godot.Tools.EditorPlugin.forward_canvas_gui_input,
+        Godot.Tools.EditorPlugin.forward_spatial_draw_over_viewport,
+        Godot.Tools.EditorPlugin.forward_spatial_force_draw_over_viewport,
         Godot.Tools.EditorPlugin.forward_spatial_gui_input,
         Godot.Tools.EditorPlugin.get_breakpoints,
         Godot.Tools.EditorPlugin.get_editor_interface,
@@ -205,7 +207,10 @@ add_autoload_singleton cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_autoload_singleton"
            '[GodotString, GodotString]
@@ -236,7 +241,7 @@ add_control_to_bottom_panel cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorPlugin "add_control_to_bottom_panel"
            '[Control, GodotString]
@@ -271,7 +276,10 @@ add_control_to_container cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_control_to_container"
            '[Int, Control]
@@ -306,7 +314,10 @@ add_control_to_dock cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_control_to_dock"
            '[Int, Control]
@@ -344,7 +355,10 @@ add_custom_type cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_custom_type"
            '[GodotString, GodotString, Script, Texture]
@@ -354,6 +368,8 @@ instance NodeMethod EditorPlugin "add_custom_type"
 
 {-# NOINLINE bindEditorPlugin_add_export_plugin #-}
 
+-- | Registers a new @EditorExportPlugin@. Export plugins are used to perform tasks when the project is being exported.
+--   				See @method add_inspector_plugin@ for an example of how to register a plugin.
 bindEditorPlugin_add_export_plugin :: MethodBind
 bindEditorPlugin_add_export_plugin
   = unsafePerformIO $
@@ -363,6 +379,8 @@ bindEditorPlugin_add_export_plugin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Registers a new @EditorExportPlugin@. Export plugins are used to perform tasks when the project is being exported.
+--   				See @method add_inspector_plugin@ for an example of how to register a plugin.
 add_export_plugin ::
                     (EditorPlugin :< cls, Object :< cls) =>
                     cls -> EditorExportPlugin -> IO ()
@@ -373,7 +391,10 @@ add_export_plugin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_export_plugin"
            '[EditorExportPlugin]
@@ -383,6 +404,9 @@ instance NodeMethod EditorPlugin "add_export_plugin"
 
 {-# NOINLINE bindEditorPlugin_add_import_plugin #-}
 
+-- | Registers a new @EditorImportPlugin@. Import plugins are used to import custom and unsupported assets as a custom @Resource@ type.
+--   				__Note:__ If you want to import custom 3D asset formats use @method add_scene_import_plugin@ instead.
+--   				See @method add_inspector_plugin@ for an example of how to register a plugin.
 bindEditorPlugin_add_import_plugin :: MethodBind
 bindEditorPlugin_add_import_plugin
   = unsafePerformIO $
@@ -392,6 +416,9 @@ bindEditorPlugin_add_import_plugin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Registers a new @EditorImportPlugin@. Import plugins are used to import custom and unsupported assets as a custom @Resource@ type.
+--   				__Note:__ If you want to import custom 3D asset formats use @method add_scene_import_plugin@ instead.
+--   				See @method add_inspector_plugin@ for an example of how to register a plugin.
 add_import_plugin ::
                     (EditorPlugin :< cls, Object :< cls) =>
                     cls -> EditorImportPlugin -> IO ()
@@ -402,7 +429,10 @@ add_import_plugin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_import_plugin"
            '[EditorImportPlugin]
@@ -412,6 +442,21 @@ instance NodeMethod EditorPlugin "add_import_plugin"
 
 {-# NOINLINE bindEditorPlugin_add_inspector_plugin #-}
 
+-- | Registers a new @EditorInspectorPlugin@. Inspector plugins are used to extend @EditorInspector@ and provide custom configuration tools for your object's properties.
+--   				__Note:__ Always use @method remove_inspector_plugin@ to remove the registered @EditorInspectorPlugin@ when your @EditorPlugin@ is disabled to prevent leaks and an unexpected behavior.
+--   				
+--   @
+--   
+--   				const MyInspectorPlugin = preload("res://addons/your_addon/path/to/your/script.gd")
+--   				var inspector_plugin = MyInspectorPlugin.new()
+--   
+--   				func _enter_tree():
+--   				    add_inspector_plugin(inspector_plugin)
+--   
+--   				func _exit_tree():
+--   				    remove_inspector_plugin(inspector_plugin)
+--   				
+--   @
 bindEditorPlugin_add_inspector_plugin :: MethodBind
 bindEditorPlugin_add_inspector_plugin
   = unsafePerformIO $
@@ -421,6 +466,21 @@ bindEditorPlugin_add_inspector_plugin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Registers a new @EditorInspectorPlugin@. Inspector plugins are used to extend @EditorInspector@ and provide custom configuration tools for your object's properties.
+--   				__Note:__ Always use @method remove_inspector_plugin@ to remove the registered @EditorInspectorPlugin@ when your @EditorPlugin@ is disabled to prevent leaks and an unexpected behavior.
+--   				
+--   @
+--   
+--   				const MyInspectorPlugin = preload("res://addons/your_addon/path/to/your/script.gd")
+--   				var inspector_plugin = MyInspectorPlugin.new()
+--   
+--   				func _enter_tree():
+--   				    add_inspector_plugin(inspector_plugin)
+--   
+--   				func _exit_tree():
+--   				    remove_inspector_plugin(inspector_plugin)
+--   				
+--   @
 add_inspector_plugin ::
                        (EditorPlugin :< cls, Object :< cls) =>
                        cls -> EditorInspectorPlugin -> IO ()
@@ -431,7 +491,10 @@ add_inspector_plugin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_inspector_plugin"
            '[EditorInspectorPlugin]
@@ -441,6 +504,7 @@ instance NodeMethod EditorPlugin "add_inspector_plugin"
 
 {-# NOINLINE bindEditorPlugin_add_scene_import_plugin #-}
 
+-- | Registers a new @EditorSceneImporter@. Scene importers are used to import custom 3D asset formats as scenes.
 bindEditorPlugin_add_scene_import_plugin :: MethodBind
 bindEditorPlugin_add_scene_import_plugin
   = unsafePerformIO $
@@ -450,6 +514,7 @@ bindEditorPlugin_add_scene_import_plugin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Registers a new @EditorSceneImporter@. Scene importers are used to import custom 3D asset formats as scenes.
 add_scene_import_plugin ::
                           (EditorPlugin :< cls, Object :< cls) =>
                           cls -> EditorSceneImporter -> IO ()
@@ -460,7 +525,10 @@ add_scene_import_plugin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_scene_import_plugin"
            '[EditorSceneImporter]
@@ -470,6 +538,8 @@ instance NodeMethod EditorPlugin "add_scene_import_plugin"
 
 {-# NOINLINE bindEditorPlugin_add_spatial_gizmo_plugin #-}
 
+-- | Registers a new @EditorSpatialGizmoPlugin@. Gizmo plugins are used to add custom gizmos to the 3D preview viewport for a @Spatial@.
+--   				See @method add_inspector_plugin@ for an example of how to register a plugin.
 bindEditorPlugin_add_spatial_gizmo_plugin :: MethodBind
 bindEditorPlugin_add_spatial_gizmo_plugin
   = unsafePerformIO $
@@ -479,6 +549,8 @@ bindEditorPlugin_add_spatial_gizmo_plugin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Registers a new @EditorSpatialGizmoPlugin@. Gizmo plugins are used to add custom gizmos to the 3D preview viewport for a @Spatial@.
+--   				See @method add_inspector_plugin@ for an example of how to register a plugin.
 add_spatial_gizmo_plugin ::
                            (EditorPlugin :< cls, Object :< cls) =>
                            cls -> EditorSpatialGizmoPlugin -> IO ()
@@ -489,7 +561,10 @@ add_spatial_gizmo_plugin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_spatial_gizmo_plugin"
            '[EditorSpatialGizmoPlugin]
@@ -523,7 +598,10 @@ add_tool_menu_item cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_tool_menu_item"
            '[GodotString, Object, GodotString, Maybe GodotVariant]
@@ -554,7 +632,10 @@ add_tool_submenu_item cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "add_tool_submenu_item"
            '[GodotString, Object]
@@ -585,13 +666,18 @@ apply_changes cls
          godot_method_bind_call bindEditorPlugin_apply_changes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "apply_changes" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorPlugin.apply_changes
 
 {-# NOINLINE bindEditorPlugin_build #-}
 
+-- | This method is called when the editor is about to run the project. The plugin can then perform required operations before the project runs.
+--   				This method must return a boolean. If this method returns @false@, the project will not run. The run is aborted immediately, so this also prevents all other plugins' @method build@ methods from running.
 bindEditorPlugin_build :: MethodBind
 bindEditorPlugin_build
   = unsafePerformIO $
@@ -601,13 +687,18 @@ bindEditorPlugin_build
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | This method is called when the editor is about to run the project. The plugin can then perform required operations before the project runs.
+--   				This method must return a boolean. If this method returns @false@, the project will not run. The run is aborted immediately, so this also prevents all other plugins' @method build@ methods from running.
 build :: (EditorPlugin :< cls, Object :< cls) => cls -> IO Bool
 build cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindEditorPlugin_build (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "build" '[] (IO Bool) where
         nodeMethod = Godot.Tools.EditorPlugin.build
@@ -631,7 +722,10 @@ clear cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindEditorPlugin_clear (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "clear" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorPlugin.clear
@@ -657,7 +751,10 @@ disable_plugin cls
          godot_method_bind_call bindEditorPlugin_disable_plugin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "disable_plugin" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorPlugin.disable_plugin
@@ -682,7 +779,10 @@ edit cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindEditorPlugin_edit (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "edit" '[Object] (IO ()) where
         nodeMethod = Godot.Tools.EditorPlugin.edit
@@ -708,13 +808,32 @@ enable_plugin cls
          godot_method_bind_call bindEditorPlugin_enable_plugin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "enable_plugin" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorPlugin.enable_plugin
 
 {-# NOINLINE bindEditorPlugin_forward_canvas_draw_over_viewport #-}
 
+-- | Called by the engine when the 2D editor's viewport is updated. Use the @overlay@ @Control@ for drawing. You can update the viewport manually by calling @method update_overlays@.
+--   				
+--   @
+--   
+--   				func forward_canvas_draw_over_viewport(overlay):
+--   				    # Draw a circle at cursor position.
+--   				    overlay.draw_circle(overlay.get_local_mouse_position(), 64, Color.white)
+--   
+--   				func forward_canvas_gui_input(event):
+--   				    if event is InputEventMouseMotion:
+--   				        # Redraw viewport when cursor is moved.
+--   				        update_overlays()
+--   				        return true
+--   				    return false
+--   				
+--   @
 bindEditorPlugin_forward_canvas_draw_over_viewport :: MethodBind
 bindEditorPlugin_forward_canvas_draw_over_viewport
   = unsafePerformIO $
@@ -724,6 +843,22 @@ bindEditorPlugin_forward_canvas_draw_over_viewport
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Called by the engine when the 2D editor's viewport is updated. Use the @overlay@ @Control@ for drawing. You can update the viewport manually by calling @method update_overlays@.
+--   				
+--   @
+--   
+--   				func forward_canvas_draw_over_viewport(overlay):
+--   				    # Draw a circle at cursor position.
+--   				    overlay.draw_circle(overlay.get_local_mouse_position(), 64, Color.white)
+--   
+--   				func forward_canvas_gui_input(event):
+--   				    if event is InputEventMouseMotion:
+--   				        # Redraw viewport when cursor is moved.
+--   				        update_overlays()
+--   				        return true
+--   				    return false
+--   				
+--   @
 forward_canvas_draw_over_viewport ::
                                     (EditorPlugin :< cls, Object :< cls) => cls -> Control -> IO ()
 forward_canvas_draw_over_viewport cls arg1
@@ -734,7 +869,10 @@ forward_canvas_draw_over_viewport cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin
            "forward_canvas_draw_over_viewport"
@@ -747,6 +885,8 @@ instance NodeMethod EditorPlugin
 {-# NOINLINE bindEditorPlugin_forward_canvas_force_draw_over_viewport
              #-}
 
+-- | This method is the same as @method forward_canvas_draw_over_viewport@, except it draws on top of everything. Useful when you need an extra layer that shows over anything else.
+--   				You need to enable calling of this method by using @method set_force_draw_over_forwarding_enabled@.
 bindEditorPlugin_forward_canvas_force_draw_over_viewport ::
                                                          MethodBind
 bindEditorPlugin_forward_canvas_force_draw_over_viewport
@@ -757,6 +897,8 @@ bindEditorPlugin_forward_canvas_force_draw_over_viewport
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | This method is the same as @method forward_canvas_draw_over_viewport@, except it draws on top of everything. Useful when you need an extra layer that shows over anything else.
+--   				You need to enable calling of this method by using @method set_force_draw_over_forwarding_enabled@.
 forward_canvas_force_draw_over_viewport ::
                                           (EditorPlugin :< cls, Object :< cls) =>
                                           cls -> Control -> IO ()
@@ -768,7 +910,10 @@ forward_canvas_force_draw_over_viewport cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin
            "forward_canvas_force_draw_over_viewport"
@@ -845,13 +990,124 @@ forward_canvas_gui_input cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "forward_canvas_gui_input"
            '[InputEvent]
            (IO Bool)
          where
         nodeMethod = Godot.Tools.EditorPlugin.forward_canvas_gui_input
+
+{-# NOINLINE bindEditorPlugin_forward_spatial_draw_over_viewport
+             #-}
+
+-- | Called by the engine when the 3D editor's viewport is updated. Use the @overlay@ @Control@ for drawing. You can update the viewport manually by calling @method update_overlays@.
+--   				
+--   @
+--   
+--   				func forward_spatial_draw_over_viewport(overlay):
+--   				    # Draw a circle at cursor position.
+--   				    overlay.draw_circle(overlay.get_local_mouse_position(), 64)
+--   
+--   				func forward_spatial_gui_input(camera, event):
+--   				    if event is InputEventMouseMotion:
+--   				        # Redraw viewport when cursor is moved.
+--   				        update_overlays()
+--   				        return true
+--   				    return false
+--   				
+--   @
+bindEditorPlugin_forward_spatial_draw_over_viewport :: MethodBind
+bindEditorPlugin_forward_spatial_draw_over_viewport
+  = unsafePerformIO $
+      withCString "EditorPlugin" $
+        \ clsNamePtr ->
+          withCString "forward_spatial_draw_over_viewport" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Called by the engine when the 3D editor's viewport is updated. Use the @overlay@ @Control@ for drawing. You can update the viewport manually by calling @method update_overlays@.
+--   				
+--   @
+--   
+--   				func forward_spatial_draw_over_viewport(overlay):
+--   				    # Draw a circle at cursor position.
+--   				    overlay.draw_circle(overlay.get_local_mouse_position(), 64)
+--   
+--   				func forward_spatial_gui_input(camera, event):
+--   				    if event is InputEventMouseMotion:
+--   				        # Redraw viewport when cursor is moved.
+--   				        update_overlays()
+--   				        return true
+--   				    return false
+--   				
+--   @
+forward_spatial_draw_over_viewport ::
+                                     (EditorPlugin :< cls, Object :< cls) => cls -> Control -> IO ()
+forward_spatial_draw_over_viewport cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindEditorPlugin_forward_spatial_draw_over_viewport
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorPlugin
+           "forward_spatial_draw_over_viewport"
+           '[Control]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Tools.EditorPlugin.forward_spatial_draw_over_viewport
+
+{-# NOINLINE bindEditorPlugin_forward_spatial_force_draw_over_viewport
+             #-}
+
+-- | This method is the same as @method forward_spatial_draw_over_viewport@, except it draws on top of everything. Useful when you need an extra layer that shows over anything else.
+--   				You need to enable calling of this method by using @method set_force_draw_over_forwarding_enabled@.
+bindEditorPlugin_forward_spatial_force_draw_over_viewport ::
+                                                          MethodBind
+bindEditorPlugin_forward_spatial_force_draw_over_viewport
+  = unsafePerformIO $
+      withCString "EditorPlugin" $
+        \ clsNamePtr ->
+          withCString "forward_spatial_force_draw_over_viewport" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | This method is the same as @method forward_spatial_draw_over_viewport@, except it draws on top of everything. Useful when you need an extra layer that shows over anything else.
+--   				You need to enable calling of this method by using @method set_force_draw_over_forwarding_enabled@.
+forward_spatial_force_draw_over_viewport ::
+                                           (EditorPlugin :< cls, Object :< cls) =>
+                                           cls -> Control -> IO ()
+forward_spatial_force_draw_over_viewport cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindEditorPlugin_forward_spatial_force_draw_over_viewport
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorPlugin
+           "forward_spatial_force_draw_over_viewport"
+           '[Control]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Tools.EditorPlugin.forward_spatial_force_draw_over_viewport
 
 {-# NOINLINE bindEditorPlugin_forward_spatial_gui_input #-}
 
@@ -920,7 +1176,10 @@ forward_spatial_gui_input cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "forward_spatial_gui_input"
            '[Camera, InputEvent]
@@ -950,7 +1209,10 @@ get_breakpoints cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "get_breakpoints" '[]
            (IO PoolStringArray)
@@ -979,7 +1241,7 @@ get_editor_interface cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorPlugin "get_editor_interface" '[]
            (IO EditorInterface)
@@ -1024,7 +1286,7 @@ bindEditorPlugin_get_plugin_icon
 --   				
 --   @
 get_plugin_icon ::
-                  (EditorPlugin :< cls, Object :< cls) => cls -> IO Object
+                  (EditorPlugin :< cls, Object :< cls) => cls -> IO Texture
 get_plugin_icon cls
   = withVariantArray []
       (\ (arrPtr, len) ->
@@ -1032,9 +1294,9 @@ get_plugin_icon cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
-instance NodeMethod EditorPlugin "get_plugin_icon" '[] (IO Object)
+instance NodeMethod EditorPlugin "get_plugin_icon" '[] (IO Texture)
          where
         nodeMethod = Godot.Tools.EditorPlugin.get_plugin_icon
 
@@ -1062,7 +1324,10 @@ get_plugin_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "get_plugin_name" '[]
            (IO GodotString)
@@ -1073,6 +1338,7 @@ instance NodeMethod EditorPlugin "get_plugin_name" '[]
 
 -- | Gets the Editor's dialogue used for making scripts.
 --   				__Note:__ Users can configure it before use.
+--   				__Warning:__ Removing and freeing this node will render a part of the editor useless and may cause a crash.
 bindEditorPlugin_get_script_create_dialog :: MethodBind
 bindEditorPlugin_get_script_create_dialog
   = unsafePerformIO $
@@ -1084,6 +1350,7 @@ bindEditorPlugin_get_script_create_dialog
 
 -- | Gets the Editor's dialogue used for making scripts.
 --   				__Note:__ Users can configure it before use.
+--   				__Warning:__ Removing and freeing this node will render a part of the editor useless and may cause a crash.
 get_script_create_dialog ::
                            (EditorPlugin :< cls, Object :< cls) =>
                            cls -> IO ScriptCreateDialog
@@ -1094,7 +1361,7 @@ get_script_create_dialog cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorPlugin "get_script_create_dialog" '[]
            (IO ScriptCreateDialog)
@@ -1122,7 +1389,10 @@ get_state cls
          godot_method_bind_call bindEditorPlugin_get_state (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "get_state" '[] (IO Dictionary)
          where
@@ -1149,7 +1419,7 @@ get_undo_redo cls
          godot_method_bind_call bindEditorPlugin_get_undo_redo (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorPlugin "get_undo_redo" '[] (IO UndoRedo)
          where
@@ -1177,7 +1447,10 @@ get_window_layout cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "get_window_layout" '[ConfigFile]
            (IO ())
@@ -1204,7 +1477,10 @@ handles cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindEditorPlugin_handles (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "handles" '[Object] (IO Bool)
          where
@@ -1232,7 +1508,10 @@ has_main_screen cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "has_main_screen" '[] (IO Bool)
          where
@@ -1240,6 +1519,7 @@ instance NodeMethod EditorPlugin "has_main_screen" '[] (IO Bool)
 
 {-# NOINLINE bindEditorPlugin_hide_bottom_panel #-}
 
+-- | Minimizes the bottom panel.
 bindEditorPlugin_hide_bottom_panel :: MethodBind
 bindEditorPlugin_hide_bottom_panel
   = unsafePerformIO $
@@ -1249,6 +1529,7 @@ bindEditorPlugin_hide_bottom_panel
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Minimizes the bottom panel.
 hide_bottom_panel ::
                     (EditorPlugin :< cls, Object :< cls) => cls -> IO ()
 hide_bottom_panel cls
@@ -1258,7 +1539,10 @@ hide_bottom_panel cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "hide_bottom_panel" '[] (IO ())
          where
@@ -1266,6 +1550,7 @@ instance NodeMethod EditorPlugin "hide_bottom_panel" '[] (IO ())
 
 {-# NOINLINE bindEditorPlugin_make_bottom_panel_item_visible #-}
 
+-- | Makes a specific item in the bottom panel visible.
 bindEditorPlugin_make_bottom_panel_item_visible :: MethodBind
 bindEditorPlugin_make_bottom_panel_item_visible
   = unsafePerformIO $
@@ -1275,6 +1560,7 @@ bindEditorPlugin_make_bottom_panel_item_visible
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Makes a specific item in the bottom panel visible.
 make_bottom_panel_item_visible ::
                                  (EditorPlugin :< cls, Object :< cls) => cls -> Control -> IO ()
 make_bottom_panel_item_visible cls arg1
@@ -1285,7 +1571,10 @@ make_bottom_panel_item_visible cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "make_bottom_panel_item_visible"
            '[Control]
@@ -1317,7 +1606,10 @@ make_visible cls arg1
          godot_method_bind_call bindEditorPlugin_make_visible (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "make_visible" '[Bool] (IO ())
          where
@@ -1345,7 +1637,10 @@ queue_save_layout cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "queue_save_layout" '[] (IO ())
          where
@@ -1373,7 +1668,10 @@ remove_autoload_singleton cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_autoload_singleton"
            '[GodotString]
@@ -1404,7 +1702,10 @@ remove_control_from_bottom_panel cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_control_from_bottom_panel"
            '[Control]
@@ -1437,7 +1738,10 @@ remove_control_from_container cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_control_from_container"
            '[Int, Control]
@@ -1467,7 +1771,10 @@ remove_control_from_docks cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_control_from_docks"
            '[Control]
@@ -1497,7 +1804,10 @@ remove_custom_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_custom_type"
            '[GodotString]
@@ -1507,6 +1817,7 @@ instance NodeMethod EditorPlugin "remove_custom_type"
 
 {-# NOINLINE bindEditorPlugin_remove_export_plugin #-}
 
+-- | Removes an export plugin registered by @method add_export_plugin@.
 bindEditorPlugin_remove_export_plugin :: MethodBind
 bindEditorPlugin_remove_export_plugin
   = unsafePerformIO $
@@ -1516,6 +1827,7 @@ bindEditorPlugin_remove_export_plugin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Removes an export plugin registered by @method add_export_plugin@.
 remove_export_plugin ::
                        (EditorPlugin :< cls, Object :< cls) =>
                        cls -> EditorExportPlugin -> IO ()
@@ -1526,7 +1838,10 @@ remove_export_plugin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_export_plugin"
            '[EditorExportPlugin]
@@ -1536,6 +1851,7 @@ instance NodeMethod EditorPlugin "remove_export_plugin"
 
 {-# NOINLINE bindEditorPlugin_remove_import_plugin #-}
 
+-- | Removes an import plugin registered by @method add_import_plugin@.
 bindEditorPlugin_remove_import_plugin :: MethodBind
 bindEditorPlugin_remove_import_plugin
   = unsafePerformIO $
@@ -1545,6 +1861,7 @@ bindEditorPlugin_remove_import_plugin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Removes an import plugin registered by @method add_import_plugin@.
 remove_import_plugin ::
                        (EditorPlugin :< cls, Object :< cls) =>
                        cls -> EditorImportPlugin -> IO ()
@@ -1555,7 +1872,10 @@ remove_import_plugin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_import_plugin"
            '[EditorImportPlugin]
@@ -1565,6 +1885,7 @@ instance NodeMethod EditorPlugin "remove_import_plugin"
 
 {-# NOINLINE bindEditorPlugin_remove_inspector_plugin #-}
 
+-- | Removes an inspector plugin registered by @method add_import_plugin@
 bindEditorPlugin_remove_inspector_plugin :: MethodBind
 bindEditorPlugin_remove_inspector_plugin
   = unsafePerformIO $
@@ -1574,6 +1895,7 @@ bindEditorPlugin_remove_inspector_plugin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Removes an inspector plugin registered by @method add_import_plugin@
 remove_inspector_plugin ::
                           (EditorPlugin :< cls, Object :< cls) =>
                           cls -> EditorInspectorPlugin -> IO ()
@@ -1584,7 +1906,10 @@ remove_inspector_plugin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_inspector_plugin"
            '[EditorInspectorPlugin]
@@ -1594,6 +1919,7 @@ instance NodeMethod EditorPlugin "remove_inspector_plugin"
 
 {-# NOINLINE bindEditorPlugin_remove_scene_import_plugin #-}
 
+-- | Removes a scene importer registered by @method add_scene_import_plugin@.
 bindEditorPlugin_remove_scene_import_plugin :: MethodBind
 bindEditorPlugin_remove_scene_import_plugin
   = unsafePerformIO $
@@ -1603,6 +1929,7 @@ bindEditorPlugin_remove_scene_import_plugin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Removes a scene importer registered by @method add_scene_import_plugin@.
 remove_scene_import_plugin ::
                              (EditorPlugin :< cls, Object :< cls) =>
                              cls -> EditorSceneImporter -> IO ()
@@ -1613,7 +1940,10 @@ remove_scene_import_plugin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_scene_import_plugin"
            '[EditorSceneImporter]
@@ -1623,6 +1953,7 @@ instance NodeMethod EditorPlugin "remove_scene_import_plugin"
 
 {-# NOINLINE bindEditorPlugin_remove_spatial_gizmo_plugin #-}
 
+-- | Removes a gizmo plugin registered by @method add_spatial_gizmo_plugin@.
 bindEditorPlugin_remove_spatial_gizmo_plugin :: MethodBind
 bindEditorPlugin_remove_spatial_gizmo_plugin
   = unsafePerformIO $
@@ -1632,6 +1963,7 @@ bindEditorPlugin_remove_spatial_gizmo_plugin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Removes a gizmo plugin registered by @method add_spatial_gizmo_plugin@.
 remove_spatial_gizmo_plugin ::
                               (EditorPlugin :< cls, Object :< cls) =>
                               cls -> EditorSpatialGizmoPlugin -> IO ()
@@ -1642,7 +1974,10 @@ remove_spatial_gizmo_plugin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_spatial_gizmo_plugin"
            '[EditorSpatialGizmoPlugin]
@@ -1672,7 +2007,10 @@ remove_tool_menu_item cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "remove_tool_menu_item"
            '[GodotString]
@@ -1702,7 +2040,10 @@ save_external_data cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "save_external_data" '[] (IO ())
          where
@@ -1711,6 +2052,7 @@ instance NodeMethod EditorPlugin "save_external_data" '[] (IO ())
 {-# NOINLINE bindEditorPlugin_set_force_draw_over_forwarding_enabled
              #-}
 
+-- | Enables calling of @method forward_canvas_force_draw_over_viewport@ for the 2D editor and @method forward_spatial_force_draw_over_viewport@ for the 3D editor when their viewports are updated. You need to call this method only once and it will work permanently for this plugin.
 bindEditorPlugin_set_force_draw_over_forwarding_enabled ::
                                                         MethodBind
 bindEditorPlugin_set_force_draw_over_forwarding_enabled
@@ -1721,6 +2063,7 @@ bindEditorPlugin_set_force_draw_over_forwarding_enabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Enables calling of @method forward_canvas_force_draw_over_viewport@ for the 2D editor and @method forward_spatial_force_draw_over_viewport@ for the 3D editor when their viewports are updated. You need to call this method only once and it will work permanently for this plugin.
 set_force_draw_over_forwarding_enabled ::
                                          (EditorPlugin :< cls, Object :< cls) => cls -> IO ()
 set_force_draw_over_forwarding_enabled cls
@@ -1731,7 +2074,10 @@ set_force_draw_over_forwarding_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin
            "set_force_draw_over_forwarding_enabled"
@@ -1766,7 +2112,10 @@ set_input_event_forwarding_always_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin
            "set_input_event_forwarding_always_enabled"
@@ -1797,7 +2146,10 @@ set_state cls arg1
          godot_method_bind_call bindEditorPlugin_set_state (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "set_state" '[Dictionary] (IO ())
          where
@@ -1825,7 +2177,10 @@ set_window_layout cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "set_window_layout" '[ConfigFile]
            (IO ())
@@ -1834,7 +2189,7 @@ instance NodeMethod EditorPlugin "set_window_layout" '[ConfigFile]
 
 {-# NOINLINE bindEditorPlugin_update_overlays #-}
 
--- | Updates the overlays of the editor (2D/3D) viewport.
+-- | Updates the overlays of the 2D and 3D editor viewport. Causes methods @method forward_canvas_draw_over_viewport@, @method forward_canvas_force_draw_over_viewport@, @method forward_spatial_draw_over_viewport@ and @method forward_spatial_force_draw_over_viewport@ to be called.
 bindEditorPlugin_update_overlays :: MethodBind
 bindEditorPlugin_update_overlays
   = unsafePerformIO $
@@ -1844,7 +2199,7 @@ bindEditorPlugin_update_overlays
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Updates the overlays of the editor (2D/3D) viewport.
+-- | Updates the overlays of the 2D and 3D editor viewport. Causes methods @method forward_canvas_draw_over_viewport@, @method forward_canvas_force_draw_over_viewport@, @method forward_spatial_draw_over_viewport@ and @method forward_spatial_force_draw_over_viewport@ to be called.
 update_overlays ::
                   (EditorPlugin :< cls, Object :< cls) => cls -> IO Int
 update_overlays cls
@@ -1854,7 +2209,10 @@ update_overlays cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorPlugin "update_overlays" '[] (IO Int)
          where

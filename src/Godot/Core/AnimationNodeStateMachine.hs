@@ -21,6 +21,7 @@ module Godot.Core.AnimationNodeStateMachine
         Godot.Core.AnimationNodeStateMachine.remove_transition,
         Godot.Core.AnimationNodeStateMachine.remove_transition_by_index,
         Godot.Core.AnimationNodeStateMachine.rename_node,
+        Godot.Core.AnimationNodeStateMachine.replace_node,
         Godot.Core.AnimationNodeStateMachine.set_end_node,
         Godot.Core.AnimationNodeStateMachine.set_graph_offset,
         Godot.Core.AnimationNodeStateMachine.set_node_position,
@@ -58,7 +59,10 @@ _tree_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "_tree_changed" '[]
            (IO ())
@@ -90,7 +94,10 @@ add_node cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "add_node"
            '[GodotString, AnimationNode, Maybe Vector2]
@@ -123,7 +130,10 @@ add_transition cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "add_transition"
            '[GodotString, GodotString, AnimationNodeStateMachineTransition]
@@ -154,7 +164,10 @@ get_end_node cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "get_end_node" '[]
            (IO GodotString)
@@ -185,7 +198,10 @@ get_graph_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "get_graph_offset"
            '[]
@@ -216,7 +232,7 @@ get_node cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AnimationNodeStateMachine "get_node"
            '[GodotString]
@@ -247,7 +263,10 @@ get_node_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "get_node_name"
            '[AnimationNode]
@@ -279,7 +298,10 @@ get_node_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "get_node_position"
            '[GodotString]
@@ -310,7 +332,10 @@ get_start_node cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "get_start_node" '[]
            (IO GodotString)
@@ -340,7 +365,7 @@ get_transition cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AnimationNodeStateMachine "get_transition"
            '[Int]
@@ -371,7 +396,10 @@ get_transition_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine
            "get_transition_count"
@@ -405,7 +433,10 @@ get_transition_from cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "get_transition_from"
            '[Int]
@@ -438,7 +469,10 @@ get_transition_to cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "get_transition_to"
            '[Int]
@@ -469,7 +503,10 @@ has_node cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "has_node"
            '[GodotString]
@@ -500,7 +537,10 @@ has_transition cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "has_transition"
            '[GodotString, GodotString]
@@ -531,7 +571,10 @@ remove_node cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "remove_node"
            '[GodotString]
@@ -563,7 +606,10 @@ remove_transition cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "remove_transition"
            '[GodotString, GodotString]
@@ -597,7 +643,10 @@ remove_transition_by_index cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine
            "remove_transition_by_index"
@@ -630,13 +679,50 @@ rename_node cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "rename_node"
            '[GodotString, GodotString]
            (IO ())
          where
         nodeMethod = Godot.Core.AnimationNodeStateMachine.rename_node
+
+{-# NOINLINE bindAnimationNodeStateMachine_replace_node #-}
+
+-- | Replaces the node and keeps its transitions unchanged.
+bindAnimationNodeStateMachine_replace_node :: MethodBind
+bindAnimationNodeStateMachine_replace_node
+  = unsafePerformIO $
+      withCString "AnimationNodeStateMachine" $
+        \ clsNamePtr ->
+          withCString "replace_node" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Replaces the node and keeps its transitions unchanged.
+replace_node ::
+               (AnimationNodeStateMachine :< cls, Object :< cls) =>
+               cls -> GodotString -> AnimationNode -> IO ()
+replace_node cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindAnimationNodeStateMachine_replace_node
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod AnimationNodeStateMachine "replace_node"
+           '[GodotString, AnimationNode]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.AnimationNodeStateMachine.replace_node
 
 {-# NOINLINE bindAnimationNodeStateMachine_set_end_node #-}
 
@@ -661,7 +747,10 @@ set_end_node cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "set_end_node"
            '[GodotString]
@@ -693,7 +782,10 @@ set_graph_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "set_graph_offset"
            '[Vector2]
@@ -725,7 +817,10 @@ set_node_position cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "set_node_position"
            '[GodotString, Vector2]
@@ -756,7 +851,10 @@ set_start_node cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachine "set_start_node"
            '[GodotString]

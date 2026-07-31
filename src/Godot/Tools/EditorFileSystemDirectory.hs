@@ -52,7 +52,10 @@ find_dir_index cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory "find_dir_index"
            '[GodotString]
@@ -84,7 +87,10 @@ find_file_index cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory "find_file_index"
            '[GodotString]
@@ -115,7 +121,10 @@ get_file cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory "get_file" '[Int]
            (IO GodotString)
@@ -144,7 +153,10 @@ get_file_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory "get_file_count" '[]
            (IO Int)
@@ -177,7 +189,10 @@ get_file_import_is_valid cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory
            "get_file_import_is_valid"
@@ -210,7 +225,10 @@ get_file_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory "get_file_path"
            '[Int]
@@ -244,7 +262,10 @@ get_file_script_class_extends cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory
            "get_file_script_class_extends"
@@ -280,7 +301,10 @@ get_file_script_class_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory
            "get_file_script_class_name"
@@ -292,7 +316,7 @@ instance NodeMethod EditorFileSystemDirectory
 
 {-# NOINLINE bindEditorFileSystemDirectory_get_file_type #-}
 
--- | Returns the file extension of the file at index @idx@.
+-- | Returns the resource type of the file at index @idx@. This returns a string such as @"Resource"@ or @"GDScript"@, @i@not@/i@ a file extension such as @".gd"@.
 bindEditorFileSystemDirectory_get_file_type :: MethodBind
 bindEditorFileSystemDirectory_get_file_type
   = unsafePerformIO $
@@ -302,7 +326,7 @@ bindEditorFileSystemDirectory_get_file_type
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the file extension of the file at index @idx@.
+-- | Returns the resource type of the file at index @idx@. This returns a string such as @"Resource"@ or @"GDScript"@, @i@not@/i@ a file extension such as @".gd"@.
 get_file_type ::
                 (EditorFileSystemDirectory :< cls, Object :< cls) =>
                 cls -> Int -> IO GodotString
@@ -313,7 +337,10 @@ get_file_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory "get_file_type"
            '[Int]
@@ -344,7 +371,10 @@ get_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory "get_name" '[]
            (IO GodotString)
@@ -374,7 +404,7 @@ get_parent cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorFileSystemDirectory "get_parent" '[]
            (IO EditorFileSystemDirectory)
@@ -404,7 +434,10 @@ get_path cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory "get_path" '[]
            (IO GodotString)
@@ -434,7 +467,7 @@ get_subdir cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorFileSystemDirectory "get_subdir" '[Int]
            (IO EditorFileSystemDirectory)
@@ -464,7 +497,10 @@ get_subdir_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileSystemDirectory "get_subdir_count"
            '[]

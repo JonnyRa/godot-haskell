@@ -162,7 +162,10 @@ _action_pressed cls
          godot_method_bind_call bindFileDialog__action_pressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_action_pressed" '[] (IO ()) where
         nodeMethod = Godot.Core.FileDialog._action_pressed
@@ -186,7 +189,10 @@ _cancel_pressed cls
          godot_method_bind_call bindFileDialog__cancel_pressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_cancel_pressed" '[] (IO ()) where
         nodeMethod = Godot.Core.FileDialog._cancel_pressed
@@ -210,7 +216,10 @@ _dir_entered cls arg1
          godot_method_bind_call bindFileDialog__dir_entered (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_dir_entered" '[GodotString]
            (IO ())
@@ -236,7 +245,10 @@ _file_entered cls arg1
          godot_method_bind_call bindFileDialog__file_entered (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_file_entered" '[GodotString]
            (IO ())
@@ -262,7 +274,10 @@ _filter_selected cls arg1
          godot_method_bind_call bindFileDialog__filter_selected (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_filter_selected" '[Int] (IO ())
          where
@@ -285,7 +300,10 @@ _go_up cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFileDialog__go_up (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_go_up" '[] (IO ()) where
         nodeMethod = Godot.Core.FileDialog._go_up
@@ -307,7 +325,10 @@ _make_dir cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFileDialog__make_dir (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_make_dir" '[] (IO ()) where
         nodeMethod = Godot.Core.FileDialog._make_dir
@@ -332,7 +353,10 @@ _make_dir_confirm cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_make_dir_confirm" '[] (IO ())
          where
@@ -358,7 +382,10 @@ _save_confirm_pressed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_save_confirm_pressed" '[] (IO ())
          where
@@ -383,7 +410,10 @@ _select_drive cls arg1
          godot_method_bind_call bindFileDialog__select_drive (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_select_drive" '[Int] (IO ()) where
         nodeMethod = Godot.Core.FileDialog._select_drive
@@ -408,7 +438,10 @@ _tree_item_activated cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_tree_item_activated" '[] (IO ())
          where
@@ -435,7 +468,10 @@ _tree_multi_selected cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_tree_multi_selected"
            '[Object, Int, Bool]
@@ -462,7 +498,10 @@ _tree_selected cls
          godot_method_bind_call bindFileDialog__tree_selected (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_tree_selected" '[] (IO ()) where
         nodeMethod = Godot.Core.FileDialog._tree_selected
@@ -486,7 +525,10 @@ _unhandled_input cls arg1
          godot_method_bind_call bindFileDialog__unhandled_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_unhandled_input" '[InputEvent]
            (IO ())
@@ -511,7 +553,10 @@ _update_dir cls
          godot_method_bind_call bindFileDialog__update_dir (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_update_dir" '[] (IO ()) where
         nodeMethod = Godot.Core.FileDialog._update_dir
@@ -536,7 +581,10 @@ _update_file_list cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_update_file_list" '[] (IO ())
          where
@@ -562,7 +610,10 @@ _update_file_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "_update_file_name" '[] (IO ())
          where
@@ -570,7 +621,9 @@ instance NodeMethod FileDialog "_update_file_name" '[] (IO ())
 
 {-# NOINLINE bindFileDialog_add_filter #-}
 
--- | Adds @filter@ as a custom filter; @filter@ should be of the form @"filename.extension ; Description"@. For example, @"*.png ; PNG Images"@.
+-- | Adds @filter@ to the list of filters, which restricts what files can be picked.
+--   				A @filter@ should be of the form @"filename.extension ; Description"@, where filename and extension can be @*@ to match any string. Filters starting with @.@ (i.e. empty filenames) are not allowed.
+--   				Example filters: @"*.png ; PNG Images"@, @"project.godot ; Godot Project"@.
 bindFileDialog_add_filter :: MethodBind
 bindFileDialog_add_filter
   = unsafePerformIO $
@@ -580,7 +633,9 @@ bindFileDialog_add_filter
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds @filter@ as a custom filter; @filter@ should be of the form @"filename.extension ; Description"@. For example, @"*.png ; PNG Images"@.
+-- | Adds @filter@ to the list of filters, which restricts what files can be picked.
+--   				A @filter@ should be of the form @"filename.extension ; Description"@, where filename and extension can be @*@ to match any string. Filters starting with @.@ (i.e. empty filenames) are not allowed.
+--   				Example filters: @"*.png ; PNG Images"@, @"project.godot ; Godot Project"@.
 add_filter ::
              (FileDialog :< cls, Object :< cls) => cls -> GodotString -> IO ()
 add_filter cls arg1
@@ -589,7 +644,10 @@ add_filter cls arg1
          godot_method_bind_call bindFileDialog_add_filter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "add_filter" '[GodotString] (IO ())
          where
@@ -615,7 +673,10 @@ clear_filters cls
          godot_method_bind_call bindFileDialog_clear_filters (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "clear_filters" '[] (IO ()) where
         nodeMethod = Godot.Core.FileDialog.clear_filters
@@ -641,7 +702,10 @@ deselect_items cls
          godot_method_bind_call bindFileDialog_deselect_items (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "deselect_items" '[] (IO ()) where
         nodeMethod = Godot.Core.FileDialog.deselect_items
@@ -668,7 +732,10 @@ get_access cls
          godot_method_bind_call bindFileDialog_get_access (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "get_access" '[] (IO Int) where
         nodeMethod = Godot.Core.FileDialog.get_access
@@ -694,7 +761,10 @@ get_current_dir cls
          godot_method_bind_call bindFileDialog_get_current_dir (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "get_current_dir" '[]
            (IO GodotString)
@@ -722,7 +792,10 @@ get_current_file cls
          godot_method_bind_call bindFileDialog_get_current_file (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "get_current_file" '[]
            (IO GodotString)
@@ -750,7 +823,10 @@ get_current_path cls
          godot_method_bind_call bindFileDialog_get_current_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "get_current_path" '[]
            (IO GodotString)
@@ -759,7 +835,7 @@ instance NodeMethod FileDialog "get_current_path" '[]
 
 {-# NOINLINE bindFileDialog_get_filters #-}
 
--- | The available file type filters. For example, this shows only @.png@ and @.gd@ files: @set_filters(PoolStringArray(@"*.png ; PNG Images","*.gd ; GDScript Files"@))@.
+-- | The available file type filters. For example, this shows only @.png@ and @.gd@ files: @set_filters(PoolStringArray(@"*.png ; PNG Images","*.gd ; GDScript Files"@))@. Multiple file types can also be specified in a single filter. @"*.png, *.jpg, *.jpeg ; Supported Images"@ will show both PNG and JPEG files when selected.
 bindFileDialog_get_filters :: MethodBind
 bindFileDialog_get_filters
   = unsafePerformIO $
@@ -769,7 +845,7 @@ bindFileDialog_get_filters
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The available file type filters. For example, this shows only @.png@ and @.gd@ files: @set_filters(PoolStringArray(@"*.png ; PNG Images","*.gd ; GDScript Files"@))@.
+-- | The available file type filters. For example, this shows only @.png@ and @.gd@ files: @set_filters(PoolStringArray(@"*.png ; PNG Images","*.gd ; GDScript Files"@))@. Multiple file types can also be specified in a single filter. @"*.png, *.jpg, *.jpeg ; Supported Images"@ will show both PNG and JPEG files when selected.
 get_filters ::
               (FileDialog :< cls, Object :< cls) => cls -> IO PoolStringArray
 get_filters cls
@@ -778,7 +854,10 @@ get_filters cls
          godot_method_bind_call bindFileDialog_get_filters (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "get_filters" '[]
            (IO PoolStringArray)
@@ -788,6 +867,7 @@ instance NodeMethod FileDialog "get_filters" '[]
 {-# NOINLINE bindFileDialog_get_line_edit #-}
 
 -- | Returns the LineEdit for the selected file.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindFileDialog_get_line_edit :: MethodBind
 bindFileDialog_get_line_edit
   = unsafePerformIO $
@@ -798,6 +878,7 @@ bindFileDialog_get_line_edit
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the LineEdit for the selected file.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_line_edit ::
                 (FileDialog :< cls, Object :< cls) => cls -> IO LineEdit
 get_line_edit cls
@@ -806,7 +887,7 @@ get_line_edit cls
          godot_method_bind_call bindFileDialog_get_line_edit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod FileDialog "get_line_edit" '[] (IO LineEdit)
          where
@@ -831,7 +912,10 @@ get_mode cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFileDialog_get_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "get_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.FileDialog.get_mode
@@ -839,6 +923,7 @@ instance NodeMethod FileDialog "get_mode" '[] (IO Int) where
 {-# NOINLINE bindFileDialog_get_vbox #-}
 
 -- | Returns the vertical box container of the dialog, custom controls can be added to it.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindFileDialog_get_vbox :: MethodBind
 bindFileDialog_get_vbox
   = unsafePerformIO $
@@ -849,6 +934,7 @@ bindFileDialog_get_vbox
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the vertical box container of the dialog, custom controls can be added to it.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_vbox ::
            (FileDialog :< cls, Object :< cls) => cls -> IO VBoxContainer
 get_vbox cls
@@ -856,7 +942,7 @@ get_vbox cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFileDialog_get_vbox (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod FileDialog "get_vbox" '[] (IO VBoxContainer)
          where
@@ -882,7 +968,10 @@ invalidate cls
          godot_method_bind_call bindFileDialog_invalidate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "invalidate" '[] (IO ()) where
         nodeMethod = Godot.Core.FileDialog.invalidate
@@ -909,7 +998,10 @@ is_mode_overriding_title cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "is_mode_overriding_title" '[]
            (IO Bool)
@@ -938,7 +1030,10 @@ is_showing_hidden_files cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "is_showing_hidden_files" '[]
            (IO Bool)
@@ -968,7 +1063,10 @@ set_access cls arg1
          godot_method_bind_call bindFileDialog_set_access (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "set_access" '[Int] (IO ()) where
         nodeMethod = Godot.Core.FileDialog.set_access
@@ -994,7 +1092,10 @@ set_current_dir cls arg1
          godot_method_bind_call bindFileDialog_set_current_dir (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "set_current_dir" '[GodotString]
            (IO ())
@@ -1022,7 +1123,10 @@ set_current_file cls arg1
          godot_method_bind_call bindFileDialog_set_current_file (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "set_current_file" '[GodotString]
            (IO ())
@@ -1050,7 +1154,10 @@ set_current_path cls arg1
          godot_method_bind_call bindFileDialog_set_current_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "set_current_path" '[GodotString]
            (IO ())
@@ -1059,7 +1166,7 @@ instance NodeMethod FileDialog "set_current_path" '[GodotString]
 
 {-# NOINLINE bindFileDialog_set_filters #-}
 
--- | The available file type filters. For example, this shows only @.png@ and @.gd@ files: @set_filters(PoolStringArray(@"*.png ; PNG Images","*.gd ; GDScript Files"@))@.
+-- | The available file type filters. For example, this shows only @.png@ and @.gd@ files: @set_filters(PoolStringArray(@"*.png ; PNG Images","*.gd ; GDScript Files"@))@. Multiple file types can also be specified in a single filter. @"*.png, *.jpg, *.jpeg ; Supported Images"@ will show both PNG and JPEG files when selected.
 bindFileDialog_set_filters :: MethodBind
 bindFileDialog_set_filters
   = unsafePerformIO $
@@ -1069,7 +1176,7 @@ bindFileDialog_set_filters
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The available file type filters. For example, this shows only @.png@ and @.gd@ files: @set_filters(PoolStringArray(@"*.png ; PNG Images","*.gd ; GDScript Files"@))@.
+-- | The available file type filters. For example, this shows only @.png@ and @.gd@ files: @set_filters(PoolStringArray(@"*.png ; PNG Images","*.gd ; GDScript Files"@))@. Multiple file types can also be specified in a single filter. @"*.png, *.jpg, *.jpeg ; Supported Images"@ will show both PNG and JPEG files when selected.
 set_filters ::
               (FileDialog :< cls, Object :< cls) =>
               cls -> PoolStringArray -> IO ()
@@ -1079,7 +1186,10 @@ set_filters cls arg1
          godot_method_bind_call bindFileDialog_set_filters (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "set_filters" '[PoolStringArray]
            (IO ())
@@ -1106,7 +1216,10 @@ set_mode cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFileDialog_set_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "set_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.FileDialog.set_mode
@@ -1133,7 +1246,10 @@ set_mode_overrides_title cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "set_mode_overrides_title" '[Bool]
            (IO ())
@@ -1162,7 +1278,10 @@ set_show_hidden_files cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod FileDialog "set_show_hidden_files" '[Bool]
            (IO ())

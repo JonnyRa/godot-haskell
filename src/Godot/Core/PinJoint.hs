@@ -64,7 +64,10 @@ get_param cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPinJoint_get_param (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PinJoint "get_param" '[Int] (IO Float) where
         nodeMethod = Godot.Core.PinJoint.get_param
@@ -89,7 +92,10 @@ set_param cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPinJoint_set_param (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PinJoint "set_param" '[Int, Float] (IO ())
          where

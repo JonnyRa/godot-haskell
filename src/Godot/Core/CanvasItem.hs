@@ -149,7 +149,7 @@ sig_hide = Godot.Internal.Dispatch.Signal "hide"
 
 instance NodeSignal CanvasItem "hide" '[]
 
--- | Emitted when the item rect has changed.
+-- | Emitted when the item's @Rect2@ boundaries (position or size) have changed, or when an action is taking place that may have impacted these boundaries (e.g. changing @Sprite.texture@).
 sig_item_rect_changed :: Godot.Internal.Dispatch.Signal CanvasItem
 sig_item_rect_changed
   = Godot.Internal.Dispatch.Signal "item_rect_changed"
@@ -218,7 +218,10 @@ _draw cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCanvasItem__draw (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_draw" '[] (IO ()) where
         nodeMethod = Godot.Core.CanvasItem._draw
@@ -242,7 +245,10 @@ _edit_get_pivot cls
          godot_method_bind_call bindCanvasItem__edit_get_pivot (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_get_pivot" '[] (IO Vector2)
          where
@@ -268,7 +274,10 @@ _edit_get_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_get_position" '[]
            (IO Vector2)
@@ -294,7 +303,10 @@ _edit_get_rect cls
          godot_method_bind_call bindCanvasItem__edit_get_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_get_rect" '[] (IO Rect2)
          where
@@ -320,7 +332,10 @@ _edit_get_rotation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_get_rotation" '[] (IO Float)
          where
@@ -345,7 +360,10 @@ _edit_get_scale cls
          godot_method_bind_call bindCanvasItem__edit_get_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_get_scale" '[] (IO Vector2)
          where
@@ -370,7 +388,10 @@ _edit_get_state cls
          godot_method_bind_call bindCanvasItem__edit_get_state (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_get_state" '[]
            (IO Dictionary)
@@ -397,7 +418,10 @@ _edit_get_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_get_transform" '[]
            (IO Transform2d)
@@ -423,7 +447,10 @@ _edit_set_pivot cls arg1
          godot_method_bind_call bindCanvasItem__edit_set_pivot (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_set_pivot" '[Vector2] (IO ())
          where
@@ -449,7 +476,10 @@ _edit_set_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_set_position" '[Vector2]
            (IO ())
@@ -475,7 +505,10 @@ _edit_set_rect cls arg1
          godot_method_bind_call bindCanvasItem__edit_set_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_set_rect" '[Rect2] (IO ())
          where
@@ -501,7 +534,10 @@ _edit_set_rotation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_set_rotation" '[Float]
            (IO ())
@@ -527,7 +563,10 @@ _edit_set_scale cls arg1
          godot_method_bind_call bindCanvasItem__edit_set_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_set_scale" '[Vector2] (IO ())
          where
@@ -552,7 +591,10 @@ _edit_set_state cls arg1
          godot_method_bind_call bindCanvasItem__edit_set_state (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_set_state" '[Dictionary]
            (IO ())
@@ -578,7 +620,10 @@ _edit_use_pivot cls
          godot_method_bind_call bindCanvasItem__edit_use_pivot (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_use_pivot" '[] (IO Bool)
          where
@@ -603,7 +648,10 @@ _edit_use_rect cls
          godot_method_bind_call bindCanvasItem__edit_use_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_use_rect" '[] (IO Bool) where
         nodeMethod = Godot.Core.CanvasItem._edit_use_rect
@@ -628,7 +676,10 @@ _edit_use_rotation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_edit_use_rotation" '[] (IO Bool)
          where
@@ -654,7 +705,10 @@ _is_on_top cls
          godot_method_bind_call bindCanvasItem__is_on_top (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_is_on_top" '[] (IO Bool) where
         nodeMethod = Godot.Core.CanvasItem._is_on_top
@@ -680,7 +734,10 @@ _set_on_top cls arg1
          godot_method_bind_call bindCanvasItem__set_on_top (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_set_on_top" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.CanvasItem._set_on_top
@@ -705,7 +762,10 @@ _toplevel_raise_self cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_toplevel_raise_self" '[] (IO ())
          where
@@ -730,14 +790,17 @@ _update_callback cls
          godot_method_bind_call bindCanvasItem__update_callback (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "_update_callback" '[] (IO ()) where
         nodeMethod = Godot.Core.CanvasItem._update_callback
 
 {-# NOINLINE bindCanvasItem_draw_arc #-}
 
--- | Draws an arc between the given angles. The larger the value of @point_count@, the smoother the curve.
+-- | Draws a unfilled arc between the given angles. The larger the value of @point_count@, the smoother the curve. See also @method draw_circle@.
 bindCanvasItem_draw_arc :: MethodBind
 bindCanvasItem_draw_arc
   = unsafePerformIO $
@@ -747,7 +810,7 @@ bindCanvasItem_draw_arc
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws an arc between the given angles. The larger the value of @point_count@, the smoother the curve.
+-- | Draws a unfilled arc between the given angles. The larger the value of @point_count@, the smoother the curve. See also @method draw_circle@.
 draw_arc ::
            (CanvasItem :< cls, Object :< cls) =>
            cls ->
@@ -764,7 +827,10 @@ draw_arc cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCanvasItem_draw_arc (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_arc"
            '[Vector2, Float, Float, Float, Int, Color, Maybe Float,
@@ -798,7 +864,10 @@ draw_char cls arg1 arg2 arg3 arg4 arg5
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCanvasItem_draw_char (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_char"
            '[Font, Vector2, GodotString, GodotString, Maybe Color]
@@ -808,7 +877,7 @@ instance NodeMethod CanvasItem "draw_char"
 
 {-# NOINLINE bindCanvasItem_draw_circle #-}
 
--- | Draws a colored circle.
+-- | Draws a colored, unfilled circle. See also @method draw_arc@, @method draw_polyline@ and @method draw_polygon@.
 bindCanvasItem_draw_circle :: MethodBind
 bindCanvasItem_draw_circle
   = unsafePerformIO $
@@ -818,7 +887,7 @@ bindCanvasItem_draw_circle
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws a colored circle.
+-- | Draws a colored, unfilled circle. See also @method draw_arc@, @method draw_polyline@ and @method draw_polygon@.
 draw_circle ::
               (CanvasItem :< cls, Object :< cls) =>
               cls -> Vector2 -> Float -> Color -> IO ()
@@ -828,7 +897,10 @@ draw_circle cls arg1 arg2 arg3
          godot_method_bind_call bindCanvasItem_draw_circle (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_circle"
            '[Vector2, Float, Color]
@@ -838,7 +910,7 @@ instance NodeMethod CanvasItem "draw_circle"
 
 {-# NOINLINE bindCanvasItem_draw_colored_polygon #-}
 
--- | Draws a colored polygon of any amount of points, convex or concave.
+-- | Draws a colored polygon of any amount of points, convex or concave. Unlike @method draw_polygon@, a single color must be specified for the whole polygon.
 bindCanvasItem_draw_colored_polygon :: MethodBind
 bindCanvasItem_draw_colored_polygon
   = unsafePerformIO $
@@ -848,7 +920,7 @@ bindCanvasItem_draw_colored_polygon
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws a colored polygon of any amount of points, convex or concave.
+-- | Draws a colored polygon of any amount of points, convex or concave. Unlike @method draw_polygon@, a single color must be specified for the whole polygon.
 draw_colored_polygon ::
                        (CanvasItem :< cls, Object :< cls) =>
                        cls ->
@@ -867,7 +939,10 @@ draw_colored_polygon cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_colored_polygon"
            '[PoolVector2Array, Color, Maybe PoolVector2Array, Maybe Texture,
@@ -878,7 +953,7 @@ instance NodeMethod CanvasItem "draw_colored_polygon"
 
 {-# NOINLINE bindCanvasItem_draw_line #-}
 
--- | Draws a line from a 2D point to another, with a given color and width. It can be optionally antialiased.
+-- | Draws a line from a 2D point to another, with a given color and width. It can be optionally antialiased. See also @method draw_multiline@ and @method draw_polyline@.
 bindCanvasItem_draw_line :: MethodBind
 bindCanvasItem_draw_line
   = unsafePerformIO $
@@ -888,7 +963,7 @@ bindCanvasItem_draw_line
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws a line from a 2D point to another, with a given color and width. It can be optionally antialiased.
+-- | Draws a line from a 2D point to another, with a given color and width. It can be optionally antialiased. See also @method draw_multiline@ and @method draw_polyline@.
 draw_line ::
             (CanvasItem :< cls, Object :< cls) =>
             cls ->
@@ -901,7 +976,10 @@ draw_line cls arg1 arg2 arg3 arg4 arg5
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCanvasItem_draw_line (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_line"
            '[Vector2, Vector2, Color, Maybe Float, Maybe Bool]
@@ -938,7 +1016,10 @@ draw_mesh cls arg1 arg2 arg3 arg4 arg5
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCanvasItem_draw_mesh (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_mesh"
            '[Mesh, Texture, Maybe Texture, Maybe Transform2d, Maybe Color]
@@ -948,7 +1029,7 @@ instance NodeMethod CanvasItem "draw_mesh"
 
 {-# NOINLINE bindCanvasItem_draw_multiline #-}
 
--- | Draws multiple, parallel lines with a uniform @color@.
+-- | Draws multiple disconnected lines with a uniform @color@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw interconnected lines, use @method draw_polyline@ instead.
 --   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect.
 bindCanvasItem_draw_multiline :: MethodBind
 bindCanvasItem_draw_multiline
@@ -959,7 +1040,7 @@ bindCanvasItem_draw_multiline
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws multiple, parallel lines with a uniform @color@.
+-- | Draws multiple disconnected lines with a uniform @color@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw interconnected lines, use @method draw_polyline@ instead.
 --   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect.
 draw_multiline ::
                  (CanvasItem :< cls, Object :< cls) =>
@@ -974,7 +1055,10 @@ draw_multiline cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindCanvasItem_draw_multiline (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_multiline"
            '[PoolVector2Array, Color, Maybe Float, Maybe Bool]
@@ -984,7 +1068,7 @@ instance NodeMethod CanvasItem "draw_multiline"
 
 {-# NOINLINE bindCanvasItem_draw_multiline_colors #-}
 
--- | Draws multiple, parallel lines with a uniform @width@ and segment-by-segment coloring. Colors assigned to line segments match by index between @points@ and @colors@.
+-- | Draws multiple disconnected lines with a uniform @width@ and segment-by-segment coloring. Colors assigned to line segments match by index between @points@ and @colors@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw interconnected lines, use @method draw_polyline_colors@ instead.
 --   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect.
 bindCanvasItem_draw_multiline_colors :: MethodBind
 bindCanvasItem_draw_multiline_colors
@@ -995,7 +1079,7 @@ bindCanvasItem_draw_multiline_colors
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws multiple, parallel lines with a uniform @width@ and segment-by-segment coloring. Colors assigned to line segments match by index between @points@ and @colors@.
+-- | Draws multiple disconnected lines with a uniform @width@ and segment-by-segment coloring. Colors assigned to line segments match by index between @points@ and @colors@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw interconnected lines, use @method draw_polyline_colors@ instead.
 --   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect.
 draw_multiline_colors ::
                         (CanvasItem :< cls, Object :< cls) =>
@@ -1012,7 +1096,10 @@ draw_multiline_colors cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_multiline_colors"
            '[PoolVector2Array, PoolColorArray, Maybe Float, Maybe Bool]
@@ -1043,7 +1130,10 @@ draw_multimesh cls arg1 arg2 arg3
          godot_method_bind_call bindCanvasItem_draw_multimesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_multimesh"
            '[MultiMesh, Texture, Maybe Texture]
@@ -1053,7 +1143,7 @@ instance NodeMethod CanvasItem "draw_multimesh"
 
 {-# NOINLINE bindCanvasItem_draw_polygon #-}
 
--- | Draws a polygon of any amount of points, convex or concave.
+-- | Draws a solid polygon of any amount of points, convex or concave. Unlike @method draw_colored_polygon@, each point's color can be changed individually. See also @method draw_polyline@ and @method draw_polyline_colors@.
 bindCanvasItem_draw_polygon :: MethodBind
 bindCanvasItem_draw_polygon
   = unsafePerformIO $
@@ -1063,7 +1153,7 @@ bindCanvasItem_draw_polygon
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws a polygon of any amount of points, convex or concave.
+-- | Draws a solid polygon of any amount of points, convex or concave. Unlike @method draw_colored_polygon@, each point's color can be changed individually. See also @method draw_polyline@ and @method draw_polyline_colors@.
 draw_polygon ::
                (CanvasItem :< cls, Object :< cls) =>
                cls ->
@@ -1081,7 +1171,10 @@ draw_polygon cls arg1 arg2 arg3 arg4 arg5 arg6
          godot_method_bind_call bindCanvasItem_draw_polygon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_polygon"
            '[PoolVector2Array, PoolColorArray, Maybe PoolVector2Array,
@@ -1092,7 +1185,7 @@ instance NodeMethod CanvasItem "draw_polygon"
 
 {-# NOINLINE bindCanvasItem_draw_polyline #-}
 
--- | Draws interconnected line segments with a uniform @color@ and @width@ and optional antialiasing.
+-- | Draws interconnected line segments with a uniform @color@ and @width@ and optional antialiasing. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw disconnected lines, use @method draw_multiline@ instead. See also @method draw_polygon@.
 bindCanvasItem_draw_polyline :: MethodBind
 bindCanvasItem_draw_polyline
   = unsafePerformIO $
@@ -1102,7 +1195,7 @@ bindCanvasItem_draw_polyline
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws interconnected line segments with a uniform @color@ and @width@ and optional antialiasing.
+-- | Draws interconnected line segments with a uniform @color@ and @width@ and optional antialiasing. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw disconnected lines, use @method draw_multiline@ instead. See also @method draw_polygon@.
 draw_polyline ::
                 (CanvasItem :< cls, Object :< cls) =>
                 cls ->
@@ -1116,7 +1209,10 @@ draw_polyline cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindCanvasItem_draw_polyline (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_polyline"
            '[PoolVector2Array, Color, Maybe Float, Maybe Bool]
@@ -1126,7 +1222,7 @@ instance NodeMethod CanvasItem "draw_polyline"
 
 {-# NOINLINE bindCanvasItem_draw_polyline_colors #-}
 
--- | Draws interconnected line segments with a uniform @width@, segment-by-segment coloring, and optional antialiasing. Colors assigned to line segments match by index between @points@ and @colors@.
+-- | Draws interconnected line segments with a uniform @width@ and segment-by-segment coloring, and optional antialiasing. Colors assigned to line segments match by index between @points@ and @colors@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw disconnected lines, use @method draw_multiline_colors@ instead. See also @method draw_polygon@.
 bindCanvasItem_draw_polyline_colors :: MethodBind
 bindCanvasItem_draw_polyline_colors
   = unsafePerformIO $
@@ -1136,7 +1232,7 @@ bindCanvasItem_draw_polyline_colors
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws interconnected line segments with a uniform @width@, segment-by-segment coloring, and optional antialiasing. Colors assigned to line segments match by index between @points@ and @colors@.
+-- | Draws interconnected line segments with a uniform @width@ and segment-by-segment coloring, and optional antialiasing. Colors assigned to line segments match by index between @points@ and @colors@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw disconnected lines, use @method draw_multiline_colors@ instead. See also @method draw_polygon@.
 draw_polyline_colors ::
                        (CanvasItem :< cls, Object :< cls) =>
                        cls ->
@@ -1152,7 +1248,10 @@ draw_polyline_colors cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_polyline_colors"
            '[PoolVector2Array, PoolColorArray, Maybe Float, Maybe Bool]
@@ -1162,7 +1261,7 @@ instance NodeMethod CanvasItem "draw_polyline_colors"
 
 {-# NOINLINE bindCanvasItem_draw_primitive #-}
 
--- | Draws a custom primitive. 1 point for a point, 2 points for a line, 3 points for a triangle and 4 points for a quad.
+-- | Draws a custom primitive. 1 point for a point, 2 points for a line, 3 points for a triangle, and 4 points for a quad. If 0 points or more than 4 points are specified, nothing will be drawn and an error message will be printed. See also @method draw_line@, @method draw_polyline@, @method draw_polygon@, and @method draw_rect@.
 bindCanvasItem_draw_primitive :: MethodBind
 bindCanvasItem_draw_primitive
   = unsafePerformIO $
@@ -1172,7 +1271,7 @@ bindCanvasItem_draw_primitive
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws a custom primitive. 1 point for a point, 2 points for a line, 3 points for a triangle and 4 points for a quad.
+-- | Draws a custom primitive. 1 point for a point, 2 points for a line, 3 points for a triangle, and 4 points for a quad. If 0 points or more than 4 points are specified, nothing will be drawn and an error message will be printed. See also @method draw_line@, @method draw_polyline@, @method draw_polygon@, and @method draw_rect@.
 draw_primitive ::
                  (CanvasItem :< cls, Object :< cls) =>
                  cls ->
@@ -1190,7 +1289,10 @@ draw_primitive cls arg1 arg2 arg3 arg4 arg5 arg6
          godot_method_bind_call bindCanvasItem_draw_primitive (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_primitive"
            '[PoolVector2Array, PoolColorArray, PoolVector2Array,
@@ -1227,7 +1329,10 @@ draw_rect cls arg1 arg2 arg3 arg4 arg5
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCanvasItem_draw_rect (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_rect"
            '[Rect2, Color, Maybe Bool, Maybe Float, Maybe Bool]
@@ -1258,7 +1363,10 @@ draw_set_transform cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_set_transform"
            '[Vector2, Float, Vector2]
@@ -1288,7 +1396,10 @@ draw_set_transform_matrix cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_set_transform_matrix"
            '[Transform2d]
@@ -1298,7 +1409,7 @@ instance NodeMethod CanvasItem "draw_set_transform_matrix"
 
 {-# NOINLINE bindCanvasItem_draw_string #-}
 
--- | Draws @text@ using the specified @font@ at the @position@ (top-left corner). The text will have its color multiplied by @modulate@. If @clip_w@ is greater than or equal to 0, the text will be clipped if it exceeds the specified width.
+-- | Draws @text@ using the specified @font@ at the @position@ (bottom-left corner using the baseline of the font). The text will have its color multiplied by @modulate@. If @clip_w@ is greater than or equal to 0, the text will be clipped if it exceeds the specified width.
 --   				__Example using the default project font:__
 --   				
 --   @
@@ -1321,7 +1432,7 @@ bindCanvasItem_draw_string
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws @text@ using the specified @font@ at the @position@ (top-left corner). The text will have its color multiplied by @modulate@. If @clip_w@ is greater than or equal to 0, the text will be clipped if it exceeds the specified width.
+-- | Draws @text@ using the specified @font@ at the @position@ (bottom-left corner using the baseline of the font). The text will have its color multiplied by @modulate@. If @clip_w@ is greater than or equal to 0, the text will be clipped if it exceeds the specified width.
 --   				__Example using the default project font:__
 --   				
 --   @
@@ -1348,7 +1459,10 @@ draw_string cls arg1 arg2 arg3 arg4 arg5
          godot_method_bind_call bindCanvasItem_draw_string (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_string"
            '[Font, Vector2, GodotString, Maybe Color, Maybe Int]
@@ -1378,7 +1492,10 @@ draw_style_box cls arg1 arg2
          godot_method_bind_call bindCanvasItem_draw_style_box (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_style_box" '[StyleBox, Rect2]
            (IO ())
@@ -1410,7 +1527,10 @@ draw_texture cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindCanvasItem_draw_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_texture"
            '[Texture, Vector2, Maybe Color, Maybe Texture]
@@ -1448,7 +1568,10 @@ draw_texture_rect cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_texture_rect"
            '[Texture, Rect2, Bool, Maybe Color, Maybe Bool, Maybe Texture]
@@ -1488,7 +1611,10 @@ draw_texture_rect_region cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "draw_texture_rect_region"
            '[Texture, Rect2, Rect2, Maybe Color, Maybe Bool, Maybe Texture,
@@ -1519,7 +1645,10 @@ force_update_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "force_update_transform" '[] (IO ())
          where
@@ -1545,7 +1674,10 @@ get_canvas cls
          godot_method_bind_call bindCanvasItem_get_canvas (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_canvas" '[] (IO Rid) where
         nodeMethod = Godot.Core.CanvasItem.get_canvas
@@ -1571,7 +1703,10 @@ get_canvas_item cls
          godot_method_bind_call bindCanvasItem_get_canvas_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_canvas_item" '[] (IO Rid) where
         nodeMethod = Godot.Core.CanvasItem.get_canvas_item
@@ -1598,7 +1733,10 @@ get_canvas_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_canvas_transform" '[]
            (IO Transform2d)
@@ -1627,7 +1765,10 @@ get_global_mouse_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_global_mouse_position" '[]
            (IO Vector2)
@@ -1656,7 +1797,10 @@ get_global_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_global_transform" '[]
            (IO Transform2d)
@@ -1686,7 +1830,10 @@ get_global_transform_with_canvas cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_global_transform_with_canvas"
            '[]
@@ -1715,7 +1862,10 @@ get_light_mask cls
          godot_method_bind_call bindCanvasItem_get_light_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_light_mask" '[] (IO Int) where
         nodeMethod = Godot.Core.CanvasItem.get_light_mask
@@ -1742,7 +1892,10 @@ get_local_mouse_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_local_mouse_position" '[]
            (IO Vector2)
@@ -1770,7 +1923,7 @@ get_material cls
          godot_method_bind_call bindCanvasItem_get_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CanvasItem "get_material" '[] (IO Material)
          where
@@ -1797,7 +1950,10 @@ get_modulate cls
          godot_method_bind_call bindCanvasItem_get_modulate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_modulate" '[] (IO Color) where
         nodeMethod = Godot.Core.CanvasItem.get_modulate
@@ -1824,7 +1980,10 @@ get_self_modulate cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_self_modulate" '[] (IO Color)
          where
@@ -1851,7 +2010,10 @@ get_transform cls
          godot_method_bind_call bindCanvasItem_get_transform (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_transform" '[] (IO Transform2d)
          where
@@ -1879,7 +2041,10 @@ get_use_parent_material cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_use_parent_material" '[]
            (IO Bool)
@@ -1908,7 +2073,10 @@ get_viewport_rect cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_viewport_rect" '[] (IO Rect2)
          where
@@ -1936,7 +2104,10 @@ get_viewport_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "get_viewport_transform" '[]
            (IO Transform2d)
@@ -1964,7 +2135,7 @@ get_world_2d cls
          godot_method_bind_call bindCanvasItem_get_world_2d (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CanvasItem "get_world_2d" '[] (IO World2D)
          where
@@ -1972,7 +2143,7 @@ instance NodeMethod CanvasItem "get_world_2d" '[] (IO World2D)
 
 {-# NOINLINE bindCanvasItem_hide #-}
 
--- | Hide the @CanvasItem@ if it's currently visible.
+-- | Hide the @CanvasItem@ if it's currently visible. This is equivalent to setting @visible@ to @false@.
 bindCanvasItem_hide :: MethodBind
 bindCanvasItem_hide
   = unsafePerformIO $
@@ -1982,13 +2153,16 @@ bindCanvasItem_hide
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Hide the @CanvasItem@ if it's currently visible.
+-- | Hide the @CanvasItem@ if it's currently visible. This is equivalent to setting @visible@ to @false@.
 hide :: (CanvasItem :< cls, Object :< cls) => cls -> IO ()
 hide cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCanvasItem_hide (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "hide" '[] (IO ()) where
         nodeMethod = Godot.Core.CanvasItem.hide
@@ -2015,7 +2189,10 @@ is_draw_behind_parent_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "is_draw_behind_parent_enabled" '[]
            (IO Bool)
@@ -2047,7 +2224,10 @@ is_local_transform_notification_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem
            "is_local_transform_notification_enabled"
@@ -2079,7 +2259,10 @@ is_set_as_toplevel cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "is_set_as_toplevel" '[] (IO Bool)
          where
@@ -2108,7 +2291,10 @@ is_transform_notification_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "is_transform_notification_enabled"
            '[]
@@ -2139,7 +2325,10 @@ is_visible cls
          godot_method_bind_call bindCanvasItem_is_visible (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "is_visible" '[] (IO Bool) where
         nodeMethod = Godot.Core.CanvasItem.is_visible
@@ -2166,7 +2355,10 @@ is_visible_in_tree cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "is_visible_in_tree" '[] (IO Bool)
          where
@@ -2194,7 +2386,10 @@ make_canvas_position_local cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "make_canvas_position_local"
            '[Vector2]
@@ -2224,7 +2419,7 @@ make_input_local cls arg1
          godot_method_bind_call bindCanvasItem_make_input_local (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CanvasItem "make_input_local" '[InputEvent]
            (IO InputEvent)
@@ -2252,7 +2447,10 @@ set_as_toplevel cls arg1
          godot_method_bind_call bindCanvasItem_set_as_toplevel (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "set_as_toplevel" '[Bool] (IO ())
          where
@@ -2280,7 +2478,10 @@ set_draw_behind_parent cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "set_draw_behind_parent" '[Bool]
            (IO ())
@@ -2308,7 +2509,10 @@ set_light_mask cls arg1
          godot_method_bind_call bindCanvasItem_set_light_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "set_light_mask" '[Int] (IO ())
          where
@@ -2335,7 +2539,10 @@ set_material cls arg1
          godot_method_bind_call bindCanvasItem_set_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "set_material" '[Material] (IO ())
          where
@@ -2362,7 +2569,10 @@ set_modulate cls arg1
          godot_method_bind_call bindCanvasItem_set_modulate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "set_modulate" '[Color] (IO ())
          where
@@ -2390,7 +2600,10 @@ set_notify_local_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "set_notify_local_transform" '[Bool]
            (IO ())
@@ -2419,7 +2632,10 @@ set_notify_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "set_notify_transform" '[Bool]
            (IO ())
@@ -2448,7 +2664,10 @@ set_self_modulate cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "set_self_modulate" '[Color] (IO ())
          where
@@ -2476,7 +2695,10 @@ set_use_parent_material cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "set_use_parent_material" '[Bool]
            (IO ())
@@ -2506,14 +2728,17 @@ set_visible cls arg1
          godot_method_bind_call bindCanvasItem_set_visible (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "set_visible" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.CanvasItem.set_visible
 
 {-# NOINLINE bindCanvasItem_show #-}
 
--- | Show the @CanvasItem@ if it's currently hidden. For controls that inherit @Popup@, the correct way to make them visible is to call one of the multiple @popup*()@ functions instead.
+-- | Show the @CanvasItem@ if it's currently hidden. This is equivalent to setting @visible@ to @true@. For controls that inherit @Popup@, the correct way to make them visible is to call one of the multiple @popup*()@ functions instead.
 bindCanvasItem_show :: MethodBind
 bindCanvasItem_show
   = unsafePerformIO $
@@ -2523,13 +2748,16 @@ bindCanvasItem_show
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Show the @CanvasItem@ if it's currently hidden. For controls that inherit @Popup@, the correct way to make them visible is to call one of the multiple @popup*()@ functions instead.
+-- | Show the @CanvasItem@ if it's currently hidden. This is equivalent to setting @visible@ to @true@. For controls that inherit @Popup@, the correct way to make them visible is to call one of the multiple @popup*()@ functions instead.
 show :: (CanvasItem :< cls, Object :< cls) => cls -> IO ()
 show cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCanvasItem_show (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "show" '[] (IO ()) where
         nodeMethod = Godot.Core.CanvasItem.show
@@ -2553,7 +2781,10 @@ update cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCanvasItem_update (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CanvasItem "update" '[] (IO ()) where
         nodeMethod = Godot.Core.CanvasItem.update

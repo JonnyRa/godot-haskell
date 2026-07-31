@@ -38,7 +38,10 @@ add_file cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPCKPacker_add_file (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PCKPacker "add_file"
            '[GodotString, GodotString]
@@ -65,7 +68,10 @@ flush cls arg1
   = withVariantArray [maybe (VariantBool False) toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPCKPacker_flush (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PCKPacker "flush" '[Maybe Bool] (IO Int) where
         nodeMethod = Godot.Core.PCKPacker.flush
@@ -92,7 +98,10 @@ pck_start cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPCKPacker_pck_start (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PCKPacker "pck_start" '[GodotString, Maybe Int]
            (IO Int)

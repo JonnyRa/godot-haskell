@@ -116,7 +116,10 @@ build_box_planes cls arg1
          godot_method_bind_call bindGeometry_build_box_planes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "build_box_planes" '[Vector3]
            (IO Array)
@@ -148,7 +151,10 @@ build_capsule_planes cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "build_capsule_planes"
            '[Float, Float, Int, Int, Maybe Int]
@@ -181,7 +187,10 @@ build_cylinder_planes cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "build_cylinder_planes"
            '[Float, Float, Int, Maybe Int]
@@ -211,7 +220,10 @@ clip_polygon cls arg1 arg2
          godot_method_bind_call bindGeometry_clip_polygon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "clip_polygon"
            '[PoolVector3Array, Plane]
@@ -222,7 +234,7 @@ instance NodeMethod Geometry "clip_polygon"
 {-# NOINLINE bindGeometry_clip_polygons_2d #-}
 
 -- | Clips @polygon_a@ against @polygon_b@ and returns an array of clipped polygons. This performs @OPERATION_DIFFERENCE@ between polygons. Returns an empty array if @polygon_b@ completely overlaps @polygon_a@.
---   				If @polygon_b@ is enclosed by @polygon_a@, returns an outer polygon (boundary) and inner polygon (hole) which could be distiguished by calling @method is_polygon_clockwise@.
+--   				If @polygon_b@ is enclosed by @polygon_a@, returns an outer polygon (boundary) and inner polygon (hole) which could be distinguished by calling @method is_polygon_clockwise@.
 bindGeometry_clip_polygons_2d :: MethodBind
 bindGeometry_clip_polygons_2d
   = unsafePerformIO $
@@ -233,7 +245,7 @@ bindGeometry_clip_polygons_2d
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Clips @polygon_a@ against @polygon_b@ and returns an array of clipped polygons. This performs @OPERATION_DIFFERENCE@ between polygons. Returns an empty array if @polygon_b@ completely overlaps @polygon_a@.
---   				If @polygon_b@ is enclosed by @polygon_a@, returns an outer polygon (boundary) and inner polygon (hole) which could be distiguished by calling @method is_polygon_clockwise@.
+--   				If @polygon_b@ is enclosed by @polygon_a@, returns an outer polygon (boundary) and inner polygon (hole) which could be distinguished by calling @method is_polygon_clockwise@.
 clip_polygons_2d ::
                    (Geometry :< cls, Object :< cls) =>
                    cls -> PoolVector2Array -> PoolVector2Array -> IO Array
@@ -243,7 +255,10 @@ clip_polygons_2d cls arg1 arg2
          godot_method_bind_call bindGeometry_clip_polygons_2d (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "clip_polygons_2d"
            '[PoolVector2Array, PoolVector2Array]
@@ -274,7 +289,10 @@ clip_polyline_with_polygon_2d cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "clip_polyline_with_polygon_2d"
            '[PoolVector2Array, PoolVector2Array]
@@ -304,7 +322,10 @@ convex_hull_2d cls arg1
          godot_method_bind_call bindGeometry_convex_hull_2d (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "convex_hull_2d" '[PoolVector2Array]
            (IO PoolVector2Array)
@@ -314,7 +335,7 @@ instance NodeMethod Geometry "convex_hull_2d" '[PoolVector2Array]
 {-# NOINLINE bindGeometry_exclude_polygons_2d #-}
 
 -- | Mutually excludes common area defined by intersection of @polygon_a@ and @polygon_b@ (see @method intersect_polygons_2d@) and returns an array of excluded polygons. This performs @OPERATION_XOR@ between polygons. In other words, returns all but common area between polygons.
---   				The operation may result in an outer polygon (boundary) and inner polygon (hole) produced which could be distiguished by calling @method is_polygon_clockwise@.
+--   				The operation may result in an outer polygon (boundary) and inner polygon (hole) produced which could be distinguished by calling @method is_polygon_clockwise@.
 bindGeometry_exclude_polygons_2d :: MethodBind
 bindGeometry_exclude_polygons_2d
   = unsafePerformIO $
@@ -325,7 +346,7 @@ bindGeometry_exclude_polygons_2d
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Mutually excludes common area defined by intersection of @polygon_a@ and @polygon_b@ (see @method intersect_polygons_2d@) and returns an array of excluded polygons. This performs @OPERATION_XOR@ between polygons. In other words, returns all but common area between polygons.
---   				The operation may result in an outer polygon (boundary) and inner polygon (hole) produced which could be distiguished by calling @method is_polygon_clockwise@.
+--   				The operation may result in an outer polygon (boundary) and inner polygon (hole) produced which could be distinguished by calling @method is_polygon_clockwise@.
 exclude_polygons_2d ::
                       (Geometry :< cls, Object :< cls) =>
                       cls -> PoolVector2Array -> PoolVector2Array -> IO Array
@@ -336,7 +357,10 @@ exclude_polygons_2d cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "exclude_polygons_2d"
            '[PoolVector2Array, PoolVector2Array]
@@ -367,7 +391,10 @@ get_closest_point_to_segment cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "get_closest_point_to_segment"
            '[Vector3, Vector3, Vector3]
@@ -398,7 +425,10 @@ get_closest_point_to_segment_2d cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "get_closest_point_to_segment_2d"
            '[Vector2, Vector2, Vector2]
@@ -430,7 +460,10 @@ get_closest_point_to_segment_uncapped cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry
            "get_closest_point_to_segment_uncapped"
@@ -465,7 +498,10 @@ get_closest_point_to_segment_uncapped_2d cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry
            "get_closest_point_to_segment_uncapped_2d"
@@ -502,7 +538,10 @@ get_closest_points_between_segments cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "get_closest_points_between_segments"
            '[Vector3, Vector3, Vector3, Vector3]
@@ -514,7 +553,7 @@ instance NodeMethod Geometry "get_closest_points_between_segments"
 {-# NOINLINE bindGeometry_get_closest_points_between_segments_2d
              #-}
 
--- | Given the two 2D segments (@p1@, @p2@) and (@q1@, @q2@), finds those two points on the two segments that are closest to each other. Returns a @PoolVector2Array@ that contains this point on (@p1@, @p2@) as well the accompanying point on (@q1@, @q2@).
+-- | Given the two 2D segments (@p1@, @q1@) and (@p2@, @q2@), finds those two points on the two segments that are closest to each other. Returns a @PoolVector2Array@ that contains this point on (@p1@, @q1@) as well the accompanying point on (@p2@, @q2@).
 bindGeometry_get_closest_points_between_segments_2d :: MethodBind
 bindGeometry_get_closest_points_between_segments_2d
   = unsafePerformIO $
@@ -524,7 +563,7 @@ bindGeometry_get_closest_points_between_segments_2d
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Given the two 2D segments (@p1@, @p2@) and (@q1@, @q2@), finds those two points on the two segments that are closest to each other. Returns a @PoolVector2Array@ that contains this point on (@p1@, @p2@) as well the accompanying point on (@q1@, @q2@).
+-- | Given the two 2D segments (@p1@, @q1@) and (@p2@, @q2@), finds those two points on the two segments that are closest to each other. Returns a @PoolVector2Array@ that contains this point on (@p1@, @q1@) as well the accompanying point on (@p2@, @q2@).
 get_closest_points_between_segments_2d ::
                                          (Geometry :< cls, Object :< cls) =>
                                          cls ->
@@ -539,7 +578,10 @@ get_closest_points_between_segments_2d cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry
            "get_closest_points_between_segments_2d"
@@ -571,7 +613,10 @@ get_uv84_normal_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "get_uv84_normal_bit" '[Vector3]
            (IO Int)
@@ -603,7 +648,10 @@ intersect_polygons_2d cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "intersect_polygons_2d"
            '[PoolVector2Array, PoolVector2Array]
@@ -635,7 +683,10 @@ intersect_polyline_with_polygon_2d cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "intersect_polyline_with_polygon_2d"
            '[PoolVector2Array, PoolVector2Array]
@@ -665,7 +716,10 @@ is_point_in_circle cls arg1 arg2 arg3
          godot_method_bind_call bindGeometry_is_point_in_circle (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "is_point_in_circle"
            '[Vector2, Vector2, Float]
@@ -696,7 +750,10 @@ is_point_in_polygon cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "is_point_in_polygon"
            '[Vector2, PoolVector2Array]
@@ -727,7 +784,10 @@ is_polygon_clockwise cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "is_polygon_clockwise"
            '[PoolVector2Array]
@@ -761,7 +821,7 @@ line_intersects_line_2d cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Geometry "line_intersects_line_2d"
            '[Vector2, Vector2, Vector2, Vector2]
@@ -790,7 +850,10 @@ make_atlas cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGeometry_make_atlas (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "make_atlas" '[PoolVector2Array]
            (IO Dictionary)
@@ -800,7 +863,7 @@ instance NodeMethod Geometry "make_atlas" '[PoolVector2Array]
 {-# NOINLINE bindGeometry_merge_polygons_2d #-}
 
 -- | Merges (combines) @polygon_a@ and @polygon_b@ and returns an array of merged polygons. This performs @OPERATION_UNION@ between polygons.
---   				The operation may result in an outer polygon (boundary) and inner polygon (hole) produced which could be distinguished by calling @method is_polygon_clockwise@.
+--   				The operation may result in an outer polygon (boundary) and multiple inner polygons (holes) produced which could be distinguished by calling @method is_polygon_clockwise@.
 bindGeometry_merge_polygons_2d :: MethodBind
 bindGeometry_merge_polygons_2d
   = unsafePerformIO $
@@ -811,7 +874,7 @@ bindGeometry_merge_polygons_2d
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Merges (combines) @polygon_a@ and @polygon_b@ and returns an array of merged polygons. This performs @OPERATION_UNION@ between polygons.
---   				The operation may result in an outer polygon (boundary) and inner polygon (hole) produced which could be distinguished by calling @method is_polygon_clockwise@.
+--   				The operation may result in an outer polygon (boundary) and multiple inner polygons (holes) produced which could be distinguished by calling @method is_polygon_clockwise@.
 merge_polygons_2d ::
                     (Geometry :< cls, Object :< cls) =>
                     cls -> PoolVector2Array -> PoolVector2Array -> IO Array
@@ -821,7 +884,10 @@ merge_polygons_2d cls arg1 arg2
          godot_method_bind_call bindGeometry_merge_polygons_2d (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "merge_polygons_2d"
            '[PoolVector2Array, PoolVector2Array]
@@ -877,7 +943,10 @@ offset_polygon_2d cls arg1 arg2 arg3
          godot_method_bind_call bindGeometry_offset_polygon_2d (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "offset_polygon_2d"
            '[PoolVector2Array, Float, Maybe Int]
@@ -917,7 +986,10 @@ offset_polyline_2d cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindGeometry_offset_polyline_2d (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "offset_polyline_2d"
            '[PoolVector2Array, Float, Maybe Int, Maybe Int]
@@ -949,7 +1021,10 @@ point_is_inside_triangle cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "point_is_inside_triangle"
            '[Vector2, Vector2, Vector2, Vector2]
@@ -984,7 +1059,7 @@ ray_intersects_triangle cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Geometry "ray_intersects_triangle"
            '[Vector3, Vector3, Vector3, Vector3, Vector3]
@@ -1016,7 +1091,10 @@ segment_intersects_circle cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "segment_intersects_circle"
            '[Vector2, Vector2, Vector2, Float]
@@ -1047,7 +1125,10 @@ segment_intersects_convex cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "segment_intersects_convex"
            '[Vector3, Vector3, Array]
@@ -1079,7 +1160,10 @@ segment_intersects_cylinder cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "segment_intersects_cylinder"
            '[Vector3, Vector3, Float, Float]
@@ -1111,7 +1195,7 @@ segment_intersects_segment_2d cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Geometry "segment_intersects_segment_2d"
            '[Vector2, Vector2, Vector2, Vector2]
@@ -1144,7 +1228,10 @@ segment_intersects_sphere cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "segment_intersects_sphere"
            '[Vector3, Vector3, Vector3, Float]
@@ -1179,7 +1266,7 @@ segment_intersects_triangle cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Geometry "segment_intersects_triangle"
            '[Vector3, Vector3, Vector3, Vector3, Vector3]
@@ -1210,7 +1297,10 @@ triangulate_delaunay_2d cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "triangulate_delaunay_2d"
            '[PoolVector2Array]
@@ -1220,7 +1310,7 @@ instance NodeMethod Geometry "triangulate_delaunay_2d"
 
 {-# NOINLINE bindGeometry_triangulate_polygon #-}
 
--- | Triangulates the polygon specified by the points in @polygon@. Returns a @PoolIntArray@ where each triangle consists of three consecutive point indices into @polygon@ (i.e. the returned array will have @n * 3@ elements, with @n@ being the number of found triangles). If the triangulation did not succeed, an empty @PoolIntArray@ is returned.
+-- | Triangulates the polygon specified by the points in @polygon@. Returns a @PoolIntArray@ where each triangle consists of three consecutive point indices into @polygon@ (i.e. the returned array will have @n * 3@ elements, with @n@ being the number of found triangles). Output triangles will always be counter clockwise, and the contour will be flipped if it's clockwise. If the triangulation did not succeed, an empty @PoolIntArray@ is returned.
 bindGeometry_triangulate_polygon :: MethodBind
 bindGeometry_triangulate_polygon
   = unsafePerformIO $
@@ -1230,7 +1320,7 @@ bindGeometry_triangulate_polygon
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Triangulates the polygon specified by the points in @polygon@. Returns a @PoolIntArray@ where each triangle consists of three consecutive point indices into @polygon@ (i.e. the returned array will have @n * 3@ elements, with @n@ being the number of found triangles). If the triangulation did not succeed, an empty @PoolIntArray@ is returned.
+-- | Triangulates the polygon specified by the points in @polygon@. Returns a @PoolIntArray@ where each triangle consists of three consecutive point indices into @polygon@ (i.e. the returned array will have @n * 3@ elements, with @n@ being the number of found triangles). Output triangles will always be counter clockwise, and the contour will be flipped if it's clockwise. If the triangulation did not succeed, an empty @PoolIntArray@ is returned.
 triangulate_polygon ::
                       (Geometry :< cls, Object :< cls) =>
                       cls -> PoolVector2Array -> IO PoolIntArray
@@ -1241,7 +1331,10 @@ triangulate_polygon cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Geometry "triangulate_polygon"
            '[PoolVector2Array]

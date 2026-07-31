@@ -90,7 +90,10 @@ _update_shape cls
          godot_method_bind_call bindCSGShape__update_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "_update_shape" '[] (IO ()) where
         nodeMethod = Godot.Core.CSGShape._update_shape
@@ -115,7 +118,10 @@ get_collision_layer cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "get_collision_layer" '[] (IO Int)
          where
@@ -141,7 +147,10 @@ get_collision_layer_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "get_collision_layer_bit" '[Int]
            (IO Bool)
@@ -167,7 +176,10 @@ get_collision_mask cls
          godot_method_bind_call bindCSGShape_get_collision_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "get_collision_mask" '[] (IO Int)
          where
@@ -193,7 +205,10 @@ get_collision_mask_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "get_collision_mask_bit" '[Int]
            (IO Bool)
@@ -217,7 +232,10 @@ get_meshes cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGShape_get_meshes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "get_meshes" '[] (IO Array) where
         nodeMethod = Godot.Core.CSGShape.get_meshes
@@ -240,7 +258,10 @@ get_operation cls
          godot_method_bind_call bindCSGShape_get_operation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "get_operation" '[] (IO Int) where
         nodeMethod = Godot.Core.CSGShape.get_operation
@@ -262,7 +283,10 @@ get_snap cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGShape_get_snap (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "get_snap" '[] (IO Float) where
         nodeMethod = Godot.Core.CSGShape.get_snap
@@ -287,7 +311,10 @@ is_calculating_tangents cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "is_calculating_tangents" '[]
            (IO Bool)
@@ -312,7 +339,10 @@ is_root_shape cls
          godot_method_bind_call bindCSGShape_is_root_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "is_root_shape" '[] (IO Bool) where
         nodeMethod = Godot.Core.CSGShape.is_root_shape
@@ -336,7 +366,10 @@ is_using_collision cls
          godot_method_bind_call bindCSGShape_is_using_collision (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "is_using_collision" '[] (IO Bool)
          where
@@ -362,7 +395,10 @@ set_calculate_tangents cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "set_calculate_tangents" '[Bool]
            (IO ())
@@ -389,7 +425,10 @@ set_collision_layer cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "set_collision_layer" '[Int] (IO ())
          where
@@ -415,7 +454,10 @@ set_collision_layer_bit cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "set_collision_layer_bit" '[Int, Bool]
            (IO ())
@@ -441,7 +483,10 @@ set_collision_mask cls arg1
          godot_method_bind_call bindCSGShape_set_collision_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "set_collision_mask" '[Int] (IO ())
          where
@@ -467,7 +512,10 @@ set_collision_mask_bit cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "set_collision_mask_bit" '[Int, Bool]
            (IO ())
@@ -493,7 +541,10 @@ set_operation cls arg1
          godot_method_bind_call bindCSGShape_set_operation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "set_operation" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CSGShape.set_operation
@@ -516,7 +567,10 @@ set_snap cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGShape_set_snap (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "set_snap" '[Float] (IO ()) where
         nodeMethod = Godot.Core.CSGShape.set_snap
@@ -540,7 +594,10 @@ set_use_collision cls arg1
          godot_method_bind_call bindCSGShape_set_use_collision (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGShape "set_use_collision" '[Bool] (IO ())
          where

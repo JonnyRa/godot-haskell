@@ -47,7 +47,10 @@ _update_bone_setup cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Skeleton2D "_update_bone_setup" '[] (IO ())
          where
@@ -73,7 +76,10 @@ _update_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Skeleton2D "_update_transform" '[] (IO ())
          where
@@ -99,7 +105,7 @@ get_bone cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSkeleton2D_get_bone (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Skeleton2D "get_bone" '[Int] (IO Bone2D) where
         nodeMethod = Godot.Core.Skeleton2D.get_bone
@@ -125,7 +131,10 @@ get_bone_count cls
          godot_method_bind_call bindSkeleton2D_get_bone_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Skeleton2D "get_bone_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Skeleton2D.get_bone_count
@@ -150,7 +159,10 @@ get_skeleton cls
          godot_method_bind_call bindSkeleton2D_get_skeleton (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Skeleton2D "get_skeleton" '[] (IO Rid) where
         nodeMethod = Godot.Core.Skeleton2D.get_skeleton

@@ -33,7 +33,10 @@ post cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSemaphore_post (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Semaphore "post" '[] (IO Int) where
         nodeMethod = Godot.Core.Semaphore.post
@@ -56,7 +59,10 @@ wait cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSemaphore_wait (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Semaphore "wait" '[] (IO Int) where
         nodeMethod = Godot.Core.Semaphore.wait

@@ -49,7 +49,10 @@ get_end cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegExMatch_get_end (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegExMatch "get_end" '[Maybe GodotVariant]
            (IO Int)
@@ -75,7 +78,10 @@ get_group_count cls
          godot_method_bind_call bindRegExMatch_get_group_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegExMatch "get_group_count" '[] (IO Int) where
         nodeMethod = Godot.Core.RegExMatch.get_group_count
@@ -98,7 +104,10 @@ get_names cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegExMatch_get_names (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegExMatch "get_names" '[] (IO Dictionary)
          where
@@ -123,7 +132,10 @@ get_start cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegExMatch_get_start (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegExMatch "get_start" '[Maybe GodotVariant]
            (IO Int)
@@ -150,7 +162,10 @@ get_string cls arg1
          godot_method_bind_call bindRegExMatch_get_string (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegExMatch "get_string" '[Maybe GodotVariant]
            (IO GodotString)
@@ -176,7 +191,10 @@ get_strings cls
          godot_method_bind_call bindRegExMatch_get_strings (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegExMatch "get_strings" '[] (IO Array) where
         nodeMethod = Godot.Core.RegExMatch.get_strings
@@ -200,7 +218,10 @@ get_subject cls
          godot_method_bind_call bindRegExMatch_get_subject (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegExMatch "get_subject" '[] (IO GodotString)
          where

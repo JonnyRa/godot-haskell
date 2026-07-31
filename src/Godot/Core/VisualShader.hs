@@ -83,7 +83,10 @@ _input_type_changed cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "_input_type_changed" '[Int, Int]
            (IO ())
@@ -109,7 +112,10 @@ _queue_update cls
          godot_method_bind_call bindVisualShader__queue_update (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "_queue_update" '[] (IO ()) where
         nodeMethod = Godot.Core.VisualShader._queue_update
@@ -133,7 +139,10 @@ _update_shader cls
          godot_method_bind_call bindVisualShader__update_shader (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "_update_shader" '[] (IO ()) where
         nodeMethod = Godot.Core.VisualShader._update_shader
@@ -161,7 +170,10 @@ add_node cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindVisualShader_add_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "add_node"
            '[Int, VisualShaderNode, Vector2, Int]
@@ -194,7 +206,10 @@ can_connect_nodes cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "can_connect_nodes"
            '[Int, Int, Int, Int, Int]
@@ -226,7 +241,10 @@ connect_nodes cls arg1 arg2 arg3 arg4 arg5
          godot_method_bind_call bindVisualShader_connect_nodes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "connect_nodes"
            '[Int, Int, Int, Int, Int]
@@ -259,7 +277,10 @@ connect_nodes_forced cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "connect_nodes_forced"
            '[Int, Int, Int, Int, Int]
@@ -292,7 +313,10 @@ disconnect_nodes cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "disconnect_nodes"
            '[Int, Int, Int, Int, Int]
@@ -322,7 +346,10 @@ get_graph_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "get_graph_offset" '[]
            (IO Vector2)
@@ -351,7 +378,7 @@ get_node cls arg1 arg2
          godot_method_bind_call bindVisualShader_get_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod VisualShader "get_node" '[Int, Int]
            (IO VisualShaderNode)
@@ -380,7 +407,10 @@ get_node_connections cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "get_node_connections" '[Int]
            (IO Array)
@@ -409,7 +439,10 @@ get_node_list cls arg1
          godot_method_bind_call bindVisualShader_get_node_list (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "get_node_list" '[Int]
            (IO PoolIntArray)
@@ -439,7 +472,10 @@ get_node_position cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "get_node_position" '[Int, Int]
            (IO Vector2)
@@ -466,7 +502,10 @@ get_valid_node_id cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "get_valid_node_id" '[Int]
            (IO Int)
@@ -498,7 +537,10 @@ is_node_connection cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "is_node_connection"
            '[Int, Int, Int, Int, Int]
@@ -527,7 +569,10 @@ remove_node cls arg1 arg2
          godot_method_bind_call bindVisualShader_remove_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "remove_node" '[Int, Int] (IO ())
          where
@@ -555,7 +600,10 @@ set_graph_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "set_graph_offset" '[Vector2]
            (IO ())
@@ -583,7 +631,10 @@ set_mode cls arg1
          godot_method_bind_call bindVisualShader_set_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "set_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.VisualShader.set_mode
@@ -611,7 +662,10 @@ set_node_position cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShader "set_node_position"
            '[Int, Int, Vector2]

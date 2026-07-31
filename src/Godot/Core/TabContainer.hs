@@ -24,9 +24,12 @@ module Godot.Core.TabContainer
         Godot.Core.TabContainer.get_tab_count,
         Godot.Core.TabContainer.get_tab_disabled,
         Godot.Core.TabContainer.get_tab_icon,
+        Godot.Core.TabContainer.get_tab_idx_at_point,
         Godot.Core.TabContainer.get_tab_title,
         Godot.Core.TabContainer.get_tabs_rearrange_group,
         Godot.Core.TabContainer.get_use_hidden_tabs_for_min_size,
+        Godot.Core.TabContainer.is_all_tabs_in_front,
+        Godot.Core.TabContainer.set_all_tabs_in_front,
         Godot.Core.TabContainer.set_current_tab,
         Godot.Core.TabContainer.set_drag_to_rearrange_enabled,
         Godot.Core.TabContainer.set_popup,
@@ -79,6 +82,12 @@ sig_tab_selected = Godot.Internal.Dispatch.Signal "tab_selected"
 
 instance NodeSignal TabContainer "tab_selected" '[Int]
 
+instance NodeProperty TabContainer "all_tabs_in_front" Bool 'False
+         where
+        nodeProperty
+          = (is_all_tabs_in_front, wrapDroppingSetter set_all_tabs_in_front,
+             Nothing)
+
 instance NodeProperty TabContainer "current_tab" Int 'False where
         nodeProperty
           = (get_current_tab, wrapDroppingSetter set_current_tab, Nothing)
@@ -126,7 +135,10 @@ _child_renamed_callback cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "_child_renamed_callback" '[]
            (IO ())
@@ -152,7 +164,10 @@ _gui_input cls arg1
          godot_method_bind_call bindTabContainer__gui_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "_gui_input" '[InputEvent] (IO ())
          where
@@ -178,7 +193,10 @@ _on_mouse_exited cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "_on_mouse_exited" '[] (IO ())
          where
@@ -204,7 +222,10 @@ _on_theme_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "_on_theme_changed" '[] (IO ())
          where
@@ -230,7 +251,10 @@ _update_current_tab cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "_update_current_tab" '[] (IO ())
          where
@@ -258,7 +282,10 @@ are_tabs_visible cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "are_tabs_visible" '[] (IO Bool)
          where
@@ -286,7 +313,10 @@ get_current_tab cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "get_current_tab" '[] (IO Int)
          where
@@ -314,7 +344,7 @@ get_current_tab_control cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TabContainer "get_current_tab_control" '[]
            (IO Control)
@@ -344,7 +374,10 @@ get_drag_to_rearrange_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "get_drag_to_rearrange_enabled"
            '[]
@@ -355,6 +388,7 @@ instance NodeMethod TabContainer "get_drag_to_rearrange_enabled"
 {-# NOINLINE bindTabContainer_get_popup #-}
 
 -- | Returns the @Popup@ node instance if one has been set already with @method set_popup@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindTabContainer_get_popup :: MethodBind
 bindTabContainer_get_popup
   = unsafePerformIO $
@@ -365,6 +399,7 @@ bindTabContainer_get_popup
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the @Popup@ node instance if one has been set already with @method set_popup@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_popup ::
             (TabContainer :< cls, Object :< cls) => cls -> IO Popup
 get_popup cls
@@ -373,7 +408,7 @@ get_popup cls
          godot_method_bind_call bindTabContainer_get_popup (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TabContainer "get_popup" '[] (IO Popup) where
         nodeMethod = Godot.Core.TabContainer.get_popup
@@ -400,7 +435,10 @@ get_previous_tab cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "get_previous_tab" '[] (IO Int)
          where
@@ -427,7 +465,10 @@ get_tab_align cls
          godot_method_bind_call bindTabContainer_get_tab_align (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "get_tab_align" '[] (IO Int) where
         nodeMethod = Godot.Core.TabContainer.get_tab_align
@@ -454,7 +495,7 @@ get_tab_control cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TabContainer "get_tab_control" '[Int]
            (IO Control)
@@ -482,7 +523,10 @@ get_tab_count cls
          godot_method_bind_call bindTabContainer_get_tab_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "get_tab_count" '[] (IO Int) where
         nodeMethod = Godot.Core.TabContainer.get_tab_count
@@ -509,7 +553,10 @@ get_tab_disabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "get_tab_disabled" '[Int]
            (IO Bool)
@@ -537,11 +584,43 @@ get_tab_icon cls arg1
          godot_method_bind_call bindTabContainer_get_tab_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TabContainer "get_tab_icon" '[Int] (IO Texture)
          where
         nodeMethod = Godot.Core.TabContainer.get_tab_icon
+
+{-# NOINLINE bindTabContainer_get_tab_idx_at_point #-}
+
+-- | Returns the index of the tab at local coordinates @point@. Returns @-1@ if the point is outside the control boundaries or if there's no tab at the queried position.
+bindTabContainer_get_tab_idx_at_point :: MethodBind
+bindTabContainer_get_tab_idx_at_point
+  = unsafePerformIO $
+      withCString "TabContainer" $
+        \ clsNamePtr ->
+          withCString "get_tab_idx_at_point" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the index of the tab at local coordinates @point@. Returns @-1@ if the point is outside the control boundaries or if there's no tab at the queried position.
+get_tab_idx_at_point ::
+                       (TabContainer :< cls, Object :< cls) => cls -> Vector2 -> IO Int
+get_tab_idx_at_point cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabContainer_get_tab_idx_at_point
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TabContainer "get_tab_idx_at_point" '[Vector2]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.TabContainer.get_tab_idx_at_point
 
 {-# NOINLINE bindTabContainer_get_tab_title #-}
 
@@ -565,7 +644,10 @@ get_tab_title cls arg1
          godot_method_bind_call bindTabContainer_get_tab_title (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "get_tab_title" '[Int]
            (IO GodotString)
@@ -594,7 +676,10 @@ get_tabs_rearrange_group cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "get_tabs_rearrange_group" '[]
            (IO Int)
@@ -624,7 +709,10 @@ get_use_hidden_tabs_for_min_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "get_use_hidden_tabs_for_min_size"
            '[]
@@ -632,6 +720,70 @@ instance NodeMethod TabContainer "get_use_hidden_tabs_for_min_size"
          where
         nodeMethod
           = Godot.Core.TabContainer.get_use_hidden_tabs_for_min_size
+
+{-# NOINLINE bindTabContainer_is_all_tabs_in_front #-}
+
+-- | If @true@, all tabs are drawn in front of the panel. If @false@, inactive tabs are drawn behind the panel.
+bindTabContainer_is_all_tabs_in_front :: MethodBind
+bindTabContainer_is_all_tabs_in_front
+  = unsafePerformIO $
+      withCString "TabContainer" $
+        \ clsNamePtr ->
+          withCString "is_all_tabs_in_front" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, all tabs are drawn in front of the panel. If @false@, inactive tabs are drawn behind the panel.
+is_all_tabs_in_front ::
+                       (TabContainer :< cls, Object :< cls) => cls -> IO Bool
+is_all_tabs_in_front cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabContainer_is_all_tabs_in_front
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TabContainer "is_all_tabs_in_front" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.TabContainer.is_all_tabs_in_front
+
+{-# NOINLINE bindTabContainer_set_all_tabs_in_front #-}
+
+-- | If @true@, all tabs are drawn in front of the panel. If @false@, inactive tabs are drawn behind the panel.
+bindTabContainer_set_all_tabs_in_front :: MethodBind
+bindTabContainer_set_all_tabs_in_front
+  = unsafePerformIO $
+      withCString "TabContainer" $
+        \ clsNamePtr ->
+          withCString "set_all_tabs_in_front" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, all tabs are drawn in front of the panel. If @false@, inactive tabs are drawn behind the panel.
+set_all_tabs_in_front ::
+                        (TabContainer :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_all_tabs_in_front cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabContainer_set_all_tabs_in_front
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TabContainer "set_all_tabs_in_front" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TabContainer.set_all_tabs_in_front
 
 {-# NOINLINE bindTabContainer_set_current_tab #-}
 
@@ -655,7 +807,10 @@ set_current_tab cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "set_current_tab" '[Int] (IO ())
          where
@@ -684,7 +839,10 @@ set_drag_to_rearrange_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "set_drag_to_rearrange_enabled"
            '[Bool]
@@ -713,7 +871,10 @@ set_popup cls arg1
          godot_method_bind_call bindTabContainer_set_popup (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "set_popup" '[Node] (IO ()) where
         nodeMethod = Godot.Core.TabContainer.set_popup
@@ -739,7 +900,10 @@ set_tab_align cls arg1
          godot_method_bind_call bindTabContainer_set_tab_align (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "set_tab_align" '[Int] (IO ())
          where
@@ -747,8 +911,7 @@ instance NodeMethod TabContainer "set_tab_align" '[Int] (IO ())
 
 {-# NOINLINE bindTabContainer_set_tab_disabled #-}
 
--- | If @disabled@ is @false@, hides the tab at index @tab_idx@.
---   				__Note:__ Its title text will remain, unless also removed with @method set_tab_title@.
+-- | If @disabled@ is @true@, disables the tab at index @tab_idx@, making it non-interactable.
 bindTabContainer_set_tab_disabled :: MethodBind
 bindTabContainer_set_tab_disabled
   = unsafePerformIO $
@@ -758,8 +921,7 @@ bindTabContainer_set_tab_disabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @disabled@ is @false@, hides the tab at index @tab_idx@.
---   				__Note:__ Its title text will remain, unless also removed with @method set_tab_title@.
+-- | If @disabled@ is @true@, disables the tab at index @tab_idx@, making it non-interactable.
 set_tab_disabled ::
                    (TabContainer :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
 set_tab_disabled cls arg1 arg2
@@ -769,7 +931,10 @@ set_tab_disabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "set_tab_disabled" '[Int, Bool]
            (IO ())
@@ -798,7 +963,10 @@ set_tab_icon cls arg1 arg2
          godot_method_bind_call bindTabContainer_set_tab_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "set_tab_icon" '[Int, Texture]
            (IO ())
@@ -807,7 +975,7 @@ instance NodeMethod TabContainer "set_tab_icon" '[Int, Texture]
 
 {-# NOINLINE bindTabContainer_set_tab_title #-}
 
--- | Sets a title for the tab at index @tab_idx@. Tab titles default to the name of the indexed child node, but this can be overridden with @method set_tab_title@.
+-- | Sets a title for the tab at index @tab_idx@. Tab titles default to the name of the indexed child node.
 bindTabContainer_set_tab_title :: MethodBind
 bindTabContainer_set_tab_title
   = unsafePerformIO $
@@ -817,7 +985,7 @@ bindTabContainer_set_tab_title
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets a title for the tab at index @tab_idx@. Tab titles default to the name of the indexed child node, but this can be overridden with @method set_tab_title@.
+-- | Sets a title for the tab at index @tab_idx@. Tab titles default to the name of the indexed child node.
 set_tab_title ::
                 (TabContainer :< cls, Object :< cls) =>
                 cls -> Int -> GodotString -> IO ()
@@ -827,7 +995,10 @@ set_tab_title cls arg1 arg2
          godot_method_bind_call bindTabContainer_set_tab_title (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "set_tab_title"
            '[Int, GodotString]
@@ -837,7 +1008,7 @@ instance NodeMethod TabContainer "set_tab_title"
 
 {-# NOINLINE bindTabContainer_set_tabs_rearrange_group #-}
 
--- | Defines rearrange group id, choose for each @TabContainer@ the same value to enable tab drag between @TabContainer@. Enable drag with @set_drag_to_rearrange_enabled(true)@.
+-- | Defines rearrange group id, choose for each @TabContainer@ the same value to enable tab drag between @TabContainer@. Enable drag with @drag_to_rearrange_enabled@.
 bindTabContainer_set_tabs_rearrange_group :: MethodBind
 bindTabContainer_set_tabs_rearrange_group
   = unsafePerformIO $
@@ -847,7 +1018,7 @@ bindTabContainer_set_tabs_rearrange_group
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Defines rearrange group id, choose for each @TabContainer@ the same value to enable tab drag between @TabContainer@. Enable drag with @set_drag_to_rearrange_enabled(true)@.
+-- | Defines rearrange group id, choose for each @TabContainer@ the same value to enable tab drag between @TabContainer@. Enable drag with @drag_to_rearrange_enabled@.
 set_tabs_rearrange_group ::
                            (TabContainer :< cls, Object :< cls) => cls -> Int -> IO ()
 set_tabs_rearrange_group cls arg1
@@ -857,7 +1028,10 @@ set_tabs_rearrange_group cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "set_tabs_rearrange_group" '[Int]
            (IO ())
@@ -886,7 +1060,10 @@ set_tabs_visible cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "set_tabs_visible" '[Bool] (IO ())
          where
@@ -915,7 +1092,10 @@ set_use_hidden_tabs_for_min_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TabContainer "set_use_hidden_tabs_for_min_size"
            '[Bool]

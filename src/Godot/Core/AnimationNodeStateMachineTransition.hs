@@ -102,7 +102,7 @@ instance NodeProperty AnimationNodeStateMachineTransition
 {-# NOINLINE bindAnimationNodeStateMachineTransition_get_advance_condition
              #-}
 
--- | Turn on auto advance when this condition is set. The provided name will become a boolean parameter on the @AnimationTree@ that can be controlled from code (see @url=https://docs.godotengine.org/en/latest/tutorials/animation/animation_tree.html#controlling-from-code@@/url@). For example, if @AnimationTree.tree_root@ is an @AnimationNodeStateMachine@ and @advance_condition@ is set to @"idle"@:
+-- | Turn on auto advance when this condition is set. The provided name will become a boolean parameter on the @AnimationTree@ that can be controlled from code (see @url=https://docs.godotengine.org/en/3.4/tutorials/animation/animation_tree.html#controlling-from-code@@/url@). For example, if @AnimationTree.tree_root@ is an @AnimationNodeStateMachine@ and @advance_condition@ is set to @"idle"@:
 --   			
 --   @
 --   
@@ -119,7 +119,7 @@ bindAnimationNodeStateMachineTransition_get_advance_condition
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Turn on auto advance when this condition is set. The provided name will become a boolean parameter on the @AnimationTree@ that can be controlled from code (see @url=https://docs.godotengine.org/en/latest/tutorials/animation/animation_tree.html#controlling-from-code@@/url@). For example, if @AnimationTree.tree_root@ is an @AnimationNodeStateMachine@ and @advance_condition@ is set to @"idle"@:
+-- | Turn on auto advance when this condition is set. The provided name will become a boolean parameter on the @AnimationTree@ that can be controlled from code (see @url=https://docs.godotengine.org/en/3.4/tutorials/animation/animation_tree.html#controlling-from-code@@/url@). For example, if @AnimationTree.tree_root@ is an @AnimationNodeStateMachine@ and @advance_condition@ is set to @"idle"@:
 --   			
 --   @
 --   
@@ -137,7 +137,10 @@ get_advance_condition cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "get_advance_condition"
@@ -172,7 +175,10 @@ get_priority cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "get_priority"
@@ -208,7 +214,10 @@ get_switch_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "get_switch_mode"
@@ -244,7 +253,10 @@ get_xfade_time cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "get_xfade_time"
@@ -280,7 +292,10 @@ has_auto_advance cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "has_auto_advance"
@@ -315,7 +330,10 @@ is_disabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "is_disabled"
@@ -328,7 +346,7 @@ instance NodeMethod AnimationNodeStateMachineTransition
 {-# NOINLINE bindAnimationNodeStateMachineTransition_set_advance_condition
              #-}
 
--- | Turn on auto advance when this condition is set. The provided name will become a boolean parameter on the @AnimationTree@ that can be controlled from code (see @url=https://docs.godotengine.org/en/latest/tutorials/animation/animation_tree.html#controlling-from-code@@/url@). For example, if @AnimationTree.tree_root@ is an @AnimationNodeStateMachine@ and @advance_condition@ is set to @"idle"@:
+-- | Turn on auto advance when this condition is set. The provided name will become a boolean parameter on the @AnimationTree@ that can be controlled from code (see @url=https://docs.godotengine.org/en/3.4/tutorials/animation/animation_tree.html#controlling-from-code@@/url@). For example, if @AnimationTree.tree_root@ is an @AnimationNodeStateMachine@ and @advance_condition@ is set to @"idle"@:
 --   			
 --   @
 --   
@@ -345,7 +363,7 @@ bindAnimationNodeStateMachineTransition_set_advance_condition
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Turn on auto advance when this condition is set. The provided name will become a boolean parameter on the @AnimationTree@ that can be controlled from code (see @url=https://docs.godotengine.org/en/latest/tutorials/animation/animation_tree.html#controlling-from-code@@/url@). For example, if @AnimationTree.tree_root@ is an @AnimationNodeStateMachine@ and @advance_condition@ is set to @"idle"@:
+-- | Turn on auto advance when this condition is set. The provided name will become a boolean parameter on the @AnimationTree@ that can be controlled from code (see @url=https://docs.godotengine.org/en/3.4/tutorials/animation/animation_tree.html#controlling-from-code@@/url@). For example, if @AnimationTree.tree_root@ is an @AnimationNodeStateMachine@ and @advance_condition@ is set to @"idle"@:
 --   			
 --   @
 --   
@@ -363,7 +381,10 @@ set_advance_condition cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "set_advance_condition"
@@ -399,7 +420,10 @@ set_auto_advance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "set_auto_advance"
@@ -434,7 +458,10 @@ set_disabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "set_disabled"
@@ -469,7 +496,10 @@ set_priority cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "set_priority"
@@ -505,7 +535,10 @@ set_switch_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "set_switch_mode"
@@ -541,7 +574,10 @@ set_xfade_time cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNodeStateMachineTransition
            "set_xfade_time"

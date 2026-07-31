@@ -75,7 +75,10 @@ accept_stream cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindStreamPeerSSL_accept_stream (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerSSL "accept_stream"
            '[StreamPeer, CryptoKey, X509Certificate, Maybe X509Certificate]
@@ -113,7 +116,10 @@ connect_to_stream cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerSSL "connect_to_stream"
            '[StreamPeer, Maybe Bool, Maybe GodotString, Maybe X509Certificate]
@@ -143,7 +149,10 @@ disconnect_from_stream cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerSSL "disconnect_from_stream" '[]
            (IO ())
@@ -171,7 +180,10 @@ get_status cls
          godot_method_bind_call bindStreamPeerSSL_get_status (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerSSL "get_status" '[] (IO Int) where
         nodeMethod = Godot.Core.StreamPeerSSL.get_status
@@ -197,7 +209,10 @@ is_blocking_handshake_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerSSL "is_blocking_handshake_enabled"
            '[]
@@ -224,7 +239,10 @@ poll cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeerSSL_poll (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerSSL "poll" '[] (IO ()) where
         nodeMethod = Godot.Core.StreamPeerSSL.poll
@@ -250,7 +268,10 @@ set_blocking_handshake_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeerSSL "set_blocking_handshake_enabled"
            '[Bool]

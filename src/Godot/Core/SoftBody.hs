@@ -14,11 +14,14 @@ module Godot.Core.SoftBody
         Godot.Core.SoftBody.get_drag_coefficient,
         Godot.Core.SoftBody.get_linear_stiffness,
         Godot.Core.SoftBody.get_parent_collision_ignore,
+        Godot.Core.SoftBody.get_point_transform,
         Godot.Core.SoftBody.get_pose_matching_coefficient,
         Godot.Core.SoftBody.get_pressure_coefficient,
         Godot.Core.SoftBody.get_simulation_precision,
         Godot.Core.SoftBody.get_total_mass,
         Godot.Core.SoftBody.get_volume_stiffness,
+        Godot.Core.SoftBody.is_physics_enabled,
+        Godot.Core.SoftBody.is_point_pinned,
         Godot.Core.SoftBody.is_ray_pickable,
         Godot.Core.SoftBody.remove_collision_exception_with,
         Godot.Core.SoftBody.set_areaAngular_stiffness,
@@ -30,6 +33,8 @@ module Godot.Core.SoftBody
         Godot.Core.SoftBody.set_drag_coefficient,
         Godot.Core.SoftBody.set_linear_stiffness,
         Godot.Core.SoftBody.set_parent_collision_ignore,
+        Godot.Core.SoftBody.set_physics_enabled,
+        Godot.Core.SoftBody.set_point_pinned,
         Godot.Core.SoftBody.set_pose_matching_coefficient,
         Godot.Core.SoftBody.set_pressure_coefficient,
         Godot.Core.SoftBody.set_ray_pickable,
@@ -90,6 +95,11 @@ instance NodeProperty SoftBody "parent_collision_ignore" NodePath
           = (get_parent_collision_ignore,
              wrapDroppingSetter set_parent_collision_ignore, Nothing)
 
+instance NodeProperty SoftBody "physics_enabled" Bool 'False where
+        nodeProperty
+          = (is_physics_enabled, wrapDroppingSetter set_physics_enabled,
+             Nothing)
+
 instance NodeProperty SoftBody "pose_matching_coefficient" Float
            'False
          where
@@ -141,7 +151,10 @@ _draw_soft_mesh cls
          godot_method_bind_call bindSoftBody__draw_soft_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "_draw_soft_mesh" '[] (IO ()) where
         nodeMethod = Godot.Core.SoftBody._draw_soft_mesh
@@ -168,7 +181,10 @@ add_collision_exception_with cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "add_collision_exception_with" '[Node]
            (IO ())
@@ -195,7 +211,10 @@ get_areaAngular_stiffness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_areaAngular_stiffness" '[]
            (IO Float)
@@ -224,7 +243,10 @@ get_collision_exceptions cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_collision_exceptions" '[]
            (IO Array)
@@ -235,7 +257,7 @@ instance NodeMethod SoftBody "get_collision_exceptions" '[]
 
 -- | The physics layers this SoftBody is in.
 --   			Collidable objects can exist in any of 32 different layers. These layers work like a tagging system, and are not visual. A collidable can use these layers to select with which objects it can collide, using the collision_mask property.
---   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindSoftBody_get_collision_layer :: MethodBind
 bindSoftBody_get_collision_layer
   = unsafePerformIO $
@@ -247,7 +269,7 @@ bindSoftBody_get_collision_layer
 
 -- | The physics layers this SoftBody is in.
 --   			Collidable objects can exist in any of 32 different layers. These layers work like a tagging system, and are not visual. A collidable can use these layers to select with which objects it can collide, using the collision_mask property.
---   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_layer ::
                       (SoftBody :< cls, Object :< cls) => cls -> IO Int
 get_collision_layer cls
@@ -257,7 +279,10 @@ get_collision_layer cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_collision_layer" '[] (IO Int)
          where
@@ -285,7 +310,10 @@ get_collision_layer_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_collision_layer_bit" '[Int]
            (IO Bool)
@@ -294,7 +322,7 @@ instance NodeMethod SoftBody "get_collision_layer_bit" '[Int]
 
 {-# NOINLINE bindSoftBody_get_collision_mask #-}
 
--- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindSoftBody_get_collision_mask :: MethodBind
 bindSoftBody_get_collision_mask
   = unsafePerformIO $
@@ -304,7 +332,7 @@ bindSoftBody_get_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_mask ::
                      (SoftBody :< cls, Object :< cls) => cls -> IO Int
 get_collision_mask cls
@@ -313,7 +341,10 @@ get_collision_mask cls
          godot_method_bind_call bindSoftBody_get_collision_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_collision_mask" '[] (IO Int)
          where
@@ -341,7 +372,10 @@ get_collision_mask_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_collision_mask_bit" '[Int]
            (IO Bool)
@@ -368,7 +402,10 @@ get_damping_coefficient cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_damping_coefficient" '[]
            (IO Float)
@@ -395,7 +432,10 @@ get_drag_coefficient cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_drag_coefficient" '[] (IO Float)
          where
@@ -421,7 +461,10 @@ get_linear_stiffness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_linear_stiffness" '[] (IO Float)
          where
@@ -449,12 +492,47 @@ get_parent_collision_ignore cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_parent_collision_ignore" '[]
            (IO NodePath)
          where
         nodeMethod = Godot.Core.SoftBody.get_parent_collision_ignore
+
+{-# NOINLINE bindSoftBody_get_point_transform #-}
+
+-- | Returns local translation of a vertex in the surface array.
+bindSoftBody_get_point_transform :: MethodBind
+bindSoftBody_get_point_transform
+  = unsafePerformIO $
+      withCString "SoftBody" $
+        \ clsNamePtr ->
+          withCString "get_point_transform" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns local translation of a vertex in the surface array.
+get_point_transform ::
+                      (SoftBody :< cls, Object :< cls) => cls -> Int -> IO Vector3
+get_point_transform cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSoftBody_get_point_transform
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SoftBody "get_point_transform" '[Int]
+           (IO Vector3)
+         where
+        nodeMethod = Godot.Core.SoftBody.get_point_transform
 
 {-# NOINLINE bindSoftBody_get_pose_matching_coefficient #-}
 
@@ -476,7 +554,10 @@ get_pose_matching_coefficient cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_pose_matching_coefficient" '[]
            (IO Float)
@@ -503,7 +584,10 @@ get_pressure_coefficient cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_pressure_coefficient" '[]
            (IO Float)
@@ -532,7 +616,10 @@ get_simulation_precision cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_simulation_precision" '[]
            (IO Int)
@@ -560,7 +647,10 @@ get_total_mass cls
          godot_method_bind_call bindSoftBody_get_total_mass (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_total_mass" '[] (IO Float) where
         nodeMethod = Godot.Core.SoftBody.get_total_mass
@@ -585,11 +675,74 @@ get_volume_stiffness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "get_volume_stiffness" '[] (IO Float)
          where
         nodeMethod = Godot.Core.SoftBody.get_volume_stiffness
+
+{-# NOINLINE bindSoftBody_is_physics_enabled #-}
+
+-- | If @true@, the @SoftBody@ is simulated in physics. Can be set to @false@ to pause the physics simulation.
+bindSoftBody_is_physics_enabled :: MethodBind
+bindSoftBody_is_physics_enabled
+  = unsafePerformIO $
+      withCString "SoftBody" $
+        \ clsNamePtr ->
+          withCString "is_physics_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the @SoftBody@ is simulated in physics. Can be set to @false@ to pause the physics simulation.
+is_physics_enabled ::
+                     (SoftBody :< cls, Object :< cls) => cls -> IO Bool
+is_physics_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSoftBody_is_physics_enabled (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SoftBody "is_physics_enabled" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.SoftBody.is_physics_enabled
+
+{-# NOINLINE bindSoftBody_is_point_pinned #-}
+
+-- | Returns @true@ if vertex is set to pinned.
+bindSoftBody_is_point_pinned :: MethodBind
+bindSoftBody_is_point_pinned
+  = unsafePerformIO $
+      withCString "SoftBody" $
+        \ clsNamePtr ->
+          withCString "is_point_pinned" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if vertex is set to pinned.
+is_point_pinned ::
+                  (SoftBody :< cls, Object :< cls) => cls -> Int -> IO Bool
+is_point_pinned cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSoftBody_is_point_pinned (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SoftBody "is_point_pinned" '[Int] (IO Bool)
+         where
+        nodeMethod = Godot.Core.SoftBody.is_point_pinned
 
 {-# NOINLINE bindSoftBody_is_ray_pickable #-}
 
@@ -612,7 +765,10 @@ is_ray_pickable cls
          godot_method_bind_call bindSoftBody_is_ray_pickable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "is_ray_pickable" '[] (IO Bool) where
         nodeMethod = Godot.Core.SoftBody.is_ray_pickable
@@ -639,7 +795,10 @@ remove_collision_exception_with cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "remove_collision_exception_with"
            '[Node]
@@ -667,7 +826,10 @@ set_areaAngular_stiffness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_areaAngular_stiffness" '[Float]
            (IO ())
@@ -678,7 +840,7 @@ instance NodeMethod SoftBody "set_areaAngular_stiffness" '[Float]
 
 -- | The physics layers this SoftBody is in.
 --   			Collidable objects can exist in any of 32 different layers. These layers work like a tagging system, and are not visual. A collidable can use these layers to select with which objects it can collide, using the collision_mask property.
---   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindSoftBody_set_collision_layer :: MethodBind
 bindSoftBody_set_collision_layer
   = unsafePerformIO $
@@ -690,7 +852,7 @@ bindSoftBody_set_collision_layer
 
 -- | The physics layers this SoftBody is in.
 --   			Collidable objects can exist in any of 32 different layers. These layers work like a tagging system, and are not visual. A collidable can use these layers to select with which objects it can collide, using the collision_mask property.
---   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_layer ::
                       (SoftBody :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_layer cls arg1
@@ -700,7 +862,10 @@ set_collision_layer cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_collision_layer" '[Int] (IO ())
          where
@@ -728,7 +893,10 @@ set_collision_layer_bit cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_collision_layer_bit" '[Int, Bool]
            (IO ())
@@ -737,7 +905,7 @@ instance NodeMethod SoftBody "set_collision_layer_bit" '[Int, Bool]
 
 {-# NOINLINE bindSoftBody_set_collision_mask #-}
 
--- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindSoftBody_set_collision_mask :: MethodBind
 bindSoftBody_set_collision_mask
   = unsafePerformIO $
@@ -747,7 +915,7 @@ bindSoftBody_set_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_mask ::
                      (SoftBody :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_mask cls arg1
@@ -756,7 +924,10 @@ set_collision_mask cls arg1
          godot_method_bind_call bindSoftBody_set_collision_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_collision_mask" '[Int] (IO ())
          where
@@ -784,7 +955,10 @@ set_collision_mask_bit cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_collision_mask_bit" '[Int, Bool]
            (IO ())
@@ -811,7 +985,10 @@ set_damping_coefficient cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_damping_coefficient" '[Float]
            (IO ())
@@ -838,7 +1015,10 @@ set_drag_coefficient cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_drag_coefficient" '[Float]
            (IO ())
@@ -865,7 +1045,10 @@ set_linear_stiffness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_linear_stiffness" '[Float]
            (IO ())
@@ -894,13 +1077,82 @@ set_parent_collision_ignore cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_parent_collision_ignore"
            '[NodePath]
            (IO ())
          where
         nodeMethod = Godot.Core.SoftBody.set_parent_collision_ignore
+
+{-# NOINLINE bindSoftBody_set_physics_enabled #-}
+
+-- | If @true@, the @SoftBody@ is simulated in physics. Can be set to @false@ to pause the physics simulation.
+bindSoftBody_set_physics_enabled :: MethodBind
+bindSoftBody_set_physics_enabled
+  = unsafePerformIO $
+      withCString "SoftBody" $
+        \ clsNamePtr ->
+          withCString "set_physics_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the @SoftBody@ is simulated in physics. Can be set to @false@ to pause the physics simulation.
+set_physics_enabled ::
+                      (SoftBody :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_physics_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSoftBody_set_physics_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SoftBody "set_physics_enabled" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.SoftBody.set_physics_enabled
+
+{-# NOINLINE bindSoftBody_set_point_pinned #-}
+
+-- | Sets the pinned state of a surface vertex. When set to @true@, the optional @attachment_path@ can define a @Spatial@ the pinned vertex will be attached to.
+bindSoftBody_set_point_pinned :: MethodBind
+bindSoftBody_set_point_pinned
+  = unsafePerformIO $
+      withCString "SoftBody" $
+        \ clsNamePtr ->
+          withCString "set_point_pinned" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the pinned state of a surface vertex. When set to @true@, the optional @attachment_path@ can define a @Spatial@ the pinned vertex will be attached to.
+set_point_pinned ::
+                   (SoftBody :< cls, Object :< cls) =>
+                   cls -> Int -> Bool -> Maybe NodePath -> IO ()
+set_point_pinned cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, toVariant arg2,
+       defaultedVariant VariantNodePath NodePath "" arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSoftBody_set_point_pinned (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SoftBody "set_point_pinned"
+           '[Int, Bool, Maybe NodePath]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.SoftBody.set_point_pinned
 
 {-# NOINLINE bindSoftBody_set_pose_matching_coefficient #-}
 
@@ -922,7 +1174,10 @@ set_pose_matching_coefficient cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_pose_matching_coefficient"
            '[Float]
@@ -950,7 +1205,10 @@ set_pressure_coefficient cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_pressure_coefficient" '[Float]
            (IO ())
@@ -978,7 +1236,10 @@ set_ray_pickable cls arg1
          godot_method_bind_call bindSoftBody_set_ray_pickable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_ray_pickable" '[Bool] (IO ())
          where
@@ -1006,7 +1267,10 @@ set_simulation_precision cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_simulation_precision" '[Int]
            (IO ())
@@ -1034,7 +1298,10 @@ set_total_mass cls arg1
          godot_method_bind_call bindSoftBody_set_total_mass (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_total_mass" '[Float] (IO ())
          where
@@ -1060,7 +1327,10 @@ set_volume_stiffness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SoftBody "set_volume_stiffness" '[Float]
            (IO ())

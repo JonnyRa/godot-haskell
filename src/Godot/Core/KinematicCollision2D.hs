@@ -2,9 +2,11 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.KinematicCollision2D
-       (Godot.Core.KinematicCollision2D.get_collider,
+       (Godot.Core.KinematicCollision2D.get_angle,
+        Godot.Core.KinematicCollision2D.get_collider,
         Godot.Core.KinematicCollision2D.get_collider_id,
         Godot.Core.KinematicCollision2D.get_collider_metadata,
+        Godot.Core.KinematicCollision2D.get_collider_rid,
         Godot.Core.KinematicCollision2D.get_collider_shape,
         Godot.Core.KinematicCollision2D.get_collider_shape_index,
         Godot.Core.KinematicCollision2D.get_collider_velocity,
@@ -39,6 +41,10 @@ instance NodeProperty KinematicCollision2D "collider_metadata"
            'True
          where
         nodeProperty = (get_collider_metadata, (), Nothing)
+
+instance NodeProperty KinematicCollision2D "collider_rid" Rid 'True
+         where
+        nodeProperty = (get_collider_rid, (), Nothing)
 
 instance NodeProperty KinematicCollision2D "collider_shape" Object
            'True
@@ -79,6 +85,41 @@ instance NodeProperty KinematicCollision2D "travel" Vector2 'True
          where
         nodeProperty = (get_travel, (), Nothing)
 
+{-# NOINLINE bindKinematicCollision2D_get_angle #-}
+
+-- | The collision angle according to @up_direction@, which is @Vector2.UP@ by default. This value is always positive.
+bindKinematicCollision2D_get_angle :: MethodBind
+bindKinematicCollision2D_get_angle
+  = unsafePerformIO $
+      withCString "KinematicCollision2D" $
+        \ clsNamePtr ->
+          withCString "get_angle" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The collision angle according to @up_direction@, which is @Vector2.UP@ by default. This value is always positive.
+get_angle ::
+            (KinematicCollision2D :< cls, Object :< cls) =>
+            cls -> Maybe Vector2 -> IO Float
+get_angle cls arg1
+  = withVariantArray
+      [defaultedVariant VariantVector2 (V2 0 (-1)) arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindKinematicCollision2D_get_angle
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod KinematicCollision2D "get_angle"
+           '[Maybe Vector2]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.KinematicCollision2D.get_angle
+
 {-# NOINLINE bindKinematicCollision2D_get_collider #-}
 
 -- | The colliding body.
@@ -101,7 +142,7 @@ get_collider cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod KinematicCollision2D "get_collider" '[]
            (IO Object)
@@ -130,7 +171,10 @@ get_collider_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod KinematicCollision2D "get_collider_id" '[]
            (IO Int)
@@ -161,13 +205,45 @@ get_collider_metadata cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod KinematicCollision2D "get_collider_metadata"
            '[]
            (IO GodotVariant)
          where
         nodeMethod = Godot.Core.KinematicCollision2D.get_collider_metadata
+
+{-# NOINLINE bindKinematicCollision2D_get_collider_rid #-}
+
+-- | The colliding body's @RID@ used by the @Physics2DServer@.
+bindKinematicCollision2D_get_collider_rid :: MethodBind
+bindKinematicCollision2D_get_collider_rid
+  = unsafePerformIO $
+      withCString "KinematicCollision2D" $
+        \ clsNamePtr ->
+          withCString "get_collider_rid" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The colliding body's @RID@ used by the @Physics2DServer@.
+get_collider_rid ::
+                   (KinematicCollision2D :< cls, Object :< cls) => cls -> IO Rid
+get_collider_rid cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindKinematicCollision2D_get_collider_rid
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod KinematicCollision2D "get_collider_rid" '[]
+           (IO Rid)
+         where
+        nodeMethod = Godot.Core.KinematicCollision2D.get_collider_rid
 
 {-# NOINLINE bindKinematicCollision2D_get_collider_shape #-}
 
@@ -191,7 +267,7 @@ get_collider_shape cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod KinematicCollision2D "get_collider_shape" '[]
            (IO Object)
@@ -221,7 +297,10 @@ get_collider_shape_index cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod KinematicCollision2D "get_collider_shape_index"
            '[]
@@ -253,7 +332,10 @@ get_collider_velocity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod KinematicCollision2D "get_collider_velocity"
            '[]
@@ -283,7 +365,7 @@ get_local_shape cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod KinematicCollision2D "get_local_shape" '[]
            (IO Object)
@@ -312,7 +394,10 @@ get_normal cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod KinematicCollision2D "get_normal" '[]
            (IO Vector2)
@@ -341,7 +426,10 @@ get_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod KinematicCollision2D "get_position" '[]
            (IO Vector2)
@@ -370,7 +458,10 @@ get_remainder cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod KinematicCollision2D "get_remainder" '[]
            (IO Vector2)
@@ -399,7 +490,10 @@ get_travel cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod KinematicCollision2D "get_travel" '[]
            (IO Vector2)

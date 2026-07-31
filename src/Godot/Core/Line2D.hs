@@ -141,7 +141,10 @@ _curve_changed cls
          godot_method_bind_call bindLine2D__curve_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "_curve_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.Line2D._curve_changed
@@ -164,7 +167,10 @@ _gradient_changed cls
          godot_method_bind_call bindLine2D__gradient_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "_gradient_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.Line2D._gradient_changed
@@ -192,7 +198,10 @@ add_point cls arg1 arg2
       [toVariant arg1, maybe (VariantInt (-1)) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_add_point (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "add_point" '[Vector2, Maybe Int]
            (IO ())
@@ -218,7 +227,10 @@ clear_points cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_clear_points (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "clear_points" '[] (IO ()) where
         nodeMethod = Godot.Core.Line2D.clear_points
@@ -226,6 +238,7 @@ instance NodeMethod Line2D "clear_points" '[] (IO ()) where
 {-# NOINLINE bindLine2D_get_antialiased #-}
 
 -- | If @true@, the line's border will be anti-aliased.
+--   			__Note:__ Line2D is not accelerated by batching when being anti-aliased.
 bindLine2D_get_antialiased :: MethodBind
 bindLine2D_get_antialiased
   = unsafePerformIO $
@@ -236,6 +249,7 @@ bindLine2D_get_antialiased
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the line's border will be anti-aliased.
+--   			__Note:__ Line2D is not accelerated by batching when being anti-aliased.
 get_antialiased :: (Line2D :< cls, Object :< cls) => cls -> IO Bool
 get_antialiased cls
   = withVariantArray []
@@ -243,7 +257,10 @@ get_antialiased cls
          godot_method_bind_call bindLine2D_get_antialiased (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_antialiased" '[] (IO Bool) where
         nodeMethod = Godot.Core.Line2D.get_antialiased
@@ -269,7 +286,10 @@ get_begin_cap_mode cls
          godot_method_bind_call bindLine2D_get_begin_cap_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_begin_cap_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Line2D.get_begin_cap_mode
@@ -292,7 +312,7 @@ get_curve cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_get_curve (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Line2D "get_curve" '[] (IO Curve) where
         nodeMethod = Godot.Core.Line2D.get_curve
@@ -318,7 +338,10 @@ get_default_color cls
          godot_method_bind_call bindLine2D_get_default_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_default_color" '[] (IO Color) where
         nodeMethod = Godot.Core.Line2D.get_default_color
@@ -343,7 +366,10 @@ get_end_cap_mode cls
          godot_method_bind_call bindLine2D_get_end_cap_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_end_cap_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Line2D.get_end_cap_mode
@@ -368,7 +394,7 @@ get_gradient cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_get_gradient (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Line2D "get_gradient" '[] (IO Gradient) where
         nodeMethod = Godot.Core.Line2D.get_gradient
@@ -393,7 +419,10 @@ get_joint_mode cls
          godot_method_bind_call bindLine2D_get_joint_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_joint_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Line2D.get_joint_mode
@@ -418,7 +447,10 @@ get_point_count cls
          godot_method_bind_call bindLine2D_get_point_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_point_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Line2D.get_point_count
@@ -444,7 +476,10 @@ get_point_position cls arg1
          godot_method_bind_call bindLine2D_get_point_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_point_position" '[Int] (IO Vector2)
          where
@@ -470,7 +505,10 @@ get_points cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_get_points (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_points" '[] (IO PoolVector2Array)
          where
@@ -497,7 +535,10 @@ get_round_precision cls
          godot_method_bind_call bindLine2D_get_round_precision (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_round_precision" '[] (IO Int) where
         nodeMethod = Godot.Core.Line2D.get_round_precision
@@ -523,7 +564,10 @@ get_sharp_limit cls
          godot_method_bind_call bindLine2D_get_sharp_limit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_sharp_limit" '[] (IO Float) where
         nodeMethod = Godot.Core.Line2D.get_sharp_limit
@@ -547,7 +591,7 @@ get_texture cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_get_texture (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Line2D "get_texture" '[] (IO Texture) where
         nodeMethod = Godot.Core.Line2D.get_texture
@@ -572,7 +616,10 @@ get_texture_mode cls
          godot_method_bind_call bindLine2D_get_texture_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_texture_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Line2D.get_texture_mode
@@ -595,7 +642,10 @@ get_width cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_get_width (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "get_width" '[] (IO Float) where
         nodeMethod = Godot.Core.Line2D.get_width
@@ -620,7 +670,10 @@ remove_point cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_remove_point (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "remove_point" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Line2D.remove_point
@@ -628,6 +681,7 @@ instance NodeMethod Line2D "remove_point" '[Int] (IO ()) where
 {-# NOINLINE bindLine2D_set_antialiased #-}
 
 -- | If @true@, the line's border will be anti-aliased.
+--   			__Note:__ Line2D is not accelerated by batching when being anti-aliased.
 bindLine2D_set_antialiased :: MethodBind
 bindLine2D_set_antialiased
   = unsafePerformIO $
@@ -638,6 +692,7 @@ bindLine2D_set_antialiased
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the line's border will be anti-aliased.
+--   			__Note:__ Line2D is not accelerated by batching when being anti-aliased.
 set_antialiased ::
                   (Line2D :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_antialiased cls arg1
@@ -646,7 +701,10 @@ set_antialiased cls arg1
          godot_method_bind_call bindLine2D_set_antialiased (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_antialiased" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Line2D.set_antialiased
@@ -672,7 +730,10 @@ set_begin_cap_mode cls arg1
          godot_method_bind_call bindLine2D_set_begin_cap_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_begin_cap_mode" '[Int] (IO ())
          where
@@ -697,7 +758,10 @@ set_curve cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_set_curve (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_curve" '[Curve] (IO ()) where
         nodeMethod = Godot.Core.Line2D.set_curve
@@ -723,7 +787,10 @@ set_default_color cls arg1
          godot_method_bind_call bindLine2D_set_default_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_default_color" '[Color] (IO ())
          where
@@ -750,7 +817,10 @@ set_end_cap_mode cls arg1
          godot_method_bind_call bindLine2D_set_end_cap_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_end_cap_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Line2D.set_end_cap_mode
@@ -775,7 +845,10 @@ set_gradient cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_set_gradient (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_gradient" '[Gradient] (IO ()) where
         nodeMethod = Godot.Core.Line2D.set_gradient
@@ -801,7 +874,10 @@ set_joint_mode cls arg1
          godot_method_bind_call bindLine2D_set_joint_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_joint_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Line2D.set_joint_mode
@@ -827,7 +903,10 @@ set_point_position cls arg1 arg2
          godot_method_bind_call bindLine2D_set_point_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_point_position" '[Int, Vector2]
            (IO ())
@@ -854,7 +933,10 @@ set_points cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_set_points (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_points" '[PoolVector2Array] (IO ())
          where
@@ -881,7 +963,10 @@ set_round_precision cls arg1
          godot_method_bind_call bindLine2D_set_round_precision (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_round_precision" '[Int] (IO ())
          where
@@ -908,7 +993,10 @@ set_sharp_limit cls arg1
          godot_method_bind_call bindLine2D_set_sharp_limit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_sharp_limit" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Line2D.set_sharp_limit
@@ -933,7 +1021,10 @@ set_texture cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_set_texture (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_texture" '[Texture] (IO ()) where
         nodeMethod = Godot.Core.Line2D.set_texture
@@ -959,7 +1050,10 @@ set_texture_mode cls arg1
          godot_method_bind_call bindLine2D_set_texture_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_texture_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Line2D.set_texture_mode
@@ -983,7 +1077,10 @@ set_width cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLine2D_set_width (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Line2D "set_width" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Line2D.set_width

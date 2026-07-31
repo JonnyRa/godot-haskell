@@ -18,6 +18,7 @@ module Godot.Core.ARVRPositionalTracker
         Godot.Core.ARVRPositionalTracker.get_orientation,
         Godot.Core.ARVRPositionalTracker.get_position,
         Godot.Core.ARVRPositionalTracker.get_rumble,
+        Godot.Core.ARVRPositionalTracker.get_tracker_id,
         Godot.Core.ARVRPositionalTracker.get_tracks_orientation,
         Godot.Core.ARVRPositionalTracker.get_tracks_position,
         Godot.Core.ARVRPositionalTracker.get_transform,
@@ -34,7 +35,7 @@ import Data.Colour.SRGB(sRGB)
 import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
-import Godot.Core.Object()
+import Godot.Core.Reference()
 
 _TRACKER_LEFT_HAND :: Int
 _TRACKER_LEFT_HAND = 1
@@ -70,7 +71,10 @@ _set_joy_id cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "_set_joy_id" '[Int]
            (IO ())
@@ -98,7 +102,10 @@ _set_mesh cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "_set_mesh" '[Mesh]
            (IO ())
@@ -126,7 +133,10 @@ _set_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "_set_name"
            '[GodotString]
@@ -155,7 +165,10 @@ _set_orientation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "_set_orientation"
            '[Basis]
@@ -184,7 +197,10 @@ _set_rw_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "_set_rw_position"
            '[Vector3]
@@ -213,7 +229,10 @@ _set_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "_set_type" '[Int]
            (IO ())
@@ -242,7 +261,10 @@ get_hand cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "get_hand" '[] (IO Int)
          where
@@ -270,7 +292,10 @@ get_joy_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "get_joy_id" '[] (IO Int)
          where
@@ -298,7 +323,7 @@ get_mesh cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ARVRPositionalTracker "get_mesh" '[] (IO Mesh)
          where
@@ -327,7 +352,10 @@ get_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "get_name" '[]
            (IO GodotString)
@@ -356,7 +384,10 @@ get_orientation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "get_orientation" '[]
            (IO Basis)
@@ -385,7 +416,10 @@ get_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "get_position" '[]
            (IO Vector3)
@@ -414,12 +448,47 @@ get_rumble cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "get_rumble" '[]
            (IO Float)
          where
         nodeMethod = Godot.Core.ARVRPositionalTracker.get_rumble
+
+{-# NOINLINE bindARVRPositionalTracker_get_tracker_id #-}
+
+-- | Returns the internal tracker ID. This uniquely identifies the tracker per tracker type and matches the ID you need to specify for nodes such as the @ARVRController@ and @ARVRAnchor@ nodes.
+bindARVRPositionalTracker_get_tracker_id :: MethodBind
+bindARVRPositionalTracker_get_tracker_id
+  = unsafePerformIO $
+      withCString "ARVRPositionalTracker" $
+        \ clsNamePtr ->
+          withCString "get_tracker_id" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the internal tracker ID. This uniquely identifies the tracker per tracker type and matches the ID you need to specify for nodes such as the @ARVRController@ and @ARVRAnchor@ nodes.
+get_tracker_id ::
+                 (ARVRPositionalTracker :< cls, Object :< cls) => cls -> IO Int
+get_tracker_id cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindARVRPositionalTracker_get_tracker_id
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ARVRPositionalTracker "get_tracker_id" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.ARVRPositionalTracker.get_tracker_id
 
 {-# NOINLINE bindARVRPositionalTracker_get_tracks_orientation #-}
 
@@ -444,7 +513,10 @@ get_tracks_orientation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "get_tracks_orientation"
            '[]
@@ -476,7 +548,10 @@ get_tracks_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "get_tracks_position" '[]
            (IO Bool)
@@ -506,7 +581,10 @@ get_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "get_transform" '[Bool]
            (IO Transform)
@@ -535,7 +613,10 @@ get_type cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "get_type" '[] (IO Int)
          where
@@ -564,7 +645,10 @@ set_rumble cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRPositionalTracker "set_rumble" '[Float]
            (IO ())

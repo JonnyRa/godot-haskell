@@ -79,7 +79,9 @@ draw cls arg1 arg2 arg3 arg4 arg5
        maybe VariantNil toVariant arg5]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTexture_draw (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Texture "draw"
            '[Rid, Vector2, Maybe Color, Maybe Bool, Maybe Texture]
@@ -115,7 +117,10 @@ draw_rect cls arg1 arg2 arg3 arg4 arg5 arg6
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTexture_draw_rect (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Texture "draw_rect"
            '[Rid, Rect2, Bool, Maybe Color, Maybe Bool, Maybe Texture]
@@ -154,7 +159,10 @@ draw_rect_region cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
          godot_method_bind_call bindTexture_draw_rect_region (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Texture "draw_rect_region"
            '[Rid, Rect2, Rect2, Maybe Color, Maybe Bool, Maybe Texture,
@@ -181,7 +189,7 @@ get_data cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTexture_get_data (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Texture "get_data" '[] (IO Image) where
         nodeMethod = Godot.Core.Texture.get_data
@@ -205,7 +213,10 @@ get_flags cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTexture_get_flags (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Texture "get_flags" '[] (IO Int) where
         nodeMethod = Godot.Core.Texture.get_flags
@@ -229,7 +240,10 @@ get_height cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTexture_get_height (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Texture "get_height" '[] (IO Int) where
         nodeMethod = Godot.Core.Texture.get_height
@@ -252,7 +266,10 @@ get_size cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTexture_get_size (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Texture "get_size" '[] (IO Vector2) where
         nodeMethod = Godot.Core.Texture.get_size
@@ -276,7 +293,10 @@ get_width cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTexture_get_width (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Texture "get_width" '[] (IO Int) where
         nodeMethod = Godot.Core.Texture.get_width
@@ -300,7 +320,10 @@ has_alpha cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTexture_has_alpha (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Texture "has_alpha" '[] (IO Bool) where
         nodeMethod = Godot.Core.Texture.has_alpha
@@ -324,7 +347,10 @@ set_flags cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTexture_set_flags (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Texture "set_flags" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Texture.set_flags

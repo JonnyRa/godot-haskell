@@ -50,7 +50,10 @@ get_initial_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GrooveJoint2D "get_initial_offset" '[]
            (IO Float)
@@ -78,7 +81,10 @@ get_length cls
          godot_method_bind_call bindGrooveJoint2D_get_length (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GrooveJoint2D "get_length" '[] (IO Float) where
         nodeMethod = Godot.Core.GrooveJoint2D.get_length
@@ -105,7 +111,10 @@ set_initial_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GrooveJoint2D "set_initial_offset" '[Float]
            (IO ())
@@ -133,7 +142,10 @@ set_length cls arg1
          godot_method_bind_call bindGrooveJoint2D_set_length (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GrooveJoint2D "set_length" '[Float] (IO ())
          where

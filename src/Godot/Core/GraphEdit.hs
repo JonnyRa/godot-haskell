@@ -12,13 +12,17 @@ module Godot.Core.GraphEdit
         Godot.Core.GraphEdit.sig_disconnection_request,
         Godot.Core.GraphEdit.sig_duplicate_nodes_request,
         Godot.Core.GraphEdit.sig_node_selected,
+        Godot.Core.GraphEdit.sig_node_unselected,
         Godot.Core.GraphEdit.sig_paste_nodes_request,
         Godot.Core.GraphEdit.sig_popup_request,
         Godot.Core.GraphEdit.sig_scroll_offset_changed,
         Godot.Core.GraphEdit._connections_layer_draw,
         Godot.Core.GraphEdit._graph_node_moved,
         Godot.Core.GraphEdit._graph_node_raised,
+        Godot.Core.GraphEdit._graph_node_slot_updated,
         Godot.Core.GraphEdit._gui_input,
+        Godot.Core.GraphEdit._minimap_draw,
+        Godot.Core.GraphEdit._minimap_toggled,
         Godot.Core.GraphEdit._scroll_moved,
         Godot.Core.GraphEdit._snap_toggled,
         Godot.Core.GraphEdit._snap_value_changed,
@@ -34,20 +38,34 @@ module Godot.Core.GraphEdit
         Godot.Core.GraphEdit.connect_node,
         Godot.Core.GraphEdit.disconnect_node,
         Godot.Core.GraphEdit.get_connection_list,
+        Godot.Core.GraphEdit.get_minimap_opacity,
+        Godot.Core.GraphEdit.get_minimap_size,
         Godot.Core.GraphEdit.get_scroll_ofs, Godot.Core.GraphEdit.get_snap,
         Godot.Core.GraphEdit.get_zoom, Godot.Core.GraphEdit.get_zoom_hbox,
+        Godot.Core.GraphEdit.get_zoom_max,
+        Godot.Core.GraphEdit.get_zoom_min,
+        Godot.Core.GraphEdit.get_zoom_step,
+        Godot.Core.GraphEdit.is_minimap_enabled,
         Godot.Core.GraphEdit.is_node_connected,
         Godot.Core.GraphEdit.is_right_disconnects_enabled,
+        Godot.Core.GraphEdit.is_showing_zoom_label,
         Godot.Core.GraphEdit.is_using_snap,
         Godot.Core.GraphEdit.is_valid_connection_type,
         Godot.Core.GraphEdit.remove_valid_connection_type,
         Godot.Core.GraphEdit.remove_valid_left_disconnect_type,
         Godot.Core.GraphEdit.remove_valid_right_disconnect_type,
         Godot.Core.GraphEdit.set_connection_activity,
+        Godot.Core.GraphEdit.set_minimap_enabled,
+        Godot.Core.GraphEdit.set_minimap_opacity,
+        Godot.Core.GraphEdit.set_minimap_size,
         Godot.Core.GraphEdit.set_right_disconnects,
         Godot.Core.GraphEdit.set_scroll_ofs,
-        Godot.Core.GraphEdit.set_selected, Godot.Core.GraphEdit.set_snap,
-        Godot.Core.GraphEdit.set_use_snap, Godot.Core.GraphEdit.set_zoom)
+        Godot.Core.GraphEdit.set_selected,
+        Godot.Core.GraphEdit.set_show_zoom_label,
+        Godot.Core.GraphEdit.set_snap, Godot.Core.GraphEdit.set_use_snap,
+        Godot.Core.GraphEdit.set_zoom, Godot.Core.GraphEdit.set_zoom_max,
+        Godot.Core.GraphEdit.set_zoom_min,
+        Godot.Core.GraphEdit.set_zoom_step)
        where
 import Data.Coerce
 import Foreign.C
@@ -138,6 +156,12 @@ sig_node_selected = Godot.Internal.Dispatch.Signal "node_selected"
 
 instance NodeSignal GraphEdit "node_selected" '[Node]
 
+sig_node_unselected :: Godot.Internal.Dispatch.Signal GraphEdit
+sig_node_unselected
+  = Godot.Internal.Dispatch.Signal "node_unselected"
+
+instance NodeSignal GraphEdit "node_unselected" '[Node]
+
 -- | Emitted when the user presses @Ctrl + V@.
 sig_paste_nodes_request :: Godot.Internal.Dispatch.Signal GraphEdit
 sig_paste_nodes_request
@@ -159,6 +183,21 @@ sig_scroll_offset_changed
 
 instance NodeSignal GraphEdit "scroll_offset_changed" '[Vector2]
 
+instance NodeProperty GraphEdit "minimap_enabled" Bool 'False where
+        nodeProperty
+          = (is_minimap_enabled, wrapDroppingSetter set_minimap_enabled,
+             Nothing)
+
+instance NodeProperty GraphEdit "minimap_opacity" Float 'False
+         where
+        nodeProperty
+          = (get_minimap_opacity, wrapDroppingSetter set_minimap_opacity,
+             Nothing)
+
+instance NodeProperty GraphEdit "minimap_size" Vector2 'False where
+        nodeProperty
+          = (get_minimap_size, wrapDroppingSetter set_minimap_size, Nothing)
+
 instance NodeProperty GraphEdit "right_disconnects" Bool 'False
          where
         nodeProperty
@@ -170,6 +209,11 @@ instance NodeProperty GraphEdit "scroll_offset" Vector2 'False
         nodeProperty
           = (get_scroll_ofs, wrapDroppingSetter set_scroll_ofs, Nothing)
 
+instance NodeProperty GraphEdit "show_zoom_label" Bool 'False where
+        nodeProperty
+          = (is_showing_zoom_label, wrapDroppingSetter set_show_zoom_label,
+             Nothing)
+
 instance NodeProperty GraphEdit "snap_distance" Int 'False where
         nodeProperty = (get_snap, wrapDroppingSetter set_snap, Nothing)
 
@@ -179,6 +223,18 @@ instance NodeProperty GraphEdit "use_snap" Bool 'False where
 
 instance NodeProperty GraphEdit "zoom" Float 'False where
         nodeProperty = (get_zoom, wrapDroppingSetter set_zoom, Nothing)
+
+instance NodeProperty GraphEdit "zoom_max" Float 'False where
+        nodeProperty
+          = (get_zoom_max, wrapDroppingSetter set_zoom_max, Nothing)
+
+instance NodeProperty GraphEdit "zoom_min" Float 'False where
+        nodeProperty
+          = (get_zoom_min, wrapDroppingSetter set_zoom_min, Nothing)
+
+instance NodeProperty GraphEdit "zoom_step" Float 'False where
+        nodeProperty
+          = (get_zoom_step, wrapDroppingSetter set_zoom_step, Nothing)
 
 {-# NOINLINE bindGraphEdit__connections_layer_draw #-}
 
@@ -200,7 +256,10 @@ _connections_layer_draw cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_connections_layer_draw" '[] (IO ())
          where
@@ -225,7 +284,10 @@ _graph_node_moved cls arg1
          godot_method_bind_call bindGraphEdit__graph_node_moved (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_graph_node_moved" '[Node] (IO ())
          where
@@ -251,11 +313,45 @@ _graph_node_raised cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_graph_node_raised" '[Node] (IO ())
          where
         nodeMethod = Godot.Core.GraphEdit._graph_node_raised
+
+{-# NOINLINE bindGraphEdit__graph_node_slot_updated #-}
+
+bindGraphEdit__graph_node_slot_updated :: MethodBind
+bindGraphEdit__graph_node_slot_updated
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "_graph_node_slot_updated" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_graph_node_slot_updated ::
+                           (GraphEdit :< cls, Object :< cls) => cls -> Int -> Node -> IO ()
+_graph_node_slot_updated cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit__graph_node_slot_updated
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "_graph_node_slot_updated"
+           '[Int, Node]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GraphEdit._graph_node_slot_updated
 
 {-# NOINLINE bindGraphEdit__gui_input #-}
 
@@ -275,11 +371,67 @@ _gui_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphEdit__gui_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_gui_input" '[InputEvent] (IO ())
          where
         nodeMethod = Godot.Core.GraphEdit._gui_input
+
+{-# NOINLINE bindGraphEdit__minimap_draw #-}
+
+bindGraphEdit__minimap_draw :: MethodBind
+bindGraphEdit__minimap_draw
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "_minimap_draw" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_minimap_draw :: (GraphEdit :< cls, Object :< cls) => cls -> IO ()
+_minimap_draw cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit__minimap_draw (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "_minimap_draw" '[] (IO ()) where
+        nodeMethod = Godot.Core.GraphEdit._minimap_draw
+
+{-# NOINLINE bindGraphEdit__minimap_toggled #-}
+
+bindGraphEdit__minimap_toggled :: MethodBind
+bindGraphEdit__minimap_toggled
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "_minimap_toggled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_minimap_toggled ::
+                   (GraphEdit :< cls, Object :< cls) => cls -> IO ()
+_minimap_toggled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit__minimap_toggled (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "_minimap_toggled" '[] (IO ()) where
+        nodeMethod = Godot.Core.GraphEdit._minimap_toggled
 
 {-# NOINLINE bindGraphEdit__scroll_moved #-}
 
@@ -300,7 +452,10 @@ _scroll_moved cls arg1
          godot_method_bind_call bindGraphEdit__scroll_moved (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_scroll_moved" '[Float] (IO ())
          where
@@ -324,7 +479,10 @@ _snap_toggled cls
          godot_method_bind_call bindGraphEdit__snap_toggled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_snap_toggled" '[] (IO ()) where
         nodeMethod = Godot.Core.GraphEdit._snap_toggled
@@ -349,7 +507,10 @@ _snap_value_changed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_snap_value_changed" '[Float]
            (IO ())
@@ -375,7 +536,10 @@ _top_layer_draw cls
          godot_method_bind_call bindGraphEdit__top_layer_draw (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_top_layer_draw" '[] (IO ()) where
         nodeMethod = Godot.Core.GraphEdit._top_layer_draw
@@ -399,7 +563,10 @@ _top_layer_input cls arg1
          godot_method_bind_call bindGraphEdit__top_layer_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_top_layer_input" '[InputEvent]
            (IO ())
@@ -426,7 +593,10 @@ _update_scroll_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_update_scroll_offset" '[] (IO ())
          where
@@ -450,7 +620,10 @@ _zoom_minus cls
          godot_method_bind_call bindGraphEdit__zoom_minus (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_zoom_minus" '[] (IO ()) where
         nodeMethod = Godot.Core.GraphEdit._zoom_minus
@@ -472,7 +645,10 @@ _zoom_plus cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphEdit__zoom_plus (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_zoom_plus" '[] (IO ()) where
         nodeMethod = Godot.Core.GraphEdit._zoom_plus
@@ -495,7 +671,10 @@ _zoom_reset cls
          godot_method_bind_call bindGraphEdit__zoom_reset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "_zoom_reset" '[] (IO ()) where
         nodeMethod = Godot.Core.GraphEdit._zoom_reset
@@ -522,7 +701,10 @@ add_valid_connection_type cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "add_valid_connection_type"
            '[Int, Int]
@@ -552,7 +734,10 @@ add_valid_left_disconnect_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "add_valid_left_disconnect_type"
            '[Int]
@@ -583,7 +768,10 @@ add_valid_right_disconnect_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "add_valid_right_disconnect_type"
            '[Int]
@@ -612,7 +800,10 @@ clear_connections cls
          godot_method_bind_call bindGraphEdit_clear_connections (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "clear_connections" '[] (IO ()) where
         nodeMethod = Godot.Core.GraphEdit.clear_connections
@@ -640,7 +831,10 @@ connect_node cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindGraphEdit_connect_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "connect_node"
            '[GodotString, Int, GodotString, Int]
@@ -671,7 +865,10 @@ disconnect_node cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindGraphEdit_disconnect_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "disconnect_node"
            '[GodotString, Int, GodotString, Int]
@@ -701,11 +898,75 @@ get_connection_list cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "get_connection_list" '[] (IO Array)
          where
         nodeMethod = Godot.Core.GraphEdit.get_connection_list
+
+{-# NOINLINE bindGraphEdit_get_minimap_opacity #-}
+
+-- | The opacity of the minimap rectangle.
+bindGraphEdit_get_minimap_opacity :: MethodBind
+bindGraphEdit_get_minimap_opacity
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "get_minimap_opacity" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The opacity of the minimap rectangle.
+get_minimap_opacity ::
+                      (GraphEdit :< cls, Object :< cls) => cls -> IO Float
+get_minimap_opacity cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_get_minimap_opacity
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "get_minimap_opacity" '[] (IO Float)
+         where
+        nodeMethod = Godot.Core.GraphEdit.get_minimap_opacity
+
+{-# NOINLINE bindGraphEdit_get_minimap_size #-}
+
+-- | The size of the minimap rectangle. The map itself is based on the size of the grid area and is scaled to fit this rectangle.
+bindGraphEdit_get_minimap_size :: MethodBind
+bindGraphEdit_get_minimap_size
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "get_minimap_size" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The size of the minimap rectangle. The map itself is based on the size of the grid area and is scaled to fit this rectangle.
+get_minimap_size ::
+                   (GraphEdit :< cls, Object :< cls) => cls -> IO Vector2
+get_minimap_size cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_get_minimap_size (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "get_minimap_size" '[] (IO Vector2)
+         where
+        nodeMethod = Godot.Core.GraphEdit.get_minimap_size
 
 {-# NOINLINE bindGraphEdit_get_scroll_ofs #-}
 
@@ -728,7 +989,10 @@ get_scroll_ofs cls
          godot_method_bind_call bindGraphEdit_get_scroll_ofs (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "get_scroll_ofs" '[] (IO Vector2)
          where
@@ -753,7 +1017,10 @@ get_snap cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphEdit_get_snap (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "get_snap" '[] (IO Int) where
         nodeMethod = Godot.Core.GraphEdit.get_snap
@@ -777,15 +1044,18 @@ get_zoom cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphEdit_get_zoom (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "get_zoom" '[] (IO Float) where
         nodeMethod = Godot.Core.GraphEdit.get_zoom
 
 {-# NOINLINE bindGraphEdit_get_zoom_hbox #-}
 
--- | Gets the @HBoxContainer@ that contains the zooming and grid snap controls in the top left of the graph.
---   				Warning: The intended usage of this function is to allow you to reposition or add your own custom controls to the container. This is an internal control and as such should not be freed. If you wish to hide this or any of it's children use their @CanvasItem.visible@ property instead.
+-- | Gets the @HBoxContainer@ that contains the zooming and grid snap controls in the top left of the graph. You can use this method to reposition the toolbar or to add your own custom controls to it.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindGraphEdit_get_zoom_hbox :: MethodBind
 bindGraphEdit_get_zoom_hbox
   = unsafePerformIO $
@@ -795,8 +1065,8 @@ bindGraphEdit_get_zoom_hbox
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the @HBoxContainer@ that contains the zooming and grid snap controls in the top left of the graph.
---   				Warning: The intended usage of this function is to allow you to reposition or add your own custom controls to the container. This is an internal control and as such should not be freed. If you wish to hide this or any of it's children use their @CanvasItem.visible@ property instead.
+-- | Gets the @HBoxContainer@ that contains the zooming and grid snap controls in the top left of the graph. You can use this method to reposition the toolbar or to add your own custom controls to it.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_zoom_hbox ::
                 (GraphEdit :< cls, Object :< cls) => cls -> IO HBoxContainer
 get_zoom_hbox cls
@@ -805,12 +1075,130 @@ get_zoom_hbox cls
          godot_method_bind_call bindGraphEdit_get_zoom_hbox (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod GraphEdit "get_zoom_hbox" '[]
            (IO HBoxContainer)
          where
         nodeMethod = Godot.Core.GraphEdit.get_zoom_hbox
+
+{-# NOINLINE bindGraphEdit_get_zoom_max #-}
+
+-- | The upper zoom limit.
+bindGraphEdit_get_zoom_max :: MethodBind
+bindGraphEdit_get_zoom_max
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "get_zoom_max" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The upper zoom limit.
+get_zoom_max ::
+               (GraphEdit :< cls, Object :< cls) => cls -> IO Float
+get_zoom_max cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_get_zoom_max (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "get_zoom_max" '[] (IO Float) where
+        nodeMethod = Godot.Core.GraphEdit.get_zoom_max
+
+{-# NOINLINE bindGraphEdit_get_zoom_min #-}
+
+-- | The lower zoom limit.
+bindGraphEdit_get_zoom_min :: MethodBind
+bindGraphEdit_get_zoom_min
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "get_zoom_min" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The lower zoom limit.
+get_zoom_min ::
+               (GraphEdit :< cls, Object :< cls) => cls -> IO Float
+get_zoom_min cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_get_zoom_min (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "get_zoom_min" '[] (IO Float) where
+        nodeMethod = Godot.Core.GraphEdit.get_zoom_min
+
+{-# NOINLINE bindGraphEdit_get_zoom_step #-}
+
+-- | The step of each zoom level.
+bindGraphEdit_get_zoom_step :: MethodBind
+bindGraphEdit_get_zoom_step
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "get_zoom_step" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The step of each zoom level.
+get_zoom_step ::
+                (GraphEdit :< cls, Object :< cls) => cls -> IO Float
+get_zoom_step cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_get_zoom_step (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "get_zoom_step" '[] (IO Float) where
+        nodeMethod = Godot.Core.GraphEdit.get_zoom_step
+
+{-# NOINLINE bindGraphEdit_is_minimap_enabled #-}
+
+-- | If @true@, the minimap is visible.
+bindGraphEdit_is_minimap_enabled :: MethodBind
+bindGraphEdit_is_minimap_enabled
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "is_minimap_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the minimap is visible.
+is_minimap_enabled ::
+                     (GraphEdit :< cls, Object :< cls) => cls -> IO Bool
+is_minimap_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_is_minimap_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "is_minimap_enabled" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.GraphEdit.is_minimap_enabled
 
 {-# NOINLINE bindGraphEdit_is_node_connected #-}
 
@@ -835,7 +1223,10 @@ is_node_connected cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindGraphEdit_is_node_connected (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "is_node_connected"
            '[GodotString, Int, GodotString, Int]
@@ -865,12 +1256,46 @@ is_right_disconnects_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "is_right_disconnects_enabled" '[]
            (IO Bool)
          where
         nodeMethod = Godot.Core.GraphEdit.is_right_disconnects_enabled
+
+{-# NOINLINE bindGraphEdit_is_showing_zoom_label #-}
+
+-- | If @true@, makes a label with the current zoom level visible. The zoom value is displayed in percents.
+bindGraphEdit_is_showing_zoom_label :: MethodBind
+bindGraphEdit_is_showing_zoom_label
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "is_showing_zoom_label" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, makes a label with the current zoom level visible. The zoom value is displayed in percents.
+is_showing_zoom_label ::
+                        (GraphEdit :< cls, Object :< cls) => cls -> IO Bool
+is_showing_zoom_label cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_is_showing_zoom_label
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "is_showing_zoom_label" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.GraphEdit.is_showing_zoom_label
 
 {-# NOINLINE bindGraphEdit_is_using_snap #-}
 
@@ -893,7 +1318,10 @@ is_using_snap cls
          godot_method_bind_call bindGraphEdit_is_using_snap (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "is_using_snap" '[] (IO Bool) where
         nodeMethod = Godot.Core.GraphEdit.is_using_snap
@@ -920,7 +1348,10 @@ is_valid_connection_type cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "is_valid_connection_type"
            '[Int, Int]
@@ -950,7 +1381,10 @@ remove_valid_connection_type cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "remove_valid_connection_type"
            '[Int, Int]
@@ -981,7 +1415,10 @@ remove_valid_left_disconnect_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "remove_valid_left_disconnect_type"
            '[Int]
@@ -1012,7 +1449,10 @@ remove_valid_right_disconnect_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "remove_valid_right_disconnect_type"
            '[Int]
@@ -1046,13 +1486,109 @@ set_connection_activity cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "set_connection_activity"
            '[GodotString, Int, GodotString, Int, Float]
            (IO ())
          where
         nodeMethod = Godot.Core.GraphEdit.set_connection_activity
+
+{-# NOINLINE bindGraphEdit_set_minimap_enabled #-}
+
+-- | If @true@, the minimap is visible.
+bindGraphEdit_set_minimap_enabled :: MethodBind
+bindGraphEdit_set_minimap_enabled
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "set_minimap_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the minimap is visible.
+set_minimap_enabled ::
+                      (GraphEdit :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_minimap_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_set_minimap_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "set_minimap_enabled" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.GraphEdit.set_minimap_enabled
+
+{-# NOINLINE bindGraphEdit_set_minimap_opacity #-}
+
+-- | The opacity of the minimap rectangle.
+bindGraphEdit_set_minimap_opacity :: MethodBind
+bindGraphEdit_set_minimap_opacity
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "set_minimap_opacity" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The opacity of the minimap rectangle.
+set_minimap_opacity ::
+                      (GraphEdit :< cls, Object :< cls) => cls -> Float -> IO ()
+set_minimap_opacity cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_set_minimap_opacity
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "set_minimap_opacity" '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GraphEdit.set_minimap_opacity
+
+{-# NOINLINE bindGraphEdit_set_minimap_size #-}
+
+-- | The size of the minimap rectangle. The map itself is based on the size of the grid area and is scaled to fit this rectangle.
+bindGraphEdit_set_minimap_size :: MethodBind
+bindGraphEdit_set_minimap_size
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "set_minimap_size" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The size of the minimap rectangle. The map itself is based on the size of the grid area and is scaled to fit this rectangle.
+set_minimap_size ::
+                   (GraphEdit :< cls, Object :< cls) => cls -> Vector2 -> IO ()
+set_minimap_size cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_set_minimap_size (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "set_minimap_size" '[Vector2] (IO ())
+         where
+        nodeMethod = Godot.Core.GraphEdit.set_minimap_size
 
 {-# NOINLINE bindGraphEdit_set_right_disconnects #-}
 
@@ -1076,7 +1612,10 @@ set_right_disconnects cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "set_right_disconnects" '[Bool]
            (IO ())
@@ -1104,7 +1643,10 @@ set_scroll_ofs cls arg1
          godot_method_bind_call bindGraphEdit_set_scroll_ofs (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "set_scroll_ofs" '[Vector2] (IO ())
          where
@@ -1131,10 +1673,44 @@ set_selected cls arg1
          godot_method_bind_call bindGraphEdit_set_selected (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "set_selected" '[Node] (IO ()) where
         nodeMethod = Godot.Core.GraphEdit.set_selected
+
+{-# NOINLINE bindGraphEdit_set_show_zoom_label #-}
+
+-- | If @true@, makes a label with the current zoom level visible. The zoom value is displayed in percents.
+bindGraphEdit_set_show_zoom_label :: MethodBind
+bindGraphEdit_set_show_zoom_label
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "set_show_zoom_label" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, makes a label with the current zoom level visible. The zoom value is displayed in percents.
+set_show_zoom_label ::
+                      (GraphEdit :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_show_zoom_label cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_set_show_zoom_label
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "set_show_zoom_label" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.GraphEdit.set_show_zoom_label
 
 {-# NOINLINE bindGraphEdit_set_snap #-}
 
@@ -1156,7 +1732,10 @@ set_snap cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphEdit_set_snap (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "set_snap" '[Int] (IO ()) where
         nodeMethod = Godot.Core.GraphEdit.set_snap
@@ -1182,7 +1761,10 @@ set_use_snap cls arg1
          godot_method_bind_call bindGraphEdit_set_use_snap (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "set_use_snap" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.GraphEdit.set_use_snap
@@ -1207,7 +1789,98 @@ set_zoom cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphEdit_set_zoom (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphEdit "set_zoom" '[Float] (IO ()) where
         nodeMethod = Godot.Core.GraphEdit.set_zoom
+
+{-# NOINLINE bindGraphEdit_set_zoom_max #-}
+
+-- | The upper zoom limit.
+bindGraphEdit_set_zoom_max :: MethodBind
+bindGraphEdit_set_zoom_max
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "set_zoom_max" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The upper zoom limit.
+set_zoom_max ::
+               (GraphEdit :< cls, Object :< cls) => cls -> Float -> IO ()
+set_zoom_max cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_set_zoom_max (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "set_zoom_max" '[Float] (IO ()) where
+        nodeMethod = Godot.Core.GraphEdit.set_zoom_max
+
+{-# NOINLINE bindGraphEdit_set_zoom_min #-}
+
+-- | The lower zoom limit.
+bindGraphEdit_set_zoom_min :: MethodBind
+bindGraphEdit_set_zoom_min
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "set_zoom_min" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The lower zoom limit.
+set_zoom_min ::
+               (GraphEdit :< cls, Object :< cls) => cls -> Float -> IO ()
+set_zoom_min cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_set_zoom_min (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "set_zoom_min" '[Float] (IO ()) where
+        nodeMethod = Godot.Core.GraphEdit.set_zoom_min
+
+{-# NOINLINE bindGraphEdit_set_zoom_step #-}
+
+-- | The step of each zoom level.
+bindGraphEdit_set_zoom_step :: MethodBind
+bindGraphEdit_set_zoom_step
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "set_zoom_step" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The step of each zoom level.
+set_zoom_step ::
+                (GraphEdit :< cls, Object :< cls) => cls -> Float -> IO ()
+set_zoom_step cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit_set_zoom_step (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "set_zoom_step" '[Float] (IO ())
+         where
+        nodeMethod = Godot.Core.GraphEdit.set_zoom_step

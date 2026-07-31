@@ -8,7 +8,6 @@ module Godot.Core.Camera2D
         Godot.Core.Camera2D._ANCHOR_MODE_DRAG_CENTER,
         Godot.Core.Camera2D._make_current,
         Godot.Core.Camera2D._set_current,
-        Godot.Core.Camera2D._set_old_smoothing,
         Godot.Core.Camera2D._update_scroll, Godot.Core.Camera2D.align,
         Godot.Core.Camera2D.clear_current,
         Godot.Core.Camera2D.force_update_scroll,
@@ -218,7 +217,10 @@ _make_current cls arg1
          godot_method_bind_call bindCamera2D__make_current (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "_make_current" '[Object] (IO ())
          where
@@ -245,35 +247,13 @@ _set_current cls arg1
          godot_method_bind_call bindCamera2D__set_current (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "_set_current" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Camera2D._set_current
-
-{-# NOINLINE bindCamera2D__set_old_smoothing #-}
-
-bindCamera2D__set_old_smoothing :: MethodBind
-bindCamera2D__set_old_smoothing
-  = unsafePerformIO $
-      withCString "Camera2D" $
-        \ clsNamePtr ->
-          withCString "_set_old_smoothing" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
-_set_old_smoothing ::
-                     (Camera2D :< cls, Object :< cls) => cls -> Float -> IO ()
-_set_old_smoothing cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindCamera2D__set_old_smoothing (upcast cls)
-           arrPtr
-           len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
-
-instance NodeMethod Camera2D "_set_old_smoothing" '[Float] (IO ())
-         where
-        nodeMethod = Godot.Core.Camera2D._set_old_smoothing
 
 {-# NOINLINE bindCamera2D__update_scroll #-}
 
@@ -293,7 +273,10 @@ _update_scroll cls
          godot_method_bind_call bindCamera2D__update_scroll (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "_update_scroll" '[] (IO ()) where
         nodeMethod = Godot.Core.Camera2D._update_scroll
@@ -316,7 +299,10 @@ align cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera2D_align (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "align" '[] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.align
@@ -341,7 +327,10 @@ clear_current cls
          godot_method_bind_call bindCamera2D_clear_current (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "clear_current" '[] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.clear_current
@@ -368,7 +357,10 @@ force_update_scroll cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "force_update_scroll" '[] (IO ())
          where
@@ -395,7 +387,10 @@ get_anchor_mode cls
          godot_method_bind_call bindCamera2D_get_anchor_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_anchor_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Camera2D.get_anchor_mode
@@ -422,7 +417,10 @@ get_camera_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_camera_position" '[] (IO Vector2)
          where
@@ -450,7 +448,10 @@ get_camera_screen_center cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_camera_screen_center" '[]
            (IO Vector2)
@@ -479,7 +480,7 @@ get_custom_viewport cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Camera2D "get_custom_viewport" '[] (IO Node)
          where
@@ -506,7 +507,10 @@ get_drag_margin cls arg1
          godot_method_bind_call bindCamera2D_get_drag_margin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_drag_margin" '[Int] (IO Float)
          where
@@ -534,7 +538,10 @@ get_follow_smoothing cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_follow_smoothing" '[] (IO Float)
          where
@@ -562,7 +569,10 @@ get_h_offset cls
          godot_method_bind_call bindCamera2D_get_h_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_h_offset" '[] (IO Float) where
         nodeMethod = Godot.Core.Camera2D.get_h_offset
@@ -587,7 +597,10 @@ get_limit cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera2D_get_limit (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_limit" '[Int] (IO Int) where
         nodeMethod = Godot.Core.Camera2D.get_limit
@@ -611,7 +624,10 @@ get_offset cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera2D_get_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_offset" '[] (IO Vector2) where
         nodeMethod = Godot.Core.Camera2D.get_offset
@@ -637,7 +653,10 @@ get_process_mode cls
          godot_method_bind_call bindCamera2D_get_process_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_process_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Camera2D.get_process_mode
@@ -664,7 +683,10 @@ get_v_offset cls
          godot_method_bind_call bindCamera2D_get_v_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_v_offset" '[] (IO Float) where
         nodeMethod = Godot.Core.Camera2D.get_v_offset
@@ -688,7 +710,10 @@ get_zoom cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera2D_get_zoom (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "get_zoom" '[] (IO Vector2) where
         nodeMethod = Godot.Core.Camera2D.get_zoom
@@ -712,7 +737,10 @@ is_current cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera2D_is_current (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "is_current" '[] (IO Bool) where
         nodeMethod = Godot.Core.Camera2D.is_current
@@ -739,7 +767,10 @@ is_follow_smoothing_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "is_follow_smoothing_enabled" '[]
            (IO Bool)
@@ -767,7 +798,10 @@ is_h_drag_enabled cls
          godot_method_bind_call bindCamera2D_is_h_drag_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "is_h_drag_enabled" '[] (IO Bool)
          where
@@ -795,7 +829,10 @@ is_limit_drawing_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "is_limit_drawing_enabled" '[]
            (IO Bool)
@@ -805,6 +842,8 @@ instance NodeMethod Camera2D "is_limit_drawing_enabled" '[]
 {-# NOINLINE bindCamera2D_is_limit_smoothing_enabled #-}
 
 -- | If @true@, the camera smoothly stops when reaches its limits.
+--   			This has no effect if smoothing is disabled.
+--   			__Note:__ To immediately update the camera's position to be within limits without smoothing, even with this setting enabled, invoke @method reset_smoothing@.
 bindCamera2D_is_limit_smoothing_enabled :: MethodBind
 bindCamera2D_is_limit_smoothing_enabled
   = unsafePerformIO $
@@ -815,6 +854,8 @@ bindCamera2D_is_limit_smoothing_enabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the camera smoothly stops when reaches its limits.
+--   			This has no effect if smoothing is disabled.
+--   			__Note:__ To immediately update the camera's position to be within limits without smoothing, even with this setting enabled, invoke @method reset_smoothing@.
 is_limit_smoothing_enabled ::
                              (Camera2D :< cls, Object :< cls) => cls -> IO Bool
 is_limit_smoothing_enabled cls
@@ -824,7 +865,10 @@ is_limit_smoothing_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "is_limit_smoothing_enabled" '[]
            (IO Bool)
@@ -853,7 +897,10 @@ is_margin_drawing_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "is_margin_drawing_enabled" '[]
            (IO Bool)
@@ -879,7 +926,10 @@ is_rotating cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera2D_is_rotating (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "is_rotating" '[] (IO Bool) where
         nodeMethod = Godot.Core.Camera2D.is_rotating
@@ -906,7 +956,10 @@ is_screen_drawing_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "is_screen_drawing_enabled" '[]
            (IO Bool)
@@ -934,7 +987,10 @@ is_v_drag_enabled cls
          godot_method_bind_call bindCamera2D_is_v_drag_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "is_v_drag_enabled" '[] (IO Bool)
          where
@@ -960,7 +1016,10 @@ make_current cls
          godot_method_bind_call bindCamera2D_make_current (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "make_current" '[] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.make_current
@@ -987,7 +1046,10 @@ reset_smoothing cls
          godot_method_bind_call bindCamera2D_reset_smoothing (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "reset_smoothing" '[] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.reset_smoothing
@@ -1013,7 +1075,10 @@ set_anchor_mode cls arg1
          godot_method_bind_call bindCamera2D_set_anchor_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_anchor_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.set_anchor_mode
@@ -1040,7 +1105,10 @@ set_custom_viewport cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_custom_viewport" '[Node] (IO ())
          where
@@ -1067,7 +1135,10 @@ set_drag_margin cls arg1 arg2
          godot_method_bind_call bindCamera2D_set_drag_margin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_drag_margin" '[Int, Float]
            (IO ())
@@ -1096,7 +1167,10 @@ set_enable_follow_smoothing cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_enable_follow_smoothing" '[Bool]
            (IO ())
@@ -1125,7 +1199,10 @@ set_follow_smoothing cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_follow_smoothing" '[Float]
            (IO ())
@@ -1153,7 +1230,10 @@ set_h_drag_enabled cls arg1
          godot_method_bind_call bindCamera2D_set_h_drag_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_h_drag_enabled" '[Bool] (IO ())
          where
@@ -1182,7 +1262,10 @@ set_h_offset cls arg1
          godot_method_bind_call bindCamera2D_set_h_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_h_offset" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.set_h_offset
@@ -1207,7 +1290,10 @@ set_limit cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera2D_set_limit (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_limit" '[Int, Int] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.set_limit
@@ -1234,7 +1320,10 @@ set_limit_drawing_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_limit_drawing_enabled" '[Bool]
            (IO ())
@@ -1244,6 +1333,8 @@ instance NodeMethod Camera2D "set_limit_drawing_enabled" '[Bool]
 {-# NOINLINE bindCamera2D_set_limit_smoothing_enabled #-}
 
 -- | If @true@, the camera smoothly stops when reaches its limits.
+--   			This has no effect if smoothing is disabled.
+--   			__Note:__ To immediately update the camera's position to be within limits without smoothing, even with this setting enabled, invoke @method reset_smoothing@.
 bindCamera2D_set_limit_smoothing_enabled :: MethodBind
 bindCamera2D_set_limit_smoothing_enabled
   = unsafePerformIO $
@@ -1254,6 +1345,8 @@ bindCamera2D_set_limit_smoothing_enabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the camera smoothly stops when reaches its limits.
+--   			This has no effect if smoothing is disabled.
+--   			__Note:__ To immediately update the camera's position to be within limits without smoothing, even with this setting enabled, invoke @method reset_smoothing@.
 set_limit_smoothing_enabled ::
                               (Camera2D :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_limit_smoothing_enabled cls arg1
@@ -1263,7 +1356,10 @@ set_limit_smoothing_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_limit_smoothing_enabled" '[Bool]
            (IO ())
@@ -1292,7 +1388,10 @@ set_margin_drawing_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_margin_drawing_enabled" '[Bool]
            (IO ())
@@ -1319,7 +1418,10 @@ set_offset cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera2D_set_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_offset" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.set_offset
@@ -1345,7 +1447,10 @@ set_process_mode cls arg1
          godot_method_bind_call bindCamera2D_set_process_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_process_mode" '[Int] (IO ())
          where
@@ -1372,7 +1477,10 @@ set_rotating cls arg1
          godot_method_bind_call bindCamera2D_set_rotating (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_rotating" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.set_rotating
@@ -1399,7 +1507,10 @@ set_screen_drawing_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_screen_drawing_enabled" '[Bool]
            (IO ())
@@ -1427,7 +1538,10 @@ set_v_drag_enabled cls arg1
          godot_method_bind_call bindCamera2D_set_v_drag_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_v_drag_enabled" '[Bool] (IO ())
          where
@@ -1456,7 +1570,10 @@ set_v_offset cls arg1
          godot_method_bind_call bindCamera2D_set_v_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_v_offset" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.set_v_offset
@@ -1481,7 +1598,10 @@ set_zoom cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera2D_set_zoom (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera2D "set_zoom" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Camera2D.set_zoom

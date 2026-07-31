@@ -61,7 +61,10 @@ add_excluded_object cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "add_excluded_object" '[Rid] (IO ())
          where
@@ -89,7 +92,10 @@ clear_excluded_objects cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "clear_excluded_objects" '[] (IO ())
          where
@@ -97,7 +103,7 @@ instance NodeMethod SpringArm "clear_excluded_objects" '[] (IO ())
 
 {-# NOINLINE bindSpringArm_get_collision_mask #-}
 
--- | The layers against which the collision check shall be done. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The layers against which the collision check shall be done. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindSpringArm_get_collision_mask :: MethodBind
 bindSpringArm_get_collision_mask
   = unsafePerformIO $
@@ -107,7 +113,7 @@ bindSpringArm_get_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The layers against which the collision check shall be done. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The layers against which the collision check shall be done. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_mask ::
                      (SpringArm :< cls, Object :< cls) => cls -> IO Int
 get_collision_mask cls
@@ -117,7 +123,10 @@ get_collision_mask cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "get_collision_mask" '[] (IO Int)
          where
@@ -144,7 +153,10 @@ get_hit_length cls
          godot_method_bind_call bindSpringArm_get_hit_length (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "get_hit_length" '[] (IO Float) where
         nodeMethod = Godot.Core.SpringArm.get_hit_length
@@ -170,7 +182,10 @@ get_length cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpringArm_get_length (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "get_length" '[] (IO Float) where
         nodeMethod = Godot.Core.SpringArm.get_length
@@ -198,7 +213,10 @@ get_margin cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpringArm_get_margin (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "get_margin" '[] (IO Float) where
         nodeMethod = Godot.Core.SpringArm.get_margin
@@ -224,7 +242,7 @@ get_shape cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpringArm_get_shape (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod SpringArm "get_shape" '[] (IO Shape) where
         nodeMethod = Godot.Core.SpringArm.get_shape
@@ -251,7 +269,10 @@ remove_excluded_object cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "remove_excluded_object" '[Rid]
            (IO Bool)
@@ -260,7 +281,7 @@ instance NodeMethod SpringArm "remove_excluded_object" '[Rid]
 
 {-# NOINLINE bindSpringArm_set_collision_mask #-}
 
--- | The layers against which the collision check shall be done. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The layers against which the collision check shall be done. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindSpringArm_set_collision_mask :: MethodBind
 bindSpringArm_set_collision_mask
   = unsafePerformIO $
@@ -270,7 +291,7 @@ bindSpringArm_set_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The layers against which the collision check shall be done. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The layers against which the collision check shall be done. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_mask ::
                      (SpringArm :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_mask cls arg1
@@ -280,7 +301,10 @@ set_collision_mask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "set_collision_mask" '[Int] (IO ())
          where
@@ -308,7 +332,10 @@ set_length cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpringArm_set_length (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "set_length" '[Float] (IO ()) where
         nodeMethod = Godot.Core.SpringArm.set_length
@@ -337,7 +364,10 @@ set_margin cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpringArm_set_margin (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "set_margin" '[Float] (IO ()) where
         nodeMethod = Godot.Core.SpringArm.set_margin
@@ -364,7 +394,10 @@ set_shape cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpringArm_set_shape (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpringArm "set_shape" '[Shape] (IO ()) where
         nodeMethod = Godot.Core.SpringArm.set_shape

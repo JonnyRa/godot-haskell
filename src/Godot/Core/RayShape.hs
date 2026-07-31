@@ -46,7 +46,10 @@ get_length cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRayShape_get_length (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayShape "get_length" '[] (IO Float) where
         nodeMethod = Godot.Core.RayShape.get_length
@@ -72,7 +75,10 @@ get_slips_on_slope cls
          godot_method_bind_call bindRayShape_get_slips_on_slope (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayShape "get_slips_on_slope" '[] (IO Bool)
          where
@@ -98,7 +104,10 @@ set_length cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRayShape_set_length (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayShape "set_length" '[Float] (IO ()) where
         nodeMethod = Godot.Core.RayShape.set_length
@@ -124,7 +133,10 @@ set_slips_on_slope cls arg1
          godot_method_bind_call bindRayShape_set_slips_on_slope (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayShape "set_slips_on_slope" '[Bool] (IO ())
          where

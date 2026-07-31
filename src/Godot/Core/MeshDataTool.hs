@@ -72,7 +72,10 @@ clear cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMeshDataTool_clear (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.MeshDataTool.clear
@@ -99,7 +102,10 @@ commit_to_surface cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "commit_to_surface" '[ArrayMesh]
            (IO Int)
@@ -131,7 +137,10 @@ create_from_surface cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "create_from_surface"
            '[ArrayMesh, Int]
@@ -160,7 +169,10 @@ get_edge_count cls
          godot_method_bind_call bindMeshDataTool_get_edge_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_edge_count" '[] (IO Int)
          where
@@ -188,7 +200,10 @@ get_edge_faces cls arg1
          godot_method_bind_call bindMeshDataTool_get_edge_faces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_edge_faces" '[Int]
            (IO PoolIntArray)
@@ -217,7 +232,7 @@ get_edge_meta cls arg1
          godot_method_bind_call bindMeshDataTool_get_edge_meta (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod MeshDataTool "get_edge_meta" '[Int]
            (IO GodotVariant)
@@ -248,7 +263,10 @@ get_edge_vertex cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_edge_vertex" '[Int, Int]
            (IO Int)
@@ -276,7 +294,10 @@ get_face_count cls
          godot_method_bind_call bindMeshDataTool_get_face_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_face_count" '[] (IO Int)
          where
@@ -285,7 +306,7 @@ instance NodeMethod MeshDataTool "get_face_count" '[] (IO Int)
 {-# NOINLINE bindMeshDataTool_get_face_edge #-}
 
 -- | Returns specified edge associated with given face.
---   				Edge argument must 2 or less because a face only has three edges.
+--   				Edge argument must be either 0, 1, or 2 because a face only has three edges.
 bindMeshDataTool_get_face_edge :: MethodBind
 bindMeshDataTool_get_face_edge
   = unsafePerformIO $
@@ -296,7 +317,7 @@ bindMeshDataTool_get_face_edge
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns specified edge associated with given face.
---   				Edge argument must 2 or less because a face only has three edges.
+--   				Edge argument must be either 0, 1, or 2 because a face only has three edges.
 get_face_edge ::
                 (MeshDataTool :< cls, Object :< cls) => cls -> Int -> Int -> IO Int
 get_face_edge cls arg1 arg2
@@ -305,7 +326,10 @@ get_face_edge cls arg1 arg2
          godot_method_bind_call bindMeshDataTool_get_face_edge (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_face_edge" '[Int, Int]
            (IO Int)
@@ -334,7 +358,7 @@ get_face_meta cls arg1
          godot_method_bind_call bindMeshDataTool_get_face_meta (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod MeshDataTool "get_face_meta" '[Int]
            (IO GodotVariant)
@@ -363,7 +387,10 @@ get_face_normal cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_face_normal" '[Int]
            (IO Vector3)
@@ -373,7 +400,7 @@ instance NodeMethod MeshDataTool "get_face_normal" '[Int]
 {-# NOINLINE bindMeshDataTool_get_face_vertex #-}
 
 -- | Returns the specified vertex of the given face.
---   				Vertex argument must be 2 or less because faces contain three vertices.
+--   				Vertex argument must be either 0, 1, or 2 because faces contain three vertices.
 bindMeshDataTool_get_face_vertex :: MethodBind
 bindMeshDataTool_get_face_vertex
   = unsafePerformIO $
@@ -384,7 +411,7 @@ bindMeshDataTool_get_face_vertex
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the specified vertex of the given face.
---   				Vertex argument must be 2 or less because faces contain three vertices.
+--   				Vertex argument must be either 0, 1, or 2 because faces contain three vertices.
 get_face_vertex ::
                   (MeshDataTool :< cls, Object :< cls) => cls -> Int -> Int -> IO Int
 get_face_vertex cls arg1 arg2
@@ -394,7 +421,10 @@ get_face_vertex cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_face_vertex" '[Int, Int]
            (IO Int)
@@ -423,7 +453,10 @@ get_format cls
          godot_method_bind_call bindMeshDataTool_get_format (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_format" '[] (IO Int) where
         nodeMethod = Godot.Core.MeshDataTool.get_format
@@ -449,7 +482,7 @@ get_material cls
          godot_method_bind_call bindMeshDataTool_get_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshDataTool "get_material" '[] (IO Material)
          where
@@ -476,7 +509,10 @@ get_vertex cls arg1
          godot_method_bind_call bindMeshDataTool_get_vertex (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex" '[Int] (IO Vector3)
          where
@@ -505,7 +541,10 @@ get_vertex_bones cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex_bones" '[Int]
            (IO PoolIntArray)
@@ -534,7 +573,10 @@ get_vertex_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex_color" '[Int]
            (IO Color)
@@ -563,7 +605,10 @@ get_vertex_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex_count" '[] (IO Int)
          where
@@ -592,7 +637,10 @@ get_vertex_edges cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex_edges" '[Int]
            (IO PoolIntArray)
@@ -622,7 +670,10 @@ get_vertex_faces cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex_faces" '[Int]
            (IO PoolIntArray)
@@ -652,7 +703,7 @@ get_vertex_meta cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod MeshDataTool "get_vertex_meta" '[Int]
            (IO GodotVariant)
@@ -681,7 +732,10 @@ get_vertex_normal cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex_normal" '[Int]
            (IO Vector3)
@@ -710,7 +764,10 @@ get_vertex_tangent cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex_tangent" '[Int]
            (IO Plane)
@@ -738,7 +795,10 @@ get_vertex_uv cls arg1
          godot_method_bind_call bindMeshDataTool_get_vertex_uv (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex_uv" '[Int]
            (IO Vector2)
@@ -766,7 +826,10 @@ get_vertex_uv2 cls arg1
          godot_method_bind_call bindMeshDataTool_get_vertex_uv2 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex_uv2" '[Int]
            (IO Vector2)
@@ -796,7 +859,10 @@ get_vertex_weights cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "get_vertex_weights" '[Int]
            (IO PoolRealArray)
@@ -825,7 +891,10 @@ set_edge_meta cls arg1 arg2
          godot_method_bind_call bindMeshDataTool_set_edge_meta (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_edge_meta"
            '[Int, GodotVariant]
@@ -855,7 +924,10 @@ set_face_meta cls arg1 arg2
          godot_method_bind_call bindMeshDataTool_set_face_meta (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_face_meta"
            '[Int, GodotVariant]
@@ -884,7 +956,10 @@ set_material cls arg1
          godot_method_bind_call bindMeshDataTool_set_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_material" '[Material] (IO ())
          where
@@ -912,7 +987,10 @@ set_vertex cls arg1 arg2
          godot_method_bind_call bindMeshDataTool_set_vertex (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_vertex" '[Int, Vector3]
            (IO ())
@@ -942,7 +1020,10 @@ set_vertex_bones cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_vertex_bones"
            '[Int, PoolIntArray]
@@ -973,7 +1054,10 @@ set_vertex_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_vertex_color" '[Int, Color]
            (IO ())
@@ -1003,7 +1087,10 @@ set_vertex_meta cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_vertex_meta"
            '[Int, GodotVariant]
@@ -1034,7 +1121,10 @@ set_vertex_normal cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_vertex_normal"
            '[Int, Vector3]
@@ -1065,7 +1155,10 @@ set_vertex_tangent cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_vertex_tangent" '[Int, Plane]
            (IO ())
@@ -1094,7 +1187,10 @@ set_vertex_uv cls arg1 arg2
          godot_method_bind_call bindMeshDataTool_set_vertex_uv (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_vertex_uv" '[Int, Vector2]
            (IO ())
@@ -1123,7 +1219,10 @@ set_vertex_uv2 cls arg1 arg2
          godot_method_bind_call bindMeshDataTool_set_vertex_uv2 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_vertex_uv2" '[Int, Vector2]
            (IO ())
@@ -1153,7 +1252,10 @@ set_vertex_weights cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshDataTool "set_vertex_weights"
            '[Int, PoolRealArray]

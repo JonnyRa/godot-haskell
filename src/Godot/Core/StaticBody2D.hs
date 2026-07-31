@@ -78,7 +78,10 @@ _reload_physics_characteristics cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StaticBody2D "_reload_physics_characteristics"
            '[]
@@ -110,7 +113,10 @@ get_bounce cls
          godot_method_bind_call bindStaticBody2D_get_bounce (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StaticBody2D "get_bounce" '[] (IO Float) where
         nodeMethod = Godot.Core.StaticBody2D.get_bounce
@@ -138,7 +144,10 @@ get_constant_angular_velocity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StaticBody2D "get_constant_angular_velocity"
            '[]
@@ -169,7 +178,10 @@ get_constant_linear_velocity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StaticBody2D "get_constant_linear_velocity" '[]
            (IO Vector2)
@@ -199,7 +211,10 @@ get_friction cls
          godot_method_bind_call bindStaticBody2D_get_friction (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StaticBody2D "get_friction" '[] (IO Float)
          where
@@ -230,7 +245,7 @@ get_physics_material_override cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod StaticBody2D "get_physics_material_override"
            '[]
@@ -261,7 +276,10 @@ set_bounce cls arg1
          godot_method_bind_call bindStaticBody2D_set_bounce (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StaticBody2D "set_bounce" '[Float] (IO ())
          where
@@ -290,7 +308,10 @@ set_constant_angular_velocity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StaticBody2D "set_constant_angular_velocity"
            '[Float]
@@ -321,7 +342,10 @@ set_constant_linear_velocity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StaticBody2D "set_constant_linear_velocity"
            '[Vector2]
@@ -352,7 +376,10 @@ set_friction cls arg1
          godot_method_bind_call bindStaticBody2D_set_friction (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StaticBody2D "set_friction" '[Float] (IO ())
          where
@@ -384,7 +411,10 @@ set_physics_material_override cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StaticBody2D "set_physics_material_override"
            '[PhysicsMaterial]

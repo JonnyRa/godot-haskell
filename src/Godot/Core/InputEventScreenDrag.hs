@@ -64,7 +64,10 @@ get_index cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventScreenDrag "get_index" '[] (IO Int)
          where
@@ -92,7 +95,10 @@ get_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventScreenDrag "get_position" '[]
            (IO Vector2)
@@ -101,7 +107,7 @@ instance NodeMethod InputEventScreenDrag "get_position" '[]
 
 {-# NOINLINE bindInputEventScreenDrag_get_relative #-}
 
--- | The drag position relative to its start position.
+-- | The drag position relative to the previous position (position at the last frame).
 bindInputEventScreenDrag_get_relative :: MethodBind
 bindInputEventScreenDrag_get_relative
   = unsafePerformIO $
@@ -111,7 +117,7 @@ bindInputEventScreenDrag_get_relative
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The drag position relative to its start position.
+-- | The drag position relative to the previous position (position at the last frame).
 get_relative ::
                (InputEventScreenDrag :< cls, Object :< cls) => cls -> IO Vector2
 get_relative cls
@@ -121,7 +127,10 @@ get_relative cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventScreenDrag "get_relative" '[]
            (IO Vector2)
@@ -150,7 +159,10 @@ get_speed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventScreenDrag "get_speed" '[]
            (IO Vector2)
@@ -179,7 +191,10 @@ set_index cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventScreenDrag "set_index" '[Int] (IO ())
          where
@@ -208,7 +223,10 @@ set_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventScreenDrag "set_position" '[Vector2]
            (IO ())
@@ -217,7 +235,7 @@ instance NodeMethod InputEventScreenDrag "set_position" '[Vector2]
 
 {-# NOINLINE bindInputEventScreenDrag_set_relative #-}
 
--- | The drag position relative to its start position.
+-- | The drag position relative to the previous position (position at the last frame).
 bindInputEventScreenDrag_set_relative :: MethodBind
 bindInputEventScreenDrag_set_relative
   = unsafePerformIO $
@@ -227,7 +245,7 @@ bindInputEventScreenDrag_set_relative
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The drag position relative to its start position.
+-- | The drag position relative to the previous position (position at the last frame).
 set_relative ::
                (InputEventScreenDrag :< cls, Object :< cls) =>
                cls -> Vector2 -> IO ()
@@ -238,7 +256,10 @@ set_relative cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventScreenDrag "set_relative" '[Vector2]
            (IO ())
@@ -268,7 +289,10 @@ set_speed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventScreenDrag "set_speed" '[Vector2]
            (IO ())

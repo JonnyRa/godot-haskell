@@ -5,6 +5,7 @@ module Godot.Core.ColorPickerButton
        (Godot.Core.ColorPickerButton.sig_color_changed,
         Godot.Core.ColorPickerButton.sig_picker_created,
         Godot.Core.ColorPickerButton.sig_popup_closed,
+        Godot.Core.ColorPickerButton._about_to_show,
         Godot.Core.ColorPickerButton._color_changed,
         Godot.Core.ColorPickerButton._modal_closed,
         Godot.Core.ColorPickerButton.get_pick_color,
@@ -57,6 +58,35 @@ instance NodeProperty ColorPickerButton "edit_alpha" Bool 'False
         nodeProperty
           = (is_editing_alpha, wrapDroppingSetter set_edit_alpha, Nothing)
 
+{-# NOINLINE bindColorPickerButton__about_to_show #-}
+
+bindColorPickerButton__about_to_show :: MethodBind
+bindColorPickerButton__about_to_show
+  = unsafePerformIO $
+      withCString "ColorPickerButton" $
+        \ clsNamePtr ->
+          withCString "_about_to_show" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_about_to_show ::
+                 (ColorPickerButton :< cls, Object :< cls) => cls -> IO ()
+_about_to_show cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindColorPickerButton__about_to_show
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ColorPickerButton "_about_to_show" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.ColorPickerButton._about_to_show
+
 {-# NOINLINE bindColorPickerButton__color_changed #-}
 
 bindColorPickerButton__color_changed :: MethodBind
@@ -77,7 +107,10 @@ _color_changed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPickerButton "_color_changed" '[Color]
            (IO ())
@@ -104,7 +137,10 @@ _modal_closed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPickerButton "_modal_closed" '[] (IO ())
          where
@@ -132,7 +168,10 @@ get_pick_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPickerButton "get_pick_color" '[]
            (IO Color)
@@ -142,6 +181,7 @@ instance NodeMethod ColorPickerButton "get_pick_color" '[]
 {-# NOINLINE bindColorPickerButton_get_picker #-}
 
 -- | Returns the @ColorPicker@ that this node toggles.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindColorPickerButton_get_picker :: MethodBind
 bindColorPickerButton_get_picker
   = unsafePerformIO $
@@ -152,6 +192,7 @@ bindColorPickerButton_get_picker
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the @ColorPicker@ that this node toggles.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_picker ::
              (ColorPickerButton :< cls, Object :< cls) => cls -> IO ColorPicker
 get_picker cls
@@ -161,7 +202,7 @@ get_picker cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ColorPickerButton "get_picker" '[]
            (IO ColorPicker)
@@ -171,6 +212,7 @@ instance NodeMethod ColorPickerButton "get_picker" '[]
 {-# NOINLINE bindColorPickerButton_get_popup #-}
 
 -- | Returns the control's @PopupPanel@ which allows you to connect to popup signals. This allows you to handle events when the ColorPicker is shown or hidden.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindColorPickerButton_get_popup :: MethodBind
 bindColorPickerButton_get_popup
   = unsafePerformIO $
@@ -181,6 +223,7 @@ bindColorPickerButton_get_popup
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the control's @PopupPanel@ which allows you to connect to popup signals. This allows you to handle events when the ColorPicker is shown or hidden.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_popup ::
             (ColorPickerButton :< cls, Object :< cls) => cls -> IO PopupPanel
 get_popup cls
@@ -189,7 +232,7 @@ get_popup cls
          godot_method_bind_call bindColorPickerButton_get_popup (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ColorPickerButton "get_popup" '[]
            (IO PopupPanel)
@@ -218,7 +261,10 @@ is_editing_alpha cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPickerButton "is_editing_alpha" '[]
            (IO Bool)
@@ -247,7 +293,10 @@ set_edit_alpha cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPickerButton "set_edit_alpha" '[Bool]
            (IO ())
@@ -276,7 +325,10 @@ set_pick_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPickerButton "set_pick_color" '[Color]
            (IO ())

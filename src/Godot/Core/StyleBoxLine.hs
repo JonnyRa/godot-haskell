@@ -65,7 +65,10 @@ get_color cls
          godot_method_bind_call bindStyleBoxLine_get_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxLine "get_color" '[] (IO Color) where
         nodeMethod = Godot.Core.StyleBoxLine.get_color
@@ -91,7 +94,10 @@ get_grow_begin cls
          godot_method_bind_call bindStyleBoxLine_get_grow_begin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxLine "get_grow_begin" '[] (IO Float)
          where
@@ -118,7 +124,10 @@ get_grow_end cls
          godot_method_bind_call bindStyleBoxLine_get_grow_end (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxLine "get_grow_end" '[] (IO Float)
          where
@@ -145,7 +154,10 @@ get_thickness cls
          godot_method_bind_call bindStyleBoxLine_get_thickness (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxLine "get_thickness" '[] (IO Int) where
         nodeMethod = Godot.Core.StyleBoxLine.get_thickness
@@ -171,7 +183,10 @@ is_vertical cls
          godot_method_bind_call bindStyleBoxLine_is_vertical (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxLine "is_vertical" '[] (IO Bool) where
         nodeMethod = Godot.Core.StyleBoxLine.is_vertical
@@ -197,7 +212,10 @@ set_color cls arg1
          godot_method_bind_call bindStyleBoxLine_set_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxLine "set_color" '[Color] (IO ()) where
         nodeMethod = Godot.Core.StyleBoxLine.set_color
@@ -223,7 +241,10 @@ set_grow_begin cls arg1
          godot_method_bind_call bindStyleBoxLine_set_grow_begin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxLine "set_grow_begin" '[Float] (IO ())
          where
@@ -250,7 +271,10 @@ set_grow_end cls arg1
          godot_method_bind_call bindStyleBoxLine_set_grow_end (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxLine "set_grow_end" '[Float] (IO ())
          where
@@ -277,7 +301,10 @@ set_thickness cls arg1
          godot_method_bind_call bindStyleBoxLine_set_thickness (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxLine "set_thickness" '[Int] (IO ())
          where
@@ -304,7 +331,10 @@ set_vertical cls arg1
          godot_method_bind_call bindStyleBoxLine_set_vertical (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBoxLine "set_vertical" '[Bool] (IO ())
          where

@@ -2,7 +2,7 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.Joint2D
-       (Godot.Core.Joint2D.get_bias,
+       (Godot.Core.Joint2D._body_exit_tree, Godot.Core.Joint2D.get_bias,
         Godot.Core.Joint2D.get_exclude_nodes_from_collision,
         Godot.Core.Joint2D.get_node_a, Godot.Core.Joint2D.get_node_b,
         Godot.Core.Joint2D.set_bias,
@@ -35,6 +35,32 @@ instance NodeProperty Joint2D "node_a" NodePath 'False where
 instance NodeProperty Joint2D "node_b" NodePath 'False where
         nodeProperty = (get_node_b, wrapDroppingSetter set_node_b, Nothing)
 
+{-# NOINLINE bindJoint2D__body_exit_tree #-}
+
+bindJoint2D__body_exit_tree :: MethodBind
+bindJoint2D__body_exit_tree
+  = unsafePerformIO $
+      withCString "Joint2D" $
+        \ clsNamePtr ->
+          withCString "_body_exit_tree" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_body_exit_tree :: (Joint2D :< cls, Object :< cls) => cls -> IO ()
+_body_exit_tree cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindJoint2D__body_exit_tree (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Joint2D "_body_exit_tree" '[] (IO ()) where
+        nodeMethod = Godot.Core.Joint2D._body_exit_tree
+
 {-# NOINLINE bindJoint2D_get_bias #-}
 
 -- | When @node_a@ and @node_b@ move in different directions the @bias@ controls how fast the joint pulls them back to their original position. The lower the @bias@ the more the two bodies can pull on the joint.
@@ -53,7 +79,10 @@ get_bias cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindJoint2D_get_bias (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint2D "get_bias" '[] (IO Float) where
         nodeMethod = Godot.Core.Joint2D.get_bias
@@ -80,7 +109,10 @@ get_exclude_nodes_from_collision cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint2D "get_exclude_nodes_from_collision" '[]
            (IO Bool)
@@ -106,7 +138,10 @@ get_node_a cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindJoint2D_get_node_a (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint2D "get_node_a" '[] (IO NodePath) where
         nodeMethod = Godot.Core.Joint2D.get_node_a
@@ -130,7 +165,10 @@ get_node_b cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindJoint2D_get_node_b (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint2D "get_node_b" '[] (IO NodePath) where
         nodeMethod = Godot.Core.Joint2D.get_node_b
@@ -154,7 +192,10 @@ set_bias cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindJoint2D_set_bias (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint2D "set_bias" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Joint2D.set_bias
@@ -181,7 +222,10 @@ set_exclude_nodes_from_collision cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint2D "set_exclude_nodes_from_collision"
            '[Bool]
@@ -209,7 +253,10 @@ set_node_a cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindJoint2D_set_node_a (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint2D "set_node_a" '[NodePath] (IO ()) where
         nodeMethod = Godot.Core.Joint2D.set_node_a
@@ -234,7 +281,10 @@ set_node_b cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindJoint2D_set_node_b (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint2D "set_node_b" '[NodePath] (IO ()) where
         nodeMethod = Godot.Core.Joint2D.set_node_b

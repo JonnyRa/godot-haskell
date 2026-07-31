@@ -151,14 +151,18 @@ capture_rect cls
          godot_method_bind_call bindParticles2D_capture_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "capture_rect" '[] (IO Rect2) where
         nodeMethod = Godot.Core.Particles2D.capture_rect
 
 {-# NOINLINE bindParticles2D_get_amount #-}
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 bindParticles2D_get_amount :: MethodBind
 bindParticles2D_get_amount
   = unsafePerformIO $
@@ -168,7 +172,8 @@ bindParticles2D_get_amount
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 get_amount :: (Particles2D :< cls, Object :< cls) => cls -> IO Int
 get_amount cls
   = withVariantArray []
@@ -176,7 +181,10 @@ get_amount cls
          godot_method_bind_call bindParticles2D_get_amount (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_amount" '[] (IO Int) where
         nodeMethod = Godot.Core.Particles2D.get_amount
@@ -202,7 +210,10 @@ get_draw_order cls
          godot_method_bind_call bindParticles2D_get_draw_order (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_draw_order" '[] (IO Int) where
         nodeMethod = Godot.Core.Particles2D.get_draw_order
@@ -229,7 +240,10 @@ get_explosiveness_ratio cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_explosiveness_ratio" '[]
            (IO Float)
@@ -257,7 +271,10 @@ get_fixed_fps cls
          godot_method_bind_call bindParticles2D_get_fixed_fps (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_fixed_fps" '[] (IO Int) where
         nodeMethod = Godot.Core.Particles2D.get_fixed_fps
@@ -284,7 +301,10 @@ get_fractional_delta cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_fractional_delta" '[]
            (IO Bool)
@@ -293,7 +313,7 @@ instance NodeMethod Particles2D "get_fractional_delta" '[]
 
 {-# NOINLINE bindParticles2D_get_lifetime #-}
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 bindParticles2D_get_lifetime :: MethodBind
 bindParticles2D_get_lifetime
   = unsafePerformIO $
@@ -303,7 +323,7 @@ bindParticles2D_get_lifetime
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 get_lifetime ::
                (Particles2D :< cls, Object :< cls) => cls -> IO Float
 get_lifetime cls
@@ -312,7 +332,10 @@ get_lifetime cls
          godot_method_bind_call bindParticles2D_get_lifetime (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_lifetime" '[] (IO Float) where
         nodeMethod = Godot.Core.Particles2D.get_lifetime
@@ -340,7 +363,7 @@ get_normal_map cls
          godot_method_bind_call bindParticles2D_get_normal_map (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Particles2D "get_normal_map" '[] (IO Texture)
          where
@@ -367,7 +390,10 @@ get_one_shot cls
          godot_method_bind_call bindParticles2D_get_one_shot (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_one_shot" '[] (IO Bool) where
         nodeMethod = Godot.Core.Particles2D.get_one_shot
@@ -394,7 +420,10 @@ get_pre_process_time cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_pre_process_time" '[]
            (IO Float)
@@ -423,7 +452,7 @@ get_process_material cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Particles2D "get_process_material" '[]
            (IO Material)
@@ -452,7 +481,10 @@ get_randomness_ratio cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_randomness_ratio" '[]
            (IO Float)
@@ -480,7 +512,10 @@ get_speed_scale cls
          godot_method_bind_call bindParticles2D_get_speed_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_speed_scale" '[] (IO Float)
          where
@@ -507,7 +542,7 @@ get_texture cls
          godot_method_bind_call bindParticles2D_get_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Particles2D "get_texture" '[] (IO Texture)
          where
@@ -535,7 +570,10 @@ get_use_local_coordinates cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_use_local_coordinates" '[]
            (IO Bool)
@@ -544,7 +582,8 @@ instance NodeMethod Particles2D "get_use_local_coordinates" '[]
 
 {-# NOINLINE bindParticles2D_get_visibility_rect #-}
 
--- | Editor visibility helper.
+-- | The @Rect2@ that determines the node's region which needs to be visible on screen for the particle system to be active.
+--   			Grow the rect if particles suddenly appear/disappear when the node enters/exits the screen. The @Rect2@ can be grown via code or with the __Particles → Generate Visibility Rect__ editor tool.
 bindParticles2D_get_visibility_rect :: MethodBind
 bindParticles2D_get_visibility_rect
   = unsafePerformIO $
@@ -554,7 +593,8 @@ bindParticles2D_get_visibility_rect
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Editor visibility helper.
+-- | The @Rect2@ that determines the node's region which needs to be visible on screen for the particle system to be active.
+--   			Grow the rect if particles suddenly appear/disappear when the node enters/exits the screen. The @Rect2@ can be grown via code or with the __Particles → Generate Visibility Rect__ editor tool.
 get_visibility_rect ::
                       (Particles2D :< cls, Object :< cls) => cls -> IO Rect2
 get_visibility_rect cls
@@ -564,7 +604,10 @@ get_visibility_rect cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "get_visibility_rect" '[]
            (IO Rect2)
@@ -592,7 +635,10 @@ is_emitting cls
          godot_method_bind_call bindParticles2D_is_emitting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "is_emitting" '[] (IO Bool) where
         nodeMethod = Godot.Core.Particles2D.is_emitting
@@ -616,14 +662,18 @@ restart cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindParticles2D_restart (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "restart" '[] (IO ()) where
         nodeMethod = Godot.Core.Particles2D.restart
 
 {-# NOINLINE bindParticles2D_set_amount #-}
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 bindParticles2D_set_amount :: MethodBind
 bindParticles2D_set_amount
   = unsafePerformIO $
@@ -633,7 +683,8 @@ bindParticles2D_set_amount
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 set_amount ::
              (Particles2D :< cls, Object :< cls) => cls -> Int -> IO ()
 set_amount cls arg1
@@ -642,7 +693,10 @@ set_amount cls arg1
          godot_method_bind_call bindParticles2D_set_amount (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_amount" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Particles2D.set_amount
@@ -668,7 +722,10 @@ set_draw_order cls arg1
          godot_method_bind_call bindParticles2D_set_draw_order (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_draw_order" '[Int] (IO ())
          where
@@ -695,7 +752,10 @@ set_emitting cls arg1
          godot_method_bind_call bindParticles2D_set_emitting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_emitting" '[Bool] (IO ())
          where
@@ -723,7 +783,10 @@ set_explosiveness_ratio cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_explosiveness_ratio" '[Float]
            (IO ())
@@ -751,7 +814,10 @@ set_fixed_fps cls arg1
          godot_method_bind_call bindParticles2D_set_fixed_fps (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_fixed_fps" '[Int] (IO ())
          where
@@ -779,7 +845,10 @@ set_fractional_delta cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_fractional_delta" '[Bool]
            (IO ())
@@ -788,7 +857,7 @@ instance NodeMethod Particles2D "set_fractional_delta" '[Bool]
 
 {-# NOINLINE bindParticles2D_set_lifetime #-}
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 bindParticles2D_set_lifetime :: MethodBind
 bindParticles2D_set_lifetime
   = unsafePerformIO $
@@ -798,7 +867,7 @@ bindParticles2D_set_lifetime
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 set_lifetime ::
                (Particles2D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_lifetime cls arg1
@@ -807,7 +876,10 @@ set_lifetime cls arg1
          godot_method_bind_call bindParticles2D_set_lifetime (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_lifetime" '[Float] (IO ())
          where
@@ -836,7 +908,10 @@ set_normal_map cls arg1
          godot_method_bind_call bindParticles2D_set_normal_map (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_normal_map" '[Texture] (IO ())
          where
@@ -863,7 +938,10 @@ set_one_shot cls arg1
          godot_method_bind_call bindParticles2D_set_one_shot (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_one_shot" '[Bool] (IO ())
          where
@@ -891,7 +969,10 @@ set_pre_process_time cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_pre_process_time" '[Float]
            (IO ())
@@ -920,7 +1001,10 @@ set_process_material cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_process_material" '[Material]
            (IO ())
@@ -949,7 +1033,10 @@ set_randomness_ratio cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_randomness_ratio" '[Float]
            (IO ())
@@ -977,7 +1064,10 @@ set_speed_scale cls arg1
          godot_method_bind_call bindParticles2D_set_speed_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_speed_scale" '[Float] (IO ())
          where
@@ -1004,7 +1094,10 @@ set_texture cls arg1
          godot_method_bind_call bindParticles2D_set_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_texture" '[Texture] (IO ())
          where
@@ -1032,7 +1125,10 @@ set_use_local_coordinates cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_use_local_coordinates" '[Bool]
            (IO ())
@@ -1041,7 +1137,8 @@ instance NodeMethod Particles2D "set_use_local_coordinates" '[Bool]
 
 {-# NOINLINE bindParticles2D_set_visibility_rect #-}
 
--- | Editor visibility helper.
+-- | The @Rect2@ that determines the node's region which needs to be visible on screen for the particle system to be active.
+--   			Grow the rect if particles suddenly appear/disappear when the node enters/exits the screen. The @Rect2@ can be grown via code or with the __Particles → Generate Visibility Rect__ editor tool.
 bindParticles2D_set_visibility_rect :: MethodBind
 bindParticles2D_set_visibility_rect
   = unsafePerformIO $
@@ -1051,7 +1148,8 @@ bindParticles2D_set_visibility_rect
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Editor visibility helper.
+-- | The @Rect2@ that determines the node's region which needs to be visible on screen for the particle system to be active.
+--   			Grow the rect if particles suddenly appear/disappear when the node enters/exits the screen. The @Rect2@ can be grown via code or with the __Particles → Generate Visibility Rect__ editor tool.
 set_visibility_rect ::
                       (Particles2D :< cls, Object :< cls) => cls -> Rect2 -> IO ()
 set_visibility_rect cls arg1
@@ -1061,7 +1159,10 @@ set_visibility_rect cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Particles2D "set_visibility_rect" '[Rect2]
            (IO ())

@@ -85,7 +85,10 @@ get_channel cls
          godot_method_bind_call bindInputEventMIDI_get_channel (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "get_channel" '[] (IO Int) where
         nodeMethod = Godot.Core.InputEventMIDI.get_channel
@@ -110,7 +113,10 @@ get_controller_number cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "get_controller_number" '[]
            (IO Int)
@@ -137,7 +143,10 @@ get_controller_value cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "get_controller_value" '[]
            (IO Int)
@@ -164,7 +173,10 @@ get_instrument cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "get_instrument" '[] (IO Int)
          where
@@ -189,7 +201,10 @@ get_message cls
          godot_method_bind_call bindInputEventMIDI_get_message (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "get_message" '[] (IO Int) where
         nodeMethod = Godot.Core.InputEventMIDI.get_message
@@ -213,7 +228,10 @@ get_pitch cls
          godot_method_bind_call bindInputEventMIDI_get_pitch (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "get_pitch" '[] (IO Int) where
         nodeMethod = Godot.Core.InputEventMIDI.get_pitch
@@ -237,7 +255,10 @@ get_pressure cls
          godot_method_bind_call bindInputEventMIDI_get_pressure (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "get_pressure" '[] (IO Int)
          where
@@ -262,7 +283,10 @@ get_velocity cls
          godot_method_bind_call bindInputEventMIDI_get_velocity (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "get_velocity" '[] (IO Int)
          where
@@ -287,7 +311,10 @@ set_channel cls arg1
          godot_method_bind_call bindInputEventMIDI_set_channel (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "set_channel" '[Int] (IO ())
          where
@@ -313,7 +340,10 @@ set_controller_number cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "set_controller_number" '[Int]
            (IO ())
@@ -340,7 +370,10 @@ set_controller_value cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "set_controller_value" '[Int]
            (IO ())
@@ -367,7 +400,10 @@ set_instrument cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "set_instrument" '[Int] (IO ())
          where
@@ -392,7 +428,10 @@ set_message cls arg1
          godot_method_bind_call bindInputEventMIDI_set_message (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "set_message" '[Int] (IO ())
          where
@@ -417,7 +456,10 @@ set_pitch cls arg1
          godot_method_bind_call bindInputEventMIDI_set_pitch (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "set_pitch" '[Int] (IO ()) where
         nodeMethod = Godot.Core.InputEventMIDI.set_pitch
@@ -441,7 +483,10 @@ set_pressure cls arg1
          godot_method_bind_call bindInputEventMIDI_set_pressure (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "set_pressure" '[Int] (IO ())
          where
@@ -466,7 +511,10 @@ set_velocity cls arg1
          godot_method_bind_call bindInputEventMIDI_set_velocity (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventMIDI "set_velocity" '[Int] (IO ())
          where

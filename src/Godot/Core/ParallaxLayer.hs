@@ -59,7 +59,10 @@ get_mirroring cls
          godot_method_bind_call bindParallaxLayer_get_mirroring (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParallaxLayer "get_mirroring" '[] (IO Vector2)
          where
@@ -87,7 +90,10 @@ get_motion_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParallaxLayer "get_motion_offset" '[]
            (IO Vector2)
@@ -116,7 +122,10 @@ get_motion_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParallaxLayer "get_motion_scale" '[]
            (IO Vector2)
@@ -144,7 +153,10 @@ set_mirroring cls arg1
          godot_method_bind_call bindParallaxLayer_set_mirroring (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParallaxLayer "set_mirroring" '[Vector2]
            (IO ())
@@ -173,7 +185,10 @@ set_motion_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParallaxLayer "set_motion_offset" '[Vector2]
            (IO ())
@@ -202,7 +217,10 @@ set_motion_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ParallaxLayer "set_motion_scale" '[Vector2]
            (IO ())

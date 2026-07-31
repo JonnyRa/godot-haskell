@@ -99,7 +99,10 @@ get_bias cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbeData_get_bias (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "get_bias" '[] (IO Float) where
         nodeMethod = Godot.Core.GIProbeData.get_bias
@@ -122,7 +125,10 @@ get_bounds cls
          godot_method_bind_call bindGIProbeData_get_bounds (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "get_bounds" '[] (IO Aabb) where
         nodeMethod = Godot.Core.GIProbeData.get_bounds
@@ -146,7 +152,10 @@ get_cell_size cls
          godot_method_bind_call bindGIProbeData_get_cell_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "get_cell_size" '[] (IO Float)
          where
@@ -172,7 +181,10 @@ get_dynamic_data cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "get_dynamic_data" '[]
            (IO PoolIntArray)
@@ -199,7 +211,10 @@ get_dynamic_range cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "get_dynamic_range" '[] (IO Int)
          where
@@ -224,7 +239,10 @@ get_energy cls
          godot_method_bind_call bindGIProbeData_get_energy (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "get_energy" '[] (IO Float) where
         nodeMethod = Godot.Core.GIProbeData.get_energy
@@ -248,7 +266,10 @@ get_normal_bias cls
          godot_method_bind_call bindGIProbeData_get_normal_bias (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "get_normal_bias" '[] (IO Float)
          where
@@ -273,7 +294,10 @@ get_propagation cls
          godot_method_bind_call bindGIProbeData_get_propagation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "get_propagation" '[] (IO Float)
          where
@@ -299,7 +323,10 @@ get_to_cell_xform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "get_to_cell_xform" '[]
            (IO Transform)
@@ -325,7 +352,10 @@ is_compressed cls
          godot_method_bind_call bindGIProbeData_is_compressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "is_compressed" '[] (IO Bool) where
         nodeMethod = Godot.Core.GIProbeData.is_compressed
@@ -349,7 +379,10 @@ is_interior cls
          godot_method_bind_call bindGIProbeData_is_interior (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "is_interior" '[] (IO Bool) where
         nodeMethod = Godot.Core.GIProbeData.is_interior
@@ -372,7 +405,10 @@ set_bias cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGIProbeData_set_bias (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_bias" '[Float] (IO ()) where
         nodeMethod = Godot.Core.GIProbeData.set_bias
@@ -396,7 +432,10 @@ set_bounds cls arg1
          godot_method_bind_call bindGIProbeData_set_bounds (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_bounds" '[Aabb] (IO ()) where
         nodeMethod = Godot.Core.GIProbeData.set_bounds
@@ -420,7 +459,10 @@ set_cell_size cls arg1
          godot_method_bind_call bindGIProbeData_set_cell_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_cell_size" '[Float] (IO ())
          where
@@ -445,7 +487,10 @@ set_compress cls arg1
          godot_method_bind_call bindGIProbeData_set_compress (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_compress" '[Bool] (IO ())
          where
@@ -471,7 +516,10 @@ set_dynamic_data cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_dynamic_data" '[PoolIntArray]
            (IO ())
@@ -498,7 +546,10 @@ set_dynamic_range cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_dynamic_range" '[Int] (IO ())
          where
@@ -523,7 +574,10 @@ set_energy cls arg1
          godot_method_bind_call bindGIProbeData_set_energy (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_energy" '[Float] (IO ()) where
         nodeMethod = Godot.Core.GIProbeData.set_energy
@@ -547,7 +601,10 @@ set_interior cls arg1
          godot_method_bind_call bindGIProbeData_set_interior (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_interior" '[Bool] (IO ())
          where
@@ -572,7 +629,10 @@ set_normal_bias cls arg1
          godot_method_bind_call bindGIProbeData_set_normal_bias (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_normal_bias" '[Float] (IO ())
          where
@@ -597,7 +657,10 @@ set_propagation cls arg1
          godot_method_bind_call bindGIProbeData_set_propagation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_propagation" '[Float] (IO ())
          where
@@ -623,7 +686,10 @@ set_to_cell_xform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GIProbeData "set_to_cell_xform" '[Transform]
            (IO ())

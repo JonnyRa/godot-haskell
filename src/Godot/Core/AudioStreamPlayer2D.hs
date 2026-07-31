@@ -123,7 +123,10 @@ _bus_layout_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "_bus_layout_changed" '[]
            (IO ())
@@ -150,7 +153,10 @@ _is_active cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "_is_active" '[] (IO Bool)
          where
@@ -178,7 +184,10 @@ _set_playing cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "_set_playing" '[Bool]
            (IO ())
@@ -187,7 +196,7 @@ instance NodeMethod AudioStreamPlayer2D "_set_playing" '[Bool]
 
 {-# NOINLINE bindAudioStreamPlayer2D_get_area_mask #-}
 
--- | Areas in which this sound plays.
+-- | Determines which @Area2D@ layers affect the sound for reverb and audio bus effects. Areas can be used to redirect @AudioStream@s so that they play in a certain audio bus. An example of how you might use this is making a "water" area so that sounds played in the water are redirected through an audio bus to make them sound like they are being played underwater.
 bindAudioStreamPlayer2D_get_area_mask :: MethodBind
 bindAudioStreamPlayer2D_get_area_mask
   = unsafePerformIO $
@@ -197,7 +206,7 @@ bindAudioStreamPlayer2D_get_area_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Areas in which this sound plays.
+-- | Determines which @Area2D@ layers affect the sound for reverb and audio bus effects. Areas can be used to redirect @AudioStream@s so that they play in a certain audio bus. An example of how you might use this is making a "water" area so that sounds played in the water are redirected through an audio bus to make them sound like they are being played underwater.
 get_area_mask ::
                 (AudioStreamPlayer2D :< cls, Object :< cls) => cls -> IO Int
 get_area_mask cls
@@ -207,7 +216,10 @@ get_area_mask cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "get_area_mask" '[]
            (IO Int)
@@ -236,7 +248,10 @@ get_attenuation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "get_attenuation" '[]
            (IO Float)
@@ -265,7 +280,10 @@ get_bus cls
          godot_method_bind_call bindAudioStreamPlayer2D_get_bus (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "get_bus" '[]
            (IO GodotString)
@@ -294,7 +312,10 @@ get_max_distance cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "get_max_distance" '[]
            (IO Float)
@@ -323,7 +344,10 @@ get_pitch_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "get_pitch_scale" '[]
            (IO Float)
@@ -353,7 +377,10 @@ get_playback_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "get_playback_position" '[]
            (IO Float)
@@ -383,7 +410,7 @@ get_stream cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AudioStreamPlayer2D "get_stream" '[]
            (IO AudioStream)
@@ -412,7 +439,10 @@ get_stream_paused cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "get_stream_paused" '[]
            (IO Bool)
@@ -442,7 +472,7 @@ get_stream_playback cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AudioStreamPlayer2D "get_stream_playback" '[]
            (IO AudioStreamPlayback)
@@ -471,7 +501,10 @@ get_volume_db cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "get_volume_db" '[]
            (IO Float)
@@ -500,7 +533,10 @@ is_autoplay_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "is_autoplay_enabled" '[]
            (IO Bool)
@@ -529,7 +565,10 @@ is_playing cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "is_playing" '[] (IO Bool)
          where
@@ -557,7 +596,10 @@ play cls arg1
          godot_method_bind_call bindAudioStreamPlayer2D_play (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "play" '[Maybe Float]
            (IO ())
@@ -586,7 +628,10 @@ seek cls arg1
          godot_method_bind_call bindAudioStreamPlayer2D_seek (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "seek" '[Float] (IO ())
          where
@@ -594,7 +639,7 @@ instance NodeMethod AudioStreamPlayer2D "seek" '[Float] (IO ())
 
 {-# NOINLINE bindAudioStreamPlayer2D_set_area_mask #-}
 
--- | Areas in which this sound plays.
+-- | Determines which @Area2D@ layers affect the sound for reverb and audio bus effects. Areas can be used to redirect @AudioStream@s so that they play in a certain audio bus. An example of how you might use this is making a "water" area so that sounds played in the water are redirected through an audio bus to make them sound like they are being played underwater.
 bindAudioStreamPlayer2D_set_area_mask :: MethodBind
 bindAudioStreamPlayer2D_set_area_mask
   = unsafePerformIO $
@@ -604,7 +649,7 @@ bindAudioStreamPlayer2D_set_area_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Areas in which this sound plays.
+-- | Determines which @Area2D@ layers affect the sound for reverb and audio bus effects. Areas can be used to redirect @AudioStream@s so that they play in a certain audio bus. An example of how you might use this is making a "water" area so that sounds played in the water are redirected through an audio bus to make them sound like they are being played underwater.
 set_area_mask ::
                 (AudioStreamPlayer2D :< cls, Object :< cls) => cls -> Int -> IO ()
 set_area_mask cls arg1
@@ -614,7 +659,10 @@ set_area_mask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "set_area_mask" '[Int]
            (IO ())
@@ -644,7 +692,10 @@ set_attenuation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "set_attenuation" '[Float]
            (IO ())
@@ -673,7 +724,10 @@ set_autoplay cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "set_autoplay" '[Bool]
            (IO ())
@@ -702,7 +756,10 @@ set_bus cls arg1
          godot_method_bind_call bindAudioStreamPlayer2D_set_bus (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "set_bus" '[GodotString]
            (IO ())
@@ -732,7 +789,10 @@ set_max_distance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "set_max_distance" '[Float]
            (IO ())
@@ -762,7 +822,10 @@ set_pitch_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "set_pitch_scale" '[Float]
            (IO ())
@@ -792,7 +855,10 @@ set_stream cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "set_stream" '[AudioStream]
            (IO ())
@@ -821,7 +887,10 @@ set_stream_paused cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "set_stream_paused" '[Bool]
            (IO ())
@@ -851,7 +920,10 @@ set_volume_db cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "set_volume_db" '[Float]
            (IO ())
@@ -878,7 +950,10 @@ stop cls
          godot_method_bind_call bindAudioStreamPlayer2D_stop (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer2D "stop" '[] (IO ()) where
         nodeMethod = Godot.Core.AudioStreamPlayer2D.stop

@@ -38,7 +38,10 @@ _run cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindEditorScript__run (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorScript "_run" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorScript._run
@@ -66,7 +69,10 @@ add_root_node cls arg1
          godot_method_bind_call bindEditorScript_add_root_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorScript "add_root_node" '[Node] (IO ())
          where
@@ -94,7 +100,7 @@ get_editor_interface cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorScript "get_editor_interface" '[]
            (IO EditorInterface)
@@ -121,7 +127,7 @@ get_scene cls
          godot_method_bind_call bindEditorScript_get_scene (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorScript "get_scene" '[] (IO Node) where
         nodeMethod = Godot.Tools.EditorScript.get_scene

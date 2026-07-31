@@ -47,7 +47,7 @@ _signal_callback cls varargs
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod GDScriptFunctionState "_signal_callback"
            '[[Variant 'GodotTy]]
@@ -76,7 +76,10 @@ is_valid cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GDScriptFunctionState "is_valid" '[Maybe Bool]
            (IO Bool)
@@ -104,7 +107,7 @@ resume cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod GDScriptFunctionState "resume"
            '[Maybe GodotVariant]

@@ -50,7 +50,10 @@ _drag_node_exit cls
          godot_method_bind_call bindScrollBar__drag_node_exit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollBar "_drag_node_exit" '[] (IO ()) where
         nodeMethod = Godot.Core.ScrollBar._drag_node_exit
@@ -74,7 +77,10 @@ _drag_node_input cls arg1
          godot_method_bind_call bindScrollBar__drag_node_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollBar "_drag_node_input" '[InputEvent]
            (IO ())
@@ -99,7 +105,10 @@ _gui_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindScrollBar__gui_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollBar "_gui_input" '[InputEvent] (IO ())
          where
@@ -126,7 +135,10 @@ get_custom_step cls
          godot_method_bind_call bindScrollBar_get_custom_step (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollBar "get_custom_step" '[] (IO Float)
          where
@@ -153,7 +165,10 @@ set_custom_step cls arg1
          godot_method_bind_call bindScrollBar_set_custom_step (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ScrollBar "set_custom_step" '[Float] (IO ())
          where
