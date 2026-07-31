@@ -225,7 +225,7 @@ mkSignals cls mdoc = return $ concatMap mkSignal (V.toList $ cls ^. signals)
       preComment (T.unpack $ D.convertDoc d)
     argToHsType (GodotArgument _ ty _) = toHsType ty
     mkSignal sig 
-      = let sigStr = T.unpack (sig ^. name)
+      = let sigStr = escapeName . T.unpack $ sig ^. name
             sigName = HS.Ident () ("sig_" ++ sigStr)
         in [ HS.TypeSig (signalDoc (sig ^. name) mdoc) [noComments $ sigName] (noComments $ HS.TyApp () sigTy (clsTy cls))
            , noComments $ HS.PatBind () (HS.PVar () sigName) (
@@ -454,3 +454,64 @@ toHsType (CustomType "ShaderMaterial,SpatialMaterial")    = nameToTyCon "Materia
 toHsType (CustomType "ShaderMaterial,ParticlesMaterial")  = nameToTyCon "Material"
 toHsType (CustomType ty) = nameToTyCon ty
 toHsType (EnumType _) = [ty| Int |]
+
+escapeName :: String -> String
+escapeName name = if name `S.member` reservedWords then name ++ "'" else name
+
+reservedWords :: S.Set String
+reservedWords = S.fromList
+  [ "_"
+  , "as"
+  , "case"
+  , "class"
+  , "data"
+  , "default"
+  , "deriving"
+  , "do"
+  , "else"
+  , "hiding"
+  , "if"
+  , "import"
+  , "in"
+  , "infix"
+  , "infixl"
+  , "infixr"
+  , "instance"
+  , "let"
+  , "module"
+  , "newtype"
+  , "of"
+  , "qualified"
+  , "then"
+  , "type"
+  , "where"
+  , "forall"
+  , "mdo"
+  , "family"
+  , "role"
+  , "pattern"
+  , "static"
+  , "stock"
+  , "anyclass"
+  , "via"
+  , "group"
+  , "by"
+  , "using"
+  , "foreign"
+  , "export"
+  , "label"
+  , "dynamic"
+  , "safe"
+  , "interruptible"
+  , "unsafe"
+  , "stdcall"
+  , "ccall"
+  , "capi"
+  , "prim"
+  , "javascript"
+  , "unit"
+  , "dependency"
+  , "signature"
+  , "rec"
+  , "proc"
+  ]
