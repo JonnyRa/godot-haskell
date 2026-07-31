@@ -309,16 +309,41 @@ mkMethod cls method doc = do
          \clsNamePtr -> withCString $(HS.strE rawMethodName) $
          \methodNamePtr -> godot_method_bind_get_method clsNamePtr methodNamePtr |]
     classModuleName = "Godot." ++ (pascal $ T.unpack (cls ^. apiType)) ++ "." ++ (T.unpack $ mangleClass $ cls ^. name)
+
+    -- this one is a bit redudant now, but code is a tad cleaner
+    returnsVariant = method ^. returnType == CoreType "Variant"
+    needsCleanup = case method ^. returnType of
+      CoreType "Object" -> False
+      CoreType "Variant" -> False
+      CustomType _ -> False
+      _ -> True
+
+    -- this is actually killing me.
     runMethodRhs = HS.UnGuardedRhs () $ HS.App () (
       HS.App ()
         (HS.Var () (HS.UnQual () (HS.Ident () "withVariantArray")))
-        (let a = HS.List () $ zipWith (\a an -> wrapDefault a an) (V.toList $ method ^. arguments) argNames
-        in if method ^. hasVarargs then
+        (
+        if method ^. hasVarargs then
             [hs|$a ++ varargs|] else
-            a))
-      [hs|
+            a)
+        ) runMethodBody
+      where
+      a :: HS.Exp ()
+      a = HS.List () $ zipWith (\a an -> wrapDefault a an) (V.toList $ method ^. arguments) argNames
+
+    runMethodBody :: HS.Exp ()
+    runMethodBody
+      | returnsVariant = [hs|
         \(arrPtr, len) -> godot_method_bind_call $(clsMethodBindVar) (upcast cls) arrPtr len >>=
-        \(err, res) -> throwIfErr err >> fromGodotVariant res |]
+        \(err, var) -> throwIfErr err >> return var |]
+      | needsCleanup = [hs|
+        \(arrPtr, len) -> godot_method_bind_call $(clsMethodBindVar) (upcast cls) arrPtr len >>=
+        \(err, var) -> throwIfErr err >> fromGodotVariant var >>=
+        \ret -> godot_variant_destroy var >> return ret |]
+      | otherwise = [hs|
+        \(arrPtr, len) -> godot_method_bind_call $(clsMethodBindVar) (upcast cls) arrPtr len >>=
+        \(err, var) -> throwIfErr err >> fromGodotVariant var |]
+
 
     wrapDefault (GodotArgument _ ty Nothing) v = mkToVariant v
     wrapDefault (GodotArgument _ ty (Just d)) v = mkDefault ty d (HS.Var () $ HS.UnQual () v)
