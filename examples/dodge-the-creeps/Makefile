@@ -18,7 +18,7 @@ stack-run:
 	cp $(STACKLIBFILE) $(GODOTPROJECT)/lib
 	godot -e --path ./game
 stack-watch:
-	stack build --file-watch --fast --exec "cp $(STACKLIBFILE) $(GODOTPROJECT)/lib"
+	stack build --file-watch --fast --colour always --exec "cp $(STACKLIBFILE) $(GODOTPROJECT)/lib" 2>&1 | tee ../../errorLog 
 project-watch:
 	stack exec godot-haskell-project-generator game src
 updatelib:

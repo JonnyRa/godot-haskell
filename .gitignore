@@ -25,3 +25,13 @@ lhr-*/
 
 # emacs TAG file
 TAGS
+
+#vim tags + swap files
+tags
+*.sw[p-z]
+
+#vim-stackThoseErrorsOfHs
+errorLog
+.errors
+
+*.cabal
