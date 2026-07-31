@@ -54,12 +54,18 @@ instance GodotFFI G.Array (V.Vector GodotVariant) where
 
 type instance TypeOf 'HaskellTy GodotString = Text
 instance GodotFFI GodotString Text where
-  fromLowLevel str = godot_string_utf8 str >>= \cstr -> T.decodeUtf8 <$> fromCharString cstr
+  fromLowLevel str = do 
+      cstr <- godot_string_utf8 str 
+      result <- T.decodeUtf8 <$> fromCharString cstr
+      godot_char_string_destroy cstr
+      return result
+      
     where
       fromCharString cstr = do
         len <- godot_char_string_length cstr
         sptr <- godot_char_string_get_data cstr
         B.packCStringLen (sptr, fromIntegral len)
+
   toLowLevel txt = B.unsafeUseAsCStringLen bstr $ \(ptr, len) ->
     godot_string_chars_to_utf8_with_len ptr (fromIntegral len)
     where
@@ -156,7 +162,11 @@ instance GodotFFI G.Transform2d Transform2d where
 type instance TypeOf 'HaskellTy G.NodePath = Text
 instance GodotFFI G.NodePath Text where
   fromLowLevel np = fromLowLevel =<< godot_node_path_get_name np 0
-  toLowLevel np = godot_node_path_new =<< toLowLevel np
+  toLowLevel np = do
+    nps <- toLowLevel np
+    ret <- godot_node_path_new nps
+    godot_string_destroy nps
+    return ret
 
 type instance TypeOf 'HaskellTy G.Color = AlphaColour Double
 instance GodotFFI G.Color (AlphaColour Double) where
@@ -395,3 +405,4 @@ fromGodotVariant var = do
       haveTy <-  godot_variant_get_type var 
       let expTy = typeOf (undefined :: a)
       error $ "Error in API: couldn't fromVariant. have: " ++ show haveTy ++ ", expected: " ++ show expTy
+
