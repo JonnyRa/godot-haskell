@@ -109,9 +109,9 @@ allByExtension ext dir = do
   if b
     then do
       l <- map (dir </>) <$> listDirectory dir
-      tscns <- filterM (\f -> (&& isSuffixOf ext f) <$> doesFileExist f) l
+      files <- filterM (\f -> (&& isSuffixOf ext f) <$> doesFileExist f) l
       dirs <- filterM doesDirectoryExist l
-      (tscns ++) . concat <$> mapM (allByExtension ext) dirs
+      (files ++) . concat <$> mapM (allByExtension ext) dirs
     else pure []
 
 mangle (h : t) = toUpper h : t
@@ -627,6 +627,7 @@ instance SceneResourcePath "#{mangle $ T.unpack $ unName scene}" where
   sceneResourcePath = "res://#{filepath}"
 |]
 
+mkSceneNode :: FilePath -> String -> T.Text -> Ty -> Ty -> Maybe (Name, Name) -> (T.Text, T.Text)
 mkSceneNode scene name path ty ty' isHaskell =
   ( T.pack [i|import Godot.Core.#{ty}()|],
     T.pack
@@ -690,6 +691,7 @@ resolve (Just (Name n)) (NodePath ".") = NodePath n
 resolve _ (NodePath ".") = error "Relative node path without a current node"
 resolve _ p = p
 
+readTscn :: FilePath -> FilePath -> IO Tscn
 readTscn fn relFile = do
   b <- doesFileExist fn
   let tscnName = Name $ T.pack $ takeBaseName fn
@@ -773,7 +775,10 @@ main = do
       let regenerate = do
             putStrLn "Regenerating ..."
             gdnsFiles <- allByExtension ".gdns" inDir
-            tscnFiles <- allByExtension ".tscn" inDir
+            allTscnFiles <- allByExtension ".tscn" inDir
+            let scenesWithHaskell = map takeBaseName gdnsFiles
+
+            let tscnFiles = filter ((`elem` scenesWithHaskell) . takeBaseName) allTscnFiles
             mapM_ putStrLn gdnsFiles
             mapM_ putStrLn tscnFiles
             b <- doesDirectoryExist (outDir </> "Project")
@@ -841,6 +846,7 @@ outputTscn segmentsTscnName sceneName outDir tscn tscns gdnss = do
             (tscn ^. connections)
       )
   where
+    sceneNodes :: [(T.Text, T.Text)]
     sceneNodes =
       flip mapMaybe (M.toList $ tscn ^. nodes) $ \(name, node) -> do
         ty <- case (node ^. ty, node ^. instanceof) of
@@ -864,17 +870,24 @@ outputTscn segmentsTscnName sceneName outDir tscn tscns gdnss = do
             (annotatePackedScene node ty)
             (isHaskellNode name node tscn tscns gdnss)
 
+    annotatePackedScene :: TscnNode -> Ty -> Ty
     annotatePackedScene node (Ty "PackedScene") =
       Ty $
-        "PackedScene' \""
-          <> unName
-            ( fromJust $ do
-                i <- node ^. instanceof
-                r <- M.lookup i (tscn ^. resources)
-                t <- M.lookup (r ^. path) tscns
-                t ^. rootNode
-            )
-          <> "\""
+        --if there is no root node then it is probably because we have a PackedScene that isn't part of the haskell code
+        --so just output it as a Node so we can call functions on it
+        case maybeRootNode of
+          Nothing -> "Node"
+          Just rootNode ->
+            "PackedScene' \""
+              <> unName rootNode
+              <> "\""
+      where
+      maybeRootNode :: Maybe Name
+      maybeRootNode = do
+        i <- node ^. instanceof
+        r <- M.lookup i (tscn ^. resources)
+        tscn <- M.lookup (r ^. path) tscns
+        tscn ^. rootNode
     annotatePackedScene node ty = ty
 
 isHaskellNode :: Name -> TscnNode -> Tscn -> M.Map T.Text Tscn -> M.Map T.Text Gdns -> Maybe (Name, Name)

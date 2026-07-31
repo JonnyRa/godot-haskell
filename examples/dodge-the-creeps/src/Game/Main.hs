@@ -39,9 +39,16 @@ instance NodeMethod Main "game_over" '[] (IO ()) where
   nodeMethod = game_over
 instance NodeMethod Main "new_game" '[] (IO ()) where
   nodeMethod = new_game
+instance NodeMethod Main "setMessage" '[GodotString] (IO ()) where
+  nodeMethod = setMessage
 
 instance NodeProperty Main "PackedScene" PackedScene 'False where
   nodeProperty = createMVarProperty' "PackedScene" _mobScene (Left VariantTypeObject)
+
+setMessage :: Main -> GodotString -> IO ()
+setMessage self text = do
+  hud <- getNodeNativeScript' @"HUD" self 
+  show_message hud text
 
 game_over :: Main -> IO ()
 game_over self = do
@@ -80,7 +87,8 @@ on_MobTimer_timeout :: Main -> IO ()
 on_MobTimer_timeout self = do
   -- Choose a random location on Path2D.
   mobSpawnLoc <- getNode' @"MobPath/MobSpawnLocation" self 
-  PathFollow2D.set_offset mobSpawnLoc . fromInteger =<< randomIO
+  mobSpawnPoint <- fromInteger <$> randomIO
+  PathFollow2D.set_offset mobSpawnLoc mobSpawnPoint
   -- Create a Mob instance and add it to the scene.
   mob :: Mob <- readMVar (_mobScene self)
             >>= (`PackedScene.instance'` Just 0)
@@ -95,6 +103,13 @@ on_MobTimer_timeout self = do
   direction' <- (direction +) <$> randomRIO ((-pi) / 4, pi / 4)
   set_rotation mob direction'
   -- Set the velocity' (speed & direction).
+  testNode <- getNode' @"Test" self
+  functionName <- toLowLevel "doSomething"
+  call testNode functionName $ map toVariant [direction, mobSpawnPoint]
+
+  otherStyleFunc <- toLowLevel "callBackToHaskell"
+  call testNode otherStyleFunc [toVariant $ (upcast self :: Object)]
+
   liftM2 (,) (readMVar $ _mMinSpeed mob) (readMVar $ _mMaxSpeed mob)
     >>= randomRIO
     >>= (\x -> toLowLevel (V2 x 0))
