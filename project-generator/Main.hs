@@ -792,8 +792,11 @@ main = do
                   (T.pack $ makeRelative inDir f,) <$> readGdns f
             ---
             forM_ (M.toList tscns) $ \(fn, t) ->
+              --outputs the Project/Scenes/blah.hs files
               outputTscn (segmentsName inDir fn) (moduleName inDir fn) outDir t tscns gdnss
+            --outputs Project/Scenes.hs
             outputCombined inDir outDir tscns
+            --outputs Project/Requirements.hs
             outputGdnss inDir outDir gdnss
             putStrLn "Generated!"
             putStrLn "Watching ... ctrl+c to stop"

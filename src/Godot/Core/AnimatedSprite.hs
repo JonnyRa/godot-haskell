@@ -433,8 +433,7 @@ play ::
        cls -> Maybe GodotString -> Maybe Bool -> IO ()
 play cls arg1 arg2
   = withVariantArray
-      [defaultedVariant VariantString "" arg1,
-       maybe (VariantBool False) toVariant arg2]
+      [defaultedVariant VariantString "" arg1] --, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAnimatedSprite_play (upcast cls) arrPtr
            len

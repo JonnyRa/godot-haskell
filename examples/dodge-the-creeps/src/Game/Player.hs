@@ -72,12 +72,14 @@ player_process self delta = do
       pos   <- get_position self >>= fromLowLevel
       let velocity' = normalize velocity ^* speed
           pos'      = pos + velocity' ^* delta
-          clamp v a b = max a (min b v)
           newPos =
             let posX = clamp (pos' ^. _x) 0 (screenSize ^. _x)
                 posY = clamp (pos' ^. _y) 0 (screenSize ^. _y)
             in  V2 posX posY
       set_position self =<< toLowLevel newPos
+
+      -- this looks suspect but replacing with Nothing doesn't make a difference and tbf it's in the godot docs
+      -- likewise replacing Nothing with Just False for backwards doesn't make a difference
       animationName <- toLowLevel ""
       play animSprite (Just animationName) Nothing
       if velocity' ^. _x /= 0
@@ -90,6 +92,9 @@ player_process self delta = do
           set_animation animSprite =<< toLowLevel "up"
           set_flip_v animSprite (velocity' ^. _y > 0)
     else stop animSprite
+  where
+  clamp :: Float -> Float -> Float -> Float
+  clamp value low high = max low (min high value)
 
+deriveHasBase ''Player
 setupNode ''Player "Player" "Player"
-deriveBase ''Player

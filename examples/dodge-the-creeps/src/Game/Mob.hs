@@ -23,5 +23,5 @@ instance NodeMethod Mob "_ready" '[] (IO ()) where
 instance NodeMethod Mob "_on_VisibilityNotifier2D_screen_exited" '[] (IO ()) where
   nodeMethod = queue_free
 
+deriveHasBase ''Mob
 setupNode ''Mob "Mob" "Mob"
-deriveBase ''Mob
