@@ -378,7 +378,7 @@ mkMethod cls method doc = do
     mkDefault _ "0"             v = [hs|maybe (VariantInt 0) toVariant $v |]
     mkDefault _ "1"             v = [hs|maybe (VariantInt 1) toVariant $v |]
     mkDefault _ "[Object:null]" v = [hs|maybe VariantNil toVariant $v |]
-    mkDefault t d _ = error $ "Don't know how to make defaults for this type (" ++ show t ++ ") for value (" ++ show d ++ ")"
+    mkDefault t d _ = error $ "Don't know how to make defaults for this type (" ++ show t ++ ") for value (" ++ show d ++ ") in class (" ++ show (_gcName cls) ++ ")"
 
     mkToVariant = HS.App () (HS.Var () (HS.UnQual () (HS.Ident () "toVariant"))) . HS.Var () . HS.UnQual ()
 
