@@ -108,7 +108,7 @@ sudo apt-get install jq libcurl4-gnutls-dev libexpat1-dev# Or equivalent on you 
 stack install xml-to-json
 
 # Generate the JSON
-xml-to-json godot-install-directory/doc/classes/*.xml | jq -n '[inputs]' &> godot_doc_classes.json
+xml-to-json godot-repo/doc/classes/*.xml | jq -n '[inputs]' &> godot_doc_classes.json
 ```
 
 * Build the bindings themselves:
