@@ -104,8 +104,8 @@ To regenerate bindings:
 
 ```bash
 # Prerequisite
-sudo apt-get install jq libcurl4-gnutls-dev # Or equivalent on you OS/Distro
-cabal install xml-to-json
+sudo apt-get install jq libcurl4-gnutls-dev libexpat1-dev# Or equivalent on you OS/Distro
+stack install xml-to-json
 
 # Generate the JSON
 xml-to-json godot-install-directory/doc/classes/*.xml | jq -n '[inputs]' &> godot_doc_classes.json
