@@ -461,7 +461,7 @@ bindRayCast_get_debug_shape_thickness
 
 -- | If set to @1@, a line is used as the debug shape. Otherwise, a truncated pyramid is drawn to represent the @RayCast@. Requires __Visible Collision Shapes__ to be enabled in the __Debug__ menu for the debug shape to be visible at run-time.
 get_debug_shape_thickness ::
-                            (RayCast :< cls, Object :< cls) => cls -> IO Float
+                            (RayCast :< cls, Object :< cls) => cls -> IO Int
 get_debug_shape_thickness cls
   = withVariantArray []
       (\ (arrPtr, len) ->
@@ -475,7 +475,7 @@ get_debug_shape_thickness cls
                \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "get_debug_shape_thickness" '[]
-           (IO Float)
+           (IO Int)
          where
         nodeMethod = Godot.Core.RayCast.get_debug_shape_thickness
 
@@ -893,7 +893,7 @@ bindRayCast_set_debug_shape_thickness
 
 -- | If set to @1@, a line is used as the debug shape. Otherwise, a truncated pyramid is drawn to represent the @RayCast@. Requires __Visible Collision Shapes__ to be enabled in the __Debug__ menu for the debug shape to be visible at run-time.
 set_debug_shape_thickness ::
-                            (RayCast :< cls, Object :< cls) => cls -> Float -> IO ()
+                            (RayCast :< cls, Object :< cls) => cls -> Int -> IO ()
 set_debug_shape_thickness cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
@@ -906,7 +906,7 @@ set_debug_shape_thickness cls arg1
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod RayCast "set_debug_shape_thickness" '[Float]
+instance NodeMethod RayCast "set_debug_shape_thickness" '[Int]
            (IO ())
          where
         nodeMethod = Godot.Core.RayCast.set_debug_shape_thickness
