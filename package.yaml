@@ -79,7 +79,7 @@ internal-libraries:
     - parsec
     - parsers
     - mtl
-    - ansi-wl-pprint
+    - prettyprinter
 
 ghc-options:
   - -O0

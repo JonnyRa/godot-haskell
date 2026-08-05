@@ -21,8 +21,8 @@ import Foreign.C
 import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
 
-import Text.PrettyPrint.ANSI.Leijen ((<+>))
-import qualified Text.PrettyPrint.ANSI.Leijen as PP
+import Prettyprinter ((<+>), Doc, pretty)
+import qualified Prettyprinter as PP
 
 import qualified Spec as S 
 
@@ -191,7 +191,7 @@ createFuncTyIO ret args = foldr AppT (AppT (ConT ''IO) ret) $ fmap (AppT ArrowT)
 shimFunction :: S.GdnativeApiEntry -> ( Name -- function name
                                       , Name -- foreign decl name
                                       , Dec -- foreign decl
-                                      , Maybe PP.Doc -- shim C code
+                                      , Maybe (PP.Doc ann) -- shim C code
                                       , [(TypeResult Type, Bool)] -- foreign argument types + whether to malloc it
                                       , TypeResult Type ) -- foreign return type 
 shimFunction entry =
@@ -243,7 +243,7 @@ shimFunction entry =
     -- shimArgs = original function params length!!
     cShim
       | needsCShim = Just $ PP.vsep
-        [ newRetDecl <+> PP.text cName <+> PP.tupled newCArgs <+> "{" -- new declaration
+        [ newRetDecl <+> pretty cName <+> PP.tupled newCArgs <+> "{" -- new declaration
         , PP.indent 2 $ retWay <+> "func" <+> PP.tupled newInvokeParams <> ";"
         , "}"]
       | otherwise = Nothing
@@ -369,7 +369,7 @@ marshalRet r = marshalArg (r, False) >>=
 
 -- constructs the haskell and C functions out of the API name, index and entry
 -- I was considering doing C via AST, but just going to use PP.Doc.
-constructFunction :: Bool -> Name -> Int -> S.GdnativeApiEntry -> Q ([Dec], Maybe PP.Doc)
+constructFunction :: Bool -> Name -> Int -> S.GdnativeApiEntry -> Q ([Dec], Maybe (PP.Doc ann))
 constructFunction isCore tyname idx entry = do
   marshalledArgs <- mapM marshalArg foreignArgs
   let (hsOuts, hsArgs) = partitionArgs marshalledArgs
