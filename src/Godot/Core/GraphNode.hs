@@ -10,6 +10,7 @@ module Godot.Core.GraphNode
         Godot.Core.GraphNode.sig_offset_changed,
         Godot.Core.GraphNode.sig_raise_request,
         Godot.Core.GraphNode.sig_resize_request,
+        Godot.Core.GraphNode.sig_slot_updated,
         Godot.Core.GraphNode._gui_input,
         Godot.Core.GraphNode.clear_all_slots,
         Godot.Core.GraphNode.clear_slot,
@@ -37,7 +38,14 @@ module Godot.Core.GraphNode
         Godot.Core.GraphNode.set_resizable,
         Godot.Core.GraphNode.set_selected,
         Godot.Core.GraphNode.set_show_close_button,
-        Godot.Core.GraphNode.set_slot, Godot.Core.GraphNode.set_title)
+        Godot.Core.GraphNode.set_slot,
+        Godot.Core.GraphNode.set_slot_color_left,
+        Godot.Core.GraphNode.set_slot_color_right,
+        Godot.Core.GraphNode.set_slot_enabled_left,
+        Godot.Core.GraphNode.set_slot_enabled_right,
+        Godot.Core.GraphNode.set_slot_type_left,
+        Godot.Core.GraphNode.set_slot_type_right,
+        Godot.Core.GraphNode.set_title)
        where
 import Data.Coerce
 import Foreign.C
@@ -92,6 +100,12 @@ sig_resize_request
 
 instance NodeSignal GraphNode "resize_request" '[Vector2]
 
+-- | Emitted when any GraphNode's slot is updated.
+sig_slot_updated :: Godot.Internal.Dispatch.Signal GraphNode
+sig_slot_updated = Godot.Internal.Dispatch.Signal "slot_updated"
+
+instance NodeSignal GraphNode "slot_updated" '[Int]
+
 instance NodeProperty GraphNode "comment" Bool 'False where
         nodeProperty
           = (is_comment, wrapDroppingSetter set_comment, Nothing)
@@ -137,7 +151,10 @@ _gui_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphNode__gui_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "_gui_input" '[InputEvent] (IO ())
          where
@@ -164,7 +181,10 @@ clear_all_slots cls
          godot_method_bind_call bindGraphNode_clear_all_slots (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "clear_all_slots" '[] (IO ()) where
         nodeMethod = Godot.Core.GraphNode.clear_all_slots
@@ -189,14 +209,17 @@ clear_slot cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphNode_clear_slot (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "clear_slot" '[Int] (IO ()) where
         nodeMethod = Godot.Core.GraphNode.clear_slot
 
 {-# NOINLINE bindGraphNode_get_connection_input_color #-}
 
--- | Returns the color of the input connection @idx@.
+-- | Returns the @Color@ of the input connection @idx@.
 bindGraphNode_get_connection_input_color :: MethodBind
 bindGraphNode_get_connection_input_color
   = unsafePerformIO $
@@ -206,7 +229,7 @@ bindGraphNode_get_connection_input_color
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the color of the input connection @idx@.
+-- | Returns the @Color@ of the input connection @idx@.
 get_connection_input_color ::
                              (GraphNode :< cls, Object :< cls) => cls -> Int -> IO Color
 get_connection_input_color cls arg1
@@ -216,7 +239,10 @@ get_connection_input_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_connection_input_color" '[Int]
            (IO Color)
@@ -245,7 +271,10 @@ get_connection_input_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_connection_input_count" '[]
            (IO Int)
@@ -274,7 +303,10 @@ get_connection_input_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_connection_input_position"
            '[Int]
@@ -304,7 +336,10 @@ get_connection_input_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_connection_input_type" '[Int]
            (IO Int)
@@ -313,7 +348,7 @@ instance NodeMethod GraphNode "get_connection_input_type" '[Int]
 
 {-# NOINLINE bindGraphNode_get_connection_output_color #-}
 
--- | Returns the color of the output connection @idx@.
+-- | Returns the @Color@ of the output connection @idx@.
 bindGraphNode_get_connection_output_color :: MethodBind
 bindGraphNode_get_connection_output_color
   = unsafePerformIO $
@@ -323,7 +358,7 @@ bindGraphNode_get_connection_output_color
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the color of the output connection @idx@.
+-- | Returns the @Color@ of the output connection @idx@.
 get_connection_output_color ::
                               (GraphNode :< cls, Object :< cls) => cls -> Int -> IO Color
 get_connection_output_color cls arg1
@@ -333,7 +368,10 @@ get_connection_output_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_connection_output_color" '[Int]
            (IO Color)
@@ -362,7 +400,10 @@ get_connection_output_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_connection_output_count" '[]
            (IO Int)
@@ -391,7 +432,10 @@ get_connection_output_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_connection_output_position"
            '[Int]
@@ -421,7 +465,10 @@ get_connection_output_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_connection_output_type" '[Int]
            (IO Int)
@@ -450,7 +497,10 @@ get_offset cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphNode_get_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_offset" '[] (IO Vector2) where
         nodeMethod = Godot.Core.GraphNode.get_offset
@@ -475,14 +525,17 @@ get_overlay cls
          godot_method_bind_call bindGraphNode_get_overlay (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_overlay" '[] (IO Int) where
         nodeMethod = Godot.Core.GraphNode.get_overlay
 
 {-# NOINLINE bindGraphNode_get_slot_color_left #-}
 
--- | Returns the color set to @idx@ left (input) slot.
+-- | Returns the left (input) @Color@ of the slot @idx@.
 bindGraphNode_get_slot_color_left :: MethodBind
 bindGraphNode_get_slot_color_left
   = unsafePerformIO $
@@ -492,7 +545,7 @@ bindGraphNode_get_slot_color_left
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the color set to @idx@ left (input) slot.
+-- | Returns the left (input) @Color@ of the slot @idx@.
 get_slot_color_left ::
                       (GraphNode :< cls, Object :< cls) => cls -> Int -> IO Color
 get_slot_color_left cls arg1
@@ -502,7 +555,10 @@ get_slot_color_left cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_slot_color_left" '[Int]
            (IO Color)
@@ -511,7 +567,7 @@ instance NodeMethod GraphNode "get_slot_color_left" '[Int]
 
 {-# NOINLINE bindGraphNode_get_slot_color_right #-}
 
--- | Returns the color set to @idx@ right (output) slot.
+-- | Returns the right (output) @Color@ of the slot @idx@.
 bindGraphNode_get_slot_color_right :: MethodBind
 bindGraphNode_get_slot_color_right
   = unsafePerformIO $
@@ -521,7 +577,7 @@ bindGraphNode_get_slot_color_right
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the color set to @idx@ right (output) slot.
+-- | Returns the right (output) @Color@ of the slot @idx@.
 get_slot_color_right ::
                        (GraphNode :< cls, Object :< cls) => cls -> Int -> IO Color
 get_slot_color_right cls arg1
@@ -531,7 +587,10 @@ get_slot_color_right cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_slot_color_right" '[Int]
            (IO Color)
@@ -540,7 +599,7 @@ instance NodeMethod GraphNode "get_slot_color_right" '[Int]
 
 {-# NOINLINE bindGraphNode_get_slot_type_left #-}
 
--- | Returns the (integer) type of left (input) @idx@ slot.
+-- | Returns the left (input) type of the slot @idx@.
 bindGraphNode_get_slot_type_left :: MethodBind
 bindGraphNode_get_slot_type_left
   = unsafePerformIO $
@@ -550,7 +609,7 @@ bindGraphNode_get_slot_type_left
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the (integer) type of left (input) @idx@ slot.
+-- | Returns the left (input) type of the slot @idx@.
 get_slot_type_left ::
                      (GraphNode :< cls, Object :< cls) => cls -> Int -> IO Int
 get_slot_type_left cls arg1
@@ -560,7 +619,10 @@ get_slot_type_left cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_slot_type_left" '[Int] (IO Int)
          where
@@ -568,7 +630,7 @@ instance NodeMethod GraphNode "get_slot_type_left" '[Int] (IO Int)
 
 {-# NOINLINE bindGraphNode_get_slot_type_right #-}
 
--- | Returns the (integer) type of right (output) @idx@ slot.
+-- | Returns the right (output) type of the slot @idx@.
 bindGraphNode_get_slot_type_right :: MethodBind
 bindGraphNode_get_slot_type_right
   = unsafePerformIO $
@@ -578,7 +640,7 @@ bindGraphNode_get_slot_type_right
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the (integer) type of right (output) @idx@ slot.
+-- | Returns the right (output) type of the slot @idx@.
 get_slot_type_right ::
                       (GraphNode :< cls, Object :< cls) => cls -> Int -> IO Int
 get_slot_type_right cls arg1
@@ -588,7 +650,10 @@ get_slot_type_right cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_slot_type_right" '[Int] (IO Int)
          where
@@ -614,7 +679,10 @@ get_title cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphNode_get_title (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "get_title" '[] (IO GodotString)
          where
@@ -644,7 +712,10 @@ is_close_button_visible cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "is_close_button_visible" '[]
            (IO Bool)
@@ -670,7 +741,10 @@ is_comment cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphNode_is_comment (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "is_comment" '[] (IO Bool) where
         nodeMethod = Godot.Core.GraphNode.is_comment
@@ -697,7 +771,10 @@ is_resizable cls
          godot_method_bind_call bindGraphNode_is_resizable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "is_resizable" '[] (IO Bool) where
         nodeMethod = Godot.Core.GraphNode.is_resizable
@@ -722,14 +799,17 @@ is_selected cls
          godot_method_bind_call bindGraphNode_is_selected (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "is_selected" '[] (IO Bool) where
         nodeMethod = Godot.Core.GraphNode.is_selected
 
 {-# NOINLINE bindGraphNode_is_slot_enabled_left #-}
 
--- | Returns @true@ if left (input) slot @idx@ is enabled, @false@ otherwise.
+-- | Returns @true@ if left (input) side of the slot @idx@ is enabled.
 bindGraphNode_is_slot_enabled_left :: MethodBind
 bindGraphNode_is_slot_enabled_left
   = unsafePerformIO $
@@ -739,7 +819,7 @@ bindGraphNode_is_slot_enabled_left
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if left (input) slot @idx@ is enabled, @false@ otherwise.
+-- | Returns @true@ if left (input) side of the slot @idx@ is enabled.
 is_slot_enabled_left ::
                        (GraphNode :< cls, Object :< cls) => cls -> Int -> IO Bool
 is_slot_enabled_left cls arg1
@@ -749,7 +829,10 @@ is_slot_enabled_left cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "is_slot_enabled_left" '[Int]
            (IO Bool)
@@ -758,7 +841,7 @@ instance NodeMethod GraphNode "is_slot_enabled_left" '[Int]
 
 {-# NOINLINE bindGraphNode_is_slot_enabled_right #-}
 
--- | Returns @true@ if right (output) slot @idx@ is enabled, @false@ otherwise.
+-- | Returns @true@ if right (output) side of the slot @idx@ is enabled.
 bindGraphNode_is_slot_enabled_right :: MethodBind
 bindGraphNode_is_slot_enabled_right
   = unsafePerformIO $
@@ -768,7 +851,7 @@ bindGraphNode_is_slot_enabled_right
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if right (output) slot @idx@ is enabled, @false@ otherwise.
+-- | Returns @true@ if right (output) side of the slot @idx@ is enabled.
 is_slot_enabled_right ::
                         (GraphNode :< cls, Object :< cls) => cls -> Int -> IO Bool
 is_slot_enabled_right cls arg1
@@ -778,7 +861,10 @@ is_slot_enabled_right cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "is_slot_enabled_right" '[Int]
            (IO Bool)
@@ -806,7 +892,10 @@ set_comment cls arg1
          godot_method_bind_call bindGraphNode_set_comment (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "set_comment" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.GraphNode.set_comment
@@ -833,7 +922,10 @@ set_offset cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphNode_set_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "set_offset" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.GraphNode.set_offset
@@ -859,7 +951,10 @@ set_overlay cls arg1
          godot_method_bind_call bindGraphNode_set_overlay (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "set_overlay" '[Int] (IO ()) where
         nodeMethod = Godot.Core.GraphNode.set_overlay
@@ -887,7 +982,10 @@ set_resizable cls arg1
          godot_method_bind_call bindGraphNode_set_resizable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "set_resizable" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.GraphNode.set_resizable
@@ -913,7 +1011,10 @@ set_selected cls arg1
          godot_method_bind_call bindGraphNode_set_selected (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "set_selected" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.GraphNode.set_selected
@@ -942,7 +1043,10 @@ set_show_close_button cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "set_show_close_button" '[Bool]
            (IO ())
@@ -957,6 +1061,7 @@ instance NodeMethod GraphNode "set_show_close_button" '[Bool]
 --   				@color_left@/@right@ is the tint of the port's icon on this side.
 --   				@custom_left@/@right@ is a custom texture for this side's port.
 --   				__Note:__ This method only sets properties of the slot. To create the slot, add a @Control@-derived child to the GraphNode.
+--   				Individual properties can be set using one of the @set_slot_*@ methods. You must enable at least one side of the slot to do so.
 bindGraphNode_set_slot :: MethodBind
 bindGraphNode_set_slot
   = unsafePerformIO $
@@ -972,6 +1077,7 @@ bindGraphNode_set_slot
 --   				@color_left@/@right@ is the tint of the port's icon on this side.
 --   				@custom_left@/@right@ is a custom texture for this side's port.
 --   				__Note:__ This method only sets properties of the slot. To create the slot, add a @Control@-derived child to the GraphNode.
+--   				Individual properties can be set using one of the @set_slot_*@ methods. You must enable at least one side of the slot to do so.
 set_slot ::
            (GraphNode :< cls, Object :< cls) =>
            cls ->
@@ -988,7 +1094,10 @@ set_slot cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphNode_set_slot (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "set_slot"
            '[Int, Bool, Int, Color, Bool, Int, Color, Maybe Texture,
@@ -996,6 +1105,198 @@ instance NodeMethod GraphNode "set_slot"
            (IO ())
          where
         nodeMethod = Godot.Core.GraphNode.set_slot
+
+{-# NOINLINE bindGraphNode_set_slot_color_left #-}
+
+-- | Sets the @Color@ of the left (input) side of the slot @idx@ to @color_left@.
+bindGraphNode_set_slot_color_left :: MethodBind
+bindGraphNode_set_slot_color_left
+  = unsafePerformIO $
+      withCString "GraphNode" $
+        \ clsNamePtr ->
+          withCString "set_slot_color_left" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the @Color@ of the left (input) side of the slot @idx@ to @color_left@.
+set_slot_color_left ::
+                      (GraphNode :< cls, Object :< cls) => cls -> Int -> Color -> IO ()
+set_slot_color_left cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphNode_set_slot_color_left
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphNode "set_slot_color_left" '[Int, Color]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GraphNode.set_slot_color_left
+
+{-# NOINLINE bindGraphNode_set_slot_color_right #-}
+
+-- | Sets the @Color@ of the right (output) side of the slot @idx@ to @color_right@.
+bindGraphNode_set_slot_color_right :: MethodBind
+bindGraphNode_set_slot_color_right
+  = unsafePerformIO $
+      withCString "GraphNode" $
+        \ clsNamePtr ->
+          withCString "set_slot_color_right" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the @Color@ of the right (output) side of the slot @idx@ to @color_right@.
+set_slot_color_right ::
+                       (GraphNode :< cls, Object :< cls) => cls -> Int -> Color -> IO ()
+set_slot_color_right cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphNode_set_slot_color_right
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphNode "set_slot_color_right" '[Int, Color]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GraphNode.set_slot_color_right
+
+{-# NOINLINE bindGraphNode_set_slot_enabled_left #-}
+
+-- | Toggles the left (input) side of the slot @idx@. If @enable_left@ is @true@, a port will appear on the left side and the slot will be able to be connected from this side.
+bindGraphNode_set_slot_enabled_left :: MethodBind
+bindGraphNode_set_slot_enabled_left
+  = unsafePerformIO $
+      withCString "GraphNode" $
+        \ clsNamePtr ->
+          withCString "set_slot_enabled_left" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Toggles the left (input) side of the slot @idx@. If @enable_left@ is @true@, a port will appear on the left side and the slot will be able to be connected from this side.
+set_slot_enabled_left ::
+                        (GraphNode :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
+set_slot_enabled_left cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphNode_set_slot_enabled_left
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphNode "set_slot_enabled_left" '[Int, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GraphNode.set_slot_enabled_left
+
+{-# NOINLINE bindGraphNode_set_slot_enabled_right #-}
+
+-- | Toggles the right (output) side of the slot @idx@. If @enable_right@ is @true@, a port will appear on the right side and the slot will be able to be connected from this side.
+bindGraphNode_set_slot_enabled_right :: MethodBind
+bindGraphNode_set_slot_enabled_right
+  = unsafePerformIO $
+      withCString "GraphNode" $
+        \ clsNamePtr ->
+          withCString "set_slot_enabled_right" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Toggles the right (output) side of the slot @idx@. If @enable_right@ is @true@, a port will appear on the right side and the slot will be able to be connected from this side.
+set_slot_enabled_right ::
+                         (GraphNode :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
+set_slot_enabled_right cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphNode_set_slot_enabled_right
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphNode "set_slot_enabled_right" '[Int, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GraphNode.set_slot_enabled_right
+
+{-# NOINLINE bindGraphNode_set_slot_type_left #-}
+
+-- | Sets the left (input) type of the slot @idx@ to @type_left@.
+bindGraphNode_set_slot_type_left :: MethodBind
+bindGraphNode_set_slot_type_left
+  = unsafePerformIO $
+      withCString "GraphNode" $
+        \ clsNamePtr ->
+          withCString "set_slot_type_left" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the left (input) type of the slot @idx@ to @type_left@.
+set_slot_type_left ::
+                     (GraphNode :< cls, Object :< cls) => cls -> Int -> Int -> IO ()
+set_slot_type_left cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphNode_set_slot_type_left
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphNode "set_slot_type_left" '[Int, Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GraphNode.set_slot_type_left
+
+{-# NOINLINE bindGraphNode_set_slot_type_right #-}
+
+-- | Sets the right (output) type of the slot @idx@ to @type_right@.
+bindGraphNode_set_slot_type_right :: MethodBind
+bindGraphNode_set_slot_type_right
+  = unsafePerformIO $
+      withCString "GraphNode" $
+        \ clsNamePtr ->
+          withCString "set_slot_type_right" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the right (output) type of the slot @idx@ to @type_right@.
+set_slot_type_right ::
+                      (GraphNode :< cls, Object :< cls) => cls -> Int -> Int -> IO ()
+set_slot_type_right cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphNode_set_slot_type_right
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphNode "set_slot_type_right" '[Int, Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GraphNode.set_slot_type_right
 
 {-# NOINLINE bindGraphNode_set_title #-}
 
@@ -1017,7 +1318,10 @@ set_title cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGraphNode_set_title (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GraphNode "set_title" '[GodotString] (IO ())
          where

@@ -55,7 +55,10 @@ add_material cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "add_material"
            '[GodotString, SpatialMaterial]
@@ -85,7 +88,10 @@ can_be_hidden cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "can_be_hidden" '[]
            (IO Bool)
@@ -116,7 +122,10 @@ commit_handle cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "commit_handle"
            '[EditorSpatialGizmo, Int, GodotVariant, Bool]
@@ -147,7 +156,7 @@ create_gizmo cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorSpatialGizmoPlugin "create_gizmo"
            '[Spatial]
@@ -159,6 +168,7 @@ instance NodeMethod EditorSpatialGizmoPlugin "create_gizmo"
              #-}
 
 -- | Creates a handle material with its variants (selected and/or editable) and adds them to the internal material list. They can then be accessed with @method get_material@ and used in @method EditorSpatialGizmo.add_handles@. Should not be overridden.
+--   				You can optionally provide a texture to use instead of the default icon.
 bindEditorSpatialGizmoPlugin_create_handle_material :: MethodBind
 bindEditorSpatialGizmoPlugin_create_handle_material
   = unsafePerformIO $
@@ -169,23 +179,28 @@ bindEditorSpatialGizmoPlugin_create_handle_material
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Creates a handle material with its variants (selected and/or editable) and adds them to the internal material list. They can then be accessed with @method get_material@ and used in @method EditorSpatialGizmo.add_handles@. Should not be overridden.
+--   				You can optionally provide a texture to use instead of the default icon.
 create_handle_material ::
                          (EditorSpatialGizmoPlugin :< cls, Object :< cls) =>
-                         cls -> GodotString -> Maybe Bool -> IO ()
-create_handle_material cls arg1 arg2
+                         cls -> GodotString -> Maybe Bool -> Maybe Texture -> IO ()
+create_handle_material cls arg1 arg2 arg3
   = withVariantArray
-      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2,
+       maybe VariantNil toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call
            bindEditorSpatialGizmoPlugin_create_handle_material
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin
            "create_handle_material"
-           '[GodotString, Maybe Bool]
+           '[GodotString, Maybe Bool, Maybe Texture]
            (IO ())
          where
         nodeMethod
@@ -218,7 +233,10 @@ create_icon_material cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "create_icon_material"
            '[GodotString, Texture, Maybe Bool, Maybe Color]
@@ -256,7 +274,10 @@ create_material cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "create_material"
            '[GodotString, Color, Maybe Bool, Maybe Bool, Maybe Bool]
@@ -287,7 +308,10 @@ get_handle_name cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "get_handle_name"
            '[EditorSpatialGizmo, Int]
@@ -319,7 +343,7 @@ get_handle_value cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod EditorSpatialGizmoPlugin "get_handle_value"
            '[EditorSpatialGizmo, Int]
@@ -342,18 +366,20 @@ bindEditorSpatialGizmoPlugin_get_material
 -- | Gets material from the internal list of materials. If an @EditorSpatialGizmo@ is provided, it will try to get the corresponding variant (selected and/or editable).
 get_material ::
                (EditorSpatialGizmoPlugin :< cls, Object :< cls) =>
-               cls -> GodotString -> EditorSpatialGizmo -> IO SpatialMaterial
+               cls ->
+                 GodotString -> Maybe EditorSpatialGizmo -> IO SpatialMaterial
 get_material cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
+  = withVariantArray
+      [toVariant arg1, maybe VariantNil toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindEditorSpatialGizmoPlugin_get_material
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorSpatialGizmoPlugin "get_material"
-           '[GodotString, EditorSpatialGizmo]
+           '[GodotString, Maybe EditorSpatialGizmo]
            (IO SpatialMaterial)
          where
         nodeMethod = Godot.Tools.EditorSpatialGizmoPlugin.get_material
@@ -381,7 +407,10 @@ get_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "get_name" '[]
            (IO GodotString)
@@ -404,8 +433,7 @@ bindEditorSpatialGizmoPlugin_get_priority
 -- | Override this method to set the gizmo's priority. Higher values correspond to higher priority. If a gizmo with higher priority conflicts with another gizmo, only the gizmo with higher priority will be used.
 --   				All built-in editor gizmos return a priority of @-1@. If not overridden, this method will return @0@, which means custom gizmos will automatically override built-in gizmos.
 get_priority ::
-               (EditorSpatialGizmoPlugin :< cls, Object :< cls) =>
-               cls -> IO GodotString
+               (EditorSpatialGizmoPlugin :< cls, Object :< cls) => cls -> IO Int
 get_priority cls
   = withVariantArray []
       (\ (arrPtr, len) ->
@@ -413,10 +441,13 @@ get_priority cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "get_priority" '[]
-           (IO GodotString)
+           (IO Int)
          where
         nodeMethod = Godot.Tools.EditorSpatialGizmoPlugin.get_priority
 
@@ -443,7 +474,10 @@ has_gizmo cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "has_gizmo" '[Spatial]
            (IO Bool)
@@ -474,7 +508,10 @@ is_handle_highlighted cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin
            "is_handle_highlighted"
@@ -487,7 +524,7 @@ instance NodeMethod EditorSpatialGizmoPlugin
 {-# NOINLINE bindEditorSpatialGizmoPlugin_is_selectable_when_hidden
              #-}
 
--- | Override this method to define whether Spatial with this gizmo should be selecteble even when the gizmo is hidden.
+-- | Override this method to define whether a Spatial with this gizmo should be selectable even when the gizmo is hidden.
 bindEditorSpatialGizmoPlugin_is_selectable_when_hidden ::
                                                        MethodBind
 bindEditorSpatialGizmoPlugin_is_selectable_when_hidden
@@ -498,7 +535,7 @@ bindEditorSpatialGizmoPlugin_is_selectable_when_hidden
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Override this method to define whether Spatial with this gizmo should be selecteble even when the gizmo is hidden.
+-- | Override this method to define whether a Spatial with this gizmo should be selectable even when the gizmo is hidden.
 is_selectable_when_hidden ::
                             (EditorSpatialGizmoPlugin :< cls, Object :< cls) => cls -> IO Bool
 is_selectable_when_hidden cls
@@ -509,7 +546,10 @@ is_selectable_when_hidden cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin
            "is_selectable_when_hidden"
@@ -542,7 +582,10 @@ redraw cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "redraw"
            '[EditorSpatialGizmo]
@@ -574,7 +617,10 @@ set_handle cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "set_handle"
            '[EditorSpatialGizmo, Int, Camera, Vector2]

@@ -54,7 +54,10 @@ get_frame_color cls
          godot_method_bind_call bindColorRect_get_frame_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorRect "get_frame_color" '[] (IO Color)
          where
@@ -93,7 +96,10 @@ set_frame_color cls arg1
          godot_method_bind_call bindColorRect_set_frame_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorRect "set_frame_color" '[Color] (IO ())
          where

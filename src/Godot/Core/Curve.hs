@@ -86,7 +86,10 @@ _get_data cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve__get_data (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "_get_data" '[] (IO Array) where
         nodeMethod = Godot.Core.Curve._get_data
@@ -107,7 +110,10 @@ _set_data cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve__set_data (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "_set_data" '[Array] (IO ()) where
         nodeMethod = Godot.Core.Curve._set_data
@@ -138,7 +144,10 @@ add_point cls arg1 arg2 arg3 arg4 arg5
        maybe (VariantInt (0)) toVariant arg5]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve_add_point (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "add_point"
            '[Vector2, Maybe Float, Maybe Float, Maybe Int, Maybe Int]
@@ -164,7 +173,9 @@ bake cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve_bake (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "bake" '[] (IO ()) where
         nodeMethod = Godot.Core.Curve.bake
@@ -188,7 +199,10 @@ clean_dupes cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve_clean_dupes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "clean_dupes" '[] (IO ()) where
         nodeMethod = Godot.Core.Curve.clean_dupes
@@ -212,7 +226,10 @@ clear_points cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve_clear_points (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "clear_points" '[] (IO ()) where
         nodeMethod = Godot.Core.Curve.clear_points
@@ -238,7 +255,10 @@ get_bake_resolution cls
          godot_method_bind_call bindCurve_get_bake_resolution (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "get_bake_resolution" '[] (IO Int) where
         nodeMethod = Godot.Core.Curve.get_bake_resolution
@@ -262,7 +282,10 @@ get_max_value cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve_get_max_value (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "get_max_value" '[] (IO Float) where
         nodeMethod = Godot.Core.Curve.get_max_value
@@ -286,7 +309,10 @@ get_min_value cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve_get_min_value (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "get_min_value" '[] (IO Float) where
         nodeMethod = Godot.Core.Curve.get_min_value
@@ -311,7 +337,10 @@ get_point_count cls
          godot_method_bind_call bindCurve_get_point_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "get_point_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Curve.get_point_count
@@ -337,7 +366,10 @@ get_point_left_mode cls arg1
          godot_method_bind_call bindCurve_get_point_left_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "get_point_left_mode" '[Int] (IO Int)
          where
@@ -365,7 +397,10 @@ get_point_left_tangent cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "get_point_left_tangent" '[Int]
            (IO Float)
@@ -393,7 +428,10 @@ get_point_position cls arg1
          godot_method_bind_call bindCurve_get_point_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "get_point_position" '[Int] (IO Vector2)
          where
@@ -420,7 +458,10 @@ get_point_right_mode cls arg1
          godot_method_bind_call bindCurve_get_point_right_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "get_point_right_mode" '[Int] (IO Int)
          where
@@ -448,7 +489,10 @@ get_point_right_tangent cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "get_point_right_tangent" '[Int]
            (IO Float)
@@ -475,7 +519,10 @@ interpolate cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve_interpolate (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "interpolate" '[Float] (IO Float) where
         nodeMethod = Godot.Core.Curve.interpolate
@@ -501,7 +548,10 @@ interpolate_baked cls arg1
          godot_method_bind_call bindCurve_interpolate_baked (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "interpolate_baked" '[Float] (IO Float)
          where
@@ -527,7 +577,10 @@ remove_point cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve_remove_point (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "remove_point" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Curve.remove_point
@@ -553,7 +606,10 @@ set_bake_resolution cls arg1
          godot_method_bind_call bindCurve_set_bake_resolution (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "set_bake_resolution" '[Int] (IO ())
          where
@@ -579,7 +635,10 @@ set_max_value cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve_set_max_value (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "set_max_value" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Curve.set_max_value
@@ -604,7 +663,10 @@ set_min_value cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurve_set_min_value (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "set_min_value" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Curve.set_min_value
@@ -630,7 +692,10 @@ set_point_left_mode cls arg1 arg2
          godot_method_bind_call bindCurve_set_point_left_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "set_point_left_mode" '[Int, Int] (IO ())
          where
@@ -658,7 +723,10 @@ set_point_left_tangent cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "set_point_left_tangent" '[Int, Float]
            (IO ())
@@ -686,7 +754,10 @@ set_point_offset cls arg1 arg2
          godot_method_bind_call bindCurve_set_point_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "set_point_offset" '[Int, Float] (IO Int)
          where
@@ -713,7 +784,10 @@ set_point_right_mode cls arg1 arg2
          godot_method_bind_call bindCurve_set_point_right_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "set_point_right_mode" '[Int, Int]
            (IO ())
@@ -742,7 +816,10 @@ set_point_right_tangent cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "set_point_right_tangent" '[Int, Float]
            (IO ())
@@ -770,7 +847,10 @@ set_point_value cls arg1 arg2
          godot_method_bind_call bindCurve_set_point_value (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Curve "set_point_value" '[Int, Float] (IO ())
          where

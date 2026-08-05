@@ -2,7 +2,8 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.ButtonGroup
-       (Godot.Core.ButtonGroup.get_buttons,
+       (Godot.Core.ButtonGroup.sig_pressed,
+        Godot.Core.ButtonGroup.get_buttons,
         Godot.Core.ButtonGroup.get_pressed_button)
        where
 import Data.Coerce
@@ -16,6 +17,12 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Resource()
+
+-- | Emitted when one of the buttons of the group is pressed.
+sig_pressed :: Godot.Internal.Dispatch.Signal ButtonGroup
+sig_pressed = Godot.Internal.Dispatch.Signal "pressed"
+
+instance NodeSignal ButtonGroup "pressed" '[Object]
 
 {-# NOINLINE bindButtonGroup_get_buttons #-}
 
@@ -38,7 +45,10 @@ get_buttons cls
          godot_method_bind_call bindButtonGroup_get_buttons (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ButtonGroup "get_buttons" '[] (IO Array) where
         nodeMethod = Godot.Core.ButtonGroup.get_buttons
@@ -65,7 +75,7 @@ get_pressed_button cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ButtonGroup "get_pressed_button" '[]
            (IO BaseButton)

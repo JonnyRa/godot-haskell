@@ -3,17 +3,22 @@
   MultiParamTypeClasses #-}
 module Godot.Core.MeshInstance
        (Godot.Core.MeshInstance._mesh_changed,
+        Godot.Core.MeshInstance._update_skinning,
         Godot.Core.MeshInstance.create_convex_collision,
         Godot.Core.MeshInstance.create_debug_tangents,
+        Godot.Core.MeshInstance.create_multiple_convex_collisions,
         Godot.Core.MeshInstance.create_trimesh_collision,
+        Godot.Core.MeshInstance.get_active_material,
         Godot.Core.MeshInstance.get_mesh,
         Godot.Core.MeshInstance.get_skeleton_path,
         Godot.Core.MeshInstance.get_skin,
         Godot.Core.MeshInstance.get_surface_material,
         Godot.Core.MeshInstance.get_surface_material_count,
+        Godot.Core.MeshInstance.is_software_skinning_transform_normals_enabled,
         Godot.Core.MeshInstance.set_mesh,
         Godot.Core.MeshInstance.set_skeleton_path,
         Godot.Core.MeshInstance.set_skin,
+        Godot.Core.MeshInstance.set_software_skinning_transform_normals,
         Godot.Core.MeshInstance.set_surface_material)
        where
 import Data.Coerce
@@ -39,6 +44,16 @@ instance NodeProperty MeshInstance "skeleton" NodePath 'False where
 instance NodeProperty MeshInstance "skin" Skin 'False where
         nodeProperty = (get_skin, wrapDroppingSetter set_skin, Nothing)
 
+instance NodeProperty MeshInstance
+           "software_skinning_transform_normals"
+           Bool
+           'False
+         where
+        nodeProperty
+          = (is_software_skinning_transform_normals_enabled,
+             wrapDroppingSetter set_software_skinning_transform_normals,
+             Nothing)
+
 {-# NOINLINE bindMeshInstance__mesh_changed #-}
 
 bindMeshInstance__mesh_changed :: MethodBind
@@ -58,14 +73,48 @@ _mesh_changed cls
          godot_method_bind_call bindMeshInstance__mesh_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance "_mesh_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.MeshInstance._mesh_changed
 
+{-# NOINLINE bindMeshInstance__update_skinning #-}
+
+bindMeshInstance__update_skinning :: MethodBind
+bindMeshInstance__update_skinning
+  = unsafePerformIO $
+      withCString "MeshInstance" $
+        \ clsNamePtr ->
+          withCString "_update_skinning" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_update_skinning ::
+                   (MeshInstance :< cls, Object :< cls) => cls -> IO ()
+_update_skinning cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindMeshInstance__update_skinning
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MeshInstance "_update_skinning" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.MeshInstance._update_skinning
+
 {-# NOINLINE bindMeshInstance_create_convex_collision #-}
 
 -- | This helper creates a @StaticBody@ child node with a @ConvexPolygonShape@ collision shape calculated from the mesh geometry. It's mainly used for testing.
+--   				If @clean@ is @true@ (default), duplicate and interior vertices are removed automatically. You can set it to @false@ to make the process faster if not needed.
+--   				If @simplify@ is @true@, the geometry can be further simplified to reduce the amount of vertices. Disabled by default.
 bindMeshInstance_create_convex_collision :: MethodBind
 bindMeshInstance_create_convex_collision
   = unsafePerformIO $
@@ -76,18 +125,27 @@ bindMeshInstance_create_convex_collision
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | This helper creates a @StaticBody@ child node with a @ConvexPolygonShape@ collision shape calculated from the mesh geometry. It's mainly used for testing.
+--   				If @clean@ is @true@ (default), duplicate and interior vertices are removed automatically. You can set it to @false@ to make the process faster if not needed.
+--   				If @simplify@ is @true@, the geometry can be further simplified to reduce the amount of vertices. Disabled by default.
 create_convex_collision ::
-                          (MeshInstance :< cls, Object :< cls) => cls -> IO ()
-create_convex_collision cls
-  = withVariantArray []
+                          (MeshInstance :< cls, Object :< cls) =>
+                          cls -> Maybe Bool -> Maybe Bool -> IO ()
+create_convex_collision cls arg1 arg2
+  = withVariantArray
+      [maybe (VariantBool True) toVariant arg1,
+       maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMeshInstance_create_convex_collision
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod MeshInstance "create_convex_collision" '[]
+instance NodeMethod MeshInstance "create_convex_collision"
+           '[Maybe Bool, Maybe Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.MeshInstance.create_convex_collision
@@ -114,12 +172,51 @@ create_debug_tangents cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance "create_debug_tangents" '[]
            (IO ())
          where
         nodeMethod = Godot.Core.MeshInstance.create_debug_tangents
+
+{-# NOINLINE bindMeshInstance_create_multiple_convex_collisions #-}
+
+-- | This helper creates a @StaticBody@ child node with multiple @ConvexPolygonShape@ collision shapes calculated from the mesh geometry via convex decomposition. It's mainly used for testing.
+bindMeshInstance_create_multiple_convex_collisions :: MethodBind
+bindMeshInstance_create_multiple_convex_collisions
+  = unsafePerformIO $
+      withCString "MeshInstance" $
+        \ clsNamePtr ->
+          withCString "create_multiple_convex_collisions" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | This helper creates a @StaticBody@ child node with multiple @ConvexPolygonShape@ collision shapes calculated from the mesh geometry via convex decomposition. It's mainly used for testing.
+create_multiple_convex_collisions ::
+                                    (MeshInstance :< cls, Object :< cls) => cls -> IO ()
+create_multiple_convex_collisions cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindMeshInstance_create_multiple_convex_collisions
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MeshInstance
+           "create_multiple_convex_collisions"
+           '[]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.MeshInstance.create_multiple_convex_collisions
 
 {-# NOINLINE bindMeshInstance_create_trimesh_collision #-}
 
@@ -143,12 +240,44 @@ create_trimesh_collision cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance "create_trimesh_collision" '[]
            (IO ())
          where
         nodeMethod = Godot.Core.MeshInstance.create_trimesh_collision
+
+{-# NOINLINE bindMeshInstance_get_active_material #-}
+
+-- | Returns the @Material@ that will be used by the @Mesh@ when drawing. This can return the @GeometryInstance.material_override@, the surface override @Material@ defined in this @MeshInstance@, or the surface @Material@ defined in the @Mesh@. For example, if @GeometryInstance.material_override@ is used, all surfaces will return the override material.
+bindMeshInstance_get_active_material :: MethodBind
+bindMeshInstance_get_active_material
+  = unsafePerformIO $
+      withCString "MeshInstance" $
+        \ clsNamePtr ->
+          withCString "get_active_material" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the @Material@ that will be used by the @Mesh@ when drawing. This can return the @GeometryInstance.material_override@, the surface override @Material@ defined in this @MeshInstance@, or the surface @Material@ defined in the @Mesh@. For example, if @GeometryInstance.material_override@ is used, all surfaces will return the override material.
+get_active_material ::
+                      (MeshInstance :< cls, Object :< cls) => cls -> Int -> IO Material
+get_active_material cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindMeshInstance_get_active_material
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod MeshInstance "get_active_material" '[Int]
+           (IO Material)
+         where
+        nodeMethod = Godot.Core.MeshInstance.get_active_material
 
 {-# NOINLINE bindMeshInstance_get_mesh #-}
 
@@ -170,7 +299,7 @@ get_mesh cls
          godot_method_bind_call bindMeshInstance_get_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshInstance "get_mesh" '[] (IO Mesh) where
         nodeMethod = Godot.Core.MeshInstance.get_mesh
@@ -197,7 +326,10 @@ get_skeleton_path cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance "get_skeleton_path" '[]
            (IO NodePath)
@@ -224,7 +356,7 @@ get_skin cls
          godot_method_bind_call bindMeshInstance_get_skin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshInstance "get_skin" '[] (IO Skin) where
         nodeMethod = Godot.Core.MeshInstance.get_skin
@@ -251,7 +383,7 @@ get_surface_material cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshInstance "get_surface_material" '[Int]
            (IO Material)
@@ -280,12 +412,56 @@ get_surface_material_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance "get_surface_material_count" '[]
            (IO Int)
          where
         nodeMethod = Godot.Core.MeshInstance.get_surface_material_count
+
+{-# NOINLINE bindMeshInstance_is_software_skinning_transform_normals_enabled
+             #-}
+
+-- | If @true@, normals are transformed when software skinning is used. Set to @false@ when normals are not needed for better performance.
+--   			See @ProjectSettings.rendering/quality/skinning/software_skinning_fallback@ for details about how software skinning is enabled.
+bindMeshInstance_is_software_skinning_transform_normals_enabled ::
+                                                                MethodBind
+bindMeshInstance_is_software_skinning_transform_normals_enabled
+  = unsafePerformIO $
+      withCString "MeshInstance" $
+        \ clsNamePtr ->
+          withCString "is_software_skinning_transform_normals_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, normals are transformed when software skinning is used. Set to @false@ when normals are not needed for better performance.
+--   			See @ProjectSettings.rendering/quality/skinning/software_skinning_fallback@ for details about how software skinning is enabled.
+is_software_skinning_transform_normals_enabled ::
+                                                 (MeshInstance :< cls, Object :< cls) =>
+                                                 cls -> IO Bool
+is_software_skinning_transform_normals_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindMeshInstance_is_software_skinning_transform_normals_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MeshInstance
+           "is_software_skinning_transform_normals_enabled"
+           '[]
+           (IO Bool)
+         where
+        nodeMethod
+          = Godot.Core.MeshInstance.is_software_skinning_transform_normals_enabled
 
 {-# NOINLINE bindMeshInstance_set_mesh #-}
 
@@ -308,7 +484,10 @@ set_mesh cls arg1
          godot_method_bind_call bindMeshInstance_set_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance "set_mesh" '[Mesh] (IO ()) where
         nodeMethod = Godot.Core.MeshInstance.set_mesh
@@ -335,7 +514,10 @@ set_skeleton_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance "set_skeleton_path" '[NodePath]
            (IO ())
@@ -363,10 +545,54 @@ set_skin cls arg1
          godot_method_bind_call bindMeshInstance_set_skin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance "set_skin" '[Skin] (IO ()) where
         nodeMethod = Godot.Core.MeshInstance.set_skin
+
+{-# NOINLINE bindMeshInstance_set_software_skinning_transform_normals
+             #-}
+
+-- | If @true@, normals are transformed when software skinning is used. Set to @false@ when normals are not needed for better performance.
+--   			See @ProjectSettings.rendering/quality/skinning/software_skinning_fallback@ for details about how software skinning is enabled.
+bindMeshInstance_set_software_skinning_transform_normals ::
+                                                         MethodBind
+bindMeshInstance_set_software_skinning_transform_normals
+  = unsafePerformIO $
+      withCString "MeshInstance" $
+        \ clsNamePtr ->
+          withCString "set_software_skinning_transform_normals" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, normals are transformed when software skinning is used. Set to @false@ when normals are not needed for better performance.
+--   			See @ProjectSettings.rendering/quality/skinning/software_skinning_fallback@ for details about how software skinning is enabled.
+set_software_skinning_transform_normals ::
+                                          (MeshInstance :< cls, Object :< cls) =>
+                                          cls -> Bool -> IO ()
+set_software_skinning_transform_normals cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindMeshInstance_set_software_skinning_transform_normals
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MeshInstance
+           "set_software_skinning_transform_normals"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.MeshInstance.set_software_skinning_transform_normals
 
 {-# NOINLINE bindMeshInstance_set_surface_material #-}
 
@@ -391,7 +617,10 @@ set_surface_material cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance "set_surface_material"
            '[Int, Material]

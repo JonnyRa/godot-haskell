@@ -42,7 +42,7 @@ call_native cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGDNative_call_native (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod GDNative "call_native"
            '[GodotString, GodotString, Array]
@@ -68,7 +68,7 @@ get_library cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGDNative_get_library (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod GDNative "get_library" '[] (IO GDNativeLibrary)
          where
@@ -91,7 +91,10 @@ initialize cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGDNative_initialize (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GDNative "initialize" '[] (IO Bool) where
         nodeMethod = Godot.Core.GDNative.initialize
@@ -114,7 +117,10 @@ set_library cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGDNative_set_library (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GDNative "set_library" '[GDNativeLibrary]
            (IO ())
@@ -138,7 +144,10 @@ terminate cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGDNative_terminate (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GDNative "terminate" '[] (IO Bool) where
         nodeMethod = Godot.Core.GDNative.terminate

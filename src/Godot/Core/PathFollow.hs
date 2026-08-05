@@ -101,7 +101,10 @@ get_cubic_interpolation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "get_cubic_interpolation" '[]
            (IO Bool)
@@ -129,7 +132,10 @@ get_h_offset cls
          godot_method_bind_call bindPathFollow_get_h_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "get_h_offset" '[] (IO Float) where
         nodeMethod = Godot.Core.PathFollow.get_h_offset
@@ -154,7 +160,10 @@ get_offset cls
          godot_method_bind_call bindPathFollow_get_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "get_offset" '[] (IO Float) where
         nodeMethod = Godot.Core.PathFollow.get_offset
@@ -181,7 +190,10 @@ get_rotation_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "get_rotation_mode" '[] (IO Int)
          where
@@ -208,7 +220,10 @@ get_unit_offset cls
          godot_method_bind_call bindPathFollow_get_unit_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "get_unit_offset" '[] (IO Float)
          where
@@ -235,7 +250,10 @@ get_v_offset cls
          godot_method_bind_call bindPathFollow_get_v_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "get_v_offset" '[] (IO Float) where
         nodeMethod = Godot.Core.PathFollow.get_v_offset
@@ -259,7 +277,10 @@ has_loop cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPathFollow_has_loop (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "has_loop" '[] (IO Bool) where
         nodeMethod = Godot.Core.PathFollow.has_loop
@@ -290,7 +311,10 @@ set_cubic_interpolation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "set_cubic_interpolation" '[Bool]
            (IO ())
@@ -318,7 +342,10 @@ set_h_offset cls arg1
          godot_method_bind_call bindPathFollow_set_h_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "set_h_offset" '[Float] (IO ())
          where
@@ -344,7 +371,10 @@ set_loop cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPathFollow_set_loop (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "set_loop" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.PathFollow.set_loop
@@ -370,7 +400,10 @@ set_offset cls arg1
          godot_method_bind_call bindPathFollow_set_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "set_offset" '[Float] (IO ()) where
         nodeMethod = Godot.Core.PathFollow.set_offset
@@ -397,7 +430,10 @@ set_rotation_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "set_rotation_mode" '[Int] (IO ())
          where
@@ -424,7 +460,10 @@ set_unit_offset cls arg1
          godot_method_bind_call bindPathFollow_set_unit_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "set_unit_offset" '[Float] (IO ())
          where
@@ -451,7 +490,10 @@ set_v_offset cls arg1
          godot_method_bind_call bindPathFollow_set_v_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PathFollow "set_v_offset" '[Float] (IO ())
          where

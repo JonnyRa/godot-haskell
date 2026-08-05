@@ -42,7 +42,10 @@ get_softness cls
          godot_method_bind_call bindPinJoint2D_get_softness (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PinJoint2D "get_softness" '[] (IO Float) where
         nodeMethod = Godot.Core.PinJoint2D.get_softness
@@ -68,7 +71,10 @@ set_softness cls arg1
          godot_method_bind_call bindPinJoint2D_set_softness (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PinJoint2D "set_softness" '[Float] (IO ())
          where

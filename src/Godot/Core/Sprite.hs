@@ -115,14 +115,17 @@ _texture_changed cls
          godot_method_bind_call bindSprite__texture_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "_texture_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.Sprite._texture_changed
 
 {-# NOINLINE bindSprite_get_frame #-}
 
--- | Current frame to display from sprite sheet. @vframes@ or @hframes@ must be greater than 1.
+-- | Current frame to display from sprite sheet. @hframes@ or @vframes@ must be greater than 1.
 bindSprite_get_frame :: MethodBind
 bindSprite_get_frame
   = unsafePerformIO $
@@ -132,20 +135,23 @@ bindSprite_get_frame
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Current frame to display from sprite sheet. @vframes@ or @hframes@ must be greater than 1.
+-- | Current frame to display from sprite sheet. @hframes@ or @vframes@ must be greater than 1.
 get_frame :: (Sprite :< cls, Object :< cls) => cls -> IO Int
 get_frame cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_get_frame (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "get_frame" '[] (IO Int) where
         nodeMethod = Godot.Core.Sprite.get_frame
 
 {-# NOINLINE bindSprite_get_frame_coords #-}
 
--- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @vframes@ or @hframes@ must be greater than 1.
+-- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @hframes@ or @vframes@ must be greater than 1.
 bindSprite_get_frame_coords :: MethodBind
 bindSprite_get_frame_coords
   = unsafePerformIO $
@@ -155,7 +161,7 @@ bindSprite_get_frame_coords
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @vframes@ or @hframes@ must be greater than 1.
+-- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @hframes@ or @vframes@ must be greater than 1.
 get_frame_coords ::
                    (Sprite :< cls, Object :< cls) => cls -> IO Vector2
 get_frame_coords cls
@@ -164,7 +170,10 @@ get_frame_coords cls
          godot_method_bind_call bindSprite_get_frame_coords (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "get_frame_coords" '[] (IO Vector2)
          where
@@ -189,7 +198,10 @@ get_hframes cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_get_hframes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "get_hframes" '[] (IO Int) where
         nodeMethod = Godot.Core.Sprite.get_hframes
@@ -217,7 +229,7 @@ get_normal_map cls
          godot_method_bind_call bindSprite_get_normal_map (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Sprite "get_normal_map" '[] (IO Texture) where
         nodeMethod = Godot.Core.Sprite.get_normal_map
@@ -241,7 +253,10 @@ get_offset cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_get_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "get_offset" '[] (IO Vector2) where
         nodeMethod = Godot.Core.Sprite.get_offset
@@ -282,7 +297,10 @@ get_rect cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_get_rect (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "get_rect" '[] (IO Rect2) where
         nodeMethod = Godot.Core.Sprite.get_rect
@@ -308,7 +326,10 @@ get_region_rect cls
          godot_method_bind_call bindSprite_get_region_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "get_region_rect" '[] (IO Rect2) where
         nodeMethod = Godot.Core.Sprite.get_region_rect
@@ -332,7 +353,7 @@ get_texture cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_get_texture (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Sprite "get_texture" '[] (IO Texture) where
         nodeMethod = Godot.Core.Sprite.get_texture
@@ -356,7 +377,10 @@ get_vframes cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_get_vframes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "get_vframes" '[] (IO Int) where
         nodeMethod = Godot.Core.Sprite.get_vframes
@@ -380,7 +404,10 @@ is_centered cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_is_centered (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "is_centered" '[] (IO Bool) where
         nodeMethod = Godot.Core.Sprite.is_centered
@@ -404,7 +431,10 @@ is_flipped_h cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_is_flipped_h (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "is_flipped_h" '[] (IO Bool) where
         nodeMethod = Godot.Core.Sprite.is_flipped_h
@@ -428,7 +458,10 @@ is_flipped_v cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_is_flipped_v (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "is_flipped_v" '[] (IO Bool) where
         nodeMethod = Godot.Core.Sprite.is_flipped_v
@@ -456,7 +489,10 @@ is_pixel_opaque cls arg1
          godot_method_bind_call bindSprite_is_pixel_opaque (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "is_pixel_opaque" '[Vector2] (IO Bool)
          where
@@ -480,7 +516,10 @@ is_region cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_is_region (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "is_region" '[] (IO Bool) where
         nodeMethod = Godot.Core.Sprite.is_region
@@ -507,7 +546,10 @@ is_region_filter_clip_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "is_region_filter_clip_enabled" '[]
            (IO Bool)
@@ -534,7 +576,10 @@ set_centered cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_set_centered (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_centered" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Sprite.set_centered
@@ -559,7 +604,10 @@ set_flip_h cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_set_flip_h (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_flip_h" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Sprite.set_flip_h
@@ -584,14 +632,17 @@ set_flip_v cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_set_flip_v (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_flip_v" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Sprite.set_flip_v
 
 {-# NOINLINE bindSprite_set_frame #-}
 
--- | Current frame to display from sprite sheet. @vframes@ or @hframes@ must be greater than 1.
+-- | Current frame to display from sprite sheet. @hframes@ or @vframes@ must be greater than 1.
 bindSprite_set_frame :: MethodBind
 bindSprite_set_frame
   = unsafePerformIO $
@@ -601,20 +652,23 @@ bindSprite_set_frame
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Current frame to display from sprite sheet. @vframes@ or @hframes@ must be greater than 1.
+-- | Current frame to display from sprite sheet. @hframes@ or @vframes@ must be greater than 1.
 set_frame :: (Sprite :< cls, Object :< cls) => cls -> Int -> IO ()
 set_frame cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_set_frame (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_frame" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Sprite.set_frame
 
 {-# NOINLINE bindSprite_set_frame_coords #-}
 
--- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @vframes@ or @hframes@ must be greater than 1.
+-- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @hframes@ or @vframes@ must be greater than 1.
 bindSprite_set_frame_coords :: MethodBind
 bindSprite_set_frame_coords
   = unsafePerformIO $
@@ -624,7 +678,7 @@ bindSprite_set_frame_coords
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @vframes@ or @hframes@ must be greater than 1.
+-- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @hframes@ or @vframes@ must be greater than 1.
 set_frame_coords ::
                    (Sprite :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_frame_coords cls arg1
@@ -633,7 +687,10 @@ set_frame_coords cls arg1
          godot_method_bind_call bindSprite_set_frame_coords (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_frame_coords" '[Vector2] (IO ())
          where
@@ -659,7 +716,10 @@ set_hframes cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_set_hframes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_hframes" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Sprite.set_hframes
@@ -687,7 +747,10 @@ set_normal_map cls arg1
          godot_method_bind_call bindSprite_set_normal_map (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_normal_map" '[Texture] (IO ())
          where
@@ -713,7 +776,10 @@ set_offset cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_set_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_offset" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Sprite.set_offset
@@ -738,7 +804,10 @@ set_region cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_set_region (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_region" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Sprite.set_region
@@ -765,7 +834,10 @@ set_region_filter_clip cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_region_filter_clip" '[Bool] (IO ())
          where
@@ -792,7 +864,10 @@ set_region_rect cls arg1
          godot_method_bind_call bindSprite_set_region_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_region_rect" '[Rect2] (IO ()) where
         nodeMethod = Godot.Core.Sprite.set_region_rect
@@ -817,7 +892,10 @@ set_texture cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_set_texture (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_texture" '[Texture] (IO ()) where
         nodeMethod = Godot.Core.Sprite.set_texture
@@ -842,7 +920,10 @@ set_vframes cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite_set_vframes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite "set_vframes" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Sprite.set_vframes

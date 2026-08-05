@@ -42,7 +42,10 @@ get_columns cls
          godot_method_bind_call bindGridContainer_get_columns (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridContainer "get_columns" '[] (IO Int) where
         nodeMethod = Godot.Core.GridContainer.get_columns
@@ -68,7 +71,10 @@ set_columns cls arg1
          godot_method_bind_call bindGridContainer_set_columns (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridContainer "set_columns" '[Int] (IO ())
          where

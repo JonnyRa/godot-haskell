@@ -99,7 +99,10 @@ _get_swing_span cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConeTwistJoint "_get_swing_span" '[] (IO Float)
          where
@@ -129,7 +132,10 @@ _get_twist_span cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConeTwistJoint "_get_twist_span" '[] (IO Float)
          where
@@ -163,7 +169,10 @@ _set_swing_span cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConeTwistJoint "_set_swing_span" '[Float]
            (IO ())
@@ -194,7 +203,10 @@ _set_twist_span cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConeTwistJoint "_set_twist_span" '[Float]
            (IO ())
@@ -224,7 +236,10 @@ get_param cls arg1
          godot_method_bind_call bindConeTwistJoint_get_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConeTwistJoint "get_param" '[Int] (IO Float)
          where
@@ -254,7 +269,10 @@ set_param cls arg1 arg2
          godot_method_bind_call bindConeTwistJoint_set_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConeTwistJoint "set_param" '[Int, Float]
            (IO ())

@@ -50,7 +50,10 @@ add_sphere cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ImmediateGeometry "add_sphere"
            '[Int, Int, Float, Maybe Bool]
@@ -81,7 +84,10 @@ add_vertex cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ImmediateGeometry "add_vertex" '[Vector3]
            (IO ())
@@ -113,7 +119,10 @@ begin cls arg1 arg2
          godot_method_bind_call bindImmediateGeometry_begin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ImmediateGeometry "begin" '[Int, Maybe Texture]
            (IO ())
@@ -140,7 +149,10 @@ clear cls
          godot_method_bind_call bindImmediateGeometry_clear (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ImmediateGeometry "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.ImmediateGeometry.clear
@@ -165,7 +177,10 @@ end cls
          godot_method_bind_call bindImmediateGeometry_end (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ImmediateGeometry "end" '[] (IO ()) where
         nodeMethod = Godot.Core.ImmediateGeometry.end
@@ -191,7 +206,10 @@ set_color cls arg1
          godot_method_bind_call bindImmediateGeometry_set_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ImmediateGeometry "set_color" '[Color] (IO ())
          where
@@ -220,7 +238,10 @@ set_normal cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ImmediateGeometry "set_normal" '[Vector3]
            (IO ())
@@ -249,7 +270,10 @@ set_tangent cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ImmediateGeometry "set_tangent" '[Plane]
            (IO ())
@@ -278,7 +302,10 @@ set_uv cls arg1
          godot_method_bind_call bindImmediateGeometry_set_uv (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ImmediateGeometry "set_uv" '[Vector2] (IO ())
          where
@@ -306,7 +333,10 @@ set_uv2 cls arg1
          godot_method_bind_call bindImmediateGeometry_set_uv2 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ImmediateGeometry "set_uv2" '[Vector2] (IO ())
          where

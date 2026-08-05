@@ -44,7 +44,10 @@ get_closest_point cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation2D "get_closest_point" '[Vector2]
            (IO Vector2)
@@ -73,7 +76,7 @@ get_closest_point_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Navigation2D "get_closest_point_owner"
            '[Vector2]
@@ -84,6 +87,7 @@ instance NodeMethod Navigation2D "get_closest_point_owner"
 {-# NOINLINE bindNavigation2D_get_simple_path #-}
 
 -- | Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the path is smoothed by merging path segments where possible.
+--   				__Note:__ This method has known issues and will often return non-optimal paths. These issues will be fixed in Godot 4.0.
 bindNavigation2D_get_simple_path :: MethodBind
 bindNavigation2D_get_simple_path
   = unsafePerformIO $
@@ -94,6 +98,7 @@ bindNavigation2D_get_simple_path
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the path is smoothed by merging path segments where possible.
+--   				__Note:__ This method has known issues and will often return non-optimal paths. These issues will be fixed in Godot 4.0.
 get_simple_path ::
                   (Navigation2D :< cls, Object :< cls) =>
                   cls -> Vector2 -> Vector2 -> Maybe Bool -> IO PoolVector2Array
@@ -106,7 +111,10 @@ get_simple_path cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation2D "get_simple_path"
            '[Vector2, Vector2, Maybe Bool]
@@ -137,7 +145,10 @@ navpoly_add cls arg1 arg2 arg3
          godot_method_bind_call bindNavigation2D_navpoly_add (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation2D "navpoly_add"
            '[NavigationPolygon, Transform2d, Maybe Object]
@@ -166,7 +177,10 @@ navpoly_remove cls arg1
          godot_method_bind_call bindNavigation2D_navpoly_remove (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation2D "navpoly_remove" '[Int] (IO ())
          where
@@ -195,7 +209,10 @@ navpoly_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation2D "navpoly_set_transform"
            '[Int, Transform2d]

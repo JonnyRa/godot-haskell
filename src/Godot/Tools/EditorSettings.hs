@@ -105,7 +105,10 @@ add_property_info cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "add_property_info"
            '[Dictionary]
@@ -134,7 +137,10 @@ erase cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindEditorSettings_erase (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "erase" '[GodotString] (IO ())
          where
@@ -162,7 +168,10 @@ get_favorites cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "get_favorites" '[]
            (IO PoolStringArray)
@@ -194,7 +203,7 @@ get_project_metadata cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod EditorSettings "get_project_metadata"
            '[GodotString, GodotString, Maybe GodotVariant]
@@ -224,7 +233,10 @@ get_project_settings_dir cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "get_project_settings_dir" '[]
            (IO GodotString)
@@ -253,7 +265,10 @@ get_recent_dirs cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "get_recent_dirs" '[]
            (IO PoolStringArray)
@@ -282,7 +297,7 @@ get_setting cls arg1
          godot_method_bind_call bindEditorSettings_get_setting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod EditorSettings "get_setting" '[GodotString]
            (IO GodotVariant)
@@ -315,7 +330,10 @@ get_settings_dir cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "get_settings_dir" '[]
            (IO GodotString)
@@ -344,7 +362,10 @@ has_setting cls arg1
          godot_method_bind_call bindEditorSettings_has_setting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "has_setting" '[GodotString]
            (IO Bool)
@@ -374,7 +395,10 @@ property_can_revert cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "property_can_revert"
            '[GodotString]
@@ -405,7 +429,7 @@ property_get_revert cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod EditorSettings "property_get_revert"
            '[GodotString]
@@ -436,7 +460,10 @@ set_favorites cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "set_favorites"
            '[PoolStringArray]
@@ -467,7 +494,10 @@ set_initial_value cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "set_initial_value"
            '[GodotString, GodotVariant, Bool]
@@ -498,7 +528,10 @@ set_project_metadata cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "set_project_metadata"
            '[GodotString, GodotString, GodotVariant]
@@ -529,7 +562,10 @@ set_recent_dirs cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "set_recent_dirs"
            '[PoolStringArray]
@@ -559,7 +595,10 @@ set_setting cls arg1 arg2
          godot_method_bind_call bindEditorSettings_set_setting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSettings "set_setting"
            '[GodotString, GodotVariant]

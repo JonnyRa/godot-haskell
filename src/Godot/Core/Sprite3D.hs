@@ -60,7 +60,7 @@ instance NodeProperty Sprite3D "vframes" Int 'False where
 
 {-# NOINLINE bindSprite3D_get_frame #-}
 
--- | Current frame to display from sprite sheet. @vframes@ or @hframes@ must be greater than 1.
+-- | Current frame to display from sprite sheet. @hframes@ or @vframes@ must be greater than 1.
 bindSprite3D_get_frame :: MethodBind
 bindSprite3D_get_frame
   = unsafePerformIO $
@@ -70,21 +70,24 @@ bindSprite3D_get_frame
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Current frame to display from sprite sheet. @vframes@ or @hframes@ must be greater than 1.
+-- | Current frame to display from sprite sheet. @hframes@ or @vframes@ must be greater than 1.
 get_frame :: (Sprite3D :< cls, Object :< cls) => cls -> IO Int
 get_frame cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite3D_get_frame (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "get_frame" '[] (IO Int) where
         nodeMethod = Godot.Core.Sprite3D.get_frame
 
 {-# NOINLINE bindSprite3D_get_frame_coords #-}
 
--- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @vframes@ or @hframes@ must be greater than 1.
+-- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @hframes@ or @vframes@ must be greater than 1.
 bindSprite3D_get_frame_coords :: MethodBind
 bindSprite3D_get_frame_coords
   = unsafePerformIO $
@@ -94,7 +97,7 @@ bindSprite3D_get_frame_coords
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @vframes@ or @hframes@ must be greater than 1.
+-- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @hframes@ or @vframes@ must be greater than 1.
 get_frame_coords ::
                    (Sprite3D :< cls, Object :< cls) => cls -> IO Vector2
 get_frame_coords cls
@@ -103,7 +106,10 @@ get_frame_coords cls
          godot_method_bind_call bindSprite3D_get_frame_coords (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "get_frame_coords" '[] (IO Vector2)
          where
@@ -128,7 +134,10 @@ get_hframes cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite3D_get_hframes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "get_hframes" '[] (IO Int) where
         nodeMethod = Godot.Core.Sprite3D.get_hframes
@@ -154,7 +163,10 @@ get_region_rect cls
          godot_method_bind_call bindSprite3D_get_region_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "get_region_rect" '[] (IO Rect2) where
         nodeMethod = Godot.Core.Sprite3D.get_region_rect
@@ -179,7 +191,7 @@ get_texture cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite3D_get_texture (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Sprite3D "get_texture" '[] (IO Texture) where
         nodeMethod = Godot.Core.Sprite3D.get_texture
@@ -203,7 +215,10 @@ get_vframes cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite3D_get_vframes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "get_vframes" '[] (IO Int) where
         nodeMethod = Godot.Core.Sprite3D.get_vframes
@@ -227,14 +242,17 @@ is_region cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite3D_is_region (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "is_region" '[] (IO Bool) where
         nodeMethod = Godot.Core.Sprite3D.is_region
 
 {-# NOINLINE bindSprite3D_set_frame #-}
 
--- | Current frame to display from sprite sheet. @vframes@ or @hframes@ must be greater than 1.
+-- | Current frame to display from sprite sheet. @hframes@ or @vframes@ must be greater than 1.
 bindSprite3D_set_frame :: MethodBind
 bindSprite3D_set_frame
   = unsafePerformIO $
@@ -244,7 +262,7 @@ bindSprite3D_set_frame
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Current frame to display from sprite sheet. @vframes@ or @hframes@ must be greater than 1.
+-- | Current frame to display from sprite sheet. @hframes@ or @vframes@ must be greater than 1.
 set_frame ::
             (Sprite3D :< cls, Object :< cls) => cls -> Int -> IO ()
 set_frame cls arg1
@@ -252,14 +270,17 @@ set_frame cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite3D_set_frame (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "set_frame" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Sprite3D.set_frame
 
 {-# NOINLINE bindSprite3D_set_frame_coords #-}
 
--- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @vframes@ or @hframes@ must be greater than 1.
+-- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @hframes@ or @vframes@ must be greater than 1.
 bindSprite3D_set_frame_coords :: MethodBind
 bindSprite3D_set_frame_coords
   = unsafePerformIO $
@@ -269,7 +290,7 @@ bindSprite3D_set_frame_coords
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @vframes@ or @hframes@ must be greater than 1.
+-- | Coordinates of the frame to display from sprite sheet. This is as an alias for the @frame@ property. @hframes@ or @vframes@ must be greater than 1.
 set_frame_coords ::
                    (Sprite3D :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_frame_coords cls arg1
@@ -278,7 +299,10 @@ set_frame_coords cls arg1
          godot_method_bind_call bindSprite3D_set_frame_coords (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "set_frame_coords" '[Vector2] (IO ())
          where
@@ -304,7 +328,10 @@ set_hframes cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite3D_set_hframes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "set_hframes" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Sprite3D.set_hframes
@@ -329,7 +356,10 @@ set_region cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite3D_set_region (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "set_region" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Sprite3D.set_region
@@ -355,7 +385,10 @@ set_region_rect cls arg1
          godot_method_bind_call bindSprite3D_set_region_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "set_region_rect" '[Rect2] (IO ())
          where
@@ -381,7 +414,10 @@ set_texture cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite3D_set_texture (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "set_texture" '[Texture] (IO ()) where
         nodeMethod = Godot.Core.Sprite3D.set_texture
@@ -406,7 +442,10 @@ set_vframes cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSprite3D_set_vframes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Sprite3D "set_vframes" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Sprite3D.set_vframes

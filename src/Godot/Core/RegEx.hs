@@ -36,7 +36,9 @@ clear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegEx_clear (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegEx "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.RegEx.clear
@@ -58,7 +60,10 @@ compile cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegEx_compile (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegEx "compile" '[GodotString] (IO Int) where
         nodeMethod = Godot.Core.RegEx.compile
@@ -81,7 +86,10 @@ get_group_count cls
          godot_method_bind_call bindRegEx_get_group_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegEx "get_group_count" '[] (IO Int) where
         nodeMethod = Godot.Core.RegEx.get_group_count
@@ -102,7 +110,10 @@ get_names cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegEx_get_names (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegEx "get_names" '[] (IO Array) where
         nodeMethod = Godot.Core.RegEx.get_names
@@ -125,7 +136,10 @@ get_pattern cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegEx_get_pattern (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegEx "get_pattern" '[] (IO GodotString) where
         nodeMethod = Godot.Core.RegEx.get_pattern
@@ -146,7 +160,10 @@ is_valid cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegEx_is_valid (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegEx "is_valid" '[] (IO Bool) where
         nodeMethod = Godot.Core.RegEx.is_valid
@@ -171,7 +188,7 @@ search cls arg1 arg2 arg3
        maybe (VariantInt (-1)) toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegEx_search (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod RegEx "search"
            '[GodotString, Maybe Int, Maybe Int]
@@ -199,7 +216,10 @@ search_all cls arg1 arg2 arg3
        maybe (VariantInt (-1)) toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegEx_search_all (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegEx "search_all"
            '[GodotString, Maybe Int, Maybe Int]
@@ -232,7 +252,9 @@ sub cls arg1 arg2 arg3 arg4 arg5
        maybe (VariantInt (-1)) toVariant arg5]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRegEx_sub (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RegEx "sub"
            '[GodotString, GodotString, Maybe Bool, Maybe Int, Maybe Int]

@@ -392,7 +392,10 @@ close cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindHTTPClient_close (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "close" '[] (IO ()) where
         nodeMethod = Godot.Core.HTTPClient.close
@@ -429,7 +432,10 @@ connect_to_host cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindHTTPClient_connect_to_host (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "connect_to_host"
            '[GodotString, Maybe Int, Maybe Bool, Maybe Bool]
@@ -458,7 +464,7 @@ get_connection cls
          godot_method_bind_call bindHTTPClient_get_connection (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod HTTPClient "get_connection" '[] (IO StreamPeer)
          where
@@ -486,7 +492,10 @@ get_read_chunk_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "get_read_chunk_size" '[] (IO Int)
          where
@@ -516,7 +525,10 @@ get_response_body_length cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "get_response_body_length" '[]
            (IO Int)
@@ -545,7 +557,10 @@ get_response_code cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "get_response_code" '[] (IO Int)
          where
@@ -573,7 +588,10 @@ get_response_headers cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "get_response_headers" '[]
            (IO PoolStringArray)
@@ -623,7 +641,10 @@ get_response_headers_as_dictionary cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "get_response_headers_as_dictionary"
            '[]
@@ -652,7 +673,10 @@ get_status cls
          godot_method_bind_call bindHTTPClient_get_status (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "get_status" '[] (IO Int) where
         nodeMethod = Godot.Core.HTTPClient.get_status
@@ -678,7 +702,10 @@ has_response cls
          godot_method_bind_call bindHTTPClient_has_response (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "has_response" '[] (IO Bool) where
         nodeMethod = Godot.Core.HTTPClient.has_response
@@ -705,7 +732,10 @@ is_blocking_mode_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "is_blocking_mode_enabled" '[]
            (IO Bool)
@@ -734,7 +764,10 @@ is_response_chunked cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "is_response_chunked" '[] (IO Bool)
          where
@@ -758,7 +791,10 @@ poll cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindHTTPClient_poll (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "poll" '[] (IO Int) where
         nodeMethod = Godot.Core.HTTPClient.poll
@@ -822,7 +858,10 @@ query_string_from_dict cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "query_string_from_dict"
            '[Dictionary]
@@ -852,7 +891,10 @@ read_response_body_chunk cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "read_response_body_chunk" '[]
            (IO PoolByteArray)
@@ -861,7 +903,8 @@ instance NodeMethod HTTPClient "read_response_body_chunk" '[]
 
 {-# NOINLINE bindHTTPClient_request #-}
 
--- | Sends a request to the connected host. The URL parameter is just the part after the host, so for @http://somehost.com/index.php@, it is @index.php@.
+-- | Sends a request to the connected host.
+--   				The URL parameter is usually just the part after the host, so for @http://somehost.com/index.php@, it is @/index.php@. When sending requests to an HTTP proxy server, it should be an absolute URL. For @HTTPClient.METHOD_OPTIONS@ requests, @*@ is also allowed. For @HTTPClient.METHOD_CONNECT@ requests, it should be the authority component (@host:port@).
 --   				Headers are HTTP request headers. For available HTTP methods, see @enum Method@.
 --   				To create a POST request with query strings to push to the server, do:
 --   				
@@ -870,7 +913,7 @@ instance NodeMethod HTTPClient "read_response_body_chunk" '[]
 --   				var fields = {"username" : "user", "password" : "pass"}
 --   				var query_string = http_client.query_string_from_dict(fields)
 --   				var headers = @"Content-Type: application/x-www-form-urlencoded", "Content-Length: " + str(query_string.length())@
---   				var result = http_client.request(http_client.METHOD_POST, "index.php", headers, query_string)
+--   				var result = http_client.request(http_client.METHOD_POST, "/index.php", headers, query_string)
 --   				
 --   @
 --   
@@ -884,7 +927,8 @@ bindHTTPClient_request
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sends a request to the connected host. The URL parameter is just the part after the host, so for @http://somehost.com/index.php@, it is @index.php@.
+-- | Sends a request to the connected host.
+--   				The URL parameter is usually just the part after the host, so for @http://somehost.com/index.php@, it is @/index.php@. When sending requests to an HTTP proxy server, it should be an absolute URL. For @HTTPClient.METHOD_OPTIONS@ requests, @*@ is also allowed. For @HTTPClient.METHOD_CONNECT@ requests, it should be the authority component (@host:port@).
 --   				Headers are HTTP request headers. For available HTTP methods, see @enum Method@.
 --   				To create a POST request with query strings to push to the server, do:
 --   				
@@ -893,7 +937,7 @@ bindHTTPClient_request
 --   				var fields = {"username" : "user", "password" : "pass"}
 --   				var query_string = http_client.query_string_from_dict(fields)
 --   				var headers = @"Content-Type: application/x-www-form-urlencoded", "Content-Length: " + str(query_string.length())@
---   				var result = http_client.request(http_client.METHOD_POST, "index.php", headers, query_string)
+--   				var result = http_client.request(http_client.METHOD_POST, "/index.php", headers, query_string)
 --   				
 --   @
 --   
@@ -910,7 +954,10 @@ request cls arg1 arg2 arg3 arg4
       (\ (arrPtr, len) ->
          godot_method_bind_call bindHTTPClient_request (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "request"
            '[Int, GodotString, PoolStringArray, Maybe GodotString]
@@ -920,7 +967,8 @@ instance NodeMethod HTTPClient "request"
 
 {-# NOINLINE bindHTTPClient_request_raw #-}
 
--- | Sends a raw request to the connected host. The URL parameter is just the part after the host, so for @http://somehost.com/index.php@, it is @index.php@.
+-- | Sends a raw request to the connected host.
+--   				The URL parameter is usually just the part after the host, so for @http://somehost.com/index.php@, it is @/index.php@. When sending requests to an HTTP proxy server, it should be an absolute URL. For @HTTPClient.METHOD_OPTIONS@ requests, @*@ is also allowed. For @HTTPClient.METHOD_CONNECT@ requests, it should be the authority component (@host:port@).
 --   				Headers are HTTP request headers. For available HTTP methods, see @enum Method@.
 --   				Sends the body data raw, as a byte array and does not encode it in any way.
 bindHTTPClient_request_raw :: MethodBind
@@ -932,7 +980,8 @@ bindHTTPClient_request_raw
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sends a raw request to the connected host. The URL parameter is just the part after the host, so for @http://somehost.com/index.php@, it is @index.php@.
+-- | Sends a raw request to the connected host.
+--   				The URL parameter is usually just the part after the host, so for @http://somehost.com/index.php@, it is @/index.php@. When sending requests to an HTTP proxy server, it should be an absolute URL. For @HTTPClient.METHOD_OPTIONS@ requests, @*@ is also allowed. For @HTTPClient.METHOD_CONNECT@ requests, it should be the authority component (@host:port@).
 --   				Headers are HTTP request headers. For available HTTP methods, see @enum Method@.
 --   				Sends the body data raw, as a byte array and does not encode it in any way.
 request_raw ::
@@ -946,7 +995,10 @@ request_raw cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindHTTPClient_request_raw (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "request_raw"
            '[Int, GodotString, PoolStringArray, PoolByteArray]
@@ -976,7 +1028,10 @@ set_blocking_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "set_blocking_mode" '[Bool] (IO ())
          where
@@ -1003,7 +1058,10 @@ set_connection cls arg1
          godot_method_bind_call bindHTTPClient_set_connection (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "set_connection" '[StreamPeer]
            (IO ())
@@ -1032,7 +1090,10 @@ set_read_chunk_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod HTTPClient "set_read_chunk_size" '[Int] (IO ())
          where

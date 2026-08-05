@@ -6,6 +6,7 @@ module Godot.Core.MeshLibrary
         Godot.Core.MeshLibrary.find_item_by_name,
         Godot.Core.MeshLibrary.get_item_list,
         Godot.Core.MeshLibrary.get_item_mesh,
+        Godot.Core.MeshLibrary.get_item_mesh_transform,
         Godot.Core.MeshLibrary.get_item_name,
         Godot.Core.MeshLibrary.get_item_navmesh,
         Godot.Core.MeshLibrary.get_item_navmesh_transform,
@@ -14,6 +15,7 @@ module Godot.Core.MeshLibrary
         Godot.Core.MeshLibrary.get_last_unused_item_id,
         Godot.Core.MeshLibrary.remove_item,
         Godot.Core.MeshLibrary.set_item_mesh,
+        Godot.Core.MeshLibrary.set_item_mesh_transform,
         Godot.Core.MeshLibrary.set_item_name,
         Godot.Core.MeshLibrary.set_item_navmesh,
         Godot.Core.MeshLibrary.set_item_navmesh_transform,
@@ -51,7 +53,10 @@ clear cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMeshLibrary_clear (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.MeshLibrary.clear
@@ -79,7 +84,10 @@ create_item cls arg1
          godot_method_bind_call bindMeshLibrary_create_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "create_item" '[Int] (IO ()) where
         nodeMethod = Godot.Core.MeshLibrary.create_item
@@ -106,7 +114,10 @@ find_item_by_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "find_item_by_name" '[GodotString]
            (IO Int)
@@ -134,7 +145,10 @@ get_item_list cls
          godot_method_bind_call bindMeshLibrary_get_item_list (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "get_item_list" '[]
            (IO PoolIntArray)
@@ -162,11 +176,43 @@ get_item_mesh cls arg1
          godot_method_bind_call bindMeshLibrary_get_item_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshLibrary "get_item_mesh" '[Int] (IO Mesh)
          where
         nodeMethod = Godot.Core.MeshLibrary.get_item_mesh
+
+{-# NOINLINE bindMeshLibrary_get_item_mesh_transform #-}
+
+-- | Returns the transform applied to the item's mesh.
+bindMeshLibrary_get_item_mesh_transform :: MethodBind
+bindMeshLibrary_get_item_mesh_transform
+  = unsafePerformIO $
+      withCString "MeshLibrary" $
+        \ clsNamePtr ->
+          withCString "get_item_mesh_transform" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the transform applied to the item's mesh.
+get_item_mesh_transform ::
+                          (MeshLibrary :< cls, Object :< cls) => cls -> Int -> IO Transform
+get_item_mesh_transform cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindMeshLibrary_get_item_mesh_transform
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MeshLibrary "get_item_mesh_transform" '[Int]
+           (IO Transform)
+         where
+        nodeMethod = Godot.Core.MeshLibrary.get_item_mesh_transform
 
 {-# NOINLINE bindMeshLibrary_get_item_name #-}
 
@@ -189,7 +235,10 @@ get_item_name cls arg1
          godot_method_bind_call bindMeshLibrary_get_item_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "get_item_name" '[Int]
            (IO GodotString)
@@ -219,7 +268,7 @@ get_item_navmesh cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshLibrary "get_item_navmesh" '[Int]
            (IO NavigationMesh)
@@ -248,7 +297,10 @@ get_item_navmesh_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "get_item_navmesh_transform" '[Int]
            (IO Transform)
@@ -277,7 +329,7 @@ get_item_preview cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshLibrary "get_item_preview" '[Int]
            (IO Texture)
@@ -307,7 +359,10 @@ get_item_shapes cls arg1
          godot_method_bind_call bindMeshLibrary_get_item_shapes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "get_item_shapes" '[Int] (IO Array)
          where
@@ -335,7 +390,10 @@ get_last_unused_item_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "get_last_unused_item_id" '[]
            (IO Int)
@@ -363,7 +421,10 @@ remove_item cls arg1
          godot_method_bind_call bindMeshLibrary_remove_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "remove_item" '[Int] (IO ()) where
         nodeMethod = Godot.Core.MeshLibrary.remove_item
@@ -389,12 +450,49 @@ set_item_mesh cls arg1 arg2
          godot_method_bind_call bindMeshLibrary_set_item_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "set_item_mesh" '[Int, Mesh]
            (IO ())
          where
         nodeMethod = Godot.Core.MeshLibrary.set_item_mesh
+
+{-# NOINLINE bindMeshLibrary_set_item_mesh_transform #-}
+
+-- | Sets the transform to apply to the item's mesh.
+bindMeshLibrary_set_item_mesh_transform :: MethodBind
+bindMeshLibrary_set_item_mesh_transform
+  = unsafePerformIO $
+      withCString "MeshLibrary" $
+        \ clsNamePtr ->
+          withCString "set_item_mesh_transform" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the transform to apply to the item's mesh.
+set_item_mesh_transform ::
+                          (MeshLibrary :< cls, Object :< cls) =>
+                          cls -> Int -> Transform -> IO ()
+set_item_mesh_transform cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindMeshLibrary_set_item_mesh_transform
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MeshLibrary "set_item_mesh_transform"
+           '[Int, Transform]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.MeshLibrary.set_item_mesh_transform
 
 {-# NOINLINE bindMeshLibrary_set_item_name #-}
 
@@ -420,7 +518,10 @@ set_item_name cls arg1 arg2
          godot_method_bind_call bindMeshLibrary_set_item_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "set_item_name" '[Int, GodotString]
            (IO ())
@@ -450,7 +551,10 @@ set_item_navmesh cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "set_item_navmesh"
            '[Int, NavigationMesh]
@@ -481,7 +585,10 @@ set_item_navmesh_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "set_item_navmesh_transform"
            '[Int, Transform]
@@ -512,7 +619,10 @@ set_item_preview cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "set_item_preview" '[Int, Texture]
            (IO ())
@@ -542,7 +652,10 @@ set_item_shapes cls arg1 arg2
          godot_method_bind_call bindMeshLibrary_set_item_shapes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshLibrary "set_item_shapes" '[Int, Array]
            (IO ())

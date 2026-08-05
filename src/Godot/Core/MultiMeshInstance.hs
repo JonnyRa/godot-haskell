@@ -45,7 +45,7 @@ get_multimesh cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MultiMeshInstance "get_multimesh" '[]
            (IO MultiMesh)
@@ -75,7 +75,10 @@ set_multimesh cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMeshInstance "set_multimesh" '[MultiMesh]
            (IO ())

@@ -21,6 +21,7 @@ import Godot.Core.Node()
 
 {-# NOINLINE bindInstancePlaceholder_create_instance #-}
 
+-- | Not thread-safe. Use @method Object.call_deferred@ if calling from a thread.
 bindInstancePlaceholder_create_instance :: MethodBind
 bindInstancePlaceholder_create_instance
   = unsafePerformIO $
@@ -30,6 +31,7 @@ bindInstancePlaceholder_create_instance
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Not thread-safe. Use @method Object.call_deferred@ if calling from a thread.
 create_instance ::
                   (InstancePlaceholder :< cls, Object :< cls) =>
                   cls -> Maybe Bool -> Maybe PackedScene -> IO Node
@@ -42,7 +44,7 @@ create_instance cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod InstancePlaceholder "create_instance"
            '[Maybe Bool, Maybe PackedScene]
@@ -52,7 +54,7 @@ instance NodeMethod InstancePlaceholder "create_instance"
 
 {-# NOINLINE bindInstancePlaceholder_get_instance_path #-}
 
--- | Gets the path to the @PackedScene@ resource file that is loaded by default when calling @method replace_by_instance@.
+-- | Gets the path to the @PackedScene@ resource file that is loaded by default when calling @method replace_by_instance@. Not thread-safe. Use @method Object.call_deferred@ if calling from a thread.
 bindInstancePlaceholder_get_instance_path :: MethodBind
 bindInstancePlaceholder_get_instance_path
   = unsafePerformIO $
@@ -62,7 +64,7 @@ bindInstancePlaceholder_get_instance_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the path to the @PackedScene@ resource file that is loaded by default when calling @method replace_by_instance@.
+-- | Gets the path to the @PackedScene@ resource file that is loaded by default when calling @method replace_by_instance@. Not thread-safe. Use @method Object.call_deferred@ if calling from a thread.
 get_instance_path ::
                     (InstancePlaceholder :< cls, Object :< cls) =>
                     cls -> IO GodotString
@@ -73,7 +75,10 @@ get_instance_path cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InstancePlaceholder "get_instance_path" '[]
            (IO GodotString)
@@ -101,7 +106,10 @@ get_stored_values cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InstancePlaceholder "get_stored_values"
            '[Maybe Bool]
@@ -132,7 +140,10 @@ replace_by_instance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InstancePlaceholder "replace_by_instance"
            '[Maybe PackedScene]

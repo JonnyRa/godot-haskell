@@ -102,7 +102,10 @@ get_audio_track cls
          godot_method_bind_call bindVideoPlayer_get_audio_track (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "get_audio_track" '[] (IO Int)
          where
@@ -130,7 +133,10 @@ get_buffering_msec cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "get_buffering_msec" '[] (IO Int)
          where
@@ -156,7 +162,10 @@ get_bus cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVideoPlayer_get_bus (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "get_bus" '[] (IO GodotString)
          where
@@ -183,7 +192,7 @@ get_stream cls
          godot_method_bind_call bindVideoPlayer_get_stream (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod VideoPlayer "get_stream" '[] (IO VideoStream)
          where
@@ -210,7 +219,10 @@ get_stream_name cls
          godot_method_bind_call bindVideoPlayer_get_stream_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "get_stream_name" '[]
            (IO GodotString)
@@ -220,6 +232,7 @@ instance NodeMethod VideoPlayer "get_stream_name" '[]
 {-# NOINLINE bindVideoPlayer_get_stream_position #-}
 
 -- | The current position of the stream, in seconds.
+--   			__Note:__ Changing this value won't have any effect as seeking is not implemented yet, except in video formats implemented by a GDNative add-on.
 bindVideoPlayer_get_stream_position :: MethodBind
 bindVideoPlayer_get_stream_position
   = unsafePerformIO $
@@ -230,6 +243,7 @@ bindVideoPlayer_get_stream_position
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The current position of the stream, in seconds.
+--   			__Note:__ Changing this value won't have any effect as seeking is not implemented yet, except in video formats implemented by a GDNative add-on.
 get_stream_position ::
                       (VideoPlayer :< cls, Object :< cls) => cls -> IO Float
 get_stream_position cls
@@ -239,7 +253,10 @@ get_stream_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "get_stream_position" '[]
            (IO Float)
@@ -268,7 +285,7 @@ get_video_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod VideoPlayer "get_video_texture" '[]
            (IO Texture)
@@ -296,7 +313,10 @@ get_volume cls
          godot_method_bind_call bindVideoPlayer_get_volume (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "get_volume" '[] (IO Float) where
         nodeMethod = Godot.Core.VideoPlayer.get_volume
@@ -322,7 +342,10 @@ get_volume_db cls
          godot_method_bind_call bindVideoPlayer_get_volume_db (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "get_volume_db" '[] (IO Float)
          where
@@ -349,7 +372,10 @@ has_autoplay cls
          godot_method_bind_call bindVideoPlayer_has_autoplay (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "has_autoplay" '[] (IO Bool) where
         nodeMethod = Godot.Core.VideoPlayer.has_autoplay
@@ -374,7 +400,10 @@ has_expand cls
          godot_method_bind_call bindVideoPlayer_has_expand (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "has_expand" '[] (IO Bool) where
         nodeMethod = Godot.Core.VideoPlayer.has_expand
@@ -399,7 +428,10 @@ is_paused cls
          godot_method_bind_call bindVideoPlayer_is_paused (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "is_paused" '[] (IO Bool) where
         nodeMethod = Godot.Core.VideoPlayer.is_paused
@@ -426,7 +458,10 @@ is_playing cls
          godot_method_bind_call bindVideoPlayer_is_playing (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "is_playing" '[] (IO Bool) where
         nodeMethod = Godot.Core.VideoPlayer.is_playing
@@ -449,7 +484,10 @@ play cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVideoPlayer_play (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "play" '[] (IO ()) where
         nodeMethod = Godot.Core.VideoPlayer.play
@@ -475,7 +513,10 @@ set_audio_track cls arg1
          godot_method_bind_call bindVideoPlayer_set_audio_track (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "set_audio_track" '[Int] (IO ())
          where
@@ -502,7 +543,10 @@ set_autoplay cls arg1
          godot_method_bind_call bindVideoPlayer_set_autoplay (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "set_autoplay" '[Bool] (IO ())
          where
@@ -530,7 +574,10 @@ set_buffering_msec cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "set_buffering_msec" '[Int] (IO ())
          where
@@ -556,7 +603,10 @@ set_bus cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVideoPlayer_set_bus (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "set_bus" '[GodotString] (IO ())
          where
@@ -583,7 +633,10 @@ set_expand cls arg1
          godot_method_bind_call bindVideoPlayer_set_expand (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "set_expand" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.VideoPlayer.set_expand
@@ -609,7 +662,10 @@ set_paused cls arg1
          godot_method_bind_call bindVideoPlayer_set_paused (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "set_paused" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.VideoPlayer.set_paused
@@ -635,7 +691,10 @@ set_stream cls arg1
          godot_method_bind_call bindVideoPlayer_set_stream (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "set_stream" '[VideoStream] (IO ())
          where
@@ -644,6 +703,7 @@ instance NodeMethod VideoPlayer "set_stream" '[VideoStream] (IO ())
 {-# NOINLINE bindVideoPlayer_set_stream_position #-}
 
 -- | The current position of the stream, in seconds.
+--   			__Note:__ Changing this value won't have any effect as seeking is not implemented yet, except in video formats implemented by a GDNative add-on.
 bindVideoPlayer_set_stream_position :: MethodBind
 bindVideoPlayer_set_stream_position
   = unsafePerformIO $
@@ -654,6 +714,7 @@ bindVideoPlayer_set_stream_position
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The current position of the stream, in seconds.
+--   			__Note:__ Changing this value won't have any effect as seeking is not implemented yet, except in video formats implemented by a GDNative add-on.
 set_stream_position ::
                       (VideoPlayer :< cls, Object :< cls) => cls -> Float -> IO ()
 set_stream_position cls arg1
@@ -663,7 +724,10 @@ set_stream_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "set_stream_position" '[Float]
            (IO ())
@@ -691,7 +755,10 @@ set_volume cls arg1
          godot_method_bind_call bindVideoPlayer_set_volume (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "set_volume" '[Float] (IO ()) where
         nodeMethod = Godot.Core.VideoPlayer.set_volume
@@ -717,7 +784,10 @@ set_volume_db cls arg1
          godot_method_bind_call bindVideoPlayer_set_volume_db (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "set_volume_db" '[Float] (IO ())
          where
@@ -743,7 +813,10 @@ stop cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVideoPlayer_stop (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoPlayer "stop" '[] (IO ()) where
         nodeMethod = Godot.Core.VideoPlayer.stop

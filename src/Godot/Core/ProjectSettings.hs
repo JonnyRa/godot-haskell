@@ -91,7 +91,10 @@ add_property_info cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "add_property_info"
            '[Dictionary]
@@ -121,7 +124,10 @@ clear cls arg1
          godot_method_bind_call bindProjectSettings_clear (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "clear" '[GodotString] (IO ())
          where
@@ -149,7 +155,10 @@ get_order cls arg1
          godot_method_bind_call bindProjectSettings_get_order (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "get_order" '[GodotString]
            (IO Int)
@@ -192,7 +201,7 @@ get_setting cls arg1
          godot_method_bind_call bindProjectSettings_get_setting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod ProjectSettings "get_setting" '[GodotString]
            (IO GodotVariant)
@@ -201,7 +210,24 @@ instance NodeMethod ProjectSettings "get_setting" '[GodotString]
 
 {-# NOINLINE bindProjectSettings_globalize_path #-}
 
--- | Converts a localized path (@res://@) to a full native OS path.
+-- | Returns the absolute, native OS path corresponding to the localized @path@ (starting with @res://@ or @user://@). The returned path will vary depending on the operating system and user preferences. See @url=https://docs.godotengine.org/en/3.4/tutorials/io/data_paths.html@File paths in Godot projects@/url@ to see what those paths convert to. See also @method localize_path@.
+--   				__Note:__ @method globalize_path@ with @res://@ will not work in an exported project. Instead, prepend the executable's base directory to the path when running from an exported project:
+--   				
+--   @
+--   
+--   				var path = ""
+--   				if OS.has_feature("editor"):
+--   				    # Running from an editor binary.
+--   				    # `path` will contain the absolute path to `hello.txt` located in the project root.
+--   				    path = ProjectSettings.globalize_path("res://hello.txt")
+--   				else:
+--   				    # Running from an exported project.
+--   				    # `path` will contain the absolute path to `hello.txt` next to the executable.
+--   				    # This is *not* identical to using `ProjectSettings.globalize_path()` with a `res://` path,
+--   				    # but is close enough in spirit.
+--   				    path = OS.get_executable_path().get_base_dir().plus_file("hello.txt")
+--   				
+--   @
 bindProjectSettings_globalize_path :: MethodBind
 bindProjectSettings_globalize_path
   = unsafePerformIO $
@@ -211,7 +237,24 @@ bindProjectSettings_globalize_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Converts a localized path (@res://@) to a full native OS path.
+-- | Returns the absolute, native OS path corresponding to the localized @path@ (starting with @res://@ or @user://@). The returned path will vary depending on the operating system and user preferences. See @url=https://docs.godotengine.org/en/3.4/tutorials/io/data_paths.html@File paths in Godot projects@/url@ to see what those paths convert to. See also @method localize_path@.
+--   				__Note:__ @method globalize_path@ with @res://@ will not work in an exported project. Instead, prepend the executable's base directory to the path when running from an exported project:
+--   				
+--   @
+--   
+--   				var path = ""
+--   				if OS.has_feature("editor"):
+--   				    # Running from an editor binary.
+--   				    # `path` will contain the absolute path to `hello.txt` located in the project root.
+--   				    path = ProjectSettings.globalize_path("res://hello.txt")
+--   				else:
+--   				    # Running from an exported project.
+--   				    # `path` will contain the absolute path to `hello.txt` next to the executable.
+--   				    # This is *not* identical to using `ProjectSettings.globalize_path()` with a `res://` path,
+--   				    # but is close enough in spirit.
+--   				    path = OS.get_executable_path().get_base_dir().plus_file("hello.txt")
+--   				
+--   @
 globalize_path ::
                  (ProjectSettings :< cls, Object :< cls) =>
                  cls -> GodotString -> IO GodotString
@@ -222,7 +265,10 @@ globalize_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "globalize_path" '[GodotString]
            (IO GodotString)
@@ -251,7 +297,10 @@ has_setting cls arg1
          godot_method_bind_call bindProjectSettings_has_setting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "has_setting" '[GodotString]
            (IO Bool)
@@ -262,6 +311,7 @@ instance NodeMethod ProjectSettings "has_setting" '[GodotString]
 
 -- | Loads the contents of the .pck or .zip file specified by @pack@ into the resource filesystem (@res://@). Returns @true@ on success.
 --   				__Note:__ If a file from @pack@ shares the same path as a file already in the resource filesystem, any attempts to load that file will use the file from @pack@ unless @replace_files@ is set to @false@.
+--   				__Note:__ The optional @offset@ parameter can be used to specify the offset in bytes to the start of the resource pack. This is only supported for .pck files.
 bindProjectSettings_load_resource_pack :: MethodBind
 bindProjectSettings_load_resource_pack
   = unsafePerformIO $
@@ -273,28 +323,33 @@ bindProjectSettings_load_resource_pack
 
 -- | Loads the contents of the .pck or .zip file specified by @pack@ into the resource filesystem (@res://@). Returns @true@ on success.
 --   				__Note:__ If a file from @pack@ shares the same path as a file already in the resource filesystem, any attempts to load that file will use the file from @pack@ unless @replace_files@ is set to @false@.
+--   				__Note:__ The optional @offset@ parameter can be used to specify the offset in bytes to the start of the resource pack. This is only supported for .pck files.
 load_resource_pack ::
                      (ProjectSettings :< cls, Object :< cls) =>
-                     cls -> GodotString -> Maybe Bool -> IO Bool
-load_resource_pack cls arg1 arg2
+                     cls -> GodotString -> Maybe Bool -> Maybe Int -> IO Bool
+load_resource_pack cls arg1 arg2 arg3
   = withVariantArray
-      [toVariant arg1, maybe (VariantBool True) toVariant arg2]
+      [toVariant arg1, maybe (VariantBool True) toVariant arg2,
+       maybe (VariantInt (0)) toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindProjectSettings_load_resource_pack
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "load_resource_pack"
-           '[GodotString, Maybe Bool]
+           '[GodotString, Maybe Bool, Maybe Int]
            (IO Bool)
          where
         nodeMethod = Godot.Core.ProjectSettings.load_resource_pack
 
 {-# NOINLINE bindProjectSettings_localize_path #-}
 
--- | Convert a path to a localized path (@res://@ path).
+-- | Returns the localized path (starting with @res://@) corresponding to the absolute, native OS @path@. See also @method globalize_path@.
 bindProjectSettings_localize_path :: MethodBind
 bindProjectSettings_localize_path
   = unsafePerformIO $
@@ -304,7 +359,7 @@ bindProjectSettings_localize_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Convert a path to a localized path (@res://@ path).
+-- | Returns the localized path (starting with @res://@) corresponding to the absolute, native OS @path@. See also @method globalize_path@.
 localize_path ::
                 (ProjectSettings :< cls, Object :< cls) =>
                 cls -> GodotString -> IO GodotString
@@ -315,7 +370,10 @@ localize_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "localize_path" '[GodotString]
            (IO GodotString)
@@ -345,7 +403,10 @@ property_can_revert cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "property_can_revert"
            '[GodotString]
@@ -376,7 +437,7 @@ property_get_revert cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod ProjectSettings "property_get_revert"
            '[GodotString]
@@ -387,6 +448,7 @@ instance NodeMethod ProjectSettings "property_get_revert"
 {-# NOINLINE bindProjectSettings_save #-}
 
 -- | Saves the configuration to the @project.godot@ file.
+--   				__Note:__ This method is intended to be used by editor plugins, as modified @ProjectSettings@ can't be loaded back in the running app. If you want to change project settings in exported projects, use @method save_custom@ to save @override.cfg@ file.
 bindProjectSettings_save :: MethodBind
 bindProjectSettings_save
   = unsafePerformIO $
@@ -397,20 +459,24 @@ bindProjectSettings_save
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Saves the configuration to the @project.godot@ file.
+--   				__Note:__ This method is intended to be used by editor plugins, as modified @ProjectSettings@ can't be loaded back in the running app. If you want to change project settings in exported projects, use @method save_custom@ to save @override.cfg@ file.
 save :: (ProjectSettings :< cls, Object :< cls) => cls -> IO Int
 save cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindProjectSettings_save (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "save" '[] (IO Int) where
         nodeMethod = Godot.Core.ProjectSettings.save
 
 {-# NOINLINE bindProjectSettings_save_custom #-}
 
--- | Saves the configuration to a custom file. The file extension must be @.godot@ (to save in text-based @ConfigFile@ format) or @.binary@ (to save in binary format).
+-- | Saves the configuration to a custom file. The file extension must be @.godot@ (to save in text-based @ConfigFile@ format) or @.binary@ (to save in binary format). You can also save @override.cfg@ file, which is also text, but can be used in exported projects unlike other formats.
 bindProjectSettings_save_custom :: MethodBind
 bindProjectSettings_save_custom
   = unsafePerformIO $
@@ -420,7 +486,7 @@ bindProjectSettings_save_custom
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Saves the configuration to a custom file. The file extension must be @.godot@ (to save in text-based @ConfigFile@ format) or @.binary@ (to save in binary format).
+-- | Saves the configuration to a custom file. The file extension must be @.godot@ (to save in text-based @ConfigFile@ format) or @.binary@ (to save in binary format). You can also save @override.cfg@ file, which is also text, but can be used in exported projects unlike other formats.
 save_custom ::
               (ProjectSettings :< cls, Object :< cls) =>
               cls -> GodotString -> IO Int
@@ -430,7 +496,10 @@ save_custom cls arg1
          godot_method_bind_call bindProjectSettings_save_custom (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "save_custom" '[GodotString]
            (IO Int)
@@ -460,7 +529,10 @@ set_initial_value cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "set_initial_value"
            '[GodotString, GodotVariant]
@@ -490,7 +562,10 @@ set_order cls arg1 arg2
          godot_method_bind_call bindProjectSettings_set_order (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "set_order" '[GodotString, Int]
            (IO ())
@@ -507,6 +582,8 @@ instance NodeMethod ProjectSettings "set_order" '[GodotString, Int]
 --   				ProjectSettings.set_setting("application/config/name", "Example")
 --   				
 --   @
+--   
+--   				This can also be used to erase custom project settings. To do this change the setting value to @null@.
 bindProjectSettings_set_setting :: MethodBind
 bindProjectSettings_set_setting
   = unsafePerformIO $
@@ -524,6 +601,8 @@ bindProjectSettings_set_setting
 --   				ProjectSettings.set_setting("application/config/name", "Example")
 --   				
 --   @
+--   
+--   				This can also be used to erase custom project settings. To do this change the setting value to @null@.
 set_setting ::
               (ProjectSettings :< cls, Object :< cls) =>
               cls -> GodotString -> GodotVariant -> IO ()
@@ -533,7 +612,10 @@ set_setting cls arg1 arg2
          godot_method_bind_call bindProjectSettings_set_setting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProjectSettings "set_setting"
            '[GodotString, GodotVariant]

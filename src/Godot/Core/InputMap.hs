@@ -5,6 +5,7 @@ module Godot.Core.InputMap
        (Godot.Core.InputMap.action_add_event,
         Godot.Core.InputMap.action_erase_event,
         Godot.Core.InputMap.action_erase_events,
+        Godot.Core.InputMap.action_get_deadzone,
         Godot.Core.InputMap.action_has_event,
         Godot.Core.InputMap.action_set_deadzone,
         Godot.Core.InputMap.add_action, Godot.Core.InputMap.erase_action,
@@ -47,7 +48,10 @@ action_add_event cls arg1 arg2
          godot_method_bind_call bindInputMap_action_add_event (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "action_add_event"
            '[GodotString, InputEvent]
@@ -77,7 +81,10 @@ action_erase_event cls arg1 arg2
          godot_method_bind_call bindInputMap_action_erase_event (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "action_erase_event"
            '[GodotString, InputEvent]
@@ -107,12 +114,47 @@ action_erase_events cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "action_erase_events" '[GodotString]
            (IO ())
          where
         nodeMethod = Godot.Core.InputMap.action_erase_events
+
+{-# NOINLINE bindInputMap_action_get_deadzone #-}
+
+-- | Returns a deadzone value for the action.
+bindInputMap_action_get_deadzone :: MethodBind
+bindInputMap_action_get_deadzone
+  = unsafePerformIO $
+      withCString "InputMap" $
+        \ clsNamePtr ->
+          withCString "action_get_deadzone" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns a deadzone value for the action.
+action_get_deadzone ::
+                      (InputMap :< cls, Object :< cls) => cls -> GodotString -> IO Float
+action_get_deadzone cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputMap_action_get_deadzone
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputMap "action_get_deadzone" '[GodotString]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.InputMap.action_get_deadzone
 
 {-# NOINLINE bindInputMap_action_has_event #-}
 
@@ -136,7 +178,10 @@ action_has_event cls arg1 arg2
          godot_method_bind_call bindInputMap_action_has_event (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "action_has_event"
            '[GodotString, InputEvent]
@@ -167,7 +212,10 @@ action_set_deadzone cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "action_set_deadzone"
            '[GodotString, Float]
@@ -199,7 +247,10 @@ add_action cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputMap_add_action (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "add_action"
            '[GodotString, Maybe Float]
@@ -228,7 +279,10 @@ erase_action cls arg1
          godot_method_bind_call bindInputMap_erase_action (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "erase_action" '[GodotString] (IO ())
          where
@@ -237,6 +291,7 @@ instance NodeMethod InputMap "erase_action" '[GodotString] (IO ())
 {-# NOINLINE bindInputMap_event_is_action #-}
 
 -- | Returns @true@ if the given event is part of an existing action. This method ignores keyboard modifiers if the given @InputEvent@ is not pressed (for proper release detection). See @method action_has_event@ if you don't want this behavior.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 bindInputMap_event_is_action :: MethodBind
 bindInputMap_event_is_action
   = unsafePerformIO $
@@ -247,19 +302,25 @@ bindInputMap_event_is_action
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ if the given event is part of an existing action. This method ignores keyboard modifiers if the given @InputEvent@ is not pressed (for proper release detection). See @method action_has_event@ if you don't want this behavior.
+--   				If @exact_match@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 event_is_action ::
                   (InputMap :< cls, Object :< cls) =>
-                  cls -> InputEvent -> GodotString -> IO Bool
-event_is_action cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
+                  cls -> InputEvent -> GodotString -> Maybe Bool -> IO Bool
+event_is_action cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, toVariant arg2,
+       maybe (VariantBool False) toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputMap_event_is_action (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "event_is_action"
-           '[InputEvent, GodotString]
+           '[InputEvent, GodotString, Maybe Bool]
            (IO Bool)
          where
         nodeMethod = Godot.Core.InputMap.event_is_action
@@ -285,7 +346,10 @@ get_action_list cls arg1
          godot_method_bind_call bindInputMap_get_action_list (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "get_action_list" '[GodotString]
            (IO Array)
@@ -311,7 +375,10 @@ get_actions cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputMap_get_actions (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "get_actions" '[] (IO Array) where
         nodeMethod = Godot.Core.InputMap.get_actions
@@ -336,7 +403,10 @@ has_action cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInputMap_has_action (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "has_action" '[GodotString] (IO Bool)
          where
@@ -363,7 +433,10 @@ load_from_globals cls
          godot_method_bind_call bindInputMap_load_from_globals (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputMap "load_from_globals" '[] (IO ()) where
         nodeMethod = Godot.Core.InputMap.load_from_globals

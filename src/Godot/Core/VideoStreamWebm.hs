@@ -40,7 +40,10 @@ get_file cls
          godot_method_bind_call bindVideoStreamWebm_get_file (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoStreamWebm "get_file" '[] (IO GodotString)
          where
@@ -66,7 +69,10 @@ set_file cls arg1
          godot_method_bind_call bindVideoStreamWebm_set_file (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VideoStreamWebm "set_file" '[GodotString]
            (IO ())

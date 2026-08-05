@@ -12,6 +12,8 @@ module Godot.Core.RayCast
         Godot.Core.RayCast.get_collision_mask_bit,
         Godot.Core.RayCast.get_collision_normal,
         Godot.Core.RayCast.get_collision_point,
+        Godot.Core.RayCast.get_debug_shape_custom_color,
+        Godot.Core.RayCast.get_debug_shape_thickness,
         Godot.Core.RayCast.get_exclude_parent_body,
         Godot.Core.RayCast.is_collide_with_areas_enabled,
         Godot.Core.RayCast.is_collide_with_bodies_enabled,
@@ -23,6 +25,8 @@ module Godot.Core.RayCast
         Godot.Core.RayCast.set_collide_with_bodies,
         Godot.Core.RayCast.set_collision_mask,
         Godot.Core.RayCast.set_collision_mask_bit,
+        Godot.Core.RayCast.set_debug_shape_custom_color,
+        Godot.Core.RayCast.set_debug_shape_thickness,
         Godot.Core.RayCast.set_enabled,
         Godot.Core.RayCast.set_exclude_parent_body)
        where
@@ -59,6 +63,19 @@ instance NodeProperty RayCast "collision_mask" Int 'False where
           = (get_collision_mask, wrapDroppingSetter set_collision_mask,
              Nothing)
 
+instance NodeProperty RayCast "debug_shape_custom_color" Color
+           'False
+         where
+        nodeProperty
+          = (get_debug_shape_custom_color,
+             wrapDroppingSetter set_debug_shape_custom_color, Nothing)
+
+instance NodeProperty RayCast "debug_shape_thickness" Int 'False
+         where
+        nodeProperty
+          = (get_debug_shape_thickness,
+             wrapDroppingSetter set_debug_shape_thickness, Nothing)
+
 instance NodeProperty RayCast "enabled" Bool 'False where
         nodeProperty
           = (is_enabled, wrapDroppingSetter set_enabled, Nothing)
@@ -89,7 +106,10 @@ add_exception cls arg1
          godot_method_bind_call bindRayCast_add_exception (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "add_exception" '[Object] (IO ()) where
         nodeMethod = Godot.Core.RayCast.add_exception
@@ -115,7 +135,10 @@ add_exception_rid cls arg1
          godot_method_bind_call bindRayCast_add_exception_rid (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "add_exception_rid" '[Rid] (IO ())
          where
@@ -141,7 +164,10 @@ clear_exceptions cls
          godot_method_bind_call bindRayCast_clear_exceptions (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "clear_exceptions" '[] (IO ()) where
         nodeMethod = Godot.Core.RayCast.clear_exceptions
@@ -172,7 +198,10 @@ force_raycast_update cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "force_raycast_update" '[] (IO ())
          where
@@ -197,7 +226,10 @@ get_cast_to cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRayCast_get_cast_to (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "get_cast_to" '[] (IO Vector3) where
         nodeMethod = Godot.Core.RayCast.get_cast_to
@@ -221,7 +253,7 @@ get_collider cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRayCast_get_collider (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod RayCast "get_collider" '[] (IO Object) where
         nodeMethod = Godot.Core.RayCast.get_collider
@@ -247,14 +279,17 @@ get_collider_shape cls
          godot_method_bind_call bindRayCast_get_collider_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "get_collider_shape" '[] (IO Int) where
         nodeMethod = Godot.Core.RayCast.get_collider_shape
 
 {-# NOINLINE bindRayCast_get_collision_mask #-}
 
--- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindRayCast_get_collision_mask :: MethodBind
 bindRayCast_get_collision_mask
   = unsafePerformIO $
@@ -264,7 +299,7 @@ bindRayCast_get_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_mask ::
                      (RayCast :< cls, Object :< cls) => cls -> IO Int
 get_collision_mask cls
@@ -273,7 +308,10 @@ get_collision_mask cls
          godot_method_bind_call bindRayCast_get_collision_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "get_collision_mask" '[] (IO Int) where
         nodeMethod = Godot.Core.RayCast.get_collision_mask
@@ -302,7 +340,10 @@ get_collision_mask_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "get_collision_mask_bit" '[Int]
            (IO Bool)
@@ -331,7 +372,10 @@ get_collision_normal cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "get_collision_normal" '[] (IO Vector3)
          where
@@ -360,11 +404,80 @@ get_collision_point cls
          godot_method_bind_call bindRayCast_get_collision_point (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "get_collision_point" '[] (IO Vector3)
          where
         nodeMethod = Godot.Core.RayCast.get_collision_point
+
+{-# NOINLINE bindRayCast_get_debug_shape_custom_color #-}
+
+-- | The custom color to use to draw the shape in the editor and at run-time if __Visible Collision Shapes__ is enabled in the __Debug__ menu. This color will be highlighted at run-time if the @RayCast@ is colliding with something.
+--   			If set to @Color(0.0, 0.0, 0.0)@ (by default), the color set in @ProjectSettings.debug/shapes/collision/shape_color@ is used.
+bindRayCast_get_debug_shape_custom_color :: MethodBind
+bindRayCast_get_debug_shape_custom_color
+  = unsafePerformIO $
+      withCString "RayCast" $
+        \ clsNamePtr ->
+          withCString "get_debug_shape_custom_color" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The custom color to use to draw the shape in the editor and at run-time if __Visible Collision Shapes__ is enabled in the __Debug__ menu. This color will be highlighted at run-time if the @RayCast@ is colliding with something.
+--   			If set to @Color(0.0, 0.0, 0.0)@ (by default), the color set in @ProjectSettings.debug/shapes/collision/shape_color@ is used.
+get_debug_shape_custom_color ::
+                               (RayCast :< cls, Object :< cls) => cls -> IO Color
+get_debug_shape_custom_color cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRayCast_get_debug_shape_custom_color
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RayCast "get_debug_shape_custom_color" '[]
+           (IO Color)
+         where
+        nodeMethod = Godot.Core.RayCast.get_debug_shape_custom_color
+
+{-# NOINLINE bindRayCast_get_debug_shape_thickness #-}
+
+-- | If set to @1@, a line is used as the debug shape. Otherwise, a truncated pyramid is drawn to represent the @RayCast@. Requires __Visible Collision Shapes__ to be enabled in the __Debug__ menu for the debug shape to be visible at run-time.
+bindRayCast_get_debug_shape_thickness :: MethodBind
+bindRayCast_get_debug_shape_thickness
+  = unsafePerformIO $
+      withCString "RayCast" $
+        \ clsNamePtr ->
+          withCString "get_debug_shape_thickness" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If set to @1@, a line is used as the debug shape. Otherwise, a truncated pyramid is drawn to represent the @RayCast@. Requires __Visible Collision Shapes__ to be enabled in the __Debug__ menu for the debug shape to be visible at run-time.
+get_debug_shape_thickness ::
+                            (RayCast :< cls, Object :< cls) => cls -> IO Int
+get_debug_shape_thickness cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRayCast_get_debug_shape_thickness
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RayCast "get_debug_shape_thickness" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.RayCast.get_debug_shape_thickness
 
 {-# NOINLINE bindRayCast_get_exclude_parent_body #-}
 
@@ -388,7 +501,10 @@ get_exclude_parent_body cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "get_exclude_parent_body" '[] (IO Bool)
          where
@@ -416,7 +532,10 @@ is_collide_with_areas_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "is_collide_with_areas_enabled" '[]
            (IO Bool)
@@ -445,7 +564,10 @@ is_collide_with_bodies_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "is_collide_with_bodies_enabled" '[]
            (IO Bool)
@@ -471,7 +593,10 @@ is_colliding cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRayCast_is_colliding (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "is_colliding" '[] (IO Bool) where
         nodeMethod = Godot.Core.RayCast.is_colliding
@@ -495,7 +620,10 @@ is_enabled cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRayCast_is_enabled (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "is_enabled" '[] (IO Bool) where
         nodeMethod = Godot.Core.RayCast.is_enabled
@@ -521,7 +649,10 @@ remove_exception cls arg1
          godot_method_bind_call bindRayCast_remove_exception (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "remove_exception" '[Object] (IO ())
          where
@@ -549,7 +680,10 @@ remove_exception_rid cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "remove_exception_rid" '[Rid] (IO ())
          where
@@ -575,7 +709,10 @@ set_cast_to cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRayCast_set_cast_to (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "set_cast_to" '[Vector3] (IO ()) where
         nodeMethod = Godot.Core.RayCast.set_cast_to
@@ -602,7 +739,10 @@ set_collide_with_areas cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "set_collide_with_areas" '[Bool]
            (IO ())
@@ -631,7 +771,10 @@ set_collide_with_bodies cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "set_collide_with_bodies" '[Bool]
            (IO ())
@@ -640,7 +783,7 @@ instance NodeMethod RayCast "set_collide_with_bodies" '[Bool]
 
 {-# NOINLINE bindRayCast_set_collision_mask #-}
 
--- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindRayCast_set_collision_mask :: MethodBind
 bindRayCast_set_collision_mask
   = unsafePerformIO $
@@ -650,7 +793,7 @@ bindRayCast_set_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_mask ::
                      (RayCast :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_mask cls arg1
@@ -659,7 +802,10 @@ set_collision_mask cls arg1
          godot_method_bind_call bindRayCast_set_collision_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "set_collision_mask" '[Int] (IO ())
          where
@@ -689,12 +835,81 @@ set_collision_mask_bit cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "set_collision_mask_bit" '[Int, Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.RayCast.set_collision_mask_bit
+
+{-# NOINLINE bindRayCast_set_debug_shape_custom_color #-}
+
+-- | The custom color to use to draw the shape in the editor and at run-time if __Visible Collision Shapes__ is enabled in the __Debug__ menu. This color will be highlighted at run-time if the @RayCast@ is colliding with something.
+--   			If set to @Color(0.0, 0.0, 0.0)@ (by default), the color set in @ProjectSettings.debug/shapes/collision/shape_color@ is used.
+bindRayCast_set_debug_shape_custom_color :: MethodBind
+bindRayCast_set_debug_shape_custom_color
+  = unsafePerformIO $
+      withCString "RayCast" $
+        \ clsNamePtr ->
+          withCString "set_debug_shape_custom_color" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The custom color to use to draw the shape in the editor and at run-time if __Visible Collision Shapes__ is enabled in the __Debug__ menu. This color will be highlighted at run-time if the @RayCast@ is colliding with something.
+--   			If set to @Color(0.0, 0.0, 0.0)@ (by default), the color set in @ProjectSettings.debug/shapes/collision/shape_color@ is used.
+set_debug_shape_custom_color ::
+                               (RayCast :< cls, Object :< cls) => cls -> Color -> IO ()
+set_debug_shape_custom_color cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRayCast_set_debug_shape_custom_color
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RayCast "set_debug_shape_custom_color" '[Color]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.RayCast.set_debug_shape_custom_color
+
+{-# NOINLINE bindRayCast_set_debug_shape_thickness #-}
+
+-- | If set to @1@, a line is used as the debug shape. Otherwise, a truncated pyramid is drawn to represent the @RayCast@. Requires __Visible Collision Shapes__ to be enabled in the __Debug__ menu for the debug shape to be visible at run-time.
+bindRayCast_set_debug_shape_thickness :: MethodBind
+bindRayCast_set_debug_shape_thickness
+  = unsafePerformIO $
+      withCString "RayCast" $
+        \ clsNamePtr ->
+          withCString "set_debug_shape_thickness" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If set to @1@, a line is used as the debug shape. Otherwise, a truncated pyramid is drawn to represent the @RayCast@. Requires __Visible Collision Shapes__ to be enabled in the __Debug__ menu for the debug shape to be visible at run-time.
+set_debug_shape_thickness ::
+                            (RayCast :< cls, Object :< cls) => cls -> Int -> IO ()
+set_debug_shape_thickness cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRayCast_set_debug_shape_thickness
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RayCast "set_debug_shape_thickness" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.RayCast.set_debug_shape_thickness
 
 {-# NOINLINE bindRayCast_set_enabled #-}
 
@@ -716,7 +931,10 @@ set_enabled cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRayCast_set_enabled (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "set_enabled" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.RayCast.set_enabled
@@ -743,7 +961,10 @@ set_exclude_parent_body cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast "set_exclude_parent_body" '[Bool]
            (IO ())

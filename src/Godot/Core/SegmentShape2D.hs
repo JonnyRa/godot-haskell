@@ -43,7 +43,10 @@ get_a cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSegmentShape2D_get_a (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SegmentShape2D "get_a" '[] (IO Vector2) where
         nodeMethod = Godot.Core.SegmentShape2D.get_a
@@ -68,7 +71,10 @@ get_b cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSegmentShape2D_get_b (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SegmentShape2D "get_b" '[] (IO Vector2) where
         nodeMethod = Godot.Core.SegmentShape2D.get_b
@@ -93,7 +99,10 @@ set_a cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSegmentShape2D_set_a (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SegmentShape2D "set_a" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.SegmentShape2D.set_a
@@ -118,7 +127,10 @@ set_b cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSegmentShape2D_set_b (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SegmentShape2D "set_b" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.SegmentShape2D.set_b

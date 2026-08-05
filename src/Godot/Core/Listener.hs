@@ -38,7 +38,10 @@ clear_current cls
          godot_method_bind_call bindListener_clear_current (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Listener "clear_current" '[] (IO ()) where
         nodeMethod = Godot.Core.Listener.clear_current
@@ -65,7 +68,10 @@ get_listener_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Listener "get_listener_transform" '[]
            (IO Transform)
@@ -93,7 +99,10 @@ is_current cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindListener_is_current (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Listener "is_current" '[] (IO Bool) where
         nodeMethod = Godot.Core.Listener.is_current
@@ -118,7 +127,10 @@ make_current cls
          godot_method_bind_call bindListener_make_current (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Listener "make_current" '[] (IO ()) where
         nodeMethod = Godot.Core.Listener.make_current

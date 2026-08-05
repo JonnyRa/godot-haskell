@@ -56,7 +56,10 @@ get_param cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOmniLight_get_param (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OmniLight "get_param" '[Int] (IO Float) where
         nodeMethod = Godot.Core.OmniLight.get_param
@@ -81,7 +84,10 @@ set_param cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOmniLight_set_param (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OmniLight "set_param" '[Int, Float] (IO ())
          where
@@ -90,12 +96,12 @@ instance NodeMethod OmniLight "set_param" '[Int, Float] (IO ())
 instance NodeProperty OmniLight "omni_attenuation" Float 'False
          where
         nodeProperty
-          = (wrapIndexedGetter 4 get_param, wrapIndexedSetter 4 set_param,
+          = (wrapIndexedGetter 5 get_param, wrapIndexedSetter 5 set_param,
              Nothing)
 
 instance NodeProperty OmniLight "omni_range" Float 'False where
         nodeProperty
-          = (wrapIndexedGetter 3 get_param, wrapIndexedSetter 3 set_param,
+          = (wrapIndexedGetter 4 get_param, wrapIndexedSetter 4 set_param,
              Nothing)
 
 instance NodeProperty OmniLight "omni_shadow_detail" Int 'False
@@ -129,7 +135,10 @@ get_shadow_detail cls
          godot_method_bind_call bindOmniLight_get_shadow_detail (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OmniLight "get_shadow_detail" '[] (IO Int)
          where
@@ -156,7 +165,10 @@ get_shadow_mode cls
          godot_method_bind_call bindOmniLight_get_shadow_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OmniLight "get_shadow_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.OmniLight.get_shadow_mode
@@ -182,7 +194,10 @@ set_shadow_detail cls arg1
          godot_method_bind_call bindOmniLight_set_shadow_detail (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OmniLight "set_shadow_detail" '[Int] (IO ())
          where
@@ -209,7 +224,10 @@ set_shadow_mode cls arg1
          godot_method_bind_call bindOmniLight_set_shadow_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OmniLight "set_shadow_mode" '[Int] (IO ())
          where

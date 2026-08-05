@@ -20,7 +20,7 @@ import Data.Colour.SRGB(sRGB)
 import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
-import Godot.Core.Spatial()
+import Godot.Core.CullInstance()
 
 -- | Emitted when the VisibilityNotifier enters a @Camera@'s view.
 sig_camera_entered ::
@@ -76,7 +76,10 @@ get_aabb cls
          godot_method_bind_call bindVisibilityNotifier_get_aabb (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisibilityNotifier "get_aabb" '[] (IO Aabb)
          where
@@ -106,7 +109,10 @@ is_on_screen cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisibilityNotifier "is_on_screen" '[] (IO Bool)
          where
@@ -133,7 +139,10 @@ set_aabb cls arg1
          godot_method_bind_call bindVisibilityNotifier_set_aabb (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisibilityNotifier "set_aabb" '[Aabb] (IO ())
          where

@@ -2,7 +2,7 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.ConfigFile
-       (Godot.Core.ConfigFile.erase_section,
+       (Godot.Core.ConfigFile.clear, Godot.Core.ConfigFile.erase_section,
         Godot.Core.ConfigFile.erase_section_key,
         Godot.Core.ConfigFile.get_section_keys,
         Godot.Core.ConfigFile.get_sections,
@@ -10,7 +10,8 @@ module Godot.Core.ConfigFile
         Godot.Core.ConfigFile.has_section_key, Godot.Core.ConfigFile.load,
         Godot.Core.ConfigFile.load_encrypted,
         Godot.Core.ConfigFile.load_encrypted_pass,
-        Godot.Core.ConfigFile.save, Godot.Core.ConfigFile.save_encrypted,
+        Godot.Core.ConfigFile.parse, Godot.Core.ConfigFile.save,
+        Godot.Core.ConfigFile.save_encrypted,
         Godot.Core.ConfigFile.save_encrypted_pass,
         Godot.Core.ConfigFile.set_value)
        where
@@ -25,6 +26,32 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Reference()
+
+{-# NOINLINE bindConfigFile_clear #-}
+
+-- | Removes the entire contents of the config.
+bindConfigFile_clear :: MethodBind
+bindConfigFile_clear
+  = unsafePerformIO $
+      withCString "ConfigFile" $
+        \ clsNamePtr ->
+          withCString "clear" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes the entire contents of the config.
+clear :: (ConfigFile :< cls, Object :< cls) => cls -> IO ()
+clear cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindConfigFile_clear (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ConfigFile "clear" '[] (IO ()) where
+        nodeMethod = Godot.Core.ConfigFile.clear
 
 {-# NOINLINE bindConfigFile_erase_section #-}
 
@@ -47,7 +74,10 @@ erase_section cls arg1
          godot_method_bind_call bindConfigFile_erase_section (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "erase_section" '[GodotString]
            (IO ())
@@ -77,7 +107,10 @@ erase_section_key cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "erase_section_key"
            '[GodotString, GodotString]
@@ -107,7 +140,10 @@ get_section_keys cls arg1
          godot_method_bind_call bindConfigFile_get_section_keys (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "get_section_keys" '[GodotString]
            (IO PoolStringArray)
@@ -135,7 +171,10 @@ get_sections cls
          godot_method_bind_call bindConfigFile_get_sections (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "get_sections" '[]
            (IO PoolStringArray)
@@ -165,7 +204,7 @@ get_value cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindConfigFile_get_value (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod ConfigFile "get_value"
            '[GodotString, GodotString, Maybe GodotVariant]
@@ -194,7 +233,10 @@ has_section cls arg1
          godot_method_bind_call bindConfigFile_has_section (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "has_section" '[GodotString]
            (IO Bool)
@@ -223,7 +265,10 @@ has_section_key cls arg1 arg2
          godot_method_bind_call bindConfigFile_has_section_key (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "has_section_key"
            '[GodotString, GodotString]
@@ -252,7 +297,10 @@ load cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindConfigFile_load (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "load" '[GodotString] (IO Int) where
         nodeMethod = Godot.Core.ConfigFile.load
@@ -281,7 +329,10 @@ load_encrypted cls arg1 arg2
          godot_method_bind_call bindConfigFile_load_encrypted (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "load_encrypted"
            '[GodotString, PoolByteArray]
@@ -314,13 +365,46 @@ load_encrypted_pass cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "load_encrypted_pass"
            '[GodotString, GodotString]
            (IO Int)
          where
         nodeMethod = Godot.Core.ConfigFile.load_encrypted_pass
+
+{-# NOINLINE bindConfigFile_parse #-}
+
+-- | Parses the passed string as the contents of a config file. The string is parsed and loaded in the ConfigFile object which the method was called on.
+--   				Returns one of the @enum Error@ code constants (@OK@ on success).
+bindConfigFile_parse :: MethodBind
+bindConfigFile_parse
+  = unsafePerformIO $
+      withCString "ConfigFile" $
+        \ clsNamePtr ->
+          withCString "parse" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Parses the passed string as the contents of a config file. The string is parsed and loaded in the ConfigFile object which the method was called on.
+--   				Returns one of the @enum Error@ code constants (@OK@ on success).
+parse ::
+        (ConfigFile :< cls, Object :< cls) => cls -> GodotString -> IO Int
+parse cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindConfigFile_parse (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ConfigFile "parse" '[GodotString] (IO Int)
+         where
+        nodeMethod = Godot.Core.ConfigFile.parse
 
 {-# NOINLINE bindConfigFile_save #-}
 
@@ -343,7 +427,10 @@ save cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindConfigFile_save (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "save" '[GodotString] (IO Int) where
         nodeMethod = Godot.Core.ConfigFile.save
@@ -372,7 +459,10 @@ save_encrypted cls arg1 arg2
          godot_method_bind_call bindConfigFile_save_encrypted (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "save_encrypted"
            '[GodotString, PoolByteArray]
@@ -405,7 +495,10 @@ save_encrypted_pass cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "save_encrypted_pass"
            '[GodotString, GodotString]
@@ -434,7 +527,10 @@ set_value cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindConfigFile_set_value (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ConfigFile "set_value"
            '[GodotString, GodotString, GodotVariant]

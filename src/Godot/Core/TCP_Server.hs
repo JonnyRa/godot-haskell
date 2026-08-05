@@ -40,7 +40,10 @@ is_connection_available cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TCP_Server "is_connection_available" '[]
            (IO Bool)
@@ -68,7 +71,10 @@ is_listening cls
          godot_method_bind_call bindTCP_Server_is_listening (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TCP_Server "is_listening" '[] (IO Bool) where
         nodeMethod = Godot.Core.TCP_Server.is_listening
@@ -101,7 +107,10 @@ listen cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTCP_Server_listen (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TCP_Server "listen" '[Int, Maybe GodotString]
            (IO Int)
@@ -126,7 +135,10 @@ stop cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTCP_Server_stop (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TCP_Server "stop" '[] (IO ()) where
         nodeMethod = Godot.Core.TCP_Server.stop
@@ -152,7 +164,7 @@ take_connection cls
          godot_method_bind_call bindTCP_Server_take_connection (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TCP_Server "take_connection" '[]
            (IO StreamPeerTCP)

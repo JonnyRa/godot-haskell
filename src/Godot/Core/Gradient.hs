@@ -49,7 +49,10 @@ add_point cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGradient_add_point (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "add_point" '[Float, Color] (IO ())
          where
@@ -75,7 +78,10 @@ get_color cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGradient_get_color (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "get_color" '[Int] (IO Color) where
         nodeMethod = Godot.Core.Gradient.get_color
@@ -100,7 +106,10 @@ get_colors cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGradient_get_colors (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "get_colors" '[] (IO PoolColorArray)
          where
@@ -126,7 +135,10 @@ get_offset cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGradient_get_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "get_offset" '[Int] (IO Float) where
         nodeMethod = Godot.Core.Gradient.get_offset
@@ -151,7 +163,10 @@ get_offsets cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGradient_get_offsets (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "get_offsets" '[] (IO PoolRealArray)
          where
@@ -178,7 +193,10 @@ get_point_count cls
          godot_method_bind_call bindGradient_get_point_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "get_point_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Gradient.get_point_count
@@ -203,7 +221,10 @@ interpolate cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGradient_interpolate (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "interpolate" '[Float] (IO Color)
          where
@@ -211,7 +232,7 @@ instance NodeMethod Gradient "interpolate" '[Float] (IO Color)
 
 {-# NOINLINE bindGradient_remove_point #-}
 
--- | Removes the color at the index @offset@.
+-- | Removes the color at the index @point@.
 bindGradient_remove_point :: MethodBind
 bindGradient_remove_point
   = unsafePerformIO $
@@ -221,7 +242,7 @@ bindGradient_remove_point
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Removes the color at the index @offset@.
+-- | Removes the color at the index @point@.
 remove_point ::
                (Gradient :< cls, Object :< cls) => cls -> Int -> IO ()
 remove_point cls arg1
@@ -230,7 +251,10 @@ remove_point cls arg1
          godot_method_bind_call bindGradient_remove_point (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "remove_point" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Gradient.remove_point
@@ -255,7 +279,10 @@ set_color cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGradient_set_color (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "set_color" '[Int, Color] (IO ())
          where
@@ -281,7 +308,10 @@ set_colors cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGradient_set_colors (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "set_colors" '[PoolColorArray] (IO ())
          where
@@ -307,7 +337,10 @@ set_offset cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGradient_set_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "set_offset" '[Int, Float] (IO ())
          where
@@ -333,7 +366,10 @@ set_offsets cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGradient_set_offsets (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Gradient "set_offsets" '[PoolRealArray] (IO ())
          where

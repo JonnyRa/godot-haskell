@@ -39,7 +39,7 @@ get_base cls
          godot_method_bind_call bindProxyTexture_get_base (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ProxyTexture "get_base" '[] (IO Texture) where
         nodeMethod = Godot.Core.ProxyTexture.get_base
@@ -63,7 +63,10 @@ set_base cls arg1
          godot_method_bind_call bindProxyTexture_set_base (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ProxyTexture "set_base" '[Texture] (IO ())
          where

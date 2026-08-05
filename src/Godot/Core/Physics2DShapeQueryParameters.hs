@@ -92,7 +92,7 @@ instance NodeProperty Physics2DShapeQueryParameters "transform"
 {-# NOINLINE bindPhysics2DShapeQueryParameters_get_collision_layer
              #-}
 
--- | The physics layer(s) the query will take into account (as a bitmask). See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layer(s) the query will take into account (as a bitmask). See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindPhysics2DShapeQueryParameters_get_collision_layer :: MethodBind
 bindPhysics2DShapeQueryParameters_get_collision_layer
   = unsafePerformIO $
@@ -102,7 +102,7 @@ bindPhysics2DShapeQueryParameters_get_collision_layer
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The physics layer(s) the query will take into account (as a bitmask). See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layer(s) the query will take into account (as a bitmask). See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_layer ::
                       (Physics2DShapeQueryParameters :< cls, Object :< cls) =>
                       cls -> IO Int
@@ -114,7 +114,10 @@ get_collision_layer cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters
            "get_collision_layer"
@@ -148,7 +151,10 @@ get_exclude cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "get_exclude" '[]
            (IO Array)
@@ -178,7 +184,10 @@ get_margin cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "get_margin" '[]
            (IO Float)
@@ -208,7 +217,10 @@ get_motion cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "get_motion" '[]
            (IO Vector2)
@@ -239,7 +251,10 @@ get_shape_rid cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "get_shape_rid"
            '[]
@@ -271,7 +286,10 @@ get_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "get_transform"
            '[]
@@ -305,7 +323,10 @@ is_collide_with_areas_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters
            "is_collide_with_areas_enabled"
@@ -341,7 +362,10 @@ is_collide_with_bodies_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters
            "is_collide_with_bodies_enabled"
@@ -377,7 +401,10 @@ set_collide_with_areas cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters
            "set_collide_with_areas"
@@ -413,7 +440,10 @@ set_collide_with_bodies cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters
            "set_collide_with_bodies"
@@ -426,7 +456,7 @@ instance NodeMethod Physics2DShapeQueryParameters
 {-# NOINLINE bindPhysics2DShapeQueryParameters_set_collision_layer
              #-}
 
--- | The physics layer(s) the query will take into account (as a bitmask). See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layer(s) the query will take into account (as a bitmask). See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindPhysics2DShapeQueryParameters_set_collision_layer :: MethodBind
 bindPhysics2DShapeQueryParameters_set_collision_layer
   = unsafePerformIO $
@@ -436,7 +466,7 @@ bindPhysics2DShapeQueryParameters_set_collision_layer
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The physics layer(s) the query will take into account (as a bitmask). See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layer(s) the query will take into account (as a bitmask). See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_layer ::
                       (Physics2DShapeQueryParameters :< cls, Object :< cls) =>
                       cls -> Int -> IO ()
@@ -448,7 +478,10 @@ set_collision_layer cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters
            "set_collision_layer"
@@ -482,7 +515,10 @@ set_exclude cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "set_exclude"
            '[Array]
@@ -513,7 +549,10 @@ set_margin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "set_margin"
            '[Float]
@@ -544,7 +583,10 @@ set_motion cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "set_motion"
            '[Vector2]
@@ -575,7 +617,10 @@ set_shape cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "set_shape"
            '[Resource]
@@ -607,7 +652,10 @@ set_shape_rid cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "set_shape_rid"
            '[Rid]
@@ -639,7 +687,10 @@ set_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DShapeQueryParameters "set_transform"
            '[Transform2d]

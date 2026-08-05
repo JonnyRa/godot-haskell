@@ -225,7 +225,7 @@ mkSignals cls mdoc = return $ concatMap mkSignal (V.toList $ cls ^. signals)
       preComment (T.unpack $ D.convertDoc d)
     argToHsType (GodotArgument _ ty _) = toHsType ty
     mkSignal sig 
-      = let sigStr = T.unpack (sig ^. name)
+      = let sigStr = escapeName . T.unpack $ sig ^. name
             sigName = HS.Ident () ("sig_" ++ sigStr)
         in [ HS.TypeSig (signalDoc (sig ^. name) mdoc) [noComments $ sigName] (noComments $ HS.TyApp () sigTy (clsTy cls))
            , noComments $ HS.PatBind () (HS.PVar () sigName) (
@@ -309,16 +309,41 @@ mkMethod cls method doc = do
          \clsNamePtr -> withCString $(HS.strE rawMethodName) $
          \methodNamePtr -> godot_method_bind_get_method clsNamePtr methodNamePtr |]
     classModuleName = "Godot." ++ (pascal $ T.unpack (cls ^. apiType)) ++ "." ++ (T.unpack $ mangleClass $ cls ^. name)
+
+    -- this one is a bit redudant now, but code is a tad cleaner
+    returnsVariant = method ^. returnType == CoreType "Variant"
+    needsCleanup = case method ^. returnType of
+      CoreType "Object" -> False
+      CoreType "Variant" -> False
+      CustomType _ -> False
+      _ -> True
+
+    -- this is actually killing me.
     runMethodRhs = HS.UnGuardedRhs () $ HS.App () (
       HS.App ()
         (HS.Var () (HS.UnQual () (HS.Ident () "withVariantArray")))
-        (let a = HS.List () $ zipWith (\a an -> wrapDefault a an) (V.toList $ method ^. arguments) argNames
-        in if method ^. hasVarargs then
+        (
+        if method ^. hasVarargs then
             [hs|$a ++ varargs|] else
-            a))
-      [hs|
+            a)
+        ) runMethodBody
+      where
+      a :: HS.Exp ()
+      a = HS.List () $ zipWith (\a an -> wrapDefault a an) (V.toList $ method ^. arguments) argNames
+
+    runMethodBody :: HS.Exp ()
+    runMethodBody
+      | returnsVariant = [hs|
         \(arrPtr, len) -> godot_method_bind_call $(clsMethodBindVar) (upcast cls) arrPtr len >>=
-        \(err, res) -> throwIfErr err >> fromGodotVariant res |]
+        \(err, var) -> throwIfErr err >> return var |]
+      | needsCleanup = [hs|
+        \(arrPtr, len) -> godot_method_bind_call $(clsMethodBindVar) (upcast cls) arrPtr len >>=
+        \(err, var) -> throwIfErr err >> fromGodotVariant var >>=
+        \ret -> godot_variant_destroy var >> return ret |]
+      | otherwise = [hs|
+        \(arrPtr, len) -> godot_method_bind_call $(clsMethodBindVar) (upcast cls) arrPtr len >>=
+        \(err, var) -> throwIfErr err >> fromGodotVariant var |]
+
 
     wrapDefault (GodotArgument _ ty Nothing) v = mkToVariant v
     wrapDefault (GodotArgument _ ty (Just d)) v = mkDefault ty d (HS.Var () $ HS.UnQual () v)
@@ -332,6 +357,7 @@ mkMethod cls method doc = do
       where dt = T.unpack d
     mkDefault (CoreType "Color") "1,1,1,1" v = [hs|defaultedVariant VariantColor (withOpacity (sRGB 1 1 1) 1) $v |]
     mkDefault (CoreType "Rect2") "(0, 0, 0, 0)" v = [hs|defaultedVariant VariantRect2 (V2 (V2 0 0) (V2 0 0)) $v |]
+    mkDefault (CoreType "Rect2") "(0, 0, 1, 1)" v = [hs|defaultedVariant VariantRect2 (V2 (V2 0 0) (V2 1 1)) $v |]
     mkDefault (CoreType "PoolStringArray") "[]" v = [hs|defaultedVariant VariantPoolStringArray V.empty $v |]
     mkDefault (CoreType "Dictionary") "{}" v = [hs|defaultedVariant VariantDictionary V.empty $v |]
     mkDefault (CoreType "PoolVector2Array") "[]" v = [hs|defaultedVariant VariantPoolVector2Array V.empty $v |]
@@ -339,12 +365,16 @@ mkMethod cls method doc = do
     mkDefault (CoreType "PoolIntArray") "[]" v = [hs|defaultedVariant VariantPoolIntArray V.empty $v |]
     mkDefault (CoreType "PoolRealArray") "[]" v = [hs|defaultedVariant VariantPoolRealArray V.empty $v |]
     mkDefault (CoreType "PoolColorArray") "[PoolColorArray]" v = [hs|defaultedVariant VariantPoolColorArray V.empty $v |]
+    mkDefault (CoreType "PoolByteArray") "[PoolByteArray]" v = [hs|defaultedVariant VariantPoolByteArray V.empty $v |]
     mkDefault (CoreType "Array") "[]" v = [hs|defaultedVariant VariantArray V.empty $v |]
     mkDefault (CoreType "Vector2") "(-1, -1)" v = [hs|defaultedVariant VariantVector2 (V2 (-1) (-1)) $v |]
     mkDefault (CoreType "Vector2") "(0, 0)" v = [hs|defaultedVariant VariantVector2 (V2 0 0) $v |]
+    mkDefault (CoreType "Vector2") "(0, -1)" v = [hs|defaultedVariant VariantVector2 (V2 0 (-1)) $v |]
     mkDefault (CoreType "Vector3") "(0, 0, 0)" v = [hs|defaultedVariant VariantVector3 (V3 0 0 0) $v |]
+    mkDefault (CoreType "Vector3") "(0, 1, 0)" v = [hs|defaultedVariant VariantVector3 (V3 0 1 0) $v |]
     mkDefault (CoreType "Transform2D") "((1, 0), (0, 1), (0, 0))" v = [hs|defaultedVariant VariantTransform2d (TF2d (V2 1 0) (V2 0 1) (V2 0 0)) $v |]
     mkDefault (CoreType "Transform") "1, 0, 0, 0, 1, 0, 0, 0, 1 - 0, 0, 0" v = [hs|defaultedVariant VariantTransform (TF (V3 (V3 1 0 0) (V3 0 1 0) (V3 0 0 1)) (V3 0 0 0)) $v |]
+    mkDefault (CoreType "NodePath") "" v = [hs|defaultedVariant VariantNodePath "" $v |]
     -- TODO Is this right?
     mkDefault (CoreType "RID") "[RID]" v = [hs|maybe VariantNil toVariant $v |]
     mkDefault (CoreType "String") d v = [hs|defaultedVariant VariantString __dt__ $v  |]
@@ -353,7 +383,7 @@ mkMethod cls method doc = do
     mkDefault _ "0"             v = [hs|maybe (VariantInt 0) toVariant $v |]
     mkDefault _ "1"             v = [hs|maybe (VariantInt 1) toVariant $v |]
     mkDefault _ "[Object:null]" v = [hs|maybe VariantNil toVariant $v |]
-    mkDefault t d _ = error $ "Don't know how to make defaults for this type (" ++ show t ++ ") for value (" ++ show d ++ ")"
+    mkDefault t d _ = error $ "Don't know how to make defaults for this type (" ++ show t ++ ") for value (" ++ show d ++ ") in class (" ++ show (_gcName cls) ++ ")"
 
     mkToVariant = HS.App () (HS.Var () (HS.UnQual () (HS.Ident () "toVariant"))) . HS.Var () . HS.UnQual ()
 
@@ -429,3 +459,64 @@ toHsType (CustomType "ShaderMaterial,SpatialMaterial")    = nameToTyCon "Materia
 toHsType (CustomType "ShaderMaterial,ParticlesMaterial")  = nameToTyCon "Material"
 toHsType (CustomType ty) = nameToTyCon ty
 toHsType (EnumType _) = [ty| Int |]
+
+escapeName :: String -> String
+escapeName name = if name `S.member` reservedWords then name ++ "'" else name
+
+reservedWords :: S.Set String
+reservedWords = S.fromList
+  [ "_"
+  , "as"
+  , "case"
+  , "class"
+  , "data"
+  , "default"
+  , "deriving"
+  , "do"
+  , "else"
+  , "hiding"
+  , "if"
+  , "import"
+  , "in"
+  , "infix"
+  , "infixl"
+  , "infixr"
+  , "instance"
+  , "let"
+  , "module"
+  , "newtype"
+  , "of"
+  , "qualified"
+  , "then"
+  , "type"
+  , "where"
+  , "forall"
+  , "mdo"
+  , "family"
+  , "role"
+  , "pattern"
+  , "static"
+  , "stock"
+  , "anyclass"
+  , "via"
+  , "group"
+  , "by"
+  , "using"
+  , "foreign"
+  , "export"
+  , "label"
+  , "dynamic"
+  , "safe"
+  , "interruptible"
+  , "unsafe"
+  , "stdcall"
+  , "ccall"
+  , "capi"
+  , "prim"
+  , "javascript"
+  , "unit"
+  , "dependency"
+  , "signature"
+  , "rec"
+  , "proc"
+  ]

@@ -8,6 +8,7 @@ module Godot.Core.Mesh
         Godot.Core.Mesh._ARRAY_COMPRESS_TANGENT,
         Godot.Core.Mesh._ARRAY_COMPRESS_NORMAL,
         Godot.Core.Mesh._ARRAY_FORMAT_COLOR,
+        Godot.Core.Mesh._ARRAY_FLAG_USE_OCTAHEDRAL_COMPRESSION,
         Godot.Core.Mesh._ARRAY_FORMAT_TEX_UV,
         Godot.Core.Mesh._ARRAY_COMPRESS_VERTEX,
         Godot.Core.Mesh._ARRAY_FORMAT_VERTEX,
@@ -81,6 +82,9 @@ _ARRAY_COMPRESS_NORMAL = 1024
 _ARRAY_FORMAT_COLOR :: Int
 _ARRAY_FORMAT_COLOR = 8
 
+_ARRAY_FLAG_USE_OCTAHEDRAL_COMPRESSION :: Int
+_ARRAY_FLAG_USE_OCTAHEDRAL_COMPRESSION = 2097152
+
 _ARRAY_FORMAT_TEX_UV :: Int
 _ARRAY_FORMAT_TEX_UV = 16
 
@@ -139,7 +143,7 @@ _ARRAY_TEX_UV2 :: Int
 _ARRAY_TEX_UV2 = 5
 
 _ARRAY_COMPRESS_DEFAULT :: Int
-_ARRAY_COMPRESS_DEFAULT = 97280
+_ARRAY_COMPRESS_DEFAULT = 2194432
 
 _ARRAY_FORMAT_BONES :: Int
 _ARRAY_FORMAT_BONES = 64
@@ -195,6 +199,8 @@ instance NodeProperty Mesh "lightmap_size_hint" Vector2 'False
 {-# NOINLINE bindMesh_create_convex_shape #-}
 
 -- | Calculate a @ConvexPolygonShape@ from the mesh.
+--   				If @clean@ is @true@ (default), duplicate and interior vertices are removed automatically. You can set it to @false@ to make the process faster if not needed.
+--   				If @simplify@ is @true@, the geometry can be further simplified to reduce the amount of vertices. Disabled by default.
 bindMesh_create_convex_shape :: MethodBind
 bindMesh_create_convex_shape
   = unsafePerformIO $
@@ -205,17 +211,25 @@ bindMesh_create_convex_shape
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Calculate a @ConvexPolygonShape@ from the mesh.
+--   				If @clean@ is @true@ (default), duplicate and interior vertices are removed automatically. You can set it to @false@ to make the process faster if not needed.
+--   				If @simplify@ is @true@, the geometry can be further simplified to reduce the amount of vertices. Disabled by default.
 create_convex_shape ::
-                      (Mesh :< cls, Object :< cls) => cls -> IO Shape
-create_convex_shape cls
-  = withVariantArray []
+                      (Mesh :< cls, Object :< cls) =>
+                      cls -> Maybe Bool -> Maybe Bool -> IO Shape
+create_convex_shape cls arg1 arg2
+  = withVariantArray
+      [maybe (VariantBool True) toVariant arg1,
+       maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMesh_create_convex_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
-instance NodeMethod Mesh "create_convex_shape" '[] (IO Shape) where
+instance NodeMethod Mesh "create_convex_shape"
+           '[Maybe Bool, Maybe Bool]
+           (IO Shape)
+         where
         nodeMethod = Godot.Core.Mesh.create_convex_shape
 
 {-# NOINLINE bindMesh_create_outline #-}
@@ -240,7 +254,7 @@ create_outline cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMesh_create_outline (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Mesh "create_outline" '[Float] (IO Mesh) where
         nodeMethod = Godot.Core.Mesh.create_outline
@@ -266,7 +280,7 @@ create_trimesh_shape cls
          godot_method_bind_call bindMesh_create_trimesh_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Mesh "create_trimesh_shape" '[] (IO Shape)
          where
@@ -293,7 +307,7 @@ generate_triangle_mesh cls
          godot_method_bind_call bindMesh_generate_triangle_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Mesh "generate_triangle_mesh" '[]
            (IO TriangleMesh)
@@ -320,7 +334,10 @@ get_aabb cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMesh_get_aabb (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mesh "get_aabb" '[] (IO Aabb) where
         nodeMethod = Godot.Core.Mesh.get_aabb
@@ -344,7 +361,10 @@ get_faces cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMesh_get_faces (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mesh "get_faces" '[] (IO PoolVector3Array)
          where
@@ -352,7 +372,7 @@ instance NodeMethod Mesh "get_faces" '[] (IO PoolVector3Array)
 
 {-# NOINLINE bindMesh_get_lightmap_size_hint #-}
 
--- | Sets a hint to be used for lightmap resolution in @BakedLightmap@. Overrides @BakedLightmap.bake_default_texels_per_unit@.
+-- | Sets a hint to be used for lightmap resolution in @BakedLightmap@. Overrides @BakedLightmap.default_texels_per_unit@.
 bindMesh_get_lightmap_size_hint :: MethodBind
 bindMesh_get_lightmap_size_hint
   = unsafePerformIO $
@@ -362,7 +382,7 @@ bindMesh_get_lightmap_size_hint
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets a hint to be used for lightmap resolution in @BakedLightmap@. Overrides @BakedLightmap.bake_default_texels_per_unit@.
+-- | Sets a hint to be used for lightmap resolution in @BakedLightmap@. Overrides @BakedLightmap.default_texels_per_unit@.
 get_lightmap_size_hint ::
                          (Mesh :< cls, Object :< cls) => cls -> IO Vector2
 get_lightmap_size_hint cls
@@ -371,7 +391,10 @@ get_lightmap_size_hint cls
          godot_method_bind_call bindMesh_get_lightmap_size_hint (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mesh "get_lightmap_size_hint" '[] (IO Vector2)
          where
@@ -397,14 +420,17 @@ get_surface_count cls
          godot_method_bind_call bindMesh_get_surface_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mesh "get_surface_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Mesh.get_surface_count
 
 {-# NOINLINE bindMesh_set_lightmap_size_hint #-}
 
--- | Sets a hint to be used for lightmap resolution in @BakedLightmap@. Overrides @BakedLightmap.bake_default_texels_per_unit@.
+-- | Sets a hint to be used for lightmap resolution in @BakedLightmap@. Overrides @BakedLightmap.default_texels_per_unit@.
 bindMesh_set_lightmap_size_hint :: MethodBind
 bindMesh_set_lightmap_size_hint
   = unsafePerformIO $
@@ -414,7 +440,7 @@ bindMesh_set_lightmap_size_hint
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets a hint to be used for lightmap resolution in @BakedLightmap@. Overrides @BakedLightmap.bake_default_texels_per_unit@.
+-- | Sets a hint to be used for lightmap resolution in @BakedLightmap@. Overrides @BakedLightmap.default_texels_per_unit@.
 set_lightmap_size_hint ::
                          (Mesh :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_lightmap_size_hint cls arg1
@@ -423,7 +449,10 @@ set_lightmap_size_hint cls arg1
          godot_method_bind_call bindMesh_set_lightmap_size_hint (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mesh "set_lightmap_size_hint" '[Vector2]
            (IO ())
@@ -451,7 +480,10 @@ surface_get_arrays cls arg1
          godot_method_bind_call bindMesh_surface_get_arrays (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mesh "surface_get_arrays" '[Int] (IO Array)
          where
@@ -479,7 +511,10 @@ surface_get_blend_shape_arrays cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mesh "surface_get_blend_shape_arrays" '[Int]
            (IO Array)
@@ -507,7 +542,7 @@ surface_get_material cls arg1
          godot_method_bind_call bindMesh_surface_get_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Mesh "surface_get_material" '[Int]
            (IO Material)
@@ -535,7 +570,10 @@ surface_set_material cls arg1 arg2
          godot_method_bind_call bindMesh_surface_set_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Mesh "surface_set_material" '[Int, Material]
            (IO ())

@@ -42,7 +42,10 @@ get_load_path cls
          godot_method_bind_call bindStreamTexture_get_load_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamTexture "get_load_path" '[]
            (IO GodotString)
@@ -70,7 +73,10 @@ load cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamTexture_load (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamTexture "load" '[GodotString] (IO Int)
          where

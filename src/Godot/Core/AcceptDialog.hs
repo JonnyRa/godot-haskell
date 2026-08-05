@@ -13,6 +13,7 @@ module Godot.Core.AcceptDialog
         Godot.Core.AcceptDialog.get_text,
         Godot.Core.AcceptDialog.has_autowrap,
         Godot.Core.AcceptDialog.register_text_enter,
+        Godot.Core.AcceptDialog.remove_button,
         Godot.Core.AcceptDialog.set_autowrap,
         Godot.Core.AcceptDialog.set_hide_on_ok,
         Godot.Core.AcceptDialog.set_text)
@@ -75,7 +76,10 @@ _builtin_text_entered cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AcceptDialog "_builtin_text_entered"
            '[GodotString]
@@ -102,7 +106,10 @@ _custom_action cls arg1
          godot_method_bind_call bindAcceptDialog__custom_action (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AcceptDialog "_custom_action" '[GodotString]
            (IO ())
@@ -125,7 +132,10 @@ _ok cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAcceptDialog__ok (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AcceptDialog "_ok" '[] (IO ()) where
         nodeMethod = Godot.Core.AcceptDialog._ok
@@ -134,6 +144,7 @@ instance NodeMethod AcceptDialog "_ok" '[] (IO ()) where
 
 -- | Adds a button with label @text@ and a custom @action@ to the dialog and returns the created button. @action@ will be passed to the @signal custom_action@ signal when pressed.
 --   				If @true@, @right@ will place the button to the right of any sibling buttons.
+--   				You can use @method remove_button@ method to remove a button created with this method from the dialog.
 bindAcceptDialog_add_button :: MethodBind
 bindAcceptDialog_add_button
   = unsafePerformIO $
@@ -145,6 +156,7 @@ bindAcceptDialog_add_button
 
 -- | Adds a button with label @text@ and a custom @action@ to the dialog and returns the created button. @action@ will be passed to the @signal custom_action@ signal when pressed.
 --   				If @true@, @right@ will place the button to the right of any sibling buttons.
+--   				You can use @method remove_button@ method to remove a button created with this method from the dialog.
 add_button ::
              (AcceptDialog :< cls, Object :< cls) =>
              cls -> GodotString -> Maybe Bool -> Maybe GodotString -> IO Button
@@ -156,7 +168,7 @@ add_button cls arg1 arg2 arg3
          godot_method_bind_call bindAcceptDialog_add_button (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AcceptDialog "add_button"
            '[GodotString, Maybe Bool, Maybe GodotString]
@@ -167,6 +179,7 @@ instance NodeMethod AcceptDialog "add_button"
 {-# NOINLINE bindAcceptDialog_add_cancel #-}
 
 -- | Adds a button with label @name@ and a cancel action to the dialog and returns the created button.
+--   				You can use @method remove_button@ method to remove a button created with this method from the dialog.
 bindAcceptDialog_add_cancel :: MethodBind
 bindAcceptDialog_add_cancel
   = unsafePerformIO $
@@ -177,6 +190,7 @@ bindAcceptDialog_add_cancel
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Adds a button with label @name@ and a cancel action to the dialog and returns the created button.
+--   				You can use @method remove_button@ method to remove a button created with this method from the dialog.
 add_cancel ::
              (AcceptDialog :< cls, Object :< cls) =>
              cls -> GodotString -> IO Button
@@ -186,7 +200,7 @@ add_cancel cls arg1
          godot_method_bind_call bindAcceptDialog_add_cancel (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AcceptDialog "add_cancel" '[GodotString]
            (IO Button)
@@ -216,7 +230,10 @@ get_hide_on_ok cls
          godot_method_bind_call bindAcceptDialog_get_hide_on_ok (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AcceptDialog "get_hide_on_ok" '[] (IO Bool)
          where
@@ -225,6 +242,7 @@ instance NodeMethod AcceptDialog "get_hide_on_ok" '[] (IO Bool)
 {-# NOINLINE bindAcceptDialog_get_label #-}
 
 -- | Returns the label used for built-in text.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindAcceptDialog_get_label :: MethodBind
 bindAcceptDialog_get_label
   = unsafePerformIO $
@@ -235,6 +253,7 @@ bindAcceptDialog_get_label
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the label used for built-in text.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_label ::
             (AcceptDialog :< cls, Object :< cls) => cls -> IO Label
 get_label cls
@@ -243,7 +262,7 @@ get_label cls
          godot_method_bind_call bindAcceptDialog_get_label (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AcceptDialog "get_label" '[] (IO Label) where
         nodeMethod = Godot.Core.AcceptDialog.get_label
@@ -251,6 +270,7 @@ instance NodeMethod AcceptDialog "get_label" '[] (IO Label) where
 {-# NOINLINE bindAcceptDialog_get_ok #-}
 
 -- | Returns the OK @Button@ instance.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindAcceptDialog_get_ok :: MethodBind
 bindAcceptDialog_get_ok
   = unsafePerformIO $
@@ -261,13 +281,14 @@ bindAcceptDialog_get_ok
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the OK @Button@ instance.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_ok :: (AcceptDialog :< cls, Object :< cls) => cls -> IO Button
 get_ok cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAcceptDialog_get_ok (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AcceptDialog "get_ok" '[] (IO Button) where
         nodeMethod = Godot.Core.AcceptDialog.get_ok
@@ -293,7 +314,10 @@ get_text cls
          godot_method_bind_call bindAcceptDialog_get_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AcceptDialog "get_text" '[] (IO GodotString)
          where
@@ -320,7 +344,10 @@ has_autowrap cls
          godot_method_bind_call bindAcceptDialog_has_autowrap (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AcceptDialog "has_autowrap" '[] (IO Bool) where
         nodeMethod = Godot.Core.AcceptDialog.has_autowrap
@@ -347,12 +374,45 @@ register_text_enter cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AcceptDialog "register_text_enter" '[Node]
            (IO ())
          where
         nodeMethod = Godot.Core.AcceptDialog.register_text_enter
+
+{-# NOINLINE bindAcceptDialog_remove_button #-}
+
+-- | Removes the @button@ from the dialog. Does NOT free the @button@. The @button@ must be a @Button@ added with @method add_button@ or @method add_cancel@ method. After removal, pressing the @button@ will no longer emit this dialog's @signal custom_action@ signal or cancel this dialog.
+bindAcceptDialog_remove_button :: MethodBind
+bindAcceptDialog_remove_button
+  = unsafePerformIO $
+      withCString "AcceptDialog" $
+        \ clsNamePtr ->
+          withCString "remove_button" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes the @button@ from the dialog. Does NOT free the @button@. The @button@ must be a @Button@ added with @method add_button@ or @method add_cancel@ method. After removal, pressing the @button@ will no longer emit this dialog's @signal custom_action@ signal or cancel this dialog.
+remove_button ::
+                (AcceptDialog :< cls, Object :< cls) => cls -> Control -> IO ()
+remove_button cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindAcceptDialog_remove_button (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod AcceptDialog "remove_button" '[Control] (IO ())
+         where
+        nodeMethod = Godot.Core.AcceptDialog.remove_button
 
 {-# NOINLINE bindAcceptDialog_set_autowrap #-}
 
@@ -375,7 +435,10 @@ set_autowrap cls arg1
          godot_method_bind_call bindAcceptDialog_set_autowrap (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AcceptDialog "set_autowrap" '[Bool] (IO ())
          where
@@ -404,7 +467,10 @@ set_hide_on_ok cls arg1
          godot_method_bind_call bindAcceptDialog_set_hide_on_ok (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AcceptDialog "set_hide_on_ok" '[Bool] (IO ())
          where
@@ -431,7 +497,10 @@ set_text cls arg1
          godot_method_bind_call bindAcceptDialog_set_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AcceptDialog "set_text" '[GodotString] (IO ())
          where

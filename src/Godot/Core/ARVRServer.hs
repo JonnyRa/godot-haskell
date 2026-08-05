@@ -15,7 +15,10 @@ module Godot.Core.ARVRServer
         Godot.Core.ARVRServer.sig_interface_removed,
         Godot.Core.ARVRServer.sig_tracker_added,
         Godot.Core.ARVRServer.sig_tracker_removed,
+        Godot.Core.ARVRServer.add_interface,
+        Godot.Core.ARVRServer.add_tracker,
         Godot.Core.ARVRServer.center_on_hmd,
+        Godot.Core.ARVRServer.clear_primary_interface_if,
         Godot.Core.ARVRServer.find_interface,
         Godot.Core.ARVRServer.get_hmd_transform,
         Godot.Core.ARVRServer.get_interface,
@@ -29,6 +32,8 @@ module Godot.Core.ARVRServer
         Godot.Core.ARVRServer.get_tracker,
         Godot.Core.ARVRServer.get_tracker_count,
         Godot.Core.ARVRServer.get_world_scale,
+        Godot.Core.ARVRServer.remove_interface,
+        Godot.Core.ARVRServer.remove_tracker,
         Godot.Core.ARVRServer.set_primary_interface,
         Godot.Core.ARVRServer.set_world_scale)
        where
@@ -111,6 +116,70 @@ instance NodeProperty ARVRServer "world_scale" Float 'False where
         nodeProperty
           = (get_world_scale, wrapDroppingSetter set_world_scale, Nothing)
 
+{-# NOINLINE bindARVRServer_add_interface #-}
+
+-- | Registers an @ARVRInterface@ object.
+bindARVRServer_add_interface :: MethodBind
+bindARVRServer_add_interface
+  = unsafePerformIO $
+      withCString "ARVRServer" $
+        \ clsNamePtr ->
+          withCString "add_interface" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Registers an @ARVRInterface@ object.
+add_interface ::
+                (ARVRServer :< cls, Object :< cls) => cls -> ARVRInterface -> IO ()
+add_interface cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindARVRServer_add_interface (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ARVRServer "add_interface" '[ARVRInterface]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ARVRServer.add_interface
+
+{-# NOINLINE bindARVRServer_add_tracker #-}
+
+-- | Registers a new @ARVRPositionalTracker@ that tracks a spatial location in real space.
+bindARVRServer_add_tracker :: MethodBind
+bindARVRServer_add_tracker
+  = unsafePerformIO $
+      withCString "ARVRServer" $
+        \ clsNamePtr ->
+          withCString "add_tracker" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Registers a new @ARVRPositionalTracker@ that tracks a spatial location in real space.
+add_tracker ::
+              (ARVRServer :< cls, Object :< cls) =>
+              cls -> ARVRPositionalTracker -> IO ()
+add_tracker cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindARVRServer_add_tracker (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ARVRServer "add_tracker"
+           '[ARVRPositionalTracker]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ARVRServer.add_tracker
+
 {-# NOINLINE bindARVRServer_center_on_hmd #-}
 
 -- | This is an important function to understand correctly. AR and VR platforms all handle positioning slightly differently.
@@ -142,11 +211,47 @@ center_on_hmd cls arg1 arg2
          godot_method_bind_call bindARVRServer_center_on_hmd (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "center_on_hmd" '[Int, Bool] (IO ())
          where
         nodeMethod = Godot.Core.ARVRServer.center_on_hmd
+
+{-# NOINLINE bindARVRServer_clear_primary_interface_if #-}
+
+-- | Clears our current primary interface if it is set to the provided interface.
+bindARVRServer_clear_primary_interface_if :: MethodBind
+bindARVRServer_clear_primary_interface_if
+  = unsafePerformIO $
+      withCString "ARVRServer" $
+        \ clsNamePtr ->
+          withCString "clear_primary_interface_if" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Clears our current primary interface if it is set to the provided interface.
+clear_primary_interface_if ::
+                             (ARVRServer :< cls, Object :< cls) => cls -> ARVRInterface -> IO ()
+clear_primary_interface_if cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindARVRServer_clear_primary_interface_if
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ARVRServer "clear_primary_interface_if"
+           '[ARVRInterface]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ARVRServer.clear_primary_interface_if
 
 {-# NOINLINE bindARVRServer_find_interface #-}
 
@@ -170,7 +275,7 @@ find_interface cls arg1
          godot_method_bind_call bindARVRServer_find_interface (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ARVRServer "find_interface" '[GodotString]
            (IO ARVRInterface)
@@ -199,7 +304,10 @@ get_hmd_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "get_hmd_transform" '[]
            (IO Transform)
@@ -228,7 +336,7 @@ get_interface cls arg1
          godot_method_bind_call bindARVRServer_get_interface (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ARVRServer "get_interface" '[Int]
            (IO ARVRInterface)
@@ -257,7 +365,10 @@ get_interface_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "get_interface_count" '[] (IO Int)
          where
@@ -284,7 +395,10 @@ get_interfaces cls
          godot_method_bind_call bindARVRServer_get_interfaces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "get_interfaces" '[] (IO Array)
          where
@@ -312,7 +426,10 @@ get_last_commit_usec cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "get_last_commit_usec" '[] (IO Int)
          where
@@ -340,7 +457,10 @@ get_last_frame_usec cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "get_last_frame_usec" '[] (IO Int)
          where
@@ -368,7 +488,10 @@ get_last_process_usec cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "get_last_process_usec" '[] (IO Int)
          where
@@ -396,7 +519,7 @@ get_primary_interface cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ARVRServer "get_primary_interface" '[]
            (IO ARVRInterface)
@@ -425,7 +548,10 @@ get_reference_frame cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "get_reference_frame" '[]
            (IO Transform)
@@ -454,7 +580,7 @@ get_tracker cls arg1
          godot_method_bind_call bindARVRServer_get_tracker (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ARVRServer "get_tracker" '[Int]
            (IO ARVRPositionalTracker)
@@ -483,7 +609,10 @@ get_tracker_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "get_tracker_count" '[] (IO Int)
          where
@@ -510,11 +639,78 @@ get_world_scale cls
          godot_method_bind_call bindARVRServer_get_world_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "get_world_scale" '[] (IO Float)
          where
         nodeMethod = Godot.Core.ARVRServer.get_world_scale
+
+{-# NOINLINE bindARVRServer_remove_interface #-}
+
+-- | Removes this interface.
+bindARVRServer_remove_interface :: MethodBind
+bindARVRServer_remove_interface
+  = unsafePerformIO $
+      withCString "ARVRServer" $
+        \ clsNamePtr ->
+          withCString "remove_interface" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes this interface.
+remove_interface ::
+                   (ARVRServer :< cls, Object :< cls) => cls -> ARVRInterface -> IO ()
+remove_interface cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindARVRServer_remove_interface (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ARVRServer "remove_interface" '[ARVRInterface]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ARVRServer.remove_interface
+
+{-# NOINLINE bindARVRServer_remove_tracker #-}
+
+-- | Removes this positional tracker.
+bindARVRServer_remove_tracker :: MethodBind
+bindARVRServer_remove_tracker
+  = unsafePerformIO $
+      withCString "ARVRServer" $
+        \ clsNamePtr ->
+          withCString "remove_tracker" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes this positional tracker.
+remove_tracker ::
+                 (ARVRServer :< cls, Object :< cls) =>
+                 cls -> ARVRPositionalTracker -> IO ()
+remove_tracker cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindARVRServer_remove_tracker (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ARVRServer "remove_tracker"
+           '[ARVRPositionalTracker]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ARVRServer.remove_tracker
 
 {-# NOINLINE bindARVRServer_set_primary_interface #-}
 
@@ -538,7 +734,10 @@ set_primary_interface cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "set_primary_interface"
            '[ARVRInterface]
@@ -567,7 +766,10 @@ set_world_scale cls arg1
          godot_method_bind_call bindARVRServer_set_world_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRServer "set_world_scale" '[Float] (IO ())
          where

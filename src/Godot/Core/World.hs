@@ -46,7 +46,7 @@ instance NodeProperty World "space" Rid 'True where
 
 {-# NOINLINE bindWorld_get_direct_space_state #-}
 
--- | Direct access to the world's physics 3D space state. Used for querying current and potential collisions. Must only be accessed from within @_physics_process(delta)@.
+-- | Direct access to the world's physics 3D space state. Used for querying current and potential collisions.
 bindWorld_get_direct_space_state :: MethodBind
 bindWorld_get_direct_space_state
   = unsafePerformIO $
@@ -56,7 +56,7 @@ bindWorld_get_direct_space_state
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Direct access to the world's physics 3D space state. Used for querying current and potential collisions. Must only be accessed from within @_physics_process(delta)@.
+-- | Direct access to the world's physics 3D space state. Used for querying current and potential collisions.
 get_direct_space_state ::
                          (World :< cls, Object :< cls) => cls -> IO PhysicsDirectSpaceState
 get_direct_space_state cls
@@ -66,7 +66,7 @@ get_direct_space_state cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod World "get_direct_space_state" '[]
            (IO PhysicsDirectSpaceState)
@@ -94,7 +94,7 @@ get_environment cls
          godot_method_bind_call bindWorld_get_environment (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod World "get_environment" '[] (IO Environment)
          where
@@ -122,7 +122,7 @@ get_fallback_environment cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod World "get_fallback_environment" '[]
            (IO Environment)
@@ -148,7 +148,10 @@ get_scenario cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindWorld_get_scenario (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod World "get_scenario" '[] (IO Rid) where
         nodeMethod = Godot.Core.World.get_scenario
@@ -171,7 +174,10 @@ get_space cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindWorld_get_space (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod World "get_space" '[] (IO Rid) where
         nodeMethod = Godot.Core.World.get_space
@@ -197,7 +203,10 @@ set_environment cls arg1
          godot_method_bind_call bindWorld_set_environment (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod World "set_environment" '[Environment] (IO ())
          where
@@ -225,7 +234,10 @@ set_fallback_environment cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod World "set_fallback_environment" '[Environment]
            (IO ())

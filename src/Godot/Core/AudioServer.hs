@@ -117,7 +117,10 @@ add_bus cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAudioServer_add_bus (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "add_bus" '[Maybe Int] (IO ())
          where
@@ -147,7 +150,10 @@ add_bus_effect cls arg1 arg2 arg3
          godot_method_bind_call bindAudioServer_add_bus_effect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "add_bus_effect"
            '[Int, AudioEffect, Maybe Int]
@@ -157,7 +163,7 @@ instance NodeMethod AudioServer "add_bus_effect"
 
 {-# NOINLINE bindAudioServer_capture_get_device #-}
 
--- | Name of the current device for audio input (see @method capture_get_device_list@).
+-- | Name of the current device for audio input (see @method capture_get_device_list@). The value @"Default"@ means that the system-wide default audio input is currently used.
 bindAudioServer_capture_get_device :: MethodBind
 bindAudioServer_capture_get_device
   = unsafePerformIO $
@@ -167,7 +173,7 @@ bindAudioServer_capture_get_device
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Name of the current device for audio input (see @method capture_get_device_list@).
+-- | Name of the current device for audio input (see @method capture_get_device_list@). The value @"Default"@ means that the system-wide default audio input is currently used.
 capture_get_device ::
                      (AudioServer :< cls, Object :< cls) => cls -> IO GodotString
 capture_get_device cls
@@ -177,7 +183,10 @@ capture_get_device cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "capture_get_device" '[]
            (IO GodotString)
@@ -206,7 +215,10 @@ capture_get_device_list cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "capture_get_device_list" '[]
            (IO Array)
@@ -215,7 +227,7 @@ instance NodeMethod AudioServer "capture_get_device_list" '[]
 
 {-# NOINLINE bindAudioServer_capture_set_device #-}
 
--- | Sets which audio input device is used for audio capture.
+-- | Sets which audio input device is used for audio capture. On systems with multiple audio inputs (such as analog and USB), this can be used to select the audio input device. Setting the value @"Default"@ will record audio from the system-wide default audio input. If an invalid device name is set, the value will be reverted back to @"Default"@.
 bindAudioServer_capture_set_device :: MethodBind
 bindAudioServer_capture_set_device
   = unsafePerformIO $
@@ -225,7 +237,7 @@ bindAudioServer_capture_set_device
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets which audio input device is used for audio capture.
+-- | Sets which audio input device is used for audio capture. On systems with multiple audio inputs (such as analog and USB), this can be used to select the audio input device. Setting the value @"Default"@ will record audio from the system-wide default audio input. If an invalid device name is set, the value will be reverted back to @"Default"@.
 capture_set_device ::
                      (AudioServer :< cls, Object :< cls) => cls -> GodotString -> IO ()
 capture_set_device cls arg1
@@ -235,7 +247,10 @@ capture_set_device cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "capture_set_device" '[GodotString]
            (IO ())
@@ -264,7 +279,7 @@ generate_bus_layout cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AudioServer "generate_bus_layout" '[]
            (IO AudioBusLayout)
@@ -293,7 +308,10 @@ get_bus_channels cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_bus_channels" '[Int] (IO Int)
          where
@@ -320,7 +338,10 @@ get_bus_count cls
          godot_method_bind_call bindAudioServer_get_bus_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_bus_count" '[] (IO Int) where
         nodeMethod = Godot.Core.AudioServer.get_bus_count
@@ -347,7 +368,7 @@ get_bus_effect cls arg1 arg2
          godot_method_bind_call bindAudioServer_get_bus_effect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AudioServer "get_bus_effect" '[Int, Int]
            (IO AudioEffect)
@@ -376,7 +397,10 @@ get_bus_effect_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_bus_effect_count" '[Int]
            (IO Int)
@@ -408,7 +432,7 @@ get_bus_effect_instance cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AudioServer "get_bus_effect_instance"
            '[Int, Int, Maybe Int]
@@ -437,7 +461,10 @@ get_bus_index cls arg1
          godot_method_bind_call bindAudioServer_get_bus_index (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_bus_index" '[GodotString]
            (IO Int)
@@ -465,7 +492,10 @@ get_bus_name cls arg1
          godot_method_bind_call bindAudioServer_get_bus_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_bus_name" '[Int]
            (IO GodotString)
@@ -495,7 +525,10 @@ get_bus_peak_volume_left_db cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_bus_peak_volume_left_db"
            '[Int, Int]
@@ -526,7 +559,10 @@ get_bus_peak_volume_right_db cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_bus_peak_volume_right_db"
            '[Int, Int]
@@ -555,7 +591,10 @@ get_bus_send cls arg1
          godot_method_bind_call bindAudioServer_get_bus_send (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_bus_send" '[Int]
            (IO GodotString)
@@ -584,7 +623,10 @@ get_bus_volume_db cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_bus_volume_db" '[Int]
            (IO Float)
@@ -593,7 +635,7 @@ instance NodeMethod AudioServer "get_bus_volume_db" '[Int]
 
 {-# NOINLINE bindAudioServer_get_device #-}
 
--- | Name of the current device for audio output (see @method get_device_list@).
+-- | Name of the current device for audio output (see @method get_device_list@). On systems with multiple audio outputs (such as analog, USB and HDMI audio), this can be used to select the audio output device. The value @"Default"@ will play audio on the system-wide default audio output. If an invalid device name is set, the value will be reverted back to @"Default"@.
 bindAudioServer_get_device :: MethodBind
 bindAudioServer_get_device
   = unsafePerformIO $
@@ -603,7 +645,7 @@ bindAudioServer_get_device
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Name of the current device for audio output (see @method get_device_list@).
+-- | Name of the current device for audio output (see @method get_device_list@). On systems with multiple audio outputs (such as analog, USB and HDMI audio), this can be used to select the audio output device. The value @"Default"@ will play audio on the system-wide default audio output. If an invalid device name is set, the value will be reverted back to @"Default"@.
 get_device ::
              (AudioServer :< cls, Object :< cls) => cls -> IO GodotString
 get_device cls
@@ -612,7 +654,10 @@ get_device cls
          godot_method_bind_call bindAudioServer_get_device (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_device" '[] (IO GodotString)
          where
@@ -639,7 +684,10 @@ get_device_list cls
          godot_method_bind_call bindAudioServer_get_device_list (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_device_list" '[] (IO Array)
          where
@@ -667,7 +715,10 @@ get_global_rate_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_global_rate_scale" '[]
            (IO Float)
@@ -695,7 +746,10 @@ get_mix_rate cls
          godot_method_bind_call bindAudioServer_get_mix_rate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_mix_rate" '[] (IO Float) where
         nodeMethod = Godot.Core.AudioServer.get_mix_rate
@@ -722,7 +776,10 @@ get_output_latency cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_output_latency" '[] (IO Float)
          where
@@ -750,7 +807,10 @@ get_speaker_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_speaker_mode" '[] (IO Int)
          where
@@ -778,7 +838,10 @@ get_time_since_last_mix cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_time_since_last_mix" '[]
            (IO Float)
@@ -807,7 +870,10 @@ get_time_to_next_mix cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "get_time_to_next_mix" '[]
            (IO Float)
@@ -836,7 +902,10 @@ is_bus_bypassing_effects cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "is_bus_bypassing_effects" '[Int]
            (IO Bool)
@@ -865,7 +934,10 @@ is_bus_effect_enabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "is_bus_effect_enabled" '[Int, Int]
            (IO Bool)
@@ -893,7 +965,10 @@ is_bus_mute cls arg1
          godot_method_bind_call bindAudioServer_is_bus_mute (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "is_bus_mute" '[Int] (IO Bool)
          where
@@ -920,7 +995,10 @@ is_bus_solo cls arg1
          godot_method_bind_call bindAudioServer_is_bus_solo (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "is_bus_solo" '[Int] (IO Bool)
          where
@@ -946,7 +1024,10 @@ lock cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAudioServer_lock (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "lock" '[] (IO ()) where
         nodeMethod = Godot.Core.AudioServer.lock
@@ -971,7 +1052,10 @@ move_bus cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAudioServer_move_bus (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "move_bus" '[Int, Int] (IO ())
          where
@@ -998,7 +1082,10 @@ remove_bus cls arg1
          godot_method_bind_call bindAudioServer_remove_bus (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "remove_bus" '[Int] (IO ()) where
         nodeMethod = Godot.Core.AudioServer.remove_bus
@@ -1025,7 +1112,10 @@ remove_bus_effect cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "remove_bus_effect" '[Int, Int]
            (IO ())
@@ -1054,7 +1144,10 @@ set_bus_bypass_effects cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_bus_bypass_effects"
            '[Int, Bool]
@@ -1083,7 +1176,10 @@ set_bus_count cls arg1
          godot_method_bind_call bindAudioServer_set_bus_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_bus_count" '[Int] (IO ())
          where
@@ -1112,7 +1208,10 @@ set_bus_effect_enabled cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_bus_effect_enabled"
            '[Int, Int, Bool]
@@ -1142,7 +1241,10 @@ set_bus_layout cls arg1
          godot_method_bind_call bindAudioServer_set_bus_layout (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_bus_layout" '[AudioBusLayout]
            (IO ())
@@ -1170,7 +1272,10 @@ set_bus_mute cls arg1 arg2
          godot_method_bind_call bindAudioServer_set_bus_mute (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_bus_mute" '[Int, Bool] (IO ())
          where
@@ -1198,7 +1303,10 @@ set_bus_name cls arg1 arg2
          godot_method_bind_call bindAudioServer_set_bus_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_bus_name" '[Int, GodotString]
            (IO ())
@@ -1227,7 +1335,10 @@ set_bus_send cls arg1 arg2
          godot_method_bind_call bindAudioServer_set_bus_send (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_bus_send" '[Int, GodotString]
            (IO ())
@@ -1255,7 +1366,10 @@ set_bus_solo cls arg1 arg2
          godot_method_bind_call bindAudioServer_set_bus_solo (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_bus_solo" '[Int, Bool] (IO ())
          where
@@ -1283,7 +1397,10 @@ set_bus_volume_db cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_bus_volume_db" '[Int, Float]
            (IO ())
@@ -1292,7 +1409,7 @@ instance NodeMethod AudioServer "set_bus_volume_db" '[Int, Float]
 
 {-# NOINLINE bindAudioServer_set_device #-}
 
--- | Name of the current device for audio output (see @method get_device_list@).
+-- | Name of the current device for audio output (see @method get_device_list@). On systems with multiple audio outputs (such as analog, USB and HDMI audio), this can be used to select the audio output device. The value @"Default"@ will play audio on the system-wide default audio output. If an invalid device name is set, the value will be reverted back to @"Default"@.
 bindAudioServer_set_device :: MethodBind
 bindAudioServer_set_device
   = unsafePerformIO $
@@ -1302,7 +1419,7 @@ bindAudioServer_set_device
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Name of the current device for audio output (see @method get_device_list@).
+-- | Name of the current device for audio output (see @method get_device_list@). On systems with multiple audio outputs (such as analog, USB and HDMI audio), this can be used to select the audio output device. The value @"Default"@ will play audio on the system-wide default audio output. If an invalid device name is set, the value will be reverted back to @"Default"@.
 set_device ::
              (AudioServer :< cls, Object :< cls) => cls -> GodotString -> IO ()
 set_device cls arg1
@@ -1311,7 +1428,10 @@ set_device cls arg1
          godot_method_bind_call bindAudioServer_set_device (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_device" '[GodotString] (IO ())
          where
@@ -1339,7 +1459,10 @@ set_global_rate_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "set_global_rate_scale" '[Float]
            (IO ())
@@ -1369,7 +1492,10 @@ swap_bus_effects cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "swap_bus_effects" '[Int, Int, Int]
            (IO ())
@@ -1395,7 +1521,10 @@ unlock cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAudioServer_unlock (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioServer "unlock" '[] (IO ()) where
         nodeMethod = Godot.Core.AudioServer.unlock

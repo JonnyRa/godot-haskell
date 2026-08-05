@@ -4,10 +4,13 @@
 module Godot.Core.InputEventKey
        (Godot.Core.InputEventKey.is_echo,
         Godot.Core.InputEventKey.is_pressed,
+        Godot.Core.InputEventKey.get_physical_scancode,
+        Godot.Core.InputEventKey.get_physical_scancode_with_modifiers,
         Godot.Core.InputEventKey.get_scancode,
         Godot.Core.InputEventKey.get_scancode_with_modifiers,
         Godot.Core.InputEventKey.get_unicode,
         Godot.Core.InputEventKey.set_echo,
+        Godot.Core.InputEventKey.set_physical_scancode,
         Godot.Core.InputEventKey.set_pressed,
         Godot.Core.InputEventKey.set_scancode,
         Godot.Core.InputEventKey.set_unicode)
@@ -44,13 +47,22 @@ is_echo cls
          godot_method_bind_call bindInputEventKey_is_echo (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventKey "is_echo" '[] (IO Bool) where
         nodeMethod = Godot.Core.InputEventKey.is_echo
 
 instance NodeProperty InputEventKey "echo" Bool 'False where
         nodeProperty = (is_echo, wrapDroppingSetter set_echo, Nothing)
+
+instance NodeProperty InputEventKey "physical_scancode" Int 'False
+         where
+        nodeProperty
+          = (get_physical_scancode, wrapDroppingSetter set_physical_scancode,
+             Nothing)
 
 {-# NOINLINE bindInputEventKey_is_pressed #-}
 
@@ -73,7 +85,10 @@ is_pressed cls
          godot_method_bind_call bindInputEventKey_is_pressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventKey "is_pressed" '[] (IO Bool) where
         nodeMethod = Godot.Core.InputEventKey.is_pressed
@@ -90,9 +105,83 @@ instance NodeProperty InputEventKey "unicode" Int 'False where
         nodeProperty
           = (get_unicode, wrapDroppingSetter set_unicode, Nothing)
 
+{-# NOINLINE bindInputEventKey_get_physical_scancode #-}
+
+-- | Key physical scancode, which corresponds to one of the @enum KeyList@ constants. Represent the physical location of a key on the 101/102-key US QWERTY keyboard.
+--   			To get a human-readable representation of the @InputEventKey@, use @OS.get_scancode_string(event.physical_scancode)@ where @event@ is the @InputEventKey@.
+bindInputEventKey_get_physical_scancode :: MethodBind
+bindInputEventKey_get_physical_scancode
+  = unsafePerformIO $
+      withCString "InputEventKey" $
+        \ clsNamePtr ->
+          withCString "get_physical_scancode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Key physical scancode, which corresponds to one of the @enum KeyList@ constants. Represent the physical location of a key on the 101/102-key US QWERTY keyboard.
+--   			To get a human-readable representation of the @InputEventKey@, use @OS.get_scancode_string(event.physical_scancode)@ where @event@ is the @InputEventKey@.
+get_physical_scancode ::
+                        (InputEventKey :< cls, Object :< cls) => cls -> IO Int
+get_physical_scancode cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputEventKey_get_physical_scancode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventKey "get_physical_scancode" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.InputEventKey.get_physical_scancode
+
+{-# NOINLINE bindInputEventKey_get_physical_scancode_with_modifiers
+             #-}
+
+-- | Returns the physical scancode combined with modifier keys such as @Shift@ or @Alt@. See also @InputEventWithModifiers@.
+--   				To get a human-readable representation of the @InputEventKey@ with modifiers, use @OS.get_scancode_string(event.get_physical_scancode_with_modifiers())@ where @event@ is the @InputEventKey@.
+bindInputEventKey_get_physical_scancode_with_modifiers ::
+                                                       MethodBind
+bindInputEventKey_get_physical_scancode_with_modifiers
+  = unsafePerformIO $
+      withCString "InputEventKey" $
+        \ clsNamePtr ->
+          withCString "get_physical_scancode_with_modifiers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the physical scancode combined with modifier keys such as @Shift@ or @Alt@. See also @InputEventWithModifiers@.
+--   				To get a human-readable representation of the @InputEventKey@ with modifiers, use @OS.get_scancode_string(event.get_physical_scancode_with_modifiers())@ where @event@ is the @InputEventKey@.
+get_physical_scancode_with_modifiers ::
+                                       (InputEventKey :< cls, Object :< cls) => cls -> IO Int
+get_physical_scancode_with_modifiers cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindInputEventKey_get_physical_scancode_with_modifiers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventKey
+           "get_physical_scancode_with_modifiers"
+           '[]
+           (IO Int)
+         where
+        nodeMethod
+          = Godot.Core.InputEventKey.get_physical_scancode_with_modifiers
+
 {-# NOINLINE bindInputEventKey_get_scancode #-}
 
--- | The key scancode, which corresponds to one of the @enum KeyList@ constants.
+-- | The key scancode, which corresponds to one of the @enum KeyList@ constants. Represent key in the current keyboard layout.
 --   			To get a human-readable representation of the @InputEventKey@, use @OS.get_scancode_string(event.scancode)@ where @event@ is the @InputEventKey@.
 bindInputEventKey_get_scancode :: MethodBind
 bindInputEventKey_get_scancode
@@ -103,7 +192,7 @@ bindInputEventKey_get_scancode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The key scancode, which corresponds to one of the @enum KeyList@ constants.
+-- | The key scancode, which corresponds to one of the @enum KeyList@ constants. Represent key in the current keyboard layout.
 --   			To get a human-readable representation of the @InputEventKey@, use @OS.get_scancode_string(event.scancode)@ where @event@ is the @InputEventKey@.
 get_scancode ::
                (InputEventKey :< cls, Object :< cls) => cls -> IO Int
@@ -113,7 +202,10 @@ get_scancode cls
          godot_method_bind_call bindInputEventKey_get_scancode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventKey "get_scancode" '[] (IO Int) where
         nodeMethod = Godot.Core.InputEventKey.get_scancode
@@ -143,7 +235,10 @@ get_scancode_with_modifiers cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventKey "get_scancode_with_modifiers" '[]
            (IO Int)
@@ -171,7 +266,10 @@ get_unicode cls
          godot_method_bind_call bindInputEventKey_get_unicode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventKey "get_unicode" '[] (IO Int) where
         nodeMethod = Godot.Core.InputEventKey.get_unicode
@@ -197,10 +295,47 @@ set_echo cls arg1
          godot_method_bind_call bindInputEventKey_set_echo (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventKey "set_echo" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.InputEventKey.set_echo
+
+{-# NOINLINE bindInputEventKey_set_physical_scancode #-}
+
+-- | Key physical scancode, which corresponds to one of the @enum KeyList@ constants. Represent the physical location of a key on the 101/102-key US QWERTY keyboard.
+--   			To get a human-readable representation of the @InputEventKey@, use @OS.get_scancode_string(event.physical_scancode)@ where @event@ is the @InputEventKey@.
+bindInputEventKey_set_physical_scancode :: MethodBind
+bindInputEventKey_set_physical_scancode
+  = unsafePerformIO $
+      withCString "InputEventKey" $
+        \ clsNamePtr ->
+          withCString "set_physical_scancode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Key physical scancode, which corresponds to one of the @enum KeyList@ constants. Represent the physical location of a key on the 101/102-key US QWERTY keyboard.
+--   			To get a human-readable representation of the @InputEventKey@, use @OS.get_scancode_string(event.physical_scancode)@ where @event@ is the @InputEventKey@.
+set_physical_scancode ::
+                        (InputEventKey :< cls, Object :< cls) => cls -> Int -> IO ()
+set_physical_scancode cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputEventKey_set_physical_scancode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventKey "set_physical_scancode" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.InputEventKey.set_physical_scancode
 
 {-# NOINLINE bindInputEventKey_set_pressed #-}
 
@@ -223,7 +358,10 @@ set_pressed cls arg1
          godot_method_bind_call bindInputEventKey_set_pressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventKey "set_pressed" '[Bool] (IO ())
          where
@@ -231,7 +369,7 @@ instance NodeMethod InputEventKey "set_pressed" '[Bool] (IO ())
 
 {-# NOINLINE bindInputEventKey_set_scancode #-}
 
--- | The key scancode, which corresponds to one of the @enum KeyList@ constants.
+-- | The key scancode, which corresponds to one of the @enum KeyList@ constants. Represent key in the current keyboard layout.
 --   			To get a human-readable representation of the @InputEventKey@, use @OS.get_scancode_string(event.scancode)@ where @event@ is the @InputEventKey@.
 bindInputEventKey_set_scancode :: MethodBind
 bindInputEventKey_set_scancode
@@ -242,7 +380,7 @@ bindInputEventKey_set_scancode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The key scancode, which corresponds to one of the @enum KeyList@ constants.
+-- | The key scancode, which corresponds to one of the @enum KeyList@ constants. Represent key in the current keyboard layout.
 --   			To get a human-readable representation of the @InputEventKey@, use @OS.get_scancode_string(event.scancode)@ where @event@ is the @InputEventKey@.
 set_scancode ::
                (InputEventKey :< cls, Object :< cls) => cls -> Int -> IO ()
@@ -252,7 +390,10 @@ set_scancode cls arg1
          godot_method_bind_call bindInputEventKey_set_scancode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventKey "set_scancode" '[Int] (IO ())
          where
@@ -279,7 +420,10 @@ set_unicode cls arg1
          godot_method_bind_call bindInputEventKey_set_unicode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod InputEventKey "set_unicode" '[Int] (IO ())
          where

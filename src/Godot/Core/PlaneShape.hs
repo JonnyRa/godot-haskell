@@ -38,7 +38,10 @@ get_plane cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPlaneShape_get_plane (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PlaneShape "get_plane" '[] (IO Plane) where
         nodeMethod = Godot.Core.PlaneShape.get_plane
@@ -63,7 +66,10 @@ set_plane cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPlaneShape_set_plane (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PlaneShape "set_plane" '[Plane] (IO ()) where
         nodeMethod = Godot.Core.PlaneShape.set_plane

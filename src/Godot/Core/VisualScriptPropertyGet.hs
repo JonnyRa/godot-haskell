@@ -2,7 +2,8 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.VisualScriptPropertyGet
-       (Godot.Core.VisualScriptPropertyGet._CALL_MODE_NODE_PATH,
+       (Godot.Core.VisualScriptPropertyGet._CALL_MODE_BASIC_TYPE,
+        Godot.Core.VisualScriptPropertyGet._CALL_MODE_NODE_PATH,
         Godot.Core.VisualScriptPropertyGet._CALL_MODE_SELF,
         Godot.Core.VisualScriptPropertyGet._CALL_MODE_INSTANCE,
         Godot.Core.VisualScriptPropertyGet._get_type_cache,
@@ -33,6 +34,9 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.VisualScriptNode()
+
+_CALL_MODE_BASIC_TYPE :: Int
+_CALL_MODE_BASIC_TYPE = 3
 
 _CALL_MODE_NODE_PATH :: Int
 _CALL_MODE_NODE_PATH = 1
@@ -112,7 +116,10 @@ _get_type_cache cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "_get_type_cache" '[]
            (IO Int)
@@ -140,7 +147,10 @@ _set_type_cache cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "_set_type_cache"
            '[Int]
@@ -169,7 +179,10 @@ get_base_path cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "get_base_path" '[]
            (IO NodePath)
@@ -197,7 +210,10 @@ get_base_script cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "get_base_script" '[]
            (IO GodotString)
@@ -225,7 +241,10 @@ get_base_type cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "get_base_type" '[]
            (IO GodotString)
@@ -252,7 +271,10 @@ get_basic_type cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "get_basic_type" '[]
            (IO Int)
@@ -279,7 +301,10 @@ get_call_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "get_call_mode" '[]
            (IO Int)
@@ -307,7 +332,10 @@ get_index cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "get_index" '[]
            (IO GodotString)
@@ -335,7 +363,10 @@ get_property cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "get_property" '[]
            (IO GodotString)
@@ -363,7 +394,10 @@ set_base_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "set_base_path"
            '[NodePath]
@@ -392,7 +426,10 @@ set_base_script cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "set_base_script"
            '[GodotString]
@@ -421,7 +458,10 @@ set_base_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "set_base_type"
            '[GodotString]
@@ -450,7 +490,10 @@ set_basic_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "set_basic_type" '[Int]
            (IO ())
@@ -478,7 +521,10 @@ set_call_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "set_call_mode" '[Int]
            (IO ())
@@ -506,7 +552,10 @@ set_index cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "set_index"
            '[GodotString]
@@ -535,7 +584,10 @@ set_property cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualScriptPropertyGet "set_property"
            '[GodotString]

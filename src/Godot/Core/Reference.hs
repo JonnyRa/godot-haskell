@@ -38,7 +38,10 @@ init_ref cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindReference_init_ref (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Reference "init_ref" '[] (IO Bool) where
         nodeMethod = Godot.Core.Reference.init_ref
@@ -64,7 +67,10 @@ reference cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindReference_reference (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Reference "reference" '[] (IO Bool) where
         nodeMethod = Godot.Core.Reference.reference
@@ -91,7 +97,10 @@ unreference cls
          godot_method_bind_call bindReference_unreference (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Reference "unreference" '[] (IO Bool) where
         nodeMethod = Godot.Core.Reference.unreference

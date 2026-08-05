@@ -157,7 +157,10 @@ _forward_atlas_subtile_selection cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "_forward_atlas_subtile_selection"
            '[Int, Object, Vector2]
@@ -187,7 +190,10 @@ _forward_subtile_selection cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "_forward_subtile_selection"
            '[Int, Int, Object, Vector2]
@@ -218,7 +224,10 @@ _is_tile_bound cls arg1 arg2
          godot_method_bind_call bindTileSet__is_tile_bound (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "_is_tile_bound" '[Int, Int] (IO Bool)
          where
@@ -246,7 +255,10 @@ autotile_clear_bitmask_map cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_clear_bitmask_map" '[Int]
            (IO ())
@@ -277,7 +289,10 @@ autotile_get_bitmask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_get_bitmask" '[Int, Vector2]
            (IO Int)
@@ -306,7 +321,10 @@ autotile_get_bitmask_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_get_bitmask_mode" '[Int]
            (IO Int)
@@ -337,7 +355,10 @@ autotile_get_icon_coordinate cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_get_icon_coordinate" '[Int]
            (IO Vector2)
@@ -367,7 +388,7 @@ autotile_get_light_occluder cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TileSet "autotile_get_light_occluder"
            '[Int, Vector2]
@@ -398,7 +419,7 @@ autotile_get_navigation_polygon cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TileSet "autotile_get_navigation_polygon"
            '[Int, Vector2]
@@ -427,7 +448,10 @@ autotile_get_size cls arg1
          godot_method_bind_call bindTileSet_autotile_get_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_get_size" '[Int] (IO Vector2)
          where
@@ -455,7 +479,10 @@ autotile_get_spacing cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_get_spacing" '[Int] (IO Int)
          where
@@ -485,7 +512,10 @@ autotile_get_subtile_priority cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_get_subtile_priority"
            '[Int, Vector2]
@@ -515,7 +545,10 @@ autotile_get_z_index cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_get_z_index" '[Int, Vector2]
            (IO Int)
@@ -547,7 +580,10 @@ autotile_set_bitmask cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_set_bitmask"
            '[Int, Vector2, Int]
@@ -577,7 +613,10 @@ autotile_set_bitmask_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_set_bitmask_mode" '[Int, Int]
            (IO ())
@@ -608,7 +647,10 @@ autotile_set_icon_coordinate cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_set_icon_coordinate"
            '[Int, Vector2]
@@ -639,7 +681,10 @@ autotile_set_light_occluder cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_set_light_occluder"
            '[Int, OccluderPolygon2D, Vector2]
@@ -670,7 +715,10 @@ autotile_set_navigation_polygon cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_set_navigation_polygon"
            '[Int, NavigationPolygon, Vector2]
@@ -699,7 +747,10 @@ autotile_set_size cls arg1 arg2
          godot_method_bind_call bindTileSet_autotile_set_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_set_size" '[Int, Vector2]
            (IO ())
@@ -728,7 +779,10 @@ autotile_set_spacing cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_set_spacing" '[Int, Int]
            (IO ())
@@ -760,7 +814,10 @@ autotile_set_subtile_priority cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_set_subtile_priority"
            '[Int, Vector2, Int]
@@ -791,7 +848,10 @@ autotile_set_z_index cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "autotile_set_z_index"
            '[Int, Vector2, Int]
@@ -817,7 +877,10 @@ clear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTileSet_clear (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.TileSet.clear
@@ -842,7 +905,10 @@ create_tile cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTileSet_create_tile (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "create_tile" '[Int] (IO ()) where
         nodeMethod = Godot.Core.TileSet.create_tile
@@ -868,7 +934,10 @@ find_tile_by_name cls arg1
          godot_method_bind_call bindTileSet_find_tile_by_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "find_tile_by_name" '[GodotString]
            (IO Int)
@@ -897,7 +966,10 @@ get_last_unused_tile_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "get_last_unused_tile_id" '[] (IO Int)
          where
@@ -923,7 +995,10 @@ get_tiles_ids cls
          godot_method_bind_call bindTileSet_get_tiles_ids (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "get_tiles_ids" '[] (IO Array) where
         nodeMethod = Godot.Core.TileSet.get_tiles_ids
@@ -948,7 +1023,10 @@ remove_tile cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTileSet_remove_tile (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "remove_tile" '[Int] (IO ()) where
         nodeMethod = Godot.Core.TileSet.remove_tile
@@ -980,7 +1058,10 @@ tile_add_shape cls arg1 arg2 arg3 arg4 arg5
          godot_method_bind_call bindTileSet_tile_add_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_add_shape"
            '[Int, Shape2D, Transform2d, Maybe Bool, Maybe Vector2]
@@ -1011,7 +1092,7 @@ tile_get_light_occluder cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TileSet "tile_get_light_occluder" '[Int]
            (IO OccluderPolygon2D)
@@ -1039,7 +1120,7 @@ tile_get_material cls arg1
          godot_method_bind_call bindTileSet_tile_get_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TileSet "tile_get_material" '[Int]
            (IO ShaderMaterial)
@@ -1067,7 +1148,10 @@ tile_get_modulate cls arg1
          godot_method_bind_call bindTileSet_tile_get_modulate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_modulate" '[Int] (IO Color)
          where
@@ -1094,7 +1178,10 @@ tile_get_name cls arg1
          godot_method_bind_call bindTileSet_tile_get_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_name" '[Int] (IO GodotString)
          where
@@ -1123,7 +1210,7 @@ tile_get_navigation_polygon cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TileSet "tile_get_navigation_polygon" '[Int]
            (IO NavigationPolygon)
@@ -1153,7 +1240,10 @@ tile_get_navigation_polygon_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_navigation_polygon_offset"
            '[Int]
@@ -1182,7 +1272,7 @@ tile_get_normal_map cls arg1
          godot_method_bind_call bindTileSet_tile_get_normal_map (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TileSet "tile_get_normal_map" '[Int]
            (IO Texture)
@@ -1211,7 +1301,10 @@ tile_get_occluder_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_occluder_offset" '[Int]
            (IO Vector2)
@@ -1239,7 +1332,10 @@ tile_get_region cls arg1
          godot_method_bind_call bindTileSet_tile_get_region (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_region" '[Int] (IO Rect2)
          where
@@ -1266,7 +1362,7 @@ tile_get_shape cls arg1 arg2
          godot_method_bind_call bindTileSet_tile_get_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TileSet "tile_get_shape" '[Int, Int]
            (IO Shape2D)
@@ -1295,7 +1391,10 @@ tile_get_shape_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_shape_count" '[Int] (IO Int)
          where
@@ -1323,7 +1422,10 @@ tile_get_shape_offset cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_shape_offset" '[Int, Int]
            (IO Vector2)
@@ -1352,7 +1454,10 @@ tile_get_shape_one_way cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_shape_one_way" '[Int, Int]
            (IO Bool)
@@ -1379,7 +1484,10 @@ tile_get_shape_one_way_margin cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_shape_one_way_margin"
            '[Int, Int]
@@ -1410,7 +1518,10 @@ tile_get_shape_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_shape_transform" '[Int, Int]
            (IO Transform2d)
@@ -1464,7 +1575,10 @@ tile_get_shapes cls arg1
          godot_method_bind_call bindTileSet_tile_get_shapes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_shapes" '[Int] (IO Array)
          where
@@ -1491,7 +1605,7 @@ tile_get_texture cls arg1
          godot_method_bind_call bindTileSet_tile_get_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TileSet "tile_get_texture" '[Int] (IO Texture)
          where
@@ -1519,7 +1633,10 @@ tile_get_texture_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_texture_offset" '[Int]
            (IO Vector2)
@@ -1547,7 +1664,10 @@ tile_get_tile_mode cls arg1
          godot_method_bind_call bindTileSet_tile_get_tile_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_tile_mode" '[Int] (IO Int)
          where
@@ -1574,7 +1694,10 @@ tile_get_z_index cls arg1
          godot_method_bind_call bindTileSet_tile_get_z_index (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_get_z_index" '[Int] (IO Int)
          where
@@ -1603,7 +1726,10 @@ tile_set_light_occluder cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_light_occluder"
            '[Int, OccluderPolygon2D]
@@ -1633,7 +1759,10 @@ tile_set_material cls arg1 arg2
          godot_method_bind_call bindTileSet_tile_set_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_material"
            '[Int, ShaderMaterial]
@@ -1644,6 +1773,7 @@ instance NodeMethod TileSet "tile_set_material"
 {-# NOINLINE bindTileSet_tile_set_modulate #-}
 
 -- | Sets the tile's modulation color.
+--   				__Note:__ Modulation is performed by setting the tile's vertex color. To access this in a shader, use @COLOR@ rather than @MODULATE@ (which instead accesses the @TileMap@'s @CanvasItem.modulate@ property).
 bindTileSet_tile_set_modulate :: MethodBind
 bindTileSet_tile_set_modulate
   = unsafePerformIO $
@@ -1654,6 +1784,7 @@ bindTileSet_tile_set_modulate
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets the tile's modulation color.
+--   				__Note:__ Modulation is performed by setting the tile's vertex color. To access this in a shader, use @COLOR@ rather than @MODULATE@ (which instead accesses the @TileMap@'s @CanvasItem.modulate@ property).
 tile_set_modulate ::
                     (TileSet :< cls, Object :< cls) => cls -> Int -> Color -> IO ()
 tile_set_modulate cls arg1 arg2
@@ -1662,7 +1793,10 @@ tile_set_modulate cls arg1 arg2
          godot_method_bind_call bindTileSet_tile_set_modulate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_modulate" '[Int, Color]
            (IO ())
@@ -1691,7 +1825,10 @@ tile_set_name cls arg1 arg2
          godot_method_bind_call bindTileSet_tile_set_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_name" '[Int, GodotString]
            (IO ())
@@ -1721,7 +1858,10 @@ tile_set_navigation_polygon cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_navigation_polygon"
            '[Int, NavigationPolygon]
@@ -1753,7 +1893,10 @@ tile_set_navigation_polygon_offset cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_navigation_polygon_offset"
            '[Int, Vector2]
@@ -1784,7 +1927,10 @@ tile_set_normal_map cls arg1 arg2
          godot_method_bind_call bindTileSet_tile_set_normal_map (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_normal_map" '[Int, Texture]
            (IO ())
@@ -1813,7 +1959,10 @@ tile_set_occluder_offset cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_occluder_offset"
            '[Int, Vector2]
@@ -1842,7 +1991,10 @@ tile_set_region cls arg1 arg2
          godot_method_bind_call bindTileSet_tile_set_region (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_region" '[Int, Rect2] (IO ())
          where
@@ -1870,7 +2022,10 @@ tile_set_shape cls arg1 arg2 arg3
          godot_method_bind_call bindTileSet_tile_set_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_shape" '[Int, Int, Shape2D]
            (IO ())
@@ -1900,7 +2055,10 @@ tile_set_shape_offset cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_shape_offset"
            '[Int, Int, Vector2]
@@ -1931,7 +2089,10 @@ tile_set_shape_one_way cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_shape_one_way"
            '[Int, Int, Bool]
@@ -1960,7 +2121,10 @@ tile_set_shape_one_way_margin cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_shape_one_way_margin"
            '[Int, Int, Float]
@@ -1991,7 +2155,10 @@ tile_set_shape_transform cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_shape_transform"
            '[Int, Int, Transform2d]
@@ -2020,7 +2187,10 @@ tile_set_shapes cls arg1 arg2
          godot_method_bind_call bindTileSet_tile_set_shapes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_shapes" '[Int, Array] (IO ())
          where
@@ -2047,7 +2217,10 @@ tile_set_texture cls arg1 arg2
          godot_method_bind_call bindTileSet_tile_set_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_texture" '[Int, Texture]
            (IO ())
@@ -2076,7 +2249,10 @@ tile_set_texture_offset cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_texture_offset"
            '[Int, Vector2]
@@ -2105,7 +2281,10 @@ tile_set_tile_mode cls arg1 arg2
          godot_method_bind_call bindTileSet_tile_set_tile_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_tile_mode" '[Int, Int]
            (IO ())
@@ -2133,7 +2312,10 @@ tile_set_z_index cls arg1 arg2
          godot_method_bind_call bindTileSet_tile_set_z_index (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileSet "tile_set_z_index" '[Int, Int] (IO ())
          where

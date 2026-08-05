@@ -24,7 +24,8 @@ module Godot.Core.Object
         Godot.Core.Object.get_property_list, Godot.Core.Object.get_script,
         Godot.Core.Object.get_signal_connection_list,
         Godot.Core.Object.get_signal_list, Godot.Core.Object.has_meta,
-        Godot.Core.Object.has_method, Godot.Core.Object.has_user_signal,
+        Godot.Core.Object.has_method, Godot.Core.Object.has_signal,
+        Godot.Core.Object.has_user_signal,
         Godot.Core.Object.is_blocking_signals, Godot.Core.Object.is_class,
         Godot.Core.Object.is_connected,
         Godot.Core.Object.is_queued_for_deletion,
@@ -95,7 +96,7 @@ _get cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject__get (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Object "_get" '[GodotString] (IO GodotVariant)
          where
@@ -126,7 +127,10 @@ _get_property_list cls
          godot_method_bind_call bindObject__get_property_list (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "_get_property_list" '[] (IO Array)
          where
@@ -134,7 +138,8 @@ instance NodeMethod Object "_get_property_list" '[] (IO Array)
 
 {-# NOINLINE bindObject__init #-}
 
--- | Called when the object is initialized.
+-- | Called when the object is initialized in memory. Can be defined to take in parameters, that are passed in when constructing.
+--   				__Note:__ If @method _init@ is defined with required parameters, then explicit construction is the only valid means of creating an Object of the class. If any other means (such as @method PackedScene.instance@) is used, then initialization will fail.
 bindObject__init :: MethodBind
 bindObject__init
   = unsafePerformIO $
@@ -144,13 +149,16 @@ bindObject__init
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Called when the object is initialized.
+-- | Called when the object is initialized in memory. Can be defined to take in parameters, that are passed in when constructing.
+--   				__Note:__ If @method _init@ is defined with required parameters, then explicit construction is the only valid means of creating an Object of the class. If any other means (such as @method PackedScene.instance@) is used, then initialization will fail.
 _init :: (Object :< cls, Object :< cls) => cls -> IO ()
 _init cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject__init (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "_init" '[] (IO ()) where
         nodeMethod = Godot.Core.Object._init
@@ -175,7 +183,10 @@ _notification cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject__notification (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "_notification" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Object._notification
@@ -202,7 +213,9 @@ _set cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject__set (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "_set" '[GodotString, GodotVariant]
            (IO Bool)
@@ -231,7 +244,10 @@ _to_string cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject__to_string (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "_to_string" '[] (IO GodotString) where
         nodeMethod = Godot.Core.Object._to_string
@@ -259,7 +275,10 @@ add_user_signal cls arg1 arg2
          godot_method_bind_call bindObject_add_user_signal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "add_user_signal"
            '[GodotString, Maybe Array]
@@ -303,7 +322,7 @@ call cls arg1 varargs
   = withVariantArray ([toVariant arg1] ++ varargs)
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_call (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Object "call"
            '[GodotString, [Variant 'GodotTy]]
@@ -348,7 +367,10 @@ call_deferred cls arg1 varargs
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_call_deferred (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "call_deferred"
            '[GodotString, [Variant 'GodotTy]]
@@ -388,7 +410,7 @@ callv cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_callv (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Object "callv" '[GodotString, Array]
            (IO GodotVariant)
@@ -417,7 +439,10 @@ can_translate_messages cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "can_translate_messages" '[] (IO Bool)
          where
@@ -492,7 +517,10 @@ connect cls arg1 arg2 arg3 arg4 arg5
        maybe (VariantInt (0)) toVariant arg5]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_connect (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "connect"
            '[GodotString, Object, GodotString, Maybe Array, Maybe Int]
@@ -523,7 +551,10 @@ disconnect cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_disconnect (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "disconnect"
            '[GodotString, Object, GodotString]
@@ -566,7 +597,10 @@ emit_signal cls arg1 varargs
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_emit_signal (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "emit_signal"
            '[GodotString, [Variant 'GodotTy]]
@@ -576,7 +610,8 @@ instance NodeMethod Object "emit_signal"
 
 {-# NOINLINE bindObject_free #-}
 
--- | Deletes the object from memory. Any pre-existing reference to the freed object will become invalid, e.g. @is_instance_valid(object)@ will return @false@.
+-- | Deletes the object from memory immediately. For @Node@s, you may want to use @method Node.queue_free@ to queue the node for safe deletion at the end of the current frame.
+--   				__Important:__ If you have a variable pointing to an object, it will @i@not@/i@ be assigned to @null@ once the object is freed. Instead, it will point to a @i@previously freed instance@/i@ and you should validate it with @method @GDScript.is_instance_valid@ before attempting to call its methods or access its properties.
 bindObject_free :: MethodBind
 bindObject_free
   = unsafePerformIO $
@@ -586,13 +621,16 @@ bindObject_free
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Deletes the object from memory. Any pre-existing reference to the freed object will become invalid, e.g. @is_instance_valid(object)@ will return @false@.
+-- | Deletes the object from memory immediately. For @Node@s, you may want to use @method Node.queue_free@ to queue the node for safe deletion at the end of the current frame.
+--   				__Important:__ If you have a variable pointing to an object, it will @i@not@/i@ be assigned to @null@ once the object is freed. Instead, it will point to a @i@previously freed instance@/i@ and you should validate it with @method @GDScript.is_instance_valid@ before attempting to call its methods or access its properties.
 free :: (Object :< cls, Object :< cls) => cls -> IO ()
 free cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_free (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "free" '[] (IO ()) where
         nodeMethod = Godot.Core.Object.free
@@ -619,7 +657,7 @@ get cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_get (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Object "get" '[GodotString] (IO GodotVariant)
          where
@@ -627,7 +665,8 @@ instance NodeMethod Object "get" '[GodotString] (IO GodotVariant)
 
 {-# NOINLINE bindObject_get_class #-}
 
--- | Returns the object's class as a @String@.
+-- | Returns the object's class as a @String@. See also @method is_class@.
+--   				__Note:__ @method get_class@ does not take @class_name@ declarations into account. If the object has a @class_name@ defined, the base class name will be returned instead.
 bindObject_get_class :: MethodBind
 bindObject_get_class
   = unsafePerformIO $
@@ -637,14 +676,18 @@ bindObject_get_class
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the object's class as a @String@.
+-- | Returns the object's class as a @String@. See also @method is_class@.
+--   				__Note:__ @method get_class@ does not take @class_name@ declarations into account. If the object has a @class_name@ defined, the base class name will be returned instead.
 get_class ::
             (Object :< cls, Object :< cls) => cls -> IO GodotString
 get_class cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_get_class (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "get_class" '[] (IO GodotString) where
         nodeMethod = Godot.Core.Object.get_class
@@ -679,7 +722,10 @@ get_incoming_connections cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "get_incoming_connections" '[]
            (IO Array)
@@ -689,6 +735,7 @@ instance NodeMethod Object "get_incoming_connections" '[]
 {-# NOINLINE bindObject_get_indexed #-}
 
 -- | Gets the object's property indexed by the given @NodePath@. The node path should be relative to the current object and can use the colon character (@:@) to access nested properties. Examples: @"position:x"@ or @"material:next_pass:blend_mode"@.
+--   				__Note:__ Even though the method takes @NodePath@ argument, it doesn't support actual paths to @Node@s in the scene tree, only colon-separated sub-property paths. For the purpose of nodes, use @method Node.get_node_and_resource@ instead.
 bindObject_get_indexed :: MethodBind
 bindObject_get_indexed
   = unsafePerformIO $
@@ -699,6 +746,7 @@ bindObject_get_indexed
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Gets the object's property indexed by the given @NodePath@. The node path should be relative to the current object and can use the colon character (@:@) to access nested properties. Examples: @"position:x"@ or @"material:next_pass:blend_mode"@.
+--   				__Note:__ Even though the method takes @NodePath@ argument, it doesn't support actual paths to @Node@s in the scene tree, only colon-separated sub-property paths. For the purpose of nodes, use @method Node.get_node_and_resource@ instead.
 get_indexed ::
               (Object :< cls, Object :< cls) =>
               cls -> NodePath -> IO GodotVariant
@@ -707,7 +755,7 @@ get_indexed cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_get_indexed (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Object "get_indexed" '[NodePath]
            (IO GodotVariant)
@@ -736,7 +784,10 @@ get_instance_id cls
          godot_method_bind_call bindObject_get_instance_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "get_instance_id" '[] (IO Int) where
         nodeMethod = Godot.Core.Object.get_instance_id
@@ -761,7 +812,7 @@ get_meta cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_get_meta (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Object "get_meta" '[GodotString]
            (IO GodotVariant)
@@ -788,7 +839,10 @@ get_meta_list cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_get_meta_list (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "get_meta_list" '[] (IO PoolStringArray)
          where
@@ -815,7 +869,10 @@ get_method_list cls
          godot_method_bind_call bindObject_get_method_list (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "get_method_list" '[] (IO Array) where
         nodeMethod = Godot.Core.Object.get_method_list
@@ -843,7 +900,10 @@ get_property_list cls
          godot_method_bind_call bindObject_get_property_list (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "get_property_list" '[] (IO Array) where
         nodeMethod = Godot.Core.Object.get_property_list
@@ -867,7 +927,7 @@ get_script cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_get_script (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Object "get_script" '[] (IO Reference) where
         nodeMethod = Godot.Core.Object.get_script
@@ -894,7 +954,10 @@ get_signal_connection_list cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "get_signal_connection_list"
            '[GodotString]
@@ -923,7 +986,10 @@ get_signal_list cls
          godot_method_bind_call bindObject_get_signal_list (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "get_signal_list" '[] (IO Array) where
         nodeMethod = Godot.Core.Object.get_signal_list
@@ -947,7 +1013,10 @@ has_meta cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_has_meta (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "has_meta" '[GodotString] (IO Bool)
          where
@@ -973,11 +1042,43 @@ has_method cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_has_method (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "has_method" '[GodotString] (IO Bool)
          where
         nodeMethod = Godot.Core.Object.has_method
+
+{-# NOINLINE bindObject_has_signal #-}
+
+-- | Returns @true@ if the given @signal@ exists.
+bindObject_has_signal :: MethodBind
+bindObject_has_signal
+  = unsafePerformIO $
+      withCString "Object" $
+        \ clsNamePtr ->
+          withCString "has_signal" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if the given @signal@ exists.
+has_signal ::
+             (Object :< cls, Object :< cls) => cls -> GodotString -> IO Bool
+has_signal cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindObject_has_signal (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Object "has_signal" '[GodotString] (IO Bool)
+         where
+        nodeMethod = Godot.Core.Object.has_signal
 
 {-# NOINLINE bindObject_has_user_signal #-}
 
@@ -1000,7 +1101,10 @@ has_user_signal cls arg1
          godot_method_bind_call bindObject_has_user_signal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "has_user_signal" '[GodotString]
            (IO Bool)
@@ -1028,7 +1132,10 @@ is_blocking_signals cls
          godot_method_bind_call bindObject_is_blocking_signals (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "is_blocking_signals" '[] (IO Bool)
          where
@@ -1036,7 +1143,8 @@ instance NodeMethod Object "is_blocking_signals" '[] (IO Bool)
 
 {-# NOINLINE bindObject_is_class #-}
 
--- | Returns @true@ if the object inherits from the given @class@.
+-- | Returns @true@ if the object inherits from the given @class@. See also @method get_class@.
+--   				__Note:__ @method is_class@ does not take @class_name@ declarations into account. If the object has a @class_name@ defined, @method is_class@ will return @false@ for that name.
 bindObject_is_class :: MethodBind
 bindObject_is_class
   = unsafePerformIO $
@@ -1046,14 +1154,18 @@ bindObject_is_class
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if the object inherits from the given @class@.
+-- | Returns @true@ if the object inherits from the given @class@. See also @method get_class@.
+--   				__Note:__ @method is_class@ does not take @class_name@ declarations into account. If the object has a @class_name@ defined, @method is_class@ will return @false@ for that name.
 is_class ::
            (Object :< cls, Object :< cls) => cls -> GodotString -> IO Bool
 is_class cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_is_class (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "is_class" '[GodotString] (IO Bool)
          where
@@ -1080,7 +1192,10 @@ is_connected cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_is_connected (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "is_connected"
            '[GodotString, Object, GodotString]
@@ -1110,7 +1225,10 @@ is_queued_for_deletion cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "is_queued_for_deletion" '[] (IO Bool)
          where
@@ -1139,7 +1257,10 @@ notification cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_notification (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "notification" '[Int, Maybe Bool]
            (IO ())
@@ -1168,7 +1289,10 @@ property_list_changed_notify cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "property_list_changed_notify" '[]
            (IO ())
@@ -1195,7 +1319,10 @@ remove_meta cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_remove_meta (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "remove_meta" '[GodotString] (IO ())
          where
@@ -1203,7 +1330,7 @@ instance NodeMethod Object "remove_meta" '[GodotString] (IO ())
 
 {-# NOINLINE bindObject_set #-}
 
--- | Assigns a new value to the given property. If the @property@ does not exist, nothing will happen.
+-- | Assigns a new value to the given property. If the @property@ does not exist or the given value's type doesn't match, nothing will happen.
 --   				__Note:__ In C#, the property name must be specified as snake_case if it is defined by a built-in Godot node. This doesn't apply to user-defined properties where you should use the same convention as in the C# source (typically PascalCase).
 bindObject_set :: MethodBind
 bindObject_set
@@ -1214,7 +1341,7 @@ bindObject_set
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Assigns a new value to the given property. If the @property@ does not exist, nothing will happen.
+-- | Assigns a new value to the given property. If the @property@ does not exist or the given value's type doesn't match, nothing will happen.
 --   				__Note:__ In C#, the property name must be specified as snake_case if it is defined by a built-in Godot node. This doesn't apply to user-defined properties where you should use the same convention as in the C# source (typically PascalCase).
 set ::
       (Object :< cls, Object :< cls) =>
@@ -1223,7 +1350,9 @@ set cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_set (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "set" '[GodotString, GodotVariant]
            (IO ())
@@ -1251,7 +1380,10 @@ set_block_signals cls arg1
          godot_method_bind_call bindObject_set_block_signals (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "set_block_signals" '[Bool] (IO ())
          where
@@ -1280,7 +1412,10 @@ set_deferred cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_set_deferred (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "set_deferred"
            '[GodotString, GodotVariant]
@@ -1325,7 +1460,10 @@ set_indexed cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_set_indexed (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "set_indexed" '[NodePath, GodotVariant]
            (IO ())
@@ -1354,7 +1492,10 @@ set_message_translation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "set_message_translation" '[Bool]
            (IO ())
@@ -1383,7 +1524,10 @@ set_meta cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_set_meta (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "set_meta" '[GodotString, GodotVariant]
            (IO ())
@@ -1412,7 +1556,10 @@ set_script cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_set_script (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "set_script" '[Reference] (IO ()) where
         nodeMethod = Godot.Core.Object.set_script
@@ -1438,7 +1585,10 @@ to_string cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_to_string (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "to_string" '[] (IO GodotString) where
         nodeMethod = Godot.Core.Object.to_string
@@ -1465,7 +1615,9 @@ tr cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_tr (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Object "tr" '[GodotString] (IO GodotString)
          where

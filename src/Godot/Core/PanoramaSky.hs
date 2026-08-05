@@ -42,7 +42,7 @@ get_panorama cls
          godot_method_bind_call bindPanoramaSky_get_panorama (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod PanoramaSky "get_panorama" '[] (IO Texture)
          where
@@ -69,7 +69,10 @@ set_panorama cls arg1
          godot_method_bind_call bindPanoramaSky_set_panorama (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PanoramaSky "set_panorama" '[Texture] (IO ())
          where

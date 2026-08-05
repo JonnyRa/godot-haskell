@@ -102,34 +102,44 @@ _MODE_RIGID = 0
 _MODE_CHARACTER :: Int
 _MODE_CHARACTER = 2
 
--- | Emitted when a body enters into contact with this one. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions.
+-- | Emitted when a collision with another @PhysicsBody2D@ or @TileMap@ occurs. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
+--   				@body@ the @Node@, if it exists in the tree, of the other @PhysicsBody2D@ or @TileMap@.
 sig_body_entered :: Godot.Internal.Dispatch.Signal RigidBody2D
 sig_body_entered = Godot.Internal.Dispatch.Signal "body_entered"
 
 instance NodeSignal RigidBody2D "body_entered" '[Node]
 
--- | Emitted when a body exits contact with this one. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions.
+-- | Emitted when the collision with another @PhysicsBody2D@ or @TileMap@ ends. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
+--   				@body@ the @Node@, if it exists in the tree, of the other @PhysicsBody2D@ or @TileMap@.
 sig_body_exited :: Godot.Internal.Dispatch.Signal RigidBody2D
 sig_body_exited = Godot.Internal.Dispatch.Signal "body_exited"
 
 instance NodeSignal RigidBody2D "body_exited" '[Node]
 
--- | Emitted when a body enters into contact with this one. Reports colliding shape information. See @CollisionObject2D@ for shape index information. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions.
+-- | Emitted when one of this RigidBody2D's @Shape2D@s collides with another @PhysicsBody2D@ or @TileMap@'s @Shape2D@s. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
+--   				@body_rid@ the @RID@ of the other @PhysicsBody2D@ or @TileSet@'s @CollisionObject2D@ used by the @Physics2DServer@.
+--   				@body@ the @Node@, if it exists in the tree, of the other @PhysicsBody2D@ or @TileMap@.
+--   				@body_shape_index@ the index of the @Shape2D@ of the other @PhysicsBody2D@ or @TileMap@ used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @body.shape_owner_get_owner(body_shape_index)@.
+--   				@local_shape_index@ the index of the @Shape2D@ of this RigidBody2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
 sig_body_shape_entered ::
                        Godot.Internal.Dispatch.Signal RigidBody2D
 sig_body_shape_entered
   = Godot.Internal.Dispatch.Signal "body_shape_entered"
 
 instance NodeSignal RigidBody2D "body_shape_entered"
-           '[Int, Node, Int, Int]
+           '[Rid, Node, Int, Int]
 
--- | Emitted when a body shape exits contact with this one. Reports colliding shape information. See @CollisionObject2D@ for shape index information. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions.
+-- | Emitted when the collision between one of this RigidBody2D's @Shape2D@s and another @PhysicsBody2D@ or @TileMap@'s @Shape2D@s ends. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
+--   				@body_rid@ the @RID@ of the other @PhysicsBody2D@ or @TileSet@'s @CollisionObject2D@ used by the @Physics2DServer@.
+--   				@body@ the @Node@, if it exists in the tree, of the other @PhysicsBody2D@ or @TileMap@.
+--   				@body_shape_index@ the index of the @Shape2D@ of the other @PhysicsBody2D@ or @TileMap@ used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @body.shape_owner_get_owner(body_shape_index)@.
+--   				@local_shape_index@ the index of the @Shape2D@ of this RigidBody2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
 sig_body_shape_exited :: Godot.Internal.Dispatch.Signal RigidBody2D
 sig_body_shape_exited
   = Godot.Internal.Dispatch.Signal "body_shape_exited"
 
 instance NodeSignal RigidBody2D "body_shape_exited"
-           '[Int, Node, Int, Int]
+           '[Rid, Node, Int, Int]
 
 -- | Emitted when the physics engine changes the body's sleeping state.
 --   				__Note:__ Changing the value @sleeping@ will not trigger this signal. It is only emitted if the sleeping state is changed by the physics engine or @emit_signal("sleeping_state_changed")@ is used.
@@ -258,7 +268,10 @@ _body_enter_tree cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "_body_enter_tree" '[Int] (IO ())
          where
@@ -283,7 +296,10 @@ _body_exit_tree cls arg1
          godot_method_bind_call bindRigidBody2D__body_exit_tree (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "_body_exit_tree" '[Int] (IO ())
          where
@@ -309,7 +325,10 @@ _direct_state_changed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "_direct_state_changed" '[Object]
            (IO ())
@@ -339,7 +358,10 @@ _integrate_forces cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "_integrate_forces"
            '[Physics2DDirectBodyState]
@@ -368,7 +390,10 @@ _reload_physics_characteristics cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "_reload_physics_characteristics"
            '[]
@@ -398,7 +423,10 @@ add_central_force cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "add_central_force" '[Vector2]
            (IO ())
@@ -427,7 +455,10 @@ add_force cls arg1 arg2
          godot_method_bind_call bindRigidBody2D_add_force (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "add_force" '[Vector2, Vector2]
            (IO ())
@@ -455,7 +486,10 @@ add_torque cls arg1
          godot_method_bind_call bindRigidBody2D_add_torque (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "add_torque" '[Float] (IO ()) where
         nodeMethod = Godot.Core.RigidBody2D.add_torque
@@ -482,7 +516,10 @@ apply_central_impulse cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "apply_central_impulse" '[Vector2]
            (IO ())
@@ -511,7 +548,10 @@ apply_impulse cls arg1 arg2
          godot_method_bind_call bindRigidBody2D_apply_impulse (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "apply_impulse" '[Vector2, Vector2]
            (IO ())
@@ -540,7 +580,10 @@ apply_torque_impulse cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "apply_torque_impulse" '[Float]
            (IO ())
@@ -550,6 +593,7 @@ instance NodeMethod RigidBody2D "apply_torque_impulse" '[Float]
 {-# NOINLINE bindRigidBody2D_get_angular_damp #-}
 
 -- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__.
+--   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 bindRigidBody2D_get_angular_damp :: MethodBind
 bindRigidBody2D_get_angular_damp
   = unsafePerformIO $
@@ -560,6 +604,7 @@ bindRigidBody2D_get_angular_damp
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__.
+--   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 get_angular_damp ::
                    (RigidBody2D :< cls, Object :< cls) => cls -> IO Float
 get_angular_damp cls
@@ -569,7 +614,10 @@ get_angular_damp cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_angular_damp" '[] (IO Float)
          where
@@ -577,7 +625,7 @@ instance NodeMethod RigidBody2D "get_angular_damp" '[] (IO Float)
 
 {-# NOINLINE bindRigidBody2D_get_angular_velocity #-}
 
--- | The body's rotational velocity.
+-- | The body's rotational velocity in @i@radians@/i@ per second.
 bindRigidBody2D_get_angular_velocity :: MethodBind
 bindRigidBody2D_get_angular_velocity
   = unsafePerformIO $
@@ -587,7 +635,7 @@ bindRigidBody2D_get_angular_velocity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The body's rotational velocity.
+-- | The body's rotational velocity in @i@radians@/i@ per second.
 get_angular_velocity ::
                        (RigidBody2D :< cls, Object :< cls) => cls -> IO Float
 get_angular_velocity cls
@@ -597,7 +645,10 @@ get_angular_velocity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_angular_velocity" '[]
            (IO Float)
@@ -626,7 +677,10 @@ get_applied_force cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_applied_force" '[]
            (IO Vector2)
@@ -655,7 +709,10 @@ get_applied_torque cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_applied_torque" '[] (IO Float)
          where
@@ -684,7 +741,10 @@ get_bounce cls
          godot_method_bind_call bindRigidBody2D_get_bounce (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_bounce" '[] (IO Float) where
         nodeMethod = Godot.Core.RigidBody2D.get_bounce
@@ -713,7 +773,10 @@ get_colliding_bodies cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_colliding_bodies" '[]
            (IO Array)
@@ -747,7 +810,10 @@ get_continuous_collision_detection_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D
            "get_continuous_collision_detection_mode"
@@ -780,7 +846,10 @@ get_friction cls
          godot_method_bind_call bindRigidBody2D_get_friction (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_friction" '[] (IO Float) where
         nodeMethod = Godot.Core.RigidBody2D.get_friction
@@ -807,7 +876,10 @@ get_gravity_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_gravity_scale" '[] (IO Float)
          where
@@ -834,7 +906,10 @@ get_inertia cls
          godot_method_bind_call bindRigidBody2D_get_inertia (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_inertia" '[] (IO Float) where
         nodeMethod = Godot.Core.RigidBody2D.get_inertia
@@ -842,6 +917,7 @@ instance NodeMethod RigidBody2D "get_inertia" '[] (IO Float) where
 {-# NOINLINE bindRigidBody2D_get_linear_damp #-}
 
 -- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__.
+--   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 bindRigidBody2D_get_linear_damp :: MethodBind
 bindRigidBody2D_get_linear_damp
   = unsafePerformIO $
@@ -852,6 +928,7 @@ bindRigidBody2D_get_linear_damp
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__.
+--   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 get_linear_damp ::
                   (RigidBody2D :< cls, Object :< cls) => cls -> IO Float
 get_linear_damp cls
@@ -860,7 +937,10 @@ get_linear_damp cls
          godot_method_bind_call bindRigidBody2D_get_linear_damp (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_linear_damp" '[] (IO Float)
          where
@@ -868,7 +948,7 @@ instance NodeMethod RigidBody2D "get_linear_damp" '[] (IO Float)
 
 {-# NOINLINE bindRigidBody2D_get_linear_velocity #-}
 
--- | The body's linear velocity.
+-- | The body's linear velocity in pixels per second. Can be used sporadically, but __don't set this every frame__, because physics may run in another thread and runs at a different granularity. Use @method _integrate_forces@ as your process loop for precise control of the body state.
 bindRigidBody2D_get_linear_velocity :: MethodBind
 bindRigidBody2D_get_linear_velocity
   = unsafePerformIO $
@@ -878,7 +958,7 @@ bindRigidBody2D_get_linear_velocity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The body's linear velocity.
+-- | The body's linear velocity in pixels per second. Can be used sporadically, but __don't set this every frame__, because physics may run in another thread and runs at a different granularity. Use @method _integrate_forces@ as your process loop for precise control of the body state.
 get_linear_velocity ::
                       (RigidBody2D :< cls, Object :< cls) => cls -> IO Vector2
 get_linear_velocity cls
@@ -888,7 +968,10 @@ get_linear_velocity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_linear_velocity" '[]
            (IO Vector2)
@@ -914,7 +997,10 @@ get_mass cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRigidBody2D_get_mass (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_mass" '[] (IO Float) where
         nodeMethod = Godot.Core.RigidBody2D.get_mass
@@ -922,7 +1008,7 @@ instance NodeMethod RigidBody2D "get_mass" '[] (IO Float) where
 {-# NOINLINE bindRigidBody2D_get_max_contacts_reported #-}
 
 -- | The maximum number of contacts that will be recorded. Requires @contact_monitor@ to be set to @true@.
---   			__Note:__ The number of contacts is different from the number of collisions. Collisions between parallel edges will result in two contacts (one at each end), and collisions between parallel faces will result in four contacts (one at each corner).
+--   			__Note:__ The number of contacts is different from the number of collisions. Collisions between parallel edges will result in two contacts (one at each end).
 bindRigidBody2D_get_max_contacts_reported :: MethodBind
 bindRigidBody2D_get_max_contacts_reported
   = unsafePerformIO $
@@ -933,7 +1019,7 @@ bindRigidBody2D_get_max_contacts_reported
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The maximum number of contacts that will be recorded. Requires @contact_monitor@ to be set to @true@.
---   			__Note:__ The number of contacts is different from the number of collisions. Collisions between parallel edges will result in two contacts (one at each end), and collisions between parallel faces will result in four contacts (one at each corner).
+--   			__Note:__ The number of contacts is different from the number of collisions. Collisions between parallel edges will result in two contacts (one at each end).
 get_max_contacts_reported ::
                             (RigidBody2D :< cls, Object :< cls) => cls -> IO Int
 get_max_contacts_reported cls
@@ -943,7 +1029,10 @@ get_max_contacts_reported cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_max_contacts_reported" '[]
            (IO Int)
@@ -969,7 +1058,10 @@ get_mode cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRigidBody2D_get_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.RigidBody2D.get_mode
@@ -999,7 +1091,7 @@ get_physics_material_override cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod RigidBody2D "get_physics_material_override" '[]
            (IO PhysicsMaterial)
@@ -1027,7 +1119,10 @@ get_weight cls
          godot_method_bind_call bindRigidBody2D_get_weight (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "get_weight" '[] (IO Float) where
         nodeMethod = Godot.Core.RigidBody2D.get_weight
@@ -1056,7 +1151,10 @@ is_able_to_sleep cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "is_able_to_sleep" '[] (IO Bool)
          where
@@ -1084,7 +1182,10 @@ is_contact_monitor_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "is_contact_monitor_enabled" '[]
            (IO Bool)
@@ -1112,7 +1213,10 @@ is_sleeping cls
          godot_method_bind_call bindRigidBody2D_is_sleeping (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "is_sleeping" '[] (IO Bool) where
         nodeMethod = Godot.Core.RigidBody2D.is_sleeping
@@ -1139,7 +1243,10 @@ is_using_custom_integrator cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "is_using_custom_integrator" '[]
            (IO Bool)
@@ -1149,6 +1256,7 @@ instance NodeMethod RigidBody2D "is_using_custom_integrator" '[]
 {-# NOINLINE bindRigidBody2D_set_angular_damp #-}
 
 -- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__.
+--   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 bindRigidBody2D_set_angular_damp :: MethodBind
 bindRigidBody2D_set_angular_damp
   = unsafePerformIO $
@@ -1159,6 +1267,7 @@ bindRigidBody2D_set_angular_damp
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__.
+--   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 set_angular_damp ::
                    (RigidBody2D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_angular_damp cls arg1
@@ -1168,7 +1277,10 @@ set_angular_damp cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_angular_damp" '[Float] (IO ())
          where
@@ -1176,7 +1288,7 @@ instance NodeMethod RigidBody2D "set_angular_damp" '[Float] (IO ())
 
 {-# NOINLINE bindRigidBody2D_set_angular_velocity #-}
 
--- | The body's rotational velocity.
+-- | The body's rotational velocity in @i@radians@/i@ per second.
 bindRigidBody2D_set_angular_velocity :: MethodBind
 bindRigidBody2D_set_angular_velocity
   = unsafePerformIO $
@@ -1186,7 +1298,7 @@ bindRigidBody2D_set_angular_velocity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The body's rotational velocity.
+-- | The body's rotational velocity in @i@radians@/i@ per second.
 set_angular_velocity ::
                        (RigidBody2D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_angular_velocity cls arg1
@@ -1196,7 +1308,10 @@ set_angular_velocity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_angular_velocity" '[Float]
            (IO ())
@@ -1225,7 +1340,10 @@ set_applied_force cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_applied_force" '[Vector2]
            (IO ())
@@ -1254,7 +1372,10 @@ set_applied_torque cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_applied_torque" '[Float]
            (IO ())
@@ -1283,7 +1404,10 @@ set_axis_velocity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_axis_velocity" '[Vector2]
            (IO ())
@@ -1313,7 +1437,10 @@ set_bounce cls arg1
          godot_method_bind_call bindRigidBody2D_set_bounce (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_bounce" '[Float] (IO ()) where
         nodeMethod = Godot.Core.RigidBody2D.set_bounce
@@ -1341,7 +1468,10 @@ set_can_sleep cls arg1
          godot_method_bind_call bindRigidBody2D_set_can_sleep (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_can_sleep" '[Bool] (IO ())
          where
@@ -1369,7 +1499,10 @@ set_contact_monitor cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_contact_monitor" '[Bool]
            (IO ())
@@ -1403,7 +1536,10 @@ set_continuous_collision_detection_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D
            "set_continuous_collision_detection_mode"
@@ -1436,7 +1572,10 @@ set_friction cls arg1
          godot_method_bind_call bindRigidBody2D_set_friction (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_friction" '[Float] (IO ())
          where
@@ -1464,7 +1603,10 @@ set_gravity_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_gravity_scale" '[Float]
            (IO ())
@@ -1492,7 +1634,10 @@ set_inertia cls arg1
          godot_method_bind_call bindRigidBody2D_set_inertia (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_inertia" '[Float] (IO ())
          where
@@ -1501,6 +1646,7 @@ instance NodeMethod RigidBody2D "set_inertia" '[Float] (IO ())
 {-# NOINLINE bindRigidBody2D_set_linear_damp #-}
 
 -- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__.
+--   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 bindRigidBody2D_set_linear_damp :: MethodBind
 bindRigidBody2D_set_linear_damp
   = unsafePerformIO $
@@ -1511,6 +1657,7 @@ bindRigidBody2D_set_linear_damp
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__.
+--   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 set_linear_damp ::
                   (RigidBody2D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_linear_damp cls arg1
@@ -1519,7 +1666,10 @@ set_linear_damp cls arg1
          godot_method_bind_call bindRigidBody2D_set_linear_damp (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_linear_damp" '[Float] (IO ())
          where
@@ -1527,7 +1677,7 @@ instance NodeMethod RigidBody2D "set_linear_damp" '[Float] (IO ())
 
 {-# NOINLINE bindRigidBody2D_set_linear_velocity #-}
 
--- | The body's linear velocity.
+-- | The body's linear velocity in pixels per second. Can be used sporadically, but __don't set this every frame__, because physics may run in another thread and runs at a different granularity. Use @method _integrate_forces@ as your process loop for precise control of the body state.
 bindRigidBody2D_set_linear_velocity :: MethodBind
 bindRigidBody2D_set_linear_velocity
   = unsafePerformIO $
@@ -1537,7 +1687,7 @@ bindRigidBody2D_set_linear_velocity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The body's linear velocity.
+-- | The body's linear velocity in pixels per second. Can be used sporadically, but __don't set this every frame__, because physics may run in another thread and runs at a different granularity. Use @method _integrate_forces@ as your process loop for precise control of the body state.
 set_linear_velocity ::
                       (RigidBody2D :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_linear_velocity cls arg1
@@ -1547,7 +1697,10 @@ set_linear_velocity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_linear_velocity" '[Vector2]
            (IO ())
@@ -1574,7 +1727,10 @@ set_mass cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRigidBody2D_set_mass (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_mass" '[Float] (IO ()) where
         nodeMethod = Godot.Core.RigidBody2D.set_mass
@@ -1582,7 +1738,7 @@ instance NodeMethod RigidBody2D "set_mass" '[Float] (IO ()) where
 {-# NOINLINE bindRigidBody2D_set_max_contacts_reported #-}
 
 -- | The maximum number of contacts that will be recorded. Requires @contact_monitor@ to be set to @true@.
---   			__Note:__ The number of contacts is different from the number of collisions. Collisions between parallel edges will result in two contacts (one at each end), and collisions between parallel faces will result in four contacts (one at each corner).
+--   			__Note:__ The number of contacts is different from the number of collisions. Collisions between parallel edges will result in two contacts (one at each end).
 bindRigidBody2D_set_max_contacts_reported :: MethodBind
 bindRigidBody2D_set_max_contacts_reported
   = unsafePerformIO $
@@ -1593,7 +1749,7 @@ bindRigidBody2D_set_max_contacts_reported
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The maximum number of contacts that will be recorded. Requires @contact_monitor@ to be set to @true@.
---   			__Note:__ The number of contacts is different from the number of collisions. Collisions between parallel edges will result in two contacts (one at each end), and collisions between parallel faces will result in four contacts (one at each corner).
+--   			__Note:__ The number of contacts is different from the number of collisions. Collisions between parallel edges will result in two contacts (one at each end).
 set_max_contacts_reported ::
                             (RigidBody2D :< cls, Object :< cls) => cls -> Int -> IO ()
 set_max_contacts_reported cls arg1
@@ -1603,7 +1759,10 @@ set_max_contacts_reported cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_max_contacts_reported" '[Int]
            (IO ())
@@ -1630,7 +1789,10 @@ set_mode cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRigidBody2D_set_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.RigidBody2D.set_mode
@@ -1661,7 +1823,10 @@ set_physics_material_override cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_physics_material_override"
            '[PhysicsMaterial]
@@ -1690,7 +1855,10 @@ set_sleeping cls arg1
          godot_method_bind_call bindRigidBody2D_set_sleeping (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_sleeping" '[Bool] (IO ())
          where
@@ -1718,7 +1886,10 @@ set_use_custom_integrator cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_use_custom_integrator" '[Bool]
            (IO ())
@@ -1746,7 +1917,10 @@ set_weight cls arg1
          godot_method_bind_call bindRigidBody2D_set_weight (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "set_weight" '[Float] (IO ()) where
         nodeMethod = Godot.Core.RigidBody2D.set_weight
@@ -1779,7 +1953,10 @@ test_motion cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindRigidBody2D_test_motion (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RigidBody2D "test_motion"
            '[Vector2, Maybe Bool, Maybe Float,

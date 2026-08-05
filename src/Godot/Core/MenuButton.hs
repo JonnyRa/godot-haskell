@@ -55,7 +55,10 @@ _get_items cls
          godot_method_bind_call bindMenuButton__get_items (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MenuButton "_get_items" '[] (IO Array) where
         nodeMethod = Godot.Core.MenuButton._get_items
@@ -79,7 +82,10 @@ _set_items cls arg1
          godot_method_bind_call bindMenuButton__set_items (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MenuButton "_set_items" '[Array] (IO ()) where
         nodeMethod = Godot.Core.MenuButton._set_items
@@ -104,7 +110,10 @@ _unhandled_key_input cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MenuButton "_unhandled_key_input" '[InputEvent]
            (IO ())
@@ -114,6 +123,7 @@ instance NodeMethod MenuButton "_unhandled_key_input" '[InputEvent]
 {-# NOINLINE bindMenuButton_get_popup #-}
 
 -- | Returns the @PopupMenu@ contained in this button.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindMenuButton_get_popup :: MethodBind
 bindMenuButton_get_popup
   = unsafePerformIO $
@@ -124,6 +134,7 @@ bindMenuButton_get_popup
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the @PopupMenu@ contained in this button.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_popup ::
             (MenuButton :< cls, Object :< cls) => cls -> IO PopupMenu
 get_popup cls
@@ -131,7 +142,7 @@ get_popup cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMenuButton_get_popup (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MenuButton "get_popup" '[] (IO PopupMenu) where
         nodeMethod = Godot.Core.MenuButton.get_popup
@@ -158,7 +169,10 @@ is_switch_on_hover cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MenuButton "is_switch_on_hover" '[] (IO Bool)
          where
@@ -186,7 +200,10 @@ set_disable_shortcuts cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MenuButton "set_disable_shortcuts" '[Bool]
            (IO ())
@@ -215,7 +232,10 @@ set_switch_on_hover cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MenuButton "set_switch_on_hover" '[Bool]
            (IO ())

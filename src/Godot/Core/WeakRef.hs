@@ -33,7 +33,7 @@ get_ref cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindWeakRef_get_ref (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod WeakRef "get_ref" '[] (IO GodotVariant) where
         nodeMethod = Godot.Core.WeakRef.get_ref

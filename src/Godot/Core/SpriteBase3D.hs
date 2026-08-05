@@ -142,7 +142,10 @@ _im_update cls
          godot_method_bind_call bindSpriteBase3D__im_update (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "_im_update" '[] (IO ()) where
         nodeMethod = Godot.Core.SpriteBase3D._im_update
@@ -166,7 +169,10 @@ _queue_update cls
          godot_method_bind_call bindSpriteBase3D__queue_update (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "_queue_update" '[] (IO ()) where
         nodeMethod = Godot.Core.SpriteBase3D._queue_update
@@ -191,7 +197,7 @@ generate_triangle_mesh cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod SpriteBase3D "generate_triangle_mesh" '[]
            (IO TriangleMesh)
@@ -218,7 +224,10 @@ get_alpha_cut_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "get_alpha_cut_mode" '[] (IO Int)
          where
@@ -244,7 +253,10 @@ get_axis cls
          godot_method_bind_call bindSpriteBase3D_get_axis (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "get_axis" '[] (IO Int) where
         nodeMethod = Godot.Core.SpriteBase3D.get_axis
@@ -269,7 +281,10 @@ get_billboard_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "get_billboard_mode" '[] (IO Int)
          where
@@ -296,7 +311,10 @@ get_draw_flag cls arg1
          godot_method_bind_call bindSpriteBase3D_get_draw_flag (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "get_draw_flag" '[Int] (IO Bool)
          where
@@ -323,7 +341,10 @@ get_item_rect cls
          godot_method_bind_call bindSpriteBase3D_get_item_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "get_item_rect" '[] (IO Rect2)
          where
@@ -331,7 +352,8 @@ instance NodeMethod SpriteBase3D "get_item_rect" '[] (IO Rect2)
 
 {-# NOINLINE bindSpriteBase3D_get_modulate #-}
 
--- | A color value that gets multiplied on, could be used for mood-coloring or to simulate the color of light.
+-- | A color value used to @i@multiply@/i@ the texture's colors. Can be used for mood-coloring or to simulate the color of light.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@/color@ must be inserted in the shader's @fragment()@ function.
 bindSpriteBase3D_get_modulate :: MethodBind
 bindSpriteBase3D_get_modulate
   = unsafePerformIO $
@@ -341,7 +363,8 @@ bindSpriteBase3D_get_modulate
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | A color value that gets multiplied on, could be used for mood-coloring or to simulate the color of light.
+-- | A color value used to @i@multiply@/i@ the texture's colors. Can be used for mood-coloring or to simulate the color of light.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@/color@ must be inserted in the shader's @fragment()@ function.
 get_modulate ::
                (SpriteBase3D :< cls, Object :< cls) => cls -> IO Color
 get_modulate cls
@@ -350,7 +373,10 @@ get_modulate cls
          godot_method_bind_call bindSpriteBase3D_get_modulate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "get_modulate" '[] (IO Color)
          where
@@ -377,7 +403,10 @@ get_offset cls
          godot_method_bind_call bindSpriteBase3D_get_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "get_offset" '[] (IO Vector2)
          where
@@ -385,7 +414,8 @@ instance NodeMethod SpriteBase3D "get_offset" '[] (IO Vector2)
 
 {-# NOINLINE bindSpriteBase3D_get_opacity #-}
 
--- | The objects visibility on a scale from @0@ fully invisible to @1@ fully visible.
+-- | The texture's visibility on a scale from @0@ (fully invisible) to @1@ (fully visible). @opacity@ is a multiplier for the @modulate@ color's alpha channel.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@/color@ must be inserted in the shader's @fragment()@ function.
 bindSpriteBase3D_get_opacity :: MethodBind
 bindSpriteBase3D_get_opacity
   = unsafePerformIO $
@@ -395,7 +425,8 @@ bindSpriteBase3D_get_opacity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The objects visibility on a scale from @0@ fully invisible to @1@ fully visible.
+-- | The texture's visibility on a scale from @0@ (fully invisible) to @1@ (fully visible). @opacity@ is a multiplier for the @modulate@ color's alpha channel.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@/color@ must be inserted in the shader's @fragment()@ function.
 get_opacity ::
               (SpriteBase3D :< cls, Object :< cls) => cls -> IO Float
 get_opacity cls
@@ -404,7 +435,10 @@ get_opacity cls
          godot_method_bind_call bindSpriteBase3D_get_opacity (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "get_opacity" '[] (IO Float) where
         nodeMethod = Godot.Core.SpriteBase3D.get_opacity
@@ -430,7 +464,10 @@ get_pixel_size cls
          godot_method_bind_call bindSpriteBase3D_get_pixel_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "get_pixel_size" '[] (IO Float)
          where
@@ -457,7 +494,10 @@ is_centered cls
          godot_method_bind_call bindSpriteBase3D_is_centered (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "is_centered" '[] (IO Bool) where
         nodeMethod = Godot.Core.SpriteBase3D.is_centered
@@ -483,7 +523,10 @@ is_flipped_h cls
          godot_method_bind_call bindSpriteBase3D_is_flipped_h (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "is_flipped_h" '[] (IO Bool) where
         nodeMethod = Godot.Core.SpriteBase3D.is_flipped_h
@@ -509,7 +552,10 @@ is_flipped_v cls
          godot_method_bind_call bindSpriteBase3D_is_flipped_v (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "is_flipped_v" '[] (IO Bool) where
         nodeMethod = Godot.Core.SpriteBase3D.is_flipped_v
@@ -534,7 +580,10 @@ set_alpha_cut_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_alpha_cut_mode" '[Int]
            (IO ())
@@ -562,7 +611,10 @@ set_axis cls arg1
          godot_method_bind_call bindSpriteBase3D_set_axis (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_axis" '[Int] (IO ()) where
         nodeMethod = Godot.Core.SpriteBase3D.set_axis
@@ -587,7 +639,10 @@ set_billboard_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_billboard_mode" '[Int]
            (IO ())
@@ -615,7 +670,10 @@ set_centered cls arg1
          godot_method_bind_call bindSpriteBase3D_set_centered (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_centered" '[Bool] (IO ())
          where
@@ -642,7 +700,10 @@ set_draw_flag cls arg1 arg2
          godot_method_bind_call bindSpriteBase3D_set_draw_flag (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_draw_flag" '[Int, Bool]
            (IO ())
@@ -670,7 +731,10 @@ set_flip_h cls arg1
          godot_method_bind_call bindSpriteBase3D_set_flip_h (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_flip_h" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.SpriteBase3D.set_flip_h
@@ -696,14 +760,18 @@ set_flip_v cls arg1
          godot_method_bind_call bindSpriteBase3D_set_flip_v (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_flip_v" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.SpriteBase3D.set_flip_v
 
 {-# NOINLINE bindSpriteBase3D_set_modulate #-}
 
--- | A color value that gets multiplied on, could be used for mood-coloring or to simulate the color of light.
+-- | A color value used to @i@multiply@/i@ the texture's colors. Can be used for mood-coloring or to simulate the color of light.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@/color@ must be inserted in the shader's @fragment()@ function.
 bindSpriteBase3D_set_modulate :: MethodBind
 bindSpriteBase3D_set_modulate
   = unsafePerformIO $
@@ -713,7 +781,8 @@ bindSpriteBase3D_set_modulate
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | A color value that gets multiplied on, could be used for mood-coloring or to simulate the color of light.
+-- | A color value used to @i@multiply@/i@ the texture's colors. Can be used for mood-coloring or to simulate the color of light.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@/color@ must be inserted in the shader's @fragment()@ function.
 set_modulate ::
                (SpriteBase3D :< cls, Object :< cls) => cls -> Color -> IO ()
 set_modulate cls arg1
@@ -722,7 +791,10 @@ set_modulate cls arg1
          godot_method_bind_call bindSpriteBase3D_set_modulate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_modulate" '[Color] (IO ())
          where
@@ -749,7 +821,10 @@ set_offset cls arg1
          godot_method_bind_call bindSpriteBase3D_set_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_offset" '[Vector2] (IO ())
          where
@@ -757,7 +832,8 @@ instance NodeMethod SpriteBase3D "set_offset" '[Vector2] (IO ())
 
 {-# NOINLINE bindSpriteBase3D_set_opacity #-}
 
--- | The objects visibility on a scale from @0@ fully invisible to @1@ fully visible.
+-- | The texture's visibility on a scale from @0@ (fully invisible) to @1@ (fully visible). @opacity@ is a multiplier for the @modulate@ color's alpha channel.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@/color@ must be inserted in the shader's @fragment()@ function.
 bindSpriteBase3D_set_opacity :: MethodBind
 bindSpriteBase3D_set_opacity
   = unsafePerformIO $
@@ -767,7 +843,8 @@ bindSpriteBase3D_set_opacity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The objects visibility on a scale from @0@ fully invisible to @1@ fully visible.
+-- | The texture's visibility on a scale from @0@ (fully invisible) to @1@ (fully visible). @opacity@ is a multiplier for the @modulate@ color's alpha channel.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@/color@ must be inserted in the shader's @fragment()@ function.
 set_opacity ::
               (SpriteBase3D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_opacity cls arg1
@@ -776,7 +853,10 @@ set_opacity cls arg1
          godot_method_bind_call bindSpriteBase3D_set_opacity (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_opacity" '[Float] (IO ())
          where
@@ -803,7 +883,10 @@ set_pixel_size cls arg1
          godot_method_bind_call bindSpriteBase3D_set_pixel_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteBase3D "set_pixel_size" '[Float] (IO ())
          where

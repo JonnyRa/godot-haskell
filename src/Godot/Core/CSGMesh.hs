@@ -43,7 +43,10 @@ _mesh_changed cls
          godot_method_bind_call bindCSGMesh__mesh_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGMesh "_mesh_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.CSGMesh._mesh_changed
@@ -66,7 +69,7 @@ get_material cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGMesh_get_material (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CSGMesh "get_material" '[] (IO Material) where
         nodeMethod = Godot.Core.CSGMesh.get_material
@@ -87,7 +90,7 @@ get_mesh cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGMesh_get_mesh (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CSGMesh "get_mesh" '[] (IO Mesh) where
         nodeMethod = Godot.Core.CSGMesh.get_mesh
@@ -110,7 +113,10 @@ set_material cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGMesh_set_material (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGMesh "set_material" '[Material] (IO ())
          where
@@ -132,7 +138,10 @@ set_mesh cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGMesh_set_mesh (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGMesh "set_mesh" '[Mesh] (IO ()) where
         nodeMethod = Godot.Core.CSGMesh.set_mesh

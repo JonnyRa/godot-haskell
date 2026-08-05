@@ -61,7 +61,10 @@ get_error cls
          godot_method_bind_call bindJSONParseResult_get_error (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod JSONParseResult "get_error" '[] (IO Int) where
         nodeMethod = Godot.Core.JSONParseResult.get_error
@@ -88,7 +91,10 @@ get_error_line cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod JSONParseResult "get_error_line" '[] (IO Int)
          where
@@ -116,7 +122,10 @@ get_error_string cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod JSONParseResult "get_error_string" '[]
            (IO GodotString)
@@ -168,7 +177,7 @@ get_result cls
          godot_method_bind_call bindJSONParseResult_get_result (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod JSONParseResult "get_result" '[]
            (IO GodotVariant)
@@ -196,7 +205,10 @@ set_error cls arg1
          godot_method_bind_call bindJSONParseResult_set_error (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod JSONParseResult "set_error" '[Int] (IO ())
          where
@@ -224,7 +236,10 @@ set_error_line cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod JSONParseResult "set_error_line" '[Int] (IO ())
          where
@@ -253,7 +268,10 @@ set_error_string cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod JSONParseResult "set_error_string"
            '[GodotString]
@@ -307,7 +325,10 @@ set_result cls arg1
          godot_method_bind_call bindJSONParseResult_set_result (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod JSONParseResult "set_result" '[GodotVariant]
            (IO ())

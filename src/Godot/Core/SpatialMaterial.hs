@@ -1167,7 +1167,10 @@ get_albedo cls
          godot_method_bind_call bindSpatialMaterial_get_albedo (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_albedo" '[] (IO Color)
          where
@@ -1196,7 +1199,10 @@ get_alpha_scissor_threshold cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_alpha_scissor_threshold"
            '[]
@@ -1206,7 +1212,7 @@ instance NodeMethod SpatialMaterial "get_alpha_scissor_threshold"
 
 {-# NOINLINE bindSpatialMaterial_get_anisotropy #-}
 
--- | The strength of the anisotropy effect.
+-- | The strength of the anisotropy effect. This is multiplied by @anisotropy_flowmap@'s alpha channel if a texture is defined there and the texture contains an alpha channel.
 bindSpatialMaterial_get_anisotropy :: MethodBind
 bindSpatialMaterial_get_anisotropy
   = unsafePerformIO $
@@ -1216,7 +1222,7 @@ bindSpatialMaterial_get_anisotropy
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The strength of the anisotropy effect.
+-- | The strength of the anisotropy effect. This is multiplied by @anisotropy_flowmap@'s alpha channel if a texture is defined there and the texture contains an alpha channel.
 get_anisotropy ::
                  (SpatialMaterial :< cls, Object :< cls) => cls -> IO Float
 get_anisotropy cls
@@ -1226,7 +1232,10 @@ get_anisotropy cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_anisotropy" '[] (IO Float)
          where
@@ -1254,7 +1263,10 @@ get_ao_light_affect cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_ao_light_affect" '[]
            (IO Float)
@@ -1283,7 +1295,10 @@ get_ao_texture_channel cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_ao_texture_channel" '[]
            (IO Int)
@@ -1293,6 +1308,7 @@ instance NodeMethod SpatialMaterial "get_ao_texture_channel" '[]
 {-# NOINLINE bindSpatialMaterial_get_billboard_mode #-}
 
 -- | Controls how the object faces the camera. See @enum BillboardMode@.
+--   			__Note:__ Billboard mode is not suitable for VR because the left-right vector of the camera is not horizontal when the screen is attached to your head instead of on the table. See @url=https://github.com/godotengine/godot/issues/41567@GitHub issue #41567@/url@ for details.
 bindSpatialMaterial_get_billboard_mode :: MethodBind
 bindSpatialMaterial_get_billboard_mode
   = unsafePerformIO $
@@ -1303,6 +1319,7 @@ bindSpatialMaterial_get_billboard_mode
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Controls how the object faces the camera. See @enum BillboardMode@.
+--   			__Note:__ Billboard mode is not suitable for VR because the left-right vector of the camera is not horizontal when the screen is attached to your head instead of on the table. See @url=https://github.com/godotengine/godot/issues/41567@GitHub issue #41567@/url@ for details.
 get_billboard_mode ::
                      (SpatialMaterial :< cls, Object :< cls) => cls -> IO Int
 get_billboard_mode cls
@@ -1312,7 +1329,10 @@ get_billboard_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_billboard_mode" '[]
            (IO Int)
@@ -1343,7 +1363,10 @@ get_blend_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_blend_mode" '[] (IO Int)
          where
@@ -1371,7 +1394,10 @@ get_clearcoat cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_clearcoat" '[] (IO Float)
          where
@@ -1399,7 +1425,10 @@ get_clearcoat_gloss cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_clearcoat_gloss" '[]
            (IO Float)
@@ -1428,7 +1457,10 @@ get_cull_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_cull_mode" '[] (IO Int)
          where
@@ -1459,7 +1491,10 @@ get_depth_deep_parallax_flip_binormal cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "get_depth_deep_parallax_flip_binormal"
@@ -1494,7 +1529,10 @@ get_depth_deep_parallax_flip_tangent cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "get_depth_deep_parallax_flip_tangent"
@@ -1529,7 +1567,10 @@ get_depth_deep_parallax_max_layers cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "get_depth_deep_parallax_max_layers"
@@ -1564,7 +1605,10 @@ get_depth_deep_parallax_min_layers cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "get_depth_deep_parallax_min_layers"
@@ -1596,7 +1640,10 @@ get_depth_draw_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_depth_draw_mode" '[]
            (IO Int)
@@ -1625,7 +1672,10 @@ get_depth_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_depth_scale" '[]
            (IO Float)
@@ -1654,7 +1704,10 @@ get_detail_blend_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_detail_blend_mode" '[]
            (IO Int)
@@ -1683,7 +1736,10 @@ get_detail_uv cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_detail_uv" '[] (IO Int)
          where
@@ -1711,7 +1767,10 @@ get_diffuse_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_diffuse_mode" '[] (IO Int)
          where
@@ -1739,7 +1798,10 @@ get_distance_fade cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_distance_fade" '[]
            (IO Int)
@@ -1748,7 +1810,8 @@ instance NodeMethod SpatialMaterial "get_distance_fade" '[]
 
 {-# NOINLINE bindSpatialMaterial_get_distance_fade_max_distance #-}
 
--- | Distance at which the object fades fully and is no longer visible.
+-- | Distance at which the object appears fully opaque.
+--   			__Note:__ If @distance_fade_max_distance@ is less than @distance_fade_min_distance@, the behavior will be reversed. The object will start to fade away at @distance_fade_max_distance@ and will fully disappear once it reaches @distance_fade_min_distance@.
 bindSpatialMaterial_get_distance_fade_max_distance :: MethodBind
 bindSpatialMaterial_get_distance_fade_max_distance
   = unsafePerformIO $
@@ -1758,7 +1821,8 @@ bindSpatialMaterial_get_distance_fade_max_distance
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Distance at which the object fades fully and is no longer visible.
+-- | Distance at which the object appears fully opaque.
+--   			__Note:__ If @distance_fade_max_distance@ is less than @distance_fade_min_distance@, the behavior will be reversed. The object will start to fade away at @distance_fade_max_distance@ and will fully disappear once it reaches @distance_fade_min_distance@.
 get_distance_fade_max_distance ::
                                  (SpatialMaterial :< cls, Object :< cls) => cls -> IO Float
 get_distance_fade_max_distance cls
@@ -1769,7 +1833,10 @@ get_distance_fade_max_distance cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "get_distance_fade_max_distance"
@@ -1781,7 +1848,8 @@ instance NodeMethod SpatialMaterial
 
 {-# NOINLINE bindSpatialMaterial_get_distance_fade_min_distance #-}
 
--- | Distance at which the object starts to fade. If the object is less than this distance away it will appear normal.
+-- | Distance at which the object starts to become visible. If the object is less than this distance away, it will be invisible.
+--   			__Note:__ If @distance_fade_min_distance@ is greater than @distance_fade_max_distance@, the behavior will be reversed. The object will start to fade away at @distance_fade_max_distance@ and will fully disappear once it reaches @distance_fade_min_distance@.
 bindSpatialMaterial_get_distance_fade_min_distance :: MethodBind
 bindSpatialMaterial_get_distance_fade_min_distance
   = unsafePerformIO $
@@ -1791,7 +1859,8 @@ bindSpatialMaterial_get_distance_fade_min_distance
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Distance at which the object starts to fade. If the object is less than this distance away it will appear normal.
+-- | Distance at which the object starts to become visible. If the object is less than this distance away, it will be invisible.
+--   			__Note:__ If @distance_fade_min_distance@ is greater than @distance_fade_max_distance@, the behavior will be reversed. The object will start to fade away at @distance_fade_max_distance@ and will fully disappear once it reaches @distance_fade_min_distance@.
 get_distance_fade_min_distance ::
                                  (SpatialMaterial :< cls, Object :< cls) => cls -> IO Float
 get_distance_fade_min_distance cls
@@ -1802,7 +1871,10 @@ get_distance_fade_min_distance cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "get_distance_fade_min_distance"
@@ -1834,7 +1906,10 @@ get_emission cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_emission" '[] (IO Color)
          where
@@ -1862,7 +1937,10 @@ get_emission_energy cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_emission_energy" '[]
            (IO Float)
@@ -1891,7 +1969,10 @@ get_emission_operator cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_emission_operator" '[]
            (IO Int)
@@ -1919,7 +2000,10 @@ get_feature cls arg1
          godot_method_bind_call bindSpatialMaterial_get_feature (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_feature" '[Int] (IO Bool)
          where
@@ -1946,7 +2030,10 @@ get_flag cls arg1
          godot_method_bind_call bindSpatialMaterial_get_flag (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_flag" '[Int] (IO Bool)
          where
@@ -1973,7 +2060,10 @@ get_grow cls
          godot_method_bind_call bindSpatialMaterial_get_grow (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_grow" '[] (IO Float) where
         nodeMethod = Godot.Core.SpatialMaterial.get_grow
@@ -2000,7 +2090,10 @@ get_line_width cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_line_width" '[] (IO Float)
          where
@@ -2028,7 +2121,10 @@ get_metallic cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_metallic" '[] (IO Float)
          where
@@ -2057,7 +2153,10 @@ get_metallic_texture_channel cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_metallic_texture_channel"
            '[]
@@ -2088,7 +2187,10 @@ get_normal_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_normal_scale" '[]
            (IO Float)
@@ -2118,7 +2220,10 @@ get_particles_anim_h_frames cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_particles_anim_h_frames"
            '[]
@@ -2148,7 +2253,10 @@ get_particles_anim_loop cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_particles_anim_loop" '[]
            (IO Bool)
@@ -2178,7 +2286,10 @@ get_particles_anim_v_frames cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_particles_anim_v_frames"
            '[]
@@ -2208,7 +2319,10 @@ get_point_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_point_size" '[] (IO Float)
          where
@@ -2237,7 +2351,10 @@ get_proximity_fade_distance cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_proximity_fade_distance"
            '[]
@@ -2247,7 +2364,7 @@ instance NodeMethod SpatialMaterial "get_proximity_fade_distance"
 
 {-# NOINLINE bindSpatialMaterial_get_refraction #-}
 
--- | The strength of the refraction effect.
+-- | The strength of the refraction effect. Higher values result in a more distorted appearance for the refraction.
 bindSpatialMaterial_get_refraction :: MethodBind
 bindSpatialMaterial_get_refraction
   = unsafePerformIO $
@@ -2257,7 +2374,7 @@ bindSpatialMaterial_get_refraction
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The strength of the refraction effect.
+-- | The strength of the refraction effect. Higher values result in a more distorted appearance for the refraction.
 get_refraction ::
                  (SpatialMaterial :< cls, Object :< cls) => cls -> IO Float
 get_refraction cls
@@ -2267,7 +2384,10 @@ get_refraction cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_refraction" '[] (IO Float)
          where
@@ -2275,7 +2395,7 @@ instance NodeMethod SpatialMaterial "get_refraction" '[] (IO Float)
 
 {-# NOINLINE bindSpatialMaterial_get_refraction_texture_channel #-}
 
--- | Specifies the channel of the @ao_texture@ in which the ambient occlusion information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.
+-- | Specifies the channel of the @refraction_texture@ in which the refraction information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.
 bindSpatialMaterial_get_refraction_texture_channel :: MethodBind
 bindSpatialMaterial_get_refraction_texture_channel
   = unsafePerformIO $
@@ -2285,7 +2405,7 @@ bindSpatialMaterial_get_refraction_texture_channel
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Specifies the channel of the @ao_texture@ in which the ambient occlusion information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.
+-- | Specifies the channel of the @refraction_texture@ in which the refraction information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.
 get_refraction_texture_channel ::
                                  (SpatialMaterial :< cls, Object :< cls) => cls -> IO Int
 get_refraction_texture_channel cls
@@ -2296,7 +2416,10 @@ get_refraction_texture_channel cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "get_refraction_texture_channel"
@@ -2327,7 +2450,10 @@ get_rim cls
          godot_method_bind_call bindSpatialMaterial_get_rim (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_rim" '[] (IO Float) where
         nodeMethod = Godot.Core.SpatialMaterial.get_rim
@@ -2354,7 +2480,10 @@ get_rim_tint cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_rim_tint" '[] (IO Float)
          where
@@ -2382,7 +2511,10 @@ get_roughness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_roughness" '[] (IO Float)
          where
@@ -2411,7 +2543,10 @@ get_roughness_texture_channel cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_roughness_texture_channel"
            '[]
@@ -2423,7 +2558,7 @@ instance NodeMethod SpatialMaterial "get_roughness_texture_channel"
 {-# NOINLINE bindSpatialMaterial_get_specular #-}
 
 -- | Sets the size of the specular lobe. The specular lobe is the bright spot that is reflected from light sources.
---   			__Note:__ unlike @metallic@, this is not energy-conserving, so it should be left at @0.5@ in most cases. See also @roughness@.
+--   			__Note:__ Unlike @metallic@, this is not energy-conserving, so it should be left at @0.5@ in most cases. See also @roughness@.
 bindSpatialMaterial_get_specular :: MethodBind
 bindSpatialMaterial_get_specular
   = unsafePerformIO $
@@ -2434,7 +2569,7 @@ bindSpatialMaterial_get_specular
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets the size of the specular lobe. The specular lobe is the bright spot that is reflected from light sources.
---   			__Note:__ unlike @metallic@, this is not energy-conserving, so it should be left at @0.5@ in most cases. See also @roughness@.
+--   			__Note:__ Unlike @metallic@, this is not energy-conserving, so it should be left at @0.5@ in most cases. See also @roughness@.
 get_specular ::
                (SpatialMaterial :< cls, Object :< cls) => cls -> IO Float
 get_specular cls
@@ -2444,7 +2579,10 @@ get_specular cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_specular" '[] (IO Float)
          where
@@ -2472,7 +2610,10 @@ get_specular_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_specular_mode" '[]
            (IO Int)
@@ -2504,7 +2645,10 @@ get_subsurface_scattering_strength cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "get_subsurface_scattering_strength"
@@ -2535,7 +2679,7 @@ get_texture cls arg1
          godot_method_bind_call bindSpatialMaterial_get_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod SpatialMaterial "get_texture" '[Int]
            (IO Texture)
@@ -2564,7 +2708,10 @@ get_transmission cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_transmission" '[]
            (IO Color)
@@ -2593,7 +2740,10 @@ get_uv1_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_uv1_offset" '[]
            (IO Vector3)
@@ -2622,7 +2772,10 @@ get_uv1_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_uv1_scale" '[]
            (IO Vector3)
@@ -2653,7 +2806,10 @@ get_uv1_triplanar_blend_sharpness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "get_uv1_triplanar_blend_sharpness"
@@ -2685,7 +2841,10 @@ get_uv2_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_uv2_offset" '[]
            (IO Vector3)
@@ -2714,7 +2873,10 @@ get_uv2_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "get_uv2_scale" '[]
            (IO Vector3)
@@ -2745,7 +2907,10 @@ get_uv2_triplanar_blend_sharpness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "get_uv2_triplanar_blend_sharpness"
@@ -2778,7 +2943,10 @@ is_depth_deep_parallax_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "is_depth_deep_parallax_enabled"
@@ -2810,7 +2978,10 @@ is_grow_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "is_grow_enabled" '[] (IO Bool)
          where
@@ -2839,7 +3010,10 @@ is_proximity_fade_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "is_proximity_fade_enabled" '[]
            (IO Bool)
@@ -2867,7 +3041,10 @@ set_albedo cls arg1
          godot_method_bind_call bindSpatialMaterial_set_albedo (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_albedo" '[Color] (IO ())
          where
@@ -2896,7 +3073,10 @@ set_alpha_scissor_threshold cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_alpha_scissor_threshold"
            '[Float]
@@ -2906,7 +3086,7 @@ instance NodeMethod SpatialMaterial "set_alpha_scissor_threshold"
 
 {-# NOINLINE bindSpatialMaterial_set_anisotropy #-}
 
--- | The strength of the anisotropy effect.
+-- | The strength of the anisotropy effect. This is multiplied by @anisotropy_flowmap@'s alpha channel if a texture is defined there and the texture contains an alpha channel.
 bindSpatialMaterial_set_anisotropy :: MethodBind
 bindSpatialMaterial_set_anisotropy
   = unsafePerformIO $
@@ -2916,7 +3096,7 @@ bindSpatialMaterial_set_anisotropy
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The strength of the anisotropy effect.
+-- | The strength of the anisotropy effect. This is multiplied by @anisotropy_flowmap@'s alpha channel if a texture is defined there and the texture contains an alpha channel.
 set_anisotropy ::
                  (SpatialMaterial :< cls, Object :< cls) => cls -> Float -> IO ()
 set_anisotropy cls arg1
@@ -2926,7 +3106,10 @@ set_anisotropy cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_anisotropy" '[Float]
            (IO ())
@@ -2955,7 +3138,10 @@ set_ao_light_affect cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_ao_light_affect" '[Float]
            (IO ())
@@ -2984,7 +3170,10 @@ set_ao_texture_channel cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_ao_texture_channel" '[Int]
            (IO ())
@@ -2994,6 +3183,7 @@ instance NodeMethod SpatialMaterial "set_ao_texture_channel" '[Int]
 {-# NOINLINE bindSpatialMaterial_set_billboard_mode #-}
 
 -- | Controls how the object faces the camera. See @enum BillboardMode@.
+--   			__Note:__ Billboard mode is not suitable for VR because the left-right vector of the camera is not horizontal when the screen is attached to your head instead of on the table. See @url=https://github.com/godotengine/godot/issues/41567@GitHub issue #41567@/url@ for details.
 bindSpatialMaterial_set_billboard_mode :: MethodBind
 bindSpatialMaterial_set_billboard_mode
   = unsafePerformIO $
@@ -3004,6 +3194,7 @@ bindSpatialMaterial_set_billboard_mode
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Controls how the object faces the camera. See @enum BillboardMode@.
+--   			__Note:__ Billboard mode is not suitable for VR because the left-right vector of the camera is not horizontal when the screen is attached to your head instead of on the table. See @url=https://github.com/godotengine/godot/issues/41567@GitHub issue #41567@/url@ for details.
 set_billboard_mode ::
                      (SpatialMaterial :< cls, Object :< cls) => cls -> Int -> IO ()
 set_billboard_mode cls arg1
@@ -3013,7 +3204,10 @@ set_billboard_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_billboard_mode" '[Int]
            (IO ())
@@ -3044,7 +3238,10 @@ set_blend_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_blend_mode" '[Int] (IO ())
          where
@@ -3072,7 +3269,10 @@ set_clearcoat cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_clearcoat" '[Float]
            (IO ())
@@ -3101,7 +3301,10 @@ set_clearcoat_gloss cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_clearcoat_gloss" '[Float]
            (IO ())
@@ -3130,7 +3333,10 @@ set_cull_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_cull_mode" '[Int] (IO ())
          where
@@ -3158,7 +3364,10 @@ set_depth_deep_parallax cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_depth_deep_parallax"
            '[Bool]
@@ -3192,7 +3401,10 @@ set_depth_deep_parallax_flip_binormal cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "set_depth_deep_parallax_flip_binormal"
@@ -3228,7 +3440,10 @@ set_depth_deep_parallax_flip_tangent cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "set_depth_deep_parallax_flip_tangent"
@@ -3263,7 +3478,10 @@ set_depth_deep_parallax_max_layers cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "set_depth_deep_parallax_max_layers"
@@ -3298,7 +3516,10 @@ set_depth_deep_parallax_min_layers cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "set_depth_deep_parallax_min_layers"
@@ -3330,7 +3551,10 @@ set_depth_draw_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_depth_draw_mode" '[Int]
            (IO ())
@@ -3359,7 +3583,10 @@ set_depth_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_depth_scale" '[Float]
            (IO ())
@@ -3388,7 +3615,10 @@ set_detail_blend_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_detail_blend_mode" '[Int]
            (IO ())
@@ -3417,7 +3647,10 @@ set_detail_uv cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_detail_uv" '[Int] (IO ())
          where
@@ -3445,7 +3678,10 @@ set_diffuse_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_diffuse_mode" '[Int]
            (IO ())
@@ -3474,7 +3710,10 @@ set_distance_fade cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_distance_fade" '[Int]
            (IO ())
@@ -3483,7 +3722,8 @@ instance NodeMethod SpatialMaterial "set_distance_fade" '[Int]
 
 {-# NOINLINE bindSpatialMaterial_set_distance_fade_max_distance #-}
 
--- | Distance at which the object fades fully and is no longer visible.
+-- | Distance at which the object appears fully opaque.
+--   			__Note:__ If @distance_fade_max_distance@ is less than @distance_fade_min_distance@, the behavior will be reversed. The object will start to fade away at @distance_fade_max_distance@ and will fully disappear once it reaches @distance_fade_min_distance@.
 bindSpatialMaterial_set_distance_fade_max_distance :: MethodBind
 bindSpatialMaterial_set_distance_fade_max_distance
   = unsafePerformIO $
@@ -3493,7 +3733,8 @@ bindSpatialMaterial_set_distance_fade_max_distance
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Distance at which the object fades fully and is no longer visible.
+-- | Distance at which the object appears fully opaque.
+--   			__Note:__ If @distance_fade_max_distance@ is less than @distance_fade_min_distance@, the behavior will be reversed. The object will start to fade away at @distance_fade_max_distance@ and will fully disappear once it reaches @distance_fade_min_distance@.
 set_distance_fade_max_distance ::
                                  (SpatialMaterial :< cls, Object :< cls) => cls -> Float -> IO ()
 set_distance_fade_max_distance cls arg1
@@ -3504,7 +3745,10 @@ set_distance_fade_max_distance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "set_distance_fade_max_distance"
@@ -3516,7 +3760,8 @@ instance NodeMethod SpatialMaterial
 
 {-# NOINLINE bindSpatialMaterial_set_distance_fade_min_distance #-}
 
--- | Distance at which the object starts to fade. If the object is less than this distance away it will appear normal.
+-- | Distance at which the object starts to become visible. If the object is less than this distance away, it will be invisible.
+--   			__Note:__ If @distance_fade_min_distance@ is greater than @distance_fade_max_distance@, the behavior will be reversed. The object will start to fade away at @distance_fade_max_distance@ and will fully disappear once it reaches @distance_fade_min_distance@.
 bindSpatialMaterial_set_distance_fade_min_distance :: MethodBind
 bindSpatialMaterial_set_distance_fade_min_distance
   = unsafePerformIO $
@@ -3526,7 +3771,8 @@ bindSpatialMaterial_set_distance_fade_min_distance
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Distance at which the object starts to fade. If the object is less than this distance away it will appear normal.
+-- | Distance at which the object starts to become visible. If the object is less than this distance away, it will be invisible.
+--   			__Note:__ If @distance_fade_min_distance@ is greater than @distance_fade_max_distance@, the behavior will be reversed. The object will start to fade away at @distance_fade_max_distance@ and will fully disappear once it reaches @distance_fade_min_distance@.
 set_distance_fade_min_distance ::
                                  (SpatialMaterial :< cls, Object :< cls) => cls -> Float -> IO ()
 set_distance_fade_min_distance cls arg1
@@ -3537,7 +3783,10 @@ set_distance_fade_min_distance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "set_distance_fade_min_distance"
@@ -3569,7 +3818,10 @@ set_emission cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_emission" '[Color] (IO ())
          where
@@ -3597,7 +3849,10 @@ set_emission_energy cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_emission_energy" '[Float]
            (IO ())
@@ -3626,7 +3881,10 @@ set_emission_operator cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_emission_operator" '[Int]
            (IO ())
@@ -3655,7 +3913,10 @@ set_feature cls arg1 arg2
          godot_method_bind_call bindSpatialMaterial_set_feature (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_feature" '[Int, Bool]
            (IO ())
@@ -3684,7 +3945,10 @@ set_flag cls arg1 arg2
          godot_method_bind_call bindSpatialMaterial_set_flag (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_flag" '[Int, Bool] (IO ())
          where
@@ -3711,7 +3975,10 @@ set_grow cls arg1
          godot_method_bind_call bindSpatialMaterial_set_grow (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_grow" '[Float] (IO ())
          where
@@ -3739,7 +4006,10 @@ set_grow_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_grow_enabled" '[Bool]
            (IO ())
@@ -3768,7 +4038,10 @@ set_line_width cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_line_width" '[Float]
            (IO ())
@@ -3797,7 +4070,10 @@ set_metallic cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_metallic" '[Float] (IO ())
          where
@@ -3826,7 +4102,10 @@ set_metallic_texture_channel cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_metallic_texture_channel"
            '[Int]
@@ -3857,7 +4136,10 @@ set_normal_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_normal_scale" '[Float]
            (IO ())
@@ -3887,7 +4169,10 @@ set_particles_anim_h_frames cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_particles_anim_h_frames"
            '[Int]
@@ -3917,7 +4202,10 @@ set_particles_anim_loop cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_particles_anim_loop"
            '[Bool]
@@ -3948,7 +4236,10 @@ set_particles_anim_v_frames cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_particles_anim_v_frames"
            '[Int]
@@ -3978,7 +4269,10 @@ set_point_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_point_size" '[Float]
            (IO ())
@@ -4007,7 +4301,10 @@ set_proximity_fade cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_proximity_fade" '[Bool]
            (IO ())
@@ -4037,7 +4334,10 @@ set_proximity_fade_distance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_proximity_fade_distance"
            '[Float]
@@ -4047,7 +4347,7 @@ instance NodeMethod SpatialMaterial "set_proximity_fade_distance"
 
 {-# NOINLINE bindSpatialMaterial_set_refraction #-}
 
--- | The strength of the refraction effect.
+-- | The strength of the refraction effect. Higher values result in a more distorted appearance for the refraction.
 bindSpatialMaterial_set_refraction :: MethodBind
 bindSpatialMaterial_set_refraction
   = unsafePerformIO $
@@ -4057,7 +4357,7 @@ bindSpatialMaterial_set_refraction
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The strength of the refraction effect.
+-- | The strength of the refraction effect. Higher values result in a more distorted appearance for the refraction.
 set_refraction ::
                  (SpatialMaterial :< cls, Object :< cls) => cls -> Float -> IO ()
 set_refraction cls arg1
@@ -4067,7 +4367,10 @@ set_refraction cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_refraction" '[Float]
            (IO ())
@@ -4076,7 +4379,7 @@ instance NodeMethod SpatialMaterial "set_refraction" '[Float]
 
 {-# NOINLINE bindSpatialMaterial_set_refraction_texture_channel #-}
 
--- | Specifies the channel of the @ao_texture@ in which the ambient occlusion information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.
+-- | Specifies the channel of the @refraction_texture@ in which the refraction information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.
 bindSpatialMaterial_set_refraction_texture_channel :: MethodBind
 bindSpatialMaterial_set_refraction_texture_channel
   = unsafePerformIO $
@@ -4086,7 +4389,7 @@ bindSpatialMaterial_set_refraction_texture_channel
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Specifies the channel of the @ao_texture@ in which the ambient occlusion information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.
+-- | Specifies the channel of the @refraction_texture@ in which the refraction information is stored. This is useful when you store the information for multiple effects in a single texture. For example if you stored metallic in the red channel, roughness in the blue, and ambient occlusion in the green you could reduce the number of textures you use.
 set_refraction_texture_channel ::
                                  (SpatialMaterial :< cls, Object :< cls) => cls -> Int -> IO ()
 set_refraction_texture_channel cls arg1
@@ -4097,7 +4400,10 @@ set_refraction_texture_channel cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "set_refraction_texture_channel"
@@ -4128,7 +4434,10 @@ set_rim cls arg1
          godot_method_bind_call bindSpatialMaterial_set_rim (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_rim" '[Float] (IO ())
          where
@@ -4156,7 +4465,10 @@ set_rim_tint cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_rim_tint" '[Float] (IO ())
          where
@@ -4184,7 +4496,10 @@ set_roughness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_roughness" '[Float]
            (IO ())
@@ -4214,7 +4529,10 @@ set_roughness_texture_channel cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_roughness_texture_channel"
            '[Int]
@@ -4226,7 +4544,7 @@ instance NodeMethod SpatialMaterial "set_roughness_texture_channel"
 {-# NOINLINE bindSpatialMaterial_set_specular #-}
 
 -- | Sets the size of the specular lobe. The specular lobe is the bright spot that is reflected from light sources.
---   			__Note:__ unlike @metallic@, this is not energy-conserving, so it should be left at @0.5@ in most cases. See also @roughness@.
+--   			__Note:__ Unlike @metallic@, this is not energy-conserving, so it should be left at @0.5@ in most cases. See also @roughness@.
 bindSpatialMaterial_set_specular :: MethodBind
 bindSpatialMaterial_set_specular
   = unsafePerformIO $
@@ -4237,7 +4555,7 @@ bindSpatialMaterial_set_specular
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets the size of the specular lobe. The specular lobe is the bright spot that is reflected from light sources.
---   			__Note:__ unlike @metallic@, this is not energy-conserving, so it should be left at @0.5@ in most cases. See also @roughness@.
+--   			__Note:__ Unlike @metallic@, this is not energy-conserving, so it should be left at @0.5@ in most cases. See also @roughness@.
 set_specular ::
                (SpatialMaterial :< cls, Object :< cls) => cls -> Float -> IO ()
 set_specular cls arg1
@@ -4247,7 +4565,10 @@ set_specular cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_specular" '[Float] (IO ())
          where
@@ -4275,7 +4596,10 @@ set_specular_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_specular_mode" '[Int]
            (IO ())
@@ -4308,7 +4632,10 @@ set_subsurface_scattering_strength cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "set_subsurface_scattering_strength"
@@ -4340,7 +4667,10 @@ set_texture cls arg1 arg2
          godot_method_bind_call bindSpatialMaterial_set_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_texture" '[Int, Texture]
            (IO ())
@@ -4369,7 +4699,10 @@ set_transmission cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_transmission" '[Color]
            (IO ())
@@ -4398,7 +4731,10 @@ set_uv1_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_uv1_offset" '[Vector3]
            (IO ())
@@ -4427,7 +4763,10 @@ set_uv1_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_uv1_scale" '[Vector3]
            (IO ())
@@ -4458,7 +4797,10 @@ set_uv1_triplanar_blend_sharpness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "set_uv1_triplanar_blend_sharpness"
@@ -4490,7 +4832,10 @@ set_uv2_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_uv2_offset" '[Vector3]
            (IO ())
@@ -4519,7 +4864,10 @@ set_uv2_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial "set_uv2_scale" '[Vector3]
            (IO ())
@@ -4550,7 +4898,10 @@ set_uv2_triplanar_blend_sharpness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpatialMaterial
            "set_uv2_triplanar_blend_sharpness"

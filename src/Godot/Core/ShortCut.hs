@@ -42,7 +42,10 @@ get_as_text cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindShortCut_get_as_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ShortCut "get_as_text" '[] (IO GodotString)
          where
@@ -71,7 +74,7 @@ get_shortcut cls
          godot_method_bind_call bindShortCut_get_shortcut (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ShortCut "get_shortcut" '[] (IO InputEvent)
          where
@@ -97,7 +100,10 @@ is_shortcut cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindShortCut_is_shortcut (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ShortCut "is_shortcut" '[InputEvent] (IO Bool)
          where
@@ -122,7 +128,10 @@ is_valid cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindShortCut_is_valid (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ShortCut "is_valid" '[] (IO Bool) where
         nodeMethod = Godot.Core.ShortCut.is_valid
@@ -150,7 +159,10 @@ set_shortcut cls arg1
          godot_method_bind_call bindShortCut_set_shortcut (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ShortCut "set_shortcut" '[InputEvent] (IO ())
          where

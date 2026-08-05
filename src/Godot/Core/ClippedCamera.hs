@@ -87,7 +87,10 @@ add_exception cls arg1
          godot_method_bind_call bindClippedCamera_add_exception (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "add_exception" '[Object] (IO ())
          where
@@ -115,7 +118,10 @@ add_exception_rid cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "add_exception_rid" '[Rid]
            (IO ())
@@ -144,7 +150,10 @@ clear_exceptions cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "clear_exceptions" '[] (IO ())
          where
@@ -172,7 +181,10 @@ get_clip_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "get_clip_offset" '[] (IO Float)
          where
@@ -180,7 +192,7 @@ instance NodeMethod ClippedCamera "get_clip_offset" '[] (IO Float)
 
 {-# NOINLINE bindClippedCamera_get_collision_mask #-}
 
--- | The camera's collision mask. Only objects in at least one collision layer matching the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The camera's collision mask. Only objects in at least one collision layer matching the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindClippedCamera_get_collision_mask :: MethodBind
 bindClippedCamera_get_collision_mask
   = unsafePerformIO $
@@ -190,7 +202,7 @@ bindClippedCamera_get_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The camera's collision mask. Only objects in at least one collision layer matching the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The camera's collision mask. Only objects in at least one collision layer matching the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_mask ::
                      (ClippedCamera :< cls, Object :< cls) => cls -> IO Int
 get_collision_mask cls
@@ -200,7 +212,10 @@ get_collision_mask cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "get_collision_mask" '[] (IO Int)
          where
@@ -230,7 +245,10 @@ get_collision_mask_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "get_collision_mask_bit" '[Int]
            (IO Bool)
@@ -258,7 +276,10 @@ get_margin cls
          godot_method_bind_call bindClippedCamera_get_margin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "get_margin" '[] (IO Float) where
         nodeMethod = Godot.Core.ClippedCamera.get_margin
@@ -285,7 +306,10 @@ get_process_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "get_process_mode" '[] (IO Int)
          where
@@ -313,7 +337,10 @@ is_clip_to_areas_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "is_clip_to_areas_enabled" '[]
            (IO Bool)
@@ -342,7 +369,10 @@ is_clip_to_bodies_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "is_clip_to_bodies_enabled" '[]
            (IO Bool)
@@ -371,7 +401,10 @@ remove_exception cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "remove_exception" '[Object]
            (IO ())
@@ -400,7 +433,10 @@ remove_exception_rid cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "remove_exception_rid" '[Rid]
            (IO ())
@@ -429,7 +465,10 @@ set_clip_to_areas cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "set_clip_to_areas" '[Bool]
            (IO ())
@@ -458,7 +497,10 @@ set_clip_to_bodies cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "set_clip_to_bodies" '[Bool]
            (IO ())
@@ -467,7 +509,7 @@ instance NodeMethod ClippedCamera "set_clip_to_bodies" '[Bool]
 
 {-# NOINLINE bindClippedCamera_set_collision_mask #-}
 
--- | The camera's collision mask. Only objects in at least one collision layer matching the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The camera's collision mask. Only objects in at least one collision layer matching the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindClippedCamera_set_collision_mask :: MethodBind
 bindClippedCamera_set_collision_mask
   = unsafePerformIO $
@@ -477,7 +519,7 @@ bindClippedCamera_set_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The camera's collision mask. Only objects in at least one collision layer matching the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The camera's collision mask. Only objects in at least one collision layer matching the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_mask ::
                      (ClippedCamera :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_mask cls arg1
@@ -487,7 +529,10 @@ set_collision_mask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "set_collision_mask" '[Int]
            (IO ())
@@ -519,7 +564,10 @@ set_collision_mask_bit cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "set_collision_mask_bit"
            '[Int, Bool]
@@ -548,7 +596,10 @@ set_margin cls arg1
          godot_method_bind_call bindClippedCamera_set_margin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "set_margin" '[Float] (IO ())
          where
@@ -576,7 +627,10 @@ set_process_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ClippedCamera "set_process_mode" '[Int] (IO ())
          where

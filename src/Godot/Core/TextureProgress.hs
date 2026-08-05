@@ -19,6 +19,7 @@ module Godot.Core.TextureProgress
         Godot.Core.TextureProgress.get_radial_center_offset,
         Godot.Core.TextureProgress.get_radial_initial_angle,
         Godot.Core.TextureProgress.get_stretch_margin,
+        Godot.Core.TextureProgress.get_texture_progress_offset,
         Godot.Core.TextureProgress.get_tint_over,
         Godot.Core.TextureProgress.get_tint_progress,
         Godot.Core.TextureProgress.get_tint_under,
@@ -31,6 +32,7 @@ module Godot.Core.TextureProgress
         Godot.Core.TextureProgress.set_radial_center_offset,
         Godot.Core.TextureProgress.set_radial_initial_angle,
         Godot.Core.TextureProgress.set_stretch_margin,
+        Godot.Core.TextureProgress.set_texture_progress_offset,
         Godot.Core.TextureProgress.set_tint_over,
         Godot.Core.TextureProgress.set_tint_progress,
         Godot.Core.TextureProgress.set_tint_under,
@@ -147,6 +149,14 @@ instance NodeProperty TextureProgress "texture_progress" Texture
           = (get_progress_texture, wrapDroppingSetter set_progress_texture,
              Nothing)
 
+instance NodeProperty TextureProgress "texture_progress_offset"
+           Vector2
+           'False
+         where
+        nodeProperty
+          = (get_texture_progress_offset,
+             wrapDroppingSetter set_texture_progress_offset, Nothing)
+
 instance NodeProperty TextureProgress "texture_under" Texture
            'False
          where
@@ -194,7 +204,10 @@ get_fill_degrees cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "get_fill_degrees" '[]
            (IO Float)
@@ -223,7 +236,10 @@ get_fill_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "get_fill_mode" '[] (IO Int)
          where
@@ -251,7 +267,10 @@ get_nine_patch_stretch cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "get_nine_patch_stretch" '[]
            (IO Bool)
@@ -280,7 +299,7 @@ get_over_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureProgress "get_over_texture" '[]
            (IO Texture)
@@ -311,7 +330,7 @@ get_progress_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureProgress "get_progress_texture" '[]
            (IO Texture)
@@ -340,7 +359,10 @@ get_radial_center_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "get_radial_center_offset" '[]
            (IO Vector2)
@@ -369,7 +391,10 @@ get_radial_initial_angle cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "get_radial_initial_angle" '[]
            (IO Float)
@@ -398,12 +423,49 @@ get_stretch_margin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "get_stretch_margin" '[Int]
            (IO Int)
          where
         nodeMethod = Godot.Core.TextureProgress.get_stretch_margin
+
+{-# NOINLINE bindTextureProgress_get_texture_progress_offset #-}
+
+-- | The offset of @texture_progress@. Useful for @texture_over@ and @texture_under@ with fancy borders, to avoid transparent margins in your progress texture.
+bindTextureProgress_get_texture_progress_offset :: MethodBind
+bindTextureProgress_get_texture_progress_offset
+  = unsafePerformIO $
+      withCString "TextureProgress" $
+        \ clsNamePtr ->
+          withCString "get_texture_progress_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The offset of @texture_progress@. Useful for @texture_over@ and @texture_under@ with fancy borders, to avoid transparent margins in your progress texture.
+get_texture_progress_offset ::
+                              (TextureProgress :< cls, Object :< cls) => cls -> IO Vector2
+get_texture_progress_offset cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindTextureProgress_get_texture_progress_offset
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextureProgress "get_texture_progress_offset"
+           '[]
+           (IO Vector2)
+         where
+        nodeMethod = Godot.Core.TextureProgress.get_texture_progress_offset
 
 {-# NOINLINE bindTextureProgress_get_tint_over #-}
 
@@ -427,7 +489,10 @@ get_tint_over cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "get_tint_over" '[] (IO Color)
          where
@@ -455,7 +520,10 @@ get_tint_progress cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "get_tint_progress" '[]
            (IO Color)
@@ -484,7 +552,10 @@ get_tint_under cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "get_tint_under" '[] (IO Color)
          where
@@ -512,7 +583,7 @@ get_under_texture cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod TextureProgress "get_under_texture" '[]
            (IO Texture)
@@ -543,7 +614,10 @@ set_fill_degrees cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_fill_degrees" '[Float]
            (IO ())
@@ -572,7 +646,10 @@ set_fill_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_fill_mode" '[Int] (IO ())
          where
@@ -600,7 +677,10 @@ set_nine_patch_stretch cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_nine_patch_stretch"
            '[Bool]
@@ -630,7 +710,10 @@ set_over_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_over_texture" '[Texture]
            (IO ())
@@ -661,7 +744,10 @@ set_progress_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_progress_texture"
            '[Texture]
@@ -691,7 +777,10 @@ set_radial_center_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_radial_center_offset"
            '[Vector2]
@@ -721,7 +810,10 @@ set_radial_initial_angle cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_radial_initial_angle"
            '[Float]
@@ -752,13 +844,50 @@ set_stretch_margin cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_stretch_margin"
            '[Int, Int]
            (IO ())
          where
         nodeMethod = Godot.Core.TextureProgress.set_stretch_margin
+
+{-# NOINLINE bindTextureProgress_set_texture_progress_offset #-}
+
+-- | The offset of @texture_progress@. Useful for @texture_over@ and @texture_under@ with fancy borders, to avoid transparent margins in your progress texture.
+bindTextureProgress_set_texture_progress_offset :: MethodBind
+bindTextureProgress_set_texture_progress_offset
+  = unsafePerformIO $
+      withCString "TextureProgress" $
+        \ clsNamePtr ->
+          withCString "set_texture_progress_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The offset of @texture_progress@. Useful for @texture_over@ and @texture_under@ with fancy borders, to avoid transparent margins in your progress texture.
+set_texture_progress_offset ::
+                              (TextureProgress :< cls, Object :< cls) => cls -> Vector2 -> IO ()
+set_texture_progress_offset cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindTextureProgress_set_texture_progress_offset
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextureProgress "set_texture_progress_offset"
+           '[Vector2]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TextureProgress.set_texture_progress_offset
 
 {-# NOINLINE bindTextureProgress_set_tint_over #-}
 
@@ -782,7 +911,10 @@ set_tint_over cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_tint_over" '[Color]
            (IO ())
@@ -811,7 +943,10 @@ set_tint_progress cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_tint_progress" '[Color]
            (IO ())
@@ -840,7 +975,10 @@ set_tint_under cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_tint_under" '[Color]
            (IO ())
@@ -869,7 +1007,10 @@ set_under_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TextureProgress "set_under_texture" '[Texture]
            (IO ())

@@ -13,6 +13,7 @@ module Godot.Core.ColorPicker
         Godot.Core.ColorPicker._html_focus_exit,
         Godot.Core.ColorPicker._preset_input,
         Godot.Core.ColorPicker._sample_draw,
+        Godot.Core.ColorPicker._sample_input,
         Godot.Core.ColorPicker._screen_input,
         Godot.Core.ColorPicker._screen_pick_pressed,
         Godot.Core.ColorPicker._text_type_toggled,
@@ -120,7 +121,10 @@ _add_preset_pressed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_add_preset_pressed" '[] (IO ())
          where
@@ -144,7 +148,10 @@ _focus_enter cls
          godot_method_bind_call bindColorPicker__focus_enter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_focus_enter" '[] (IO ()) where
         nodeMethod = Godot.Core.ColorPicker._focus_enter
@@ -167,7 +174,10 @@ _focus_exit cls
          godot_method_bind_call bindColorPicker__focus_exit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_focus_exit" '[] (IO ()) where
         nodeMethod = Godot.Core.ColorPicker._focus_exit
@@ -192,7 +202,10 @@ _hsv_draw cls arg1 arg2
          godot_method_bind_call bindColorPicker__hsv_draw (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_hsv_draw" '[Int, Control] (IO ())
          where
@@ -217,7 +230,10 @@ _html_entered cls arg1
          godot_method_bind_call bindColorPicker__html_entered (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_html_entered" '[GodotString]
            (IO ())
@@ -244,7 +260,10 @@ _html_focus_exit cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_html_focus_exit" '[] (IO ())
          where
@@ -269,7 +288,10 @@ _preset_input cls arg1
          godot_method_bind_call bindColorPicker__preset_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_preset_input" '[InputEvent]
            (IO ())
@@ -294,10 +316,42 @@ _sample_draw cls
          godot_method_bind_call bindColorPicker__sample_draw (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_sample_draw" '[] (IO ()) where
         nodeMethod = Godot.Core.ColorPicker._sample_draw
+
+{-# NOINLINE bindColorPicker__sample_input #-}
+
+bindColorPicker__sample_input :: MethodBind
+bindColorPicker__sample_input
+  = unsafePerformIO $
+      withCString "ColorPicker" $
+        \ clsNamePtr ->
+          withCString "_sample_input" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_sample_input ::
+                (ColorPicker :< cls, Object :< cls) => cls -> InputEvent -> IO ()
+_sample_input cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindColorPicker__sample_input (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ColorPicker "_sample_input" '[InputEvent]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ColorPicker._sample_input
 
 {-# NOINLINE bindColorPicker__screen_input #-}
 
@@ -318,7 +372,10 @@ _screen_input cls arg1
          godot_method_bind_call bindColorPicker__screen_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_screen_input" '[InputEvent]
            (IO ())
@@ -345,7 +402,10 @@ _screen_pick_pressed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_screen_pick_pressed" '[] (IO ())
          where
@@ -371,7 +431,10 @@ _text_type_toggled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_text_type_toggled" '[] (IO ())
          where
@@ -396,7 +459,10 @@ _update_presets cls
          godot_method_bind_call bindColorPicker__update_presets (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_update_presets" '[] (IO ()) where
         nodeMethod = Godot.Core.ColorPicker._update_presets
@@ -420,7 +486,10 @@ _uv_input cls arg1
          godot_method_bind_call bindColorPicker__uv_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_uv_input" '[InputEvent] (IO ())
          where
@@ -445,7 +514,10 @@ _value_changed cls arg1
          godot_method_bind_call bindColorPicker__value_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_value_changed" '[Float] (IO ())
          where
@@ -469,7 +541,10 @@ _w_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindColorPicker__w_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "_w_input" '[InputEvent] (IO ())
          where
@@ -478,7 +553,7 @@ instance NodeMethod ColorPicker "_w_input" '[InputEvent] (IO ())
 {-# NOINLINE bindColorPicker_add_preset #-}
 
 -- | Adds the given color to a list of color presets. The presets are displayed in the color picker and the user will be able to select them.
---   				__Note:__ the presets list is only for @i@this@/i@ color picker.
+--   				__Note:__ The presets list is only for @i@this@/i@ color picker.
 bindColorPicker_add_preset :: MethodBind
 bindColorPicker_add_preset
   = unsafePerformIO $
@@ -489,7 +564,7 @@ bindColorPicker_add_preset
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Adds the given color to a list of color presets. The presets are displayed in the color picker and the user will be able to select them.
---   				__Note:__ the presets list is only for @i@this@/i@ color picker.
+--   				__Note:__ The presets list is only for @i@this@/i@ color picker.
 add_preset ::
              (ColorPicker :< cls, Object :< cls) => cls -> Color -> IO ()
 add_preset cls arg1
@@ -498,7 +573,10 @@ add_preset cls arg1
          godot_method_bind_call bindColorPicker_add_preset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "add_preset" '[Color] (IO ()) where
         nodeMethod = Godot.Core.ColorPicker.add_preset
@@ -525,7 +603,10 @@ are_presets_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "are_presets_enabled" '[] (IO Bool)
          where
@@ -553,7 +634,10 @@ are_presets_visible cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "are_presets_visible" '[] (IO Bool)
          where
@@ -580,7 +664,10 @@ erase_preset cls arg1
          godot_method_bind_call bindColorPicker_erase_preset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "erase_preset" '[Color] (IO ())
          where
@@ -607,7 +694,10 @@ get_pick_color cls
          godot_method_bind_call bindColorPicker_get_pick_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "get_pick_color" '[] (IO Color)
          where
@@ -634,7 +724,10 @@ get_presets cls
          godot_method_bind_call bindColorPicker_get_presets (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "get_presets" '[]
            (IO PoolColorArray)
@@ -663,7 +756,10 @@ is_deferred_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "is_deferred_mode" '[] (IO Bool)
          where
@@ -671,7 +767,7 @@ instance NodeMethod ColorPicker "is_deferred_mode" '[] (IO Bool)
 
 {-# NOINLINE bindColorPicker_is_editing_alpha #-}
 
--- | If @true@, shows an alpha channel slider (transparency).
+-- | If @true@, shows an alpha channel slider (opacity).
 bindColorPicker_is_editing_alpha :: MethodBind
 bindColorPicker_is_editing_alpha
   = unsafePerformIO $
@@ -681,7 +777,7 @@ bindColorPicker_is_editing_alpha
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, shows an alpha channel slider (transparency).
+-- | If @true@, shows an alpha channel slider (opacity).
 is_editing_alpha ::
                    (ColorPicker :< cls, Object :< cls) => cls -> IO Bool
 is_editing_alpha cls
@@ -691,7 +787,10 @@ is_editing_alpha cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "is_editing_alpha" '[] (IO Bool)
          where
@@ -720,7 +819,10 @@ is_hsv_mode cls
          godot_method_bind_call bindColorPicker_is_hsv_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "is_hsv_mode" '[] (IO Bool) where
         nodeMethod = Godot.Core.ColorPicker.is_hsv_mode
@@ -748,7 +850,10 @@ is_raw_mode cls
          godot_method_bind_call bindColorPicker_is_raw_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "is_raw_mode" '[] (IO Bool) where
         nodeMethod = Godot.Core.ColorPicker.is_raw_mode
@@ -775,7 +880,10 @@ set_deferred_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "set_deferred_mode" '[Bool] (IO ())
          where
@@ -783,7 +891,7 @@ instance NodeMethod ColorPicker "set_deferred_mode" '[Bool] (IO ())
 
 {-# NOINLINE bindColorPicker_set_edit_alpha #-}
 
--- | If @true@, shows an alpha channel slider (transparency).
+-- | If @true@, shows an alpha channel slider (opacity).
 bindColorPicker_set_edit_alpha :: MethodBind
 bindColorPicker_set_edit_alpha
   = unsafePerformIO $
@@ -793,7 +901,7 @@ bindColorPicker_set_edit_alpha
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, shows an alpha channel slider (transparency).
+-- | If @true@, shows an alpha channel slider (opacity).
 set_edit_alpha ::
                  (ColorPicker :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_edit_alpha cls arg1
@@ -802,7 +910,10 @@ set_edit_alpha cls arg1
          godot_method_bind_call bindColorPicker_set_edit_alpha (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "set_edit_alpha" '[Bool] (IO ())
          where
@@ -831,7 +942,10 @@ set_hsv_mode cls arg1
          godot_method_bind_call bindColorPicker_set_hsv_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "set_hsv_mode" '[Bool] (IO ())
          where
@@ -858,7 +972,10 @@ set_pick_color cls arg1
          godot_method_bind_call bindColorPicker_set_pick_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "set_pick_color" '[Color] (IO ())
          where
@@ -886,7 +1003,10 @@ set_presets_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "set_presets_enabled" '[Bool]
            (IO ())
@@ -915,7 +1035,10 @@ set_presets_visible cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "set_presets_visible" '[Bool]
            (IO ())
@@ -945,7 +1068,10 @@ set_raw_mode cls arg1
          godot_method_bind_call bindColorPicker_set_raw_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ColorPicker "set_raw_mode" '[Bool] (IO ())
          where

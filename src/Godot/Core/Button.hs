@@ -57,6 +57,7 @@ instance NodeProperty Button "text" GodotString 'False where
 {-# NOINLINE bindButton_get_button_icon #-}
 
 -- | Button's icon, if text is present the icon will be placed before the text.
+--   			To edit margin and spacing of the icon, use @hseparation@ theme property of @Button@ and @content_margin_*@ properties of the used @StyleBox@es.
 bindButton_get_button_icon :: MethodBind
 bindButton_get_button_icon
   = unsafePerformIO $
@@ -67,6 +68,7 @@ bindButton_get_button_icon
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Button's icon, if text is present the icon will be placed before the text.
+--   			To edit margin and spacing of the icon, use @hseparation@ theme property of @Button@ and @content_margin_*@ properties of the used @StyleBox@es.
 get_button_icon ::
                   (Button :< cls, Object :< cls) => cls -> IO Texture
 get_button_icon cls
@@ -75,7 +77,7 @@ get_button_icon cls
          godot_method_bind_call bindButton_get_button_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Button "get_button_icon" '[] (IO Texture) where
         nodeMethod = Godot.Core.Button.get_button_icon
@@ -99,7 +101,10 @@ get_clip_text cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindButton_get_clip_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "get_clip_text" '[] (IO Bool) where
         nodeMethod = Godot.Core.Button.get_clip_text
@@ -122,7 +127,10 @@ get_text cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindButton_get_text (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "get_text" '[] (IO GodotString) where
         nodeMethod = Godot.Core.Button.get_text
@@ -147,7 +155,10 @@ get_text_align cls
          godot_method_bind_call bindButton_get_text_align (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "get_text_align" '[] (IO Int) where
         nodeMethod = Godot.Core.Button.get_text_align
@@ -172,7 +183,10 @@ is_expand_icon cls
          godot_method_bind_call bindButton_is_expand_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "is_expand_icon" '[] (IO Bool) where
         nodeMethod = Godot.Core.Button.is_expand_icon
@@ -195,7 +209,10 @@ is_flat cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindButton_is_flat (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "is_flat" '[] (IO Bool) where
         nodeMethod = Godot.Core.Button.is_flat
@@ -203,6 +220,7 @@ instance NodeMethod Button "is_flat" '[] (IO Bool) where
 {-# NOINLINE bindButton_set_button_icon #-}
 
 -- | Button's icon, if text is present the icon will be placed before the text.
+--   			To edit margin and spacing of the icon, use @hseparation@ theme property of @Button@ and @content_margin_*@ properties of the used @StyleBox@es.
 bindButton_set_button_icon :: MethodBind
 bindButton_set_button_icon
   = unsafePerformIO $
@@ -213,6 +231,7 @@ bindButton_set_button_icon
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Button's icon, if text is present the icon will be placed before the text.
+--   			To edit margin and spacing of the icon, use @hseparation@ theme property of @Button@ and @content_margin_*@ properties of the used @StyleBox@es.
 set_button_icon ::
                   (Button :< cls, Object :< cls) => cls -> Texture -> IO ()
 set_button_icon cls arg1
@@ -221,7 +240,10 @@ set_button_icon cls arg1
          godot_method_bind_call bindButton_set_button_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "set_button_icon" '[Texture] (IO ())
          where
@@ -247,7 +269,10 @@ set_clip_text cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindButton_set_clip_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "set_clip_text" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Button.set_clip_text
@@ -273,7 +298,10 @@ set_expand_icon cls arg1
          godot_method_bind_call bindButton_set_expand_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "set_expand_icon" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Button.set_expand_icon
@@ -296,7 +324,10 @@ set_flat cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindButton_set_flat (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "set_flat" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Button.set_flat
@@ -320,7 +351,10 @@ set_text cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindButton_set_text (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "set_text" '[GodotString] (IO ()) where
         nodeMethod = Godot.Core.Button.set_text
@@ -346,7 +380,10 @@ set_text_align cls arg1
          godot_method_bind_call bindButton_set_text_align (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Button "set_text_align" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Button.set_text_align

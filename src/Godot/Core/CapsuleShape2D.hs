@@ -46,7 +46,10 @@ get_height cls
          godot_method_bind_call bindCapsuleShape2D_get_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleShape2D "get_height" '[] (IO Float)
          where
@@ -73,7 +76,10 @@ get_radius cls
          godot_method_bind_call bindCapsuleShape2D_get_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleShape2D "get_radius" '[] (IO Float)
          where
@@ -100,7 +106,10 @@ set_height cls arg1
          godot_method_bind_call bindCapsuleShape2D_set_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleShape2D "set_height" '[Float] (IO ())
          where
@@ -127,7 +136,10 @@ set_radius cls arg1
          godot_method_bind_call bindCapsuleShape2D_set_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleShape2D "set_radius" '[Float] (IO ())
          where

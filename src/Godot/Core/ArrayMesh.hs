@@ -26,6 +26,7 @@ module Godot.Core.ArrayMesh
         Godot.Core.ArrayMesh.add_blend_shape,
         Godot.Core.ArrayMesh.add_surface_from_arrays,
         Godot.Core.ArrayMesh.clear_blend_shapes,
+        Godot.Core.ArrayMesh.clear_surfaces,
         Godot.Core.ArrayMesh.get_blend_shape_count,
         Godot.Core.ArrayMesh.get_blend_shape_mode,
         Godot.Core.ArrayMesh.get_blend_shape_name,
@@ -33,6 +34,7 @@ module Godot.Core.ArrayMesh
         Godot.Core.ArrayMesh.lightmap_unwrap,
         Godot.Core.ArrayMesh.regen_normalmaps,
         Godot.Core.ArrayMesh.set_blend_shape_mode,
+        Godot.Core.ArrayMesh.set_blend_shape_name,
         Godot.Core.ArrayMesh.set_custom_aabb,
         Godot.Core.ArrayMesh.surface_find_by_name,
         Godot.Core.ArrayMesh.surface_get_array_index_len,
@@ -149,7 +151,10 @@ add_blend_shape cls arg1
          godot_method_bind_call bindArrayMesh_add_blend_shape (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "add_blend_shape" '[GodotString]
            (IO ())
@@ -159,9 +164,8 @@ instance NodeMethod ArrayMesh "add_blend_shape" '[GodotString]
 {-# NOINLINE bindArrayMesh_add_surface_from_arrays #-}
 
 -- | Creates a new surface.
---   				Surfaces are created to be rendered using a @primitive@, which may be any of the types defined in @enum Mesh.PrimitiveType@. (As a note, when using indices, it is recommended to only use points, lines or triangles.) @method Mesh.get_surface_count@ will become the @surf_idx@ for this new surface.
+--   				Surfaces are created to be rendered using a @primitive@, which may be any of the types defined in @enum Mesh.PrimitiveType@. (As a note, when using indices, it is recommended to only use points, lines, or triangles.) @method Mesh.get_surface_count@ will become the @surf_idx@ for this new surface.
 --   				The @arrays@ argument is an array of arrays. See @enum ArrayType@ for the values used in this array. For example, @arrays@0@@ is the array of vertices. That first vertex sub-array is always required; the others are optional. Adding an index array puts this function into "index mode" where the vertex and other arrays become the sources of data and the index array defines the vertex order. All sub-arrays must have the same length as the vertex array or be empty, except for @ARRAY_INDEX@ if it is used.
---   				Adding an index array puts this function into "index mode" where the vertex and other arrays become the sources of data, and the index array defines the order of the vertices.
 bindArrayMesh_add_surface_from_arrays :: MethodBind
 bindArrayMesh_add_surface_from_arrays
   = unsafePerformIO $
@@ -172,9 +176,8 @@ bindArrayMesh_add_surface_from_arrays
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Creates a new surface.
---   				Surfaces are created to be rendered using a @primitive@, which may be any of the types defined in @enum Mesh.PrimitiveType@. (As a note, when using indices, it is recommended to only use points, lines or triangles.) @method Mesh.get_surface_count@ will become the @surf_idx@ for this new surface.
+--   				Surfaces are created to be rendered using a @primitive@, which may be any of the types defined in @enum Mesh.PrimitiveType@. (As a note, when using indices, it is recommended to only use points, lines, or triangles.) @method Mesh.get_surface_count@ will become the @surf_idx@ for this new surface.
 --   				The @arrays@ argument is an array of arrays. See @enum ArrayType@ for the values used in this array. For example, @arrays@0@@ is the array of vertices. That first vertex sub-array is always required; the others are optional. Adding an index array puts this function into "index mode" where the vertex and other arrays become the sources of data and the index array defines the vertex order. All sub-arrays must have the same length as the vertex array or be empty, except for @ARRAY_INDEX@ if it is used.
---   				Adding an index array puts this function into "index mode" where the vertex and other arrays become the sources of data, and the index array defines the order of the vertices.
 add_surface_from_arrays ::
                           (ArrayMesh :< cls, Object :< cls) =>
                           cls -> Int -> Array -> Maybe Array -> Maybe Int -> IO ()
@@ -182,13 +185,16 @@ add_surface_from_arrays cls arg1 arg2 arg3 arg4
   = withVariantArray
       [toVariant arg1, toVariant arg2,
        defaultedVariant VariantArray V.empty arg3,
-       maybe (VariantInt (97280)) toVariant arg4]
+       maybe (VariantInt (2194432)) toVariant arg4]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindArrayMesh_add_surface_from_arrays
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "add_surface_from_arrays"
            '[Int, Array, Maybe Array, Maybe Int]
@@ -218,11 +224,42 @@ clear_blend_shapes cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "clear_blend_shapes" '[] (IO ())
          where
         nodeMethod = Godot.Core.ArrayMesh.clear_blend_shapes
+
+{-# NOINLINE bindArrayMesh_clear_surfaces #-}
+
+-- | Removes all surfaces from this @ArrayMesh@.
+bindArrayMesh_clear_surfaces :: MethodBind
+bindArrayMesh_clear_surfaces
+  = unsafePerformIO $
+      withCString "ArrayMesh" $
+        \ clsNamePtr ->
+          withCString "clear_surfaces" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes all surfaces from this @ArrayMesh@.
+clear_surfaces :: (ArrayMesh :< cls, Object :< cls) => cls -> IO ()
+clear_surfaces cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindArrayMesh_clear_surfaces (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ArrayMesh "clear_surfaces" '[] (IO ()) where
+        nodeMethod = Godot.Core.ArrayMesh.clear_surfaces
 
 {-# NOINLINE bindArrayMesh_get_blend_shape_count #-}
 
@@ -246,7 +283,10 @@ get_blend_shape_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "get_blend_shape_count" '[] (IO Int)
          where
@@ -274,7 +314,10 @@ get_blend_shape_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "get_blend_shape_mode" '[] (IO Int)
          where
@@ -302,7 +345,10 @@ get_blend_shape_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "get_blend_shape_name" '[Int]
            (IO GodotString)
@@ -330,7 +376,10 @@ get_custom_aabb cls
          godot_method_bind_call bindArrayMesh_get_custom_aabb (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "get_custom_aabb" '[] (IO Aabb) where
         nodeMethod = Godot.Core.ArrayMesh.get_custom_aabb
@@ -357,7 +406,10 @@ lightmap_unwrap cls arg1 arg2
          godot_method_bind_call bindArrayMesh_lightmap_unwrap (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "lightmap_unwrap" '[Transform, Float]
            (IO Int)
@@ -385,7 +437,10 @@ regen_normalmaps cls
          godot_method_bind_call bindArrayMesh_regen_normalmaps (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "regen_normalmaps" '[] (IO ()) where
         nodeMethod = Godot.Core.ArrayMesh.regen_normalmaps
@@ -412,11 +467,46 @@ set_blend_shape_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "set_blend_shape_mode" '[Int] (IO ())
          where
         nodeMethod = Godot.Core.ArrayMesh.set_blend_shape_mode
+
+{-# NOINLINE bindArrayMesh_set_blend_shape_name #-}
+
+bindArrayMesh_set_blend_shape_name :: MethodBind
+bindArrayMesh_set_blend_shape_name
+  = unsafePerformIO $
+      withCString "ArrayMesh" $
+        \ clsNamePtr ->
+          withCString "set_blend_shape_name" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_blend_shape_name ::
+                       (ArrayMesh :< cls, Object :< cls) =>
+                       cls -> Int -> GodotString -> IO ()
+set_blend_shape_name cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindArrayMesh_set_blend_shape_name
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ArrayMesh "set_blend_shape_name"
+           '[Int, GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ArrayMesh.set_blend_shape_name
 
 {-# NOINLINE bindArrayMesh_set_custom_aabb #-}
 
@@ -439,7 +529,10 @@ set_custom_aabb cls arg1
          godot_method_bind_call bindArrayMesh_set_custom_aabb (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "set_custom_aabb" '[Aabb] (IO ())
          where
@@ -467,7 +560,10 @@ surface_find_by_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "surface_find_by_name" '[GodotString]
            (IO Int)
@@ -496,7 +592,10 @@ surface_get_array_index_len cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "surface_get_array_index_len" '[Int]
            (IO Int)
@@ -525,7 +624,10 @@ surface_get_array_len cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "surface_get_array_len" '[Int]
            (IO Int)
@@ -554,7 +656,10 @@ surface_get_format cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "surface_get_format" '[Int] (IO Int)
          where
@@ -581,7 +686,10 @@ surface_get_name cls arg1
          godot_method_bind_call bindArrayMesh_surface_get_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "surface_get_name" '[Int]
            (IO GodotString)
@@ -610,7 +718,10 @@ surface_get_primitive_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "surface_get_primitive_type" '[Int]
            (IO Int)
@@ -638,7 +749,10 @@ surface_remove cls arg1
          godot_method_bind_call bindArrayMesh_surface_remove (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "surface_remove" '[Int] (IO ()) where
         nodeMethod = Godot.Core.ArrayMesh.surface_remove
@@ -665,7 +779,10 @@ surface_set_name cls arg1 arg2
          godot_method_bind_call bindArrayMesh_surface_set_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "surface_set_name"
            '[Int, GodotString]
@@ -698,7 +815,10 @@ surface_update_region cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ArrayMesh "surface_update_region"
            '[Int, Int, PoolByteArray]

@@ -44,7 +44,10 @@ add_peer cls arg1 arg2 arg3
          godot_method_bind_call bindWebRTCMultiplayer_add_peer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCMultiplayer "add_peer"
            '[WebRTCPeerConnection, Int, Maybe Int]
@@ -70,7 +73,10 @@ close cls
          godot_method_bind_call bindWebRTCMultiplayer_close (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCMultiplayer "close" '[] (IO ()) where
         nodeMethod = Godot.Core.WebRTCMultiplayer.close
@@ -95,7 +101,10 @@ get_peer cls arg1
          godot_method_bind_call bindWebRTCMultiplayer_get_peer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCMultiplayer "get_peer" '[Int]
            (IO Dictionary)
@@ -121,7 +130,10 @@ get_peers cls
          godot_method_bind_call bindWebRTCMultiplayer_get_peers (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCMultiplayer "get_peers" '[]
            (IO Dictionary)
@@ -147,7 +159,10 @@ has_peer cls arg1
          godot_method_bind_call bindWebRTCMultiplayer_has_peer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCMultiplayer "has_peer" '[Int] (IO Bool)
          where
@@ -175,7 +190,10 @@ initialize cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCMultiplayer "initialize"
            '[Int, Maybe Bool]
@@ -203,7 +221,10 @@ remove_peer cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCMultiplayer "remove_peer" '[Int] (IO ())
          where

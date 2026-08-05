@@ -27,6 +27,7 @@ module Godot.Core.CPUParticles2D
         Godot.Core.CPUParticles2D._PARAM_HUE_VARIATION,
         Godot.Core.CPUParticles2D._PARAM_ANIM_OFFSET,
         Godot.Core.CPUParticles2D._PARAM_ANGLE,
+        Godot.Core.CPUParticles2D._texture_changed,
         Godot.Core.CPUParticles2D._update_render_thread,
         Godot.Core.CPUParticles2D.convert_from_particles,
         Godot.Core.CPUParticles2D.get_amount,
@@ -556,6 +557,35 @@ instance NodeProperty CPUParticles2D "texture" Texture 'False where
         nodeProperty
           = (get_texture, wrapDroppingSetter set_texture, Nothing)
 
+{-# NOINLINE bindCPUParticles2D__texture_changed #-}
+
+bindCPUParticles2D__texture_changed :: MethodBind
+bindCPUParticles2D__texture_changed
+  = unsafePerformIO $
+      withCString "CPUParticles2D" $
+        \ clsNamePtr ->
+          withCString "_texture_changed" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_texture_changed ::
+                   (CPUParticles2D :< cls, Object :< cls) => cls -> IO ()
+_texture_changed cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCPUParticles2D__texture_changed
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CPUParticles2D "_texture_changed" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.CPUParticles2D._texture_changed
+
 {-# NOINLINE bindCPUParticles2D__update_render_thread #-}
 
 bindCPUParticles2D__update_render_thread :: MethodBind
@@ -576,7 +606,10 @@ _update_render_thread cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "_update_render_thread" '[]
            (IO ())
@@ -605,7 +638,10 @@ convert_from_particles cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "convert_from_particles" '[Node]
            (IO ())
@@ -614,7 +650,8 @@ instance NodeMethod CPUParticles2D "convert_from_particles" '[Node]
 
 {-# NOINLINE bindCPUParticles2D_get_amount #-}
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 bindCPUParticles2D_get_amount :: MethodBind
 bindCPUParticles2D_get_amount
   = unsafePerformIO $
@@ -624,7 +661,8 @@ bindCPUParticles2D_get_amount
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 get_amount ::
              (CPUParticles2D :< cls, Object :< cls) => cls -> IO Int
 get_amount cls
@@ -633,7 +671,10 @@ get_amount cls
          godot_method_bind_call bindCPUParticles2D_get_amount (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_amount" '[] (IO Int) where
         nodeMethod = Godot.Core.CPUParticles2D.get_amount
@@ -659,14 +700,17 @@ get_color cls
          godot_method_bind_call bindCPUParticles2D_get_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_color" '[] (IO Color) where
         nodeMethod = Godot.Core.CPUParticles2D.get_color
 
 {-# NOINLINE bindCPUParticles2D_get_color_ramp #-}
 
--- | Each particle's color will vary along this @Gradient@.
+-- | Each particle's color will vary along this @Gradient@ (multiplied with @color@).
 bindCPUParticles2D_get_color_ramp :: MethodBind
 bindCPUParticles2D_get_color_ramp
   = unsafePerformIO $
@@ -676,7 +720,7 @@ bindCPUParticles2D_get_color_ramp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Each particle's color will vary along this @Gradient@.
+-- | Each particle's color will vary along this @Gradient@ (multiplied with @color@).
 get_color_ramp ::
                  (CPUParticles2D :< cls, Object :< cls) => cls -> IO Gradient
 get_color_ramp cls
@@ -686,7 +730,7 @@ get_color_ramp cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CPUParticles2D "get_color_ramp" '[]
            (IO Gradient)
@@ -715,7 +759,10 @@ get_direction cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_direction" '[] (IO Vector2)
          where
@@ -743,7 +790,10 @@ get_draw_order cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_draw_order" '[] (IO Int)
          where
@@ -771,7 +821,10 @@ get_emission_colors cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_emission_colors" '[]
            (IO PoolColorArray)
@@ -801,7 +854,10 @@ get_emission_normals cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_emission_normals" '[]
            (IO PoolVector2Array)
@@ -831,7 +887,10 @@ get_emission_points cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_emission_points" '[]
            (IO PoolVector2Array)
@@ -860,7 +919,10 @@ get_emission_rect_extents cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_emission_rect_extents" '[]
            (IO Vector2)
@@ -889,7 +951,10 @@ get_emission_shape cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_emission_shape" '[]
            (IO Int)
@@ -919,7 +984,10 @@ get_emission_sphere_radius cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_emission_sphere_radius" '[]
            (IO Float)
@@ -948,7 +1016,10 @@ get_explosiveness_ratio cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_explosiveness_ratio" '[]
            (IO Float)
@@ -977,7 +1048,10 @@ get_fixed_fps cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_fixed_fps" '[] (IO Int)
          where
@@ -1005,7 +1079,10 @@ get_fractional_delta cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_fractional_delta" '[]
            (IO Bool)
@@ -1033,7 +1110,10 @@ get_gravity cls
          godot_method_bind_call bindCPUParticles2D_get_gravity (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_gravity" '[] (IO Vector2)
          where
@@ -1041,7 +1121,7 @@ instance NodeMethod CPUParticles2D "get_gravity" '[] (IO Vector2)
 
 {-# NOINLINE bindCPUParticles2D_get_lifetime #-}
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 bindCPUParticles2D_get_lifetime :: MethodBind
 bindCPUParticles2D_get_lifetime
   = unsafePerformIO $
@@ -1051,7 +1131,7 @@ bindCPUParticles2D_get_lifetime
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 get_lifetime ::
                (CPUParticles2D :< cls, Object :< cls) => cls -> IO Float
 get_lifetime cls
@@ -1060,7 +1140,10 @@ get_lifetime cls
          godot_method_bind_call bindCPUParticles2D_get_lifetime (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_lifetime" '[] (IO Float)
          where
@@ -1088,7 +1171,10 @@ get_lifetime_randomness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_lifetime_randomness" '[]
            (IO Float)
@@ -1119,7 +1205,7 @@ get_normalmap cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CPUParticles2D "get_normalmap" '[] (IO Texture)
          where
@@ -1146,7 +1232,10 @@ get_one_shot cls
          godot_method_bind_call bindCPUParticles2D_get_one_shot (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_one_shot" '[] (IO Bool)
          where
@@ -1173,7 +1262,10 @@ get_param cls arg1
          godot_method_bind_call bindCPUParticles2D_get_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_param" '[Int] (IO Float)
          where
@@ -1201,7 +1293,7 @@ get_param_curve cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CPUParticles2D "get_param_curve" '[Int]
            (IO Curve)
@@ -1230,7 +1322,10 @@ get_param_randomness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_param_randomness" '[Int]
            (IO Float)
@@ -1259,7 +1354,10 @@ get_particle_flag cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_particle_flag" '[Int]
            (IO Bool)
@@ -1288,7 +1386,10 @@ get_pre_process_time cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_pre_process_time" '[]
            (IO Float)
@@ -1317,7 +1418,10 @@ get_randomness_ratio cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_randomness_ratio" '[]
            (IO Float)
@@ -1346,7 +1450,10 @@ get_speed_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_speed_scale" '[] (IO Float)
          where
@@ -1373,7 +1480,10 @@ get_spread cls
          godot_method_bind_call bindCPUParticles2D_get_spread (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_spread" '[] (IO Float)
          where
@@ -1400,7 +1510,7 @@ get_texture cls
          godot_method_bind_call bindCPUParticles2D_get_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CPUParticles2D "get_texture" '[] (IO Texture)
          where
@@ -1428,7 +1538,10 @@ get_use_local_coordinates cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "get_use_local_coordinates" '[]
            (IO Bool)
@@ -1456,7 +1569,10 @@ is_emitting cls
          godot_method_bind_call bindCPUParticles2D_is_emitting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "is_emitting" '[] (IO Bool)
          where
@@ -1482,14 +1598,18 @@ restart cls
          godot_method_bind_call bindCPUParticles2D_restart (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "restart" '[] (IO ()) where
         nodeMethod = Godot.Core.CPUParticles2D.restart
 
 {-# NOINLINE bindCPUParticles2D_set_amount #-}
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 bindCPUParticles2D_set_amount :: MethodBind
 bindCPUParticles2D_set_amount
   = unsafePerformIO $
@@ -1499,7 +1619,8 @@ bindCPUParticles2D_set_amount
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Number of particles emitted in one emission cycle.
+-- | The number of particles emitted in one emission cycle (corresponding to the @lifetime@).
+--   			__Note:__ Changing @amount@ will reset the particle emission, therefore removing all particles that were already emitted before changing @amount@.
 set_amount ::
              (CPUParticles2D :< cls, Object :< cls) => cls -> Int -> IO ()
 set_amount cls arg1
@@ -1508,7 +1629,10 @@ set_amount cls arg1
          godot_method_bind_call bindCPUParticles2D_set_amount (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_amount" '[Int] (IO ())
          where
@@ -1535,7 +1659,10 @@ set_color cls arg1
          godot_method_bind_call bindCPUParticles2D_set_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_color" '[Color] (IO ())
          where
@@ -1543,7 +1670,7 @@ instance NodeMethod CPUParticles2D "set_color" '[Color] (IO ())
 
 {-# NOINLINE bindCPUParticles2D_set_color_ramp #-}
 
--- | Each particle's color will vary along this @Gradient@.
+-- | Each particle's color will vary along this @Gradient@ (multiplied with @color@).
 bindCPUParticles2D_set_color_ramp :: MethodBind
 bindCPUParticles2D_set_color_ramp
   = unsafePerformIO $
@@ -1553,7 +1680,7 @@ bindCPUParticles2D_set_color_ramp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Each particle's color will vary along this @Gradient@.
+-- | Each particle's color will vary along this @Gradient@ (multiplied with @color@).
 set_color_ramp ::
                  (CPUParticles2D :< cls, Object :< cls) => cls -> Gradient -> IO ()
 set_color_ramp cls arg1
@@ -1563,7 +1690,10 @@ set_color_ramp cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_color_ramp" '[Gradient]
            (IO ())
@@ -1592,7 +1722,10 @@ set_direction cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_direction" '[Vector2]
            (IO ())
@@ -1621,7 +1754,10 @@ set_draw_order cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_draw_order" '[Int] (IO ())
          where
@@ -1650,7 +1786,10 @@ set_emission_colors cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_emission_colors"
            '[PoolColorArray]
@@ -1681,7 +1820,10 @@ set_emission_normals cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_emission_normals"
            '[PoolVector2Array]
@@ -1712,7 +1854,10 @@ set_emission_points cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_emission_points"
            '[PoolVector2Array]
@@ -1742,7 +1887,10 @@ set_emission_rect_extents cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_emission_rect_extents"
            '[Vector2]
@@ -1772,7 +1920,10 @@ set_emission_shape cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_emission_shape" '[Int]
            (IO ())
@@ -1802,7 +1953,10 @@ set_emission_sphere_radius cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_emission_sphere_radius"
            '[Float]
@@ -1831,7 +1985,10 @@ set_emitting cls arg1
          godot_method_bind_call bindCPUParticles2D_set_emitting (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_emitting" '[Bool] (IO ())
          where
@@ -1859,7 +2016,10 @@ set_explosiveness_ratio cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_explosiveness_ratio"
            '[Float]
@@ -1889,7 +2049,10 @@ set_fixed_fps cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_fixed_fps" '[Int] (IO ())
          where
@@ -1917,7 +2080,10 @@ set_fractional_delta cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_fractional_delta" '[Bool]
            (IO ())
@@ -1945,7 +2111,10 @@ set_gravity cls arg1
          godot_method_bind_call bindCPUParticles2D_set_gravity (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_gravity" '[Vector2] (IO ())
          where
@@ -1953,7 +2122,7 @@ instance NodeMethod CPUParticles2D "set_gravity" '[Vector2] (IO ())
 
 {-# NOINLINE bindCPUParticles2D_set_lifetime #-}
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 bindCPUParticles2D_set_lifetime :: MethodBind
 bindCPUParticles2D_set_lifetime
   = unsafePerformIO $
@@ -1963,7 +2132,7 @@ bindCPUParticles2D_set_lifetime
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount of time each particle will exist.
+-- | The amount of time each particle will exist (in seconds).
 set_lifetime ::
                (CPUParticles2D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_lifetime cls arg1
@@ -1972,7 +2141,10 @@ set_lifetime cls arg1
          godot_method_bind_call bindCPUParticles2D_set_lifetime (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_lifetime" '[Float] (IO ())
          where
@@ -2000,7 +2172,10 @@ set_lifetime_randomness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_lifetime_randomness"
            '[Float]
@@ -2032,7 +2207,10 @@ set_normalmap cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_normalmap" '[Texture]
            (IO ())
@@ -2060,7 +2238,10 @@ set_one_shot cls arg1
          godot_method_bind_call bindCPUParticles2D_set_one_shot (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_one_shot" '[Bool] (IO ())
          where
@@ -2088,7 +2269,10 @@ set_param cls arg1 arg2
          godot_method_bind_call bindCPUParticles2D_set_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_param" '[Int, Float]
            (IO ())
@@ -2118,7 +2302,10 @@ set_param_curve cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_param_curve" '[Int, Curve]
            (IO ())
@@ -2148,7 +2335,10 @@ set_param_randomness cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_param_randomness"
            '[Int, Float]
@@ -2179,7 +2369,10 @@ set_particle_flag cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_particle_flag" '[Int, Bool]
            (IO ())
@@ -2208,7 +2401,10 @@ set_pre_process_time cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_pre_process_time" '[Float]
            (IO ())
@@ -2237,7 +2433,10 @@ set_randomness_ratio cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_randomness_ratio" '[Float]
            (IO ())
@@ -2266,7 +2465,10 @@ set_speed_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_speed_scale" '[Float]
            (IO ())
@@ -2294,7 +2496,10 @@ set_spread cls arg1
          godot_method_bind_call bindCPUParticles2D_set_spread (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_spread" '[Float] (IO ())
          where
@@ -2321,7 +2526,10 @@ set_texture cls arg1
          godot_method_bind_call bindCPUParticles2D_set_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_texture" '[Texture] (IO ())
          where
@@ -2349,7 +2557,10 @@ set_use_local_coordinates cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CPUParticles2D "set_use_local_coordinates"
            '[Bool]

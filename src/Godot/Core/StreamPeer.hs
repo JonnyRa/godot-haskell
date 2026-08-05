@@ -62,7 +62,10 @@ get_16 cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_16 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_16" '[] (IO Int) where
         nodeMethod = Godot.Core.StreamPeer.get_16
@@ -86,7 +89,10 @@ get_32 cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_32 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_32" '[] (IO Int) where
         nodeMethod = Godot.Core.StreamPeer.get_32
@@ -110,7 +116,10 @@ get_64 cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_64 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_64" '[] (IO Int) where
         nodeMethod = Godot.Core.StreamPeer.get_64
@@ -133,7 +142,10 @@ get_8 cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_8 (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_8" '[] (IO Int) where
         nodeMethod = Godot.Core.StreamPeer.get_8
@@ -160,7 +172,10 @@ get_available_bytes cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_available_bytes" '[] (IO Int)
          where
@@ -186,7 +201,10 @@ get_data cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_data (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_data" '[Int] (IO Array) where
         nodeMethod = Godot.Core.StreamPeer.get_data
@@ -211,7 +229,10 @@ get_double cls
          godot_method_bind_call bindStreamPeer_get_double (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_double" '[] (IO Float) where
         nodeMethod = Godot.Core.StreamPeer.get_double
@@ -235,7 +256,10 @@ get_float cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_float (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_float" '[] (IO Float) where
         nodeMethod = Godot.Core.StreamPeer.get_float
@@ -261,7 +285,10 @@ get_partial_data cls arg1
          godot_method_bind_call bindStreamPeer_get_partial_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_partial_data" '[Int] (IO Array)
          where
@@ -269,7 +296,7 @@ instance NodeMethod StreamPeer "get_partial_data" '[Int] (IO Array)
 
 {-# NOINLINE bindStreamPeer_get_string #-}
 
--- | Gets a string with byte-length @bytes@ from the stream. If @bytes@ is negative (default) the length will be read from the stream using the reverse process of @method put_string@.
+-- | Gets an ASCII string with byte-length @bytes@ from the stream. If @bytes@ is negative (default) the length will be read from the stream using the reverse process of @method put_string@.
 bindStreamPeer_get_string :: MethodBind
 bindStreamPeer_get_string
   = unsafePerformIO $
@@ -279,7 +306,7 @@ bindStreamPeer_get_string
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets a string with byte-length @bytes@ from the stream. If @bytes@ is negative (default) the length will be read from the stream using the reverse process of @method put_string@.
+-- | Gets an ASCII string with byte-length @bytes@ from the stream. If @bytes@ is negative (default) the length will be read from the stream using the reverse process of @method put_string@.
 get_string ::
              (StreamPeer :< cls, Object :< cls) =>
              cls -> Maybe Int -> IO GodotString
@@ -289,7 +316,10 @@ get_string cls arg1
          godot_method_bind_call bindStreamPeer_get_string (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_string" '[Maybe Int]
            (IO GodotString)
@@ -315,7 +345,10 @@ get_u16 cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_u16 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_u16" '[] (IO Int) where
         nodeMethod = Godot.Core.StreamPeer.get_u16
@@ -339,7 +372,10 @@ get_u32 cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_u32 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_u32" '[] (IO Int) where
         nodeMethod = Godot.Core.StreamPeer.get_u32
@@ -363,7 +399,10 @@ get_u64 cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_u64 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_u64" '[] (IO Int) where
         nodeMethod = Godot.Core.StreamPeer.get_u64
@@ -387,7 +426,10 @@ get_u8 cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_u8 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_u8" '[] (IO Int) where
         nodeMethod = Godot.Core.StreamPeer.get_u8
@@ -414,7 +456,10 @@ get_utf8_string cls arg1
          godot_method_bind_call bindStreamPeer_get_utf8_string (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "get_utf8_string" '[Maybe Int]
            (IO GodotString)
@@ -444,7 +489,7 @@ get_var cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_get_var (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod StreamPeer "get_var" '[Maybe Bool]
            (IO GodotVariant)
@@ -473,7 +518,10 @@ is_big_endian_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "is_big_endian_enabled" '[]
            (IO Bool)
@@ -499,7 +547,10 @@ put_16 cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_16 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_16" '[Int] (IO ()) where
         nodeMethod = Godot.Core.StreamPeer.put_16
@@ -523,7 +574,10 @@ put_32 cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_32 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_32" '[Int] (IO ()) where
         nodeMethod = Godot.Core.StreamPeer.put_32
@@ -547,7 +601,10 @@ put_64 cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_64 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_64" '[Int] (IO ()) where
         nodeMethod = Godot.Core.StreamPeer.put_64
@@ -570,7 +627,10 @@ put_8 cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_8 (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_8" '[Int] (IO ()) where
         nodeMethod = Godot.Core.StreamPeer.put_8
@@ -596,7 +656,10 @@ put_data cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_data (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_data" '[PoolByteArray] (IO Int)
          where
@@ -623,7 +686,10 @@ put_double cls arg1
          godot_method_bind_call bindStreamPeer_put_double (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_double" '[Float] (IO ()) where
         nodeMethod = Godot.Core.StreamPeer.put_double
@@ -648,7 +714,10 @@ put_float cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_float (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_float" '[Float] (IO ()) where
         nodeMethod = Godot.Core.StreamPeer.put_float
@@ -675,7 +744,10 @@ put_partial_data cls arg1
          godot_method_bind_call bindStreamPeer_put_partial_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_partial_data" '[PoolByteArray]
            (IO Array)
@@ -685,7 +757,7 @@ instance NodeMethod StreamPeer "put_partial_data" '[PoolByteArray]
 {-# NOINLINE bindStreamPeer_put_string #-}
 
 -- | Puts a zero-terminated ASCII string into the stream prepended by a 32-bit unsigned integer representing its size.
---   				Note: To put an ASCII string without prepending its size, you can use @method put_data@:
+--   				__Note:__ To put an ASCII string without prepending its size, you can use @method put_data@:
 --   				
 --   @
 --   
@@ -702,7 +774,7 @@ bindStreamPeer_put_string
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Puts a zero-terminated ASCII string into the stream prepended by a 32-bit unsigned integer representing its size.
---   				Note: To put an ASCII string without prepending its size, you can use @method put_data@:
+--   				__Note:__ To put an ASCII string without prepending its size, you can use @method put_data@:
 --   				
 --   @
 --   
@@ -717,7 +789,10 @@ put_string cls arg1
          godot_method_bind_call bindStreamPeer_put_string (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_string" '[GodotString] (IO ())
          where
@@ -743,7 +818,10 @@ put_u16 cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_u16 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_u16" '[Int] (IO ()) where
         nodeMethod = Godot.Core.StreamPeer.put_u16
@@ -768,7 +846,10 @@ put_u32 cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_u32 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_u32" '[Int] (IO ()) where
         nodeMethod = Godot.Core.StreamPeer.put_u32
@@ -793,7 +874,10 @@ put_u64 cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_u64 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_u64" '[Int] (IO ()) where
         nodeMethod = Godot.Core.StreamPeer.put_u64
@@ -817,7 +901,10 @@ put_u8 cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_u8 (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_u8" '[Int] (IO ()) where
         nodeMethod = Godot.Core.StreamPeer.put_u8
@@ -825,7 +912,7 @@ instance NodeMethod StreamPeer "put_u8" '[Int] (IO ()) where
 {-# NOINLINE bindStreamPeer_put_utf8_string #-}
 
 -- | Puts a zero-terminated UTF-8 string into the stream prepended by a 32 bits unsigned integer representing its size.
---   				Note: To put an UTF-8 string without prepending its size, you can use @method put_data@:
+--   				__Note:__ To put an UTF-8 string without prepending its size, you can use @method put_data@:
 --   				
 --   @
 --   
@@ -842,7 +929,7 @@ bindStreamPeer_put_utf8_string
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Puts a zero-terminated UTF-8 string into the stream prepended by a 32 bits unsigned integer representing its size.
---   				Note: To put an UTF-8 string without prepending its size, you can use @method put_data@:
+--   				__Note:__ To put an UTF-8 string without prepending its size, you can use @method put_data@:
 --   				
 --   @
 --   
@@ -857,7 +944,10 @@ put_utf8_string cls arg1
          godot_method_bind_call bindStreamPeer_put_utf8_string (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_utf8_string" '[GodotString]
            (IO ())
@@ -886,7 +976,10 @@ put_var cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStreamPeer_put_var (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "put_var"
            '[GodotVariant, Maybe Bool]
@@ -915,7 +1008,10 @@ set_big_endian cls arg1
          godot_method_bind_call bindStreamPeer_set_big_endian (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StreamPeer "set_big_endian" '[Bool] (IO ())
          where

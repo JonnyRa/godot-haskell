@@ -7,6 +7,10 @@ module Godot.Core.CollisionObject2D
         Godot.Core.CollisionObject2D.sig_mouse_exited,
         Godot.Core.CollisionObject2D._input_event,
         Godot.Core.CollisionObject2D.create_shape_owner,
+        Godot.Core.CollisionObject2D.get_collision_layer,
+        Godot.Core.CollisionObject2D.get_collision_layer_bit,
+        Godot.Core.CollisionObject2D.get_collision_mask,
+        Godot.Core.CollisionObject2D.get_collision_mask_bit,
         Godot.Core.CollisionObject2D.get_rid,
         Godot.Core.CollisionObject2D.get_shape_owner_one_way_collision_margin,
         Godot.Core.CollisionObject2D.get_shape_owners,
@@ -14,6 +18,10 @@ module Godot.Core.CollisionObject2D
         Godot.Core.CollisionObject2D.is_shape_owner_disabled,
         Godot.Core.CollisionObject2D.is_shape_owner_one_way_collision_enabled,
         Godot.Core.CollisionObject2D.remove_shape_owner,
+        Godot.Core.CollisionObject2D.set_collision_layer,
+        Godot.Core.CollisionObject2D.set_collision_layer_bit,
+        Godot.Core.CollisionObject2D.set_collision_mask,
+        Godot.Core.CollisionObject2D.set_collision_mask_bit,
         Godot.Core.CollisionObject2D.set_pickable,
         Godot.Core.CollisionObject2D.shape_find_owner,
         Godot.Core.CollisionObject2D.shape_owner_add_shape,
@@ -62,6 +70,19 @@ sig_mouse_exited = Godot.Internal.Dispatch.Signal "mouse_exited"
 
 instance NodeSignal CollisionObject2D "mouse_exited" '[]
 
+instance NodeProperty CollisionObject2D "collision_layer" Int
+           'False
+         where
+        nodeProperty
+          = (get_collision_layer, wrapDroppingSetter set_collision_layer,
+             Nothing)
+
+instance NodeProperty CollisionObject2D "collision_mask" Int 'False
+         where
+        nodeProperty
+          = (get_collision_mask, wrapDroppingSetter set_collision_mask,
+             Nothing)
+
 instance NodeProperty CollisionObject2D "input_pickable" Bool
            'False
          where
@@ -91,7 +112,10 @@ _input_event cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "_input_event"
            '[Object, InputEvent, Int]
@@ -122,13 +146,151 @@ create_shape_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "create_shape_owner"
            '[Object]
            (IO Int)
          where
         nodeMethod = Godot.Core.CollisionObject2D.create_shape_owner
+
+{-# NOINLINE bindCollisionObject2D_get_collision_layer #-}
+
+-- | The physics layers this CollisionObject2D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+bindCollisionObject2D_get_collision_layer :: MethodBind
+bindCollisionObject2D_get_collision_layer
+  = unsafePerformIO $
+      withCString "CollisionObject2D" $
+        \ clsNamePtr ->
+          withCString "get_collision_layer" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The physics layers this CollisionObject2D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+get_collision_layer ::
+                      (CollisionObject2D :< cls, Object :< cls) => cls -> IO Int
+get_collision_layer cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject2D_get_collision_layer
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject2D "get_collision_layer" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.CollisionObject2D.get_collision_layer
+
+{-# NOINLINE bindCollisionObject2D_get_collision_layer_bit #-}
+
+-- | Returns whether or not the specified @bit@ of the @collision_layer@ is set.
+bindCollisionObject2D_get_collision_layer_bit :: MethodBind
+bindCollisionObject2D_get_collision_layer_bit
+  = unsafePerformIO $
+      withCString "CollisionObject2D" $
+        \ clsNamePtr ->
+          withCString "get_collision_layer_bit" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns whether or not the specified @bit@ of the @collision_layer@ is set.
+get_collision_layer_bit ::
+                          (CollisionObject2D :< cls, Object :< cls) => cls -> Int -> IO Bool
+get_collision_layer_bit cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindCollisionObject2D_get_collision_layer_bit
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject2D "get_collision_layer_bit"
+           '[Int]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.CollisionObject2D.get_collision_layer_bit
+
+{-# NOINLINE bindCollisionObject2D_get_collision_mask #-}
+
+-- | The physics layers this CollisionObject2D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+bindCollisionObject2D_get_collision_mask :: MethodBind
+bindCollisionObject2D_get_collision_mask
+  = unsafePerformIO $
+      withCString "CollisionObject2D" $
+        \ clsNamePtr ->
+          withCString "get_collision_mask" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The physics layers this CollisionObject2D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+get_collision_mask ::
+                     (CollisionObject2D :< cls, Object :< cls) => cls -> IO Int
+get_collision_mask cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject2D_get_collision_mask
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject2D "get_collision_mask" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.CollisionObject2D.get_collision_mask
+
+{-# NOINLINE bindCollisionObject2D_get_collision_mask_bit #-}
+
+-- | Returns whether or not the specified @bit@ of the @collision_mask@ is set.
+bindCollisionObject2D_get_collision_mask_bit :: MethodBind
+bindCollisionObject2D_get_collision_mask_bit
+  = unsafePerformIO $
+      withCString "CollisionObject2D" $
+        \ clsNamePtr ->
+          withCString "get_collision_mask_bit" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns whether or not the specified @bit@ of the @collision_mask@ is set.
+get_collision_mask_bit ::
+                         (CollisionObject2D :< cls, Object :< cls) => cls -> Int -> IO Bool
+get_collision_mask_bit cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject2D_get_collision_mask_bit
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject2D "get_collision_mask_bit"
+           '[Int]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.CollisionObject2D.get_collision_mask_bit
 
 {-# NOINLINE bindCollisionObject2D_get_rid #-}
 
@@ -151,7 +313,10 @@ get_rid cls
          godot_method_bind_call bindCollisionObject2D_get_rid (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "get_rid" '[] (IO Rid) where
         nodeMethod = Godot.Core.CollisionObject2D.get_rid
@@ -182,7 +347,10 @@ get_shape_owner_one_way_collision_margin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D
            "get_shape_owner_one_way_collision_margin"
@@ -214,7 +382,10 @@ get_shape_owners cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "get_shape_owners" '[]
            (IO Array)
@@ -243,7 +414,10 @@ is_pickable cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "is_pickable" '[] (IO Bool)
          where
@@ -272,7 +446,10 @@ is_shape_owner_disabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "is_shape_owner_disabled"
            '[Int]
@@ -306,7 +483,10 @@ is_shape_owner_one_way_collision_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D
            "is_shape_owner_one_way_collision_enabled"
@@ -338,12 +518,156 @@ remove_shape_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "remove_shape_owner" '[Int]
            (IO ())
          where
         nodeMethod = Godot.Core.CollisionObject2D.remove_shape_owner
+
+{-# NOINLINE bindCollisionObject2D_set_collision_layer #-}
+
+-- | The physics layers this CollisionObject2D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+bindCollisionObject2D_set_collision_layer :: MethodBind
+bindCollisionObject2D_set_collision_layer
+  = unsafePerformIO $
+      withCString "CollisionObject2D" $
+        \ clsNamePtr ->
+          withCString "set_collision_layer" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The physics layers this CollisionObject2D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+set_collision_layer ::
+                      (CollisionObject2D :< cls, Object :< cls) => cls -> Int -> IO ()
+set_collision_layer cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject2D_set_collision_layer
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject2D "set_collision_layer" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CollisionObject2D.set_collision_layer
+
+{-# NOINLINE bindCollisionObject2D_set_collision_layer_bit #-}
+
+-- | If @value@ is @true@, sets the specified @bit@ in the the @collision_layer@.
+--   				If @value@ is @false@, clears the specified @bit@ in the the @collision_layer@.
+bindCollisionObject2D_set_collision_layer_bit :: MethodBind
+bindCollisionObject2D_set_collision_layer_bit
+  = unsafePerformIO $
+      withCString "CollisionObject2D" $
+        \ clsNamePtr ->
+          withCString "set_collision_layer_bit" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @value@ is @true@, sets the specified @bit@ in the the @collision_layer@.
+--   				If @value@ is @false@, clears the specified @bit@ in the the @collision_layer@.
+set_collision_layer_bit ::
+                          (CollisionObject2D :< cls, Object :< cls) =>
+                          cls -> Int -> Bool -> IO ()
+set_collision_layer_bit cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindCollisionObject2D_set_collision_layer_bit
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject2D "set_collision_layer_bit"
+           '[Int, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CollisionObject2D.set_collision_layer_bit
+
+{-# NOINLINE bindCollisionObject2D_set_collision_mask #-}
+
+-- | The physics layers this CollisionObject2D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+bindCollisionObject2D_set_collision_mask :: MethodBind
+bindCollisionObject2D_set_collision_mask
+  = unsafePerformIO $
+      withCString "CollisionObject2D" $
+        \ clsNamePtr ->
+          withCString "set_collision_mask" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The physics layers this CollisionObject2D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+set_collision_mask ::
+                     (CollisionObject2D :< cls, Object :< cls) => cls -> Int -> IO ()
+set_collision_mask cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject2D_set_collision_mask
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject2D "set_collision_mask" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CollisionObject2D.set_collision_mask
+
+{-# NOINLINE bindCollisionObject2D_set_collision_mask_bit #-}
+
+-- | If @value@ is @true@, sets the specified @bit@ in the the @collision_mask@.
+--   				If @value@ is @false@, clears the specified @bit@ in the the @collision_mask@.
+bindCollisionObject2D_set_collision_mask_bit :: MethodBind
+bindCollisionObject2D_set_collision_mask_bit
+  = unsafePerformIO $
+      withCString "CollisionObject2D" $
+        \ clsNamePtr ->
+          withCString "set_collision_mask_bit" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @value@ is @true@, sets the specified @bit@ in the the @collision_mask@.
+--   				If @value@ is @false@, clears the specified @bit@ in the the @collision_mask@.
+set_collision_mask_bit ::
+                         (CollisionObject2D :< cls, Object :< cls) =>
+                         cls -> Int -> Bool -> IO ()
+set_collision_mask_bit cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject2D_set_collision_mask_bit
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject2D "set_collision_mask_bit"
+           '[Int, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CollisionObject2D.set_collision_mask_bit
 
 {-# NOINLINE bindCollisionObject2D_set_pickable #-}
 
@@ -367,7 +691,10 @@ set_pickable cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "set_pickable" '[Bool]
            (IO ())
@@ -396,7 +723,10 @@ shape_find_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "shape_find_owner" '[Int]
            (IO Int)
@@ -426,7 +756,10 @@ shape_owner_add_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "shape_owner_add_shape"
            '[Int, Shape2D]
@@ -457,7 +790,10 @@ shape_owner_clear_shapes cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "shape_owner_clear_shapes"
            '[Int]
@@ -488,7 +824,7 @@ shape_owner_get_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CollisionObject2D "shape_owner_get_owner"
            '[Int]
@@ -519,7 +855,7 @@ shape_owner_get_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CollisionObject2D "shape_owner_get_shape"
            '[Int, Int]
@@ -550,7 +886,10 @@ shape_owner_get_shape_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "shape_owner_get_shape_count"
            '[Int]
@@ -583,7 +922,10 @@ shape_owner_get_shape_index cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "shape_owner_get_shape_index"
            '[Int, Int]
@@ -616,7 +958,10 @@ shape_owner_get_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "shape_owner_get_transform"
            '[Int]
@@ -648,7 +993,10 @@ shape_owner_remove_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "shape_owner_remove_shape"
            '[Int, Int]
@@ -680,7 +1028,10 @@ shape_owner_set_disabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "shape_owner_set_disabled"
            '[Int, Bool]
@@ -714,7 +1065,10 @@ shape_owner_set_one_way_collision cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D
            "shape_owner_set_one_way_collision"
@@ -750,7 +1104,10 @@ shape_owner_set_one_way_collision_margin cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D
            "shape_owner_set_one_way_collision_margin"
@@ -784,7 +1141,10 @@ shape_owner_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject2D "shape_owner_set_transform"
            '[Int, Transform2d]

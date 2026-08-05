@@ -19,6 +19,7 @@ module Godot.Core.GridMap
         Godot.Core.GridMap.get_collision_mask_bit,
         Godot.Core.GridMap.get_mesh_library, Godot.Core.GridMap.get_meshes,
         Godot.Core.GridMap.get_octant_size,
+        Godot.Core.GridMap.get_use_in_baked_light,
         Godot.Core.GridMap.get_used_cells,
         Godot.Core.GridMap.make_baked_meshes,
         Godot.Core.GridMap.map_to_world,
@@ -34,6 +35,7 @@ module Godot.Core.GridMap
         Godot.Core.GridMap.set_collision_mask_bit,
         Godot.Core.GridMap.set_mesh_library,
         Godot.Core.GridMap.set_octant_size,
+        Godot.Core.GridMap.set_use_in_baked_light,
         Godot.Core.GridMap.world_to_map)
        where
 import Data.Coerce
@@ -96,6 +98,12 @@ instance NodeProperty GridMap "mesh_library" MeshLibrary 'False
         nodeProperty
           = (get_mesh_library, wrapDroppingSetter set_mesh_library, Nothing)
 
+instance NodeProperty GridMap "use_in_baked_light" Bool 'False
+         where
+        nodeProperty
+          = (get_use_in_baked_light,
+             wrapDroppingSetter set_use_in_baked_light, Nothing)
+
 {-# NOINLINE bindGridMap__update_octants_callback #-}
 
 bindGridMap__update_octants_callback :: MethodBind
@@ -116,7 +124,10 @@ _update_octants_callback cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "_update_octants_callback" '[] (IO ())
          where
@@ -138,7 +149,10 @@ clear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_clear (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.GridMap.clear
@@ -162,7 +176,10 @@ clear_baked_meshes cls
          godot_method_bind_call bindGridMap_clear_baked_meshes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "clear_baked_meshes" '[] (IO ()) where
         nodeMethod = Godot.Core.GridMap.clear_baked_meshes
@@ -187,7 +204,10 @@ get_bake_mesh_instance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_bake_mesh_instance" '[Int]
            (IO Rid)
@@ -213,7 +233,10 @@ get_bake_meshes cls
          godot_method_bind_call bindGridMap_get_bake_meshes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_bake_meshes" '[] (IO Array) where
         nodeMethod = Godot.Core.GridMap.get_bake_meshes
@@ -238,7 +261,10 @@ get_cell_item cls arg1 arg2 arg3
          godot_method_bind_call bindGridMap_get_cell_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_cell_item" '[Int, Int, Int]
            (IO Int)
@@ -266,7 +292,10 @@ get_cell_item_orientation cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_cell_item_orientation"
            '[Int, Int, Int]
@@ -293,7 +322,10 @@ get_cell_scale cls
          godot_method_bind_call bindGridMap_get_cell_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_cell_scale" '[] (IO Float) where
         nodeMethod = Godot.Core.GridMap.get_cell_scale
@@ -317,7 +349,10 @@ get_cell_size cls
          godot_method_bind_call bindGridMap_get_cell_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_cell_size" '[] (IO Vector3) where
         nodeMethod = Godot.Core.GridMap.get_cell_size
@@ -339,7 +374,10 @@ get_center_x cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_get_center_x (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_center_x" '[] (IO Bool) where
         nodeMethod = Godot.Core.GridMap.get_center_x
@@ -361,7 +399,10 @@ get_center_y cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_get_center_y (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_center_y" '[] (IO Bool) where
         nodeMethod = Godot.Core.GridMap.get_center_y
@@ -383,7 +424,10 @@ get_center_z cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_get_center_z (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_center_z" '[] (IO Bool) where
         nodeMethod = Godot.Core.GridMap.get_center_z
@@ -407,7 +451,10 @@ get_collision_layer cls
          godot_method_bind_call bindGridMap_get_collision_layer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_collision_layer" '[] (IO Int)
          where
@@ -433,7 +480,10 @@ get_collision_layer_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_collision_layer_bit" '[Int]
            (IO Bool)
@@ -459,7 +509,10 @@ get_collision_mask cls
          godot_method_bind_call bindGridMap_get_collision_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_collision_mask" '[] (IO Int) where
         nodeMethod = Godot.Core.GridMap.get_collision_mask
@@ -484,7 +537,10 @@ get_collision_mask_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_collision_mask_bit" '[Int]
            (IO Bool)
@@ -510,7 +566,7 @@ get_mesh_library cls
          godot_method_bind_call bindGridMap_get_mesh_library (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod GridMap "get_mesh_library" '[] (IO MeshLibrary)
          where
@@ -533,7 +589,10 @@ get_meshes cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_get_meshes (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_meshes" '[] (IO Array) where
         nodeMethod = Godot.Core.GridMap.get_meshes
@@ -556,10 +615,42 @@ get_octant_size cls
          godot_method_bind_call bindGridMap_get_octant_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_octant_size" '[] (IO Int) where
         nodeMethod = Godot.Core.GridMap.get_octant_size
+
+{-# NOINLINE bindGridMap_get_use_in_baked_light #-}
+
+bindGridMap_get_use_in_baked_light :: MethodBind
+bindGridMap_get_use_in_baked_light
+  = unsafePerformIO $
+      withCString "GridMap" $
+        \ clsNamePtr ->
+          withCString "get_use_in_baked_light" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_use_in_baked_light ::
+                         (GridMap :< cls, Object :< cls) => cls -> IO Bool
+get_use_in_baked_light cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGridMap_get_use_in_baked_light
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GridMap "get_use_in_baked_light" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.GridMap.get_use_in_baked_light
 
 {-# NOINLINE bindGridMap_get_used_cells #-}
 
@@ -580,7 +671,10 @@ get_used_cells cls
          godot_method_bind_call bindGridMap_get_used_cells (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "get_used_cells" '[] (IO Array) where
         nodeMethod = Godot.Core.GridMap.get_used_cells
@@ -607,7 +701,10 @@ make_baked_meshes cls arg1 arg2
          godot_method_bind_call bindGridMap_make_baked_meshes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "make_baked_meshes"
            '[Maybe Bool, Maybe Float]
@@ -634,7 +731,10 @@ map_to_world cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_map_to_world (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "map_to_world" '[Int, Int, Int]
            (IO Vector3)
@@ -660,7 +760,10 @@ resource_changed cls arg1
          godot_method_bind_call bindGridMap_resource_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "resource_changed" '[Resource] (IO ())
          where
@@ -688,7 +791,10 @@ set_cell_item cls arg1 arg2 arg3 arg4 arg5
          godot_method_bind_call bindGridMap_set_cell_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_cell_item"
            '[Int, Int, Int, Int, Maybe Int]
@@ -715,7 +821,10 @@ set_cell_scale cls arg1
          godot_method_bind_call bindGridMap_set_cell_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_cell_scale" '[Float] (IO ()) where
         nodeMethod = Godot.Core.GridMap.set_cell_scale
@@ -739,7 +848,10 @@ set_cell_size cls arg1
          godot_method_bind_call bindGridMap_set_cell_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_cell_size" '[Vector3] (IO ())
          where
@@ -763,7 +875,10 @@ set_center_x cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_set_center_x (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_center_x" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.GridMap.set_center_x
@@ -786,7 +901,10 @@ set_center_y cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_set_center_y (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_center_y" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.GridMap.set_center_y
@@ -809,7 +927,10 @@ set_center_z cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_set_center_z (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_center_z" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.GridMap.set_center_z
@@ -835,7 +956,10 @@ set_clip cls arg1 arg2 arg3 arg4
        maybe (VariantInt (0)) toVariant arg4]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_set_clip (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_clip"
            '[Bool, Maybe Bool, Maybe Int, Maybe Int]
@@ -862,7 +986,10 @@ set_collision_layer cls arg1
          godot_method_bind_call bindGridMap_set_collision_layer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_collision_layer" '[Int] (IO ())
          where
@@ -888,7 +1015,10 @@ set_collision_layer_bit cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_collision_layer_bit" '[Int, Bool]
            (IO ())
@@ -914,7 +1044,10 @@ set_collision_mask cls arg1
          godot_method_bind_call bindGridMap_set_collision_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_collision_mask" '[Int] (IO ())
          where
@@ -940,7 +1073,10 @@ set_collision_mask_bit cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_collision_mask_bit" '[Int, Bool]
            (IO ())
@@ -966,7 +1102,10 @@ set_mesh_library cls arg1
          godot_method_bind_call bindGridMap_set_mesh_library (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_mesh_library" '[MeshLibrary]
            (IO ())
@@ -992,10 +1131,43 @@ set_octant_size cls arg1
          godot_method_bind_call bindGridMap_set_octant_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "set_octant_size" '[Int] (IO ()) where
         nodeMethod = Godot.Core.GridMap.set_octant_size
+
+{-# NOINLINE bindGridMap_set_use_in_baked_light #-}
+
+bindGridMap_set_use_in_baked_light :: MethodBind
+bindGridMap_set_use_in_baked_light
+  = unsafePerformIO $
+      withCString "GridMap" $
+        \ clsNamePtr ->
+          withCString "set_use_in_baked_light" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_use_in_baked_light ::
+                         (GridMap :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_use_in_baked_light cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGridMap_set_use_in_baked_light
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GridMap "set_use_in_baked_light" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GridMap.set_use_in_baked_light
 
 {-# NOINLINE bindGridMap_world_to_map #-}
 
@@ -1015,7 +1187,10 @@ world_to_map cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindGridMap_world_to_map (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod GridMap "world_to_map" '[Vector3] (IO Vector3)
          where

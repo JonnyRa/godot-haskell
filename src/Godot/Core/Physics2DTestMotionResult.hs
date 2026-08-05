@@ -7,8 +7,11 @@ module Godot.Core.Physics2DTestMotionResult
         Godot.Core.Physics2DTestMotionResult.get_collider_rid,
         Godot.Core.Physics2DTestMotionResult.get_collider_shape,
         Godot.Core.Physics2DTestMotionResult.get_collider_velocity,
+        Godot.Core.Physics2DTestMotionResult.get_collision_depth,
         Godot.Core.Physics2DTestMotionResult.get_collision_normal,
         Godot.Core.Physics2DTestMotionResult.get_collision_point,
+        Godot.Core.Physics2DTestMotionResult.get_collision_safe_fraction,
+        Godot.Core.Physics2DTestMotionResult.get_collision_unsafe_fraction,
         Godot.Core.Physics2DTestMotionResult.get_motion,
         Godot.Core.Physics2DTestMotionResult.get_motion_remainder)
        where
@@ -51,6 +54,12 @@ instance NodeProperty Physics2DTestMotionResult "collider_velocity"
          where
         nodeProperty = (get_collider_velocity, (), Nothing)
 
+instance NodeProperty Physics2DTestMotionResult "collision_depth"
+           Float
+           'True
+         where
+        nodeProperty = (get_collision_depth, (), Nothing)
+
 instance NodeProperty Physics2DTestMotionResult "collision_normal"
            Vector2
            'True
@@ -62,6 +71,20 @@ instance NodeProperty Physics2DTestMotionResult "collision_point"
            'True
          where
         nodeProperty = (get_collision_point, (), Nothing)
+
+instance NodeProperty Physics2DTestMotionResult
+           "collision_safe_fraction"
+           Float
+           'True
+         where
+        nodeProperty = (get_collision_safe_fraction, (), Nothing)
+
+instance NodeProperty Physics2DTestMotionResult
+           "collision_unsafe_fraction"
+           Float
+           'True
+         where
+        nodeProperty = (get_collision_unsafe_fraction, (), Nothing)
 
 instance NodeProperty Physics2DTestMotionResult "motion" Vector2
            'True
@@ -95,7 +118,7 @@ get_collider cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Physics2DTestMotionResult "get_collider" '[]
            (IO Object)
@@ -123,7 +146,10 @@ get_collider_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DTestMotionResult "get_collider_id" '[]
            (IO Int)
@@ -151,7 +177,10 @@ get_collider_rid cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DTestMotionResult "get_collider_rid"
            '[]
@@ -180,7 +209,10 @@ get_collider_shape cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DTestMotionResult "get_collider_shape"
            '[]
@@ -212,7 +244,10 @@ get_collider_velocity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DTestMotionResult
            "get_collider_velocity"
@@ -221,6 +256,40 @@ instance NodeMethod Physics2DTestMotionResult
          where
         nodeMethod
           = Godot.Core.Physics2DTestMotionResult.get_collider_velocity
+
+{-# NOINLINE bindPhysics2DTestMotionResult_get_collision_depth #-}
+
+bindPhysics2DTestMotionResult_get_collision_depth :: MethodBind
+bindPhysics2DTestMotionResult_get_collision_depth
+  = unsafePerformIO $
+      withCString "Physics2DTestMotionResult" $
+        \ clsNamePtr ->
+          withCString "get_collision_depth" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_collision_depth ::
+                      (Physics2DTestMotionResult :< cls, Object :< cls) =>
+                      cls -> IO Float
+get_collision_depth cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindPhysics2DTestMotionResult_get_collision_depth
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Physics2DTestMotionResult "get_collision_depth"
+           '[]
+           (IO Float)
+         where
+        nodeMethod
+          = Godot.Core.Physics2DTestMotionResult.get_collision_depth
 
 {-# NOINLINE bindPhysics2DTestMotionResult_get_collision_normal #-}
 
@@ -244,7 +313,10 @@ get_collision_normal cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DTestMotionResult
            "get_collision_normal"
@@ -276,7 +348,10 @@ get_collision_point cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DTestMotionResult "get_collision_point"
            '[]
@@ -284,6 +359,80 @@ instance NodeMethod Physics2DTestMotionResult "get_collision_point"
          where
         nodeMethod
           = Godot.Core.Physics2DTestMotionResult.get_collision_point
+
+{-# NOINLINE bindPhysics2DTestMotionResult_get_collision_safe_fraction
+             #-}
+
+bindPhysics2DTestMotionResult_get_collision_safe_fraction ::
+                                                          MethodBind
+bindPhysics2DTestMotionResult_get_collision_safe_fraction
+  = unsafePerformIO $
+      withCString "Physics2DTestMotionResult" $
+        \ clsNamePtr ->
+          withCString "get_collision_safe_fraction" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_collision_safe_fraction ::
+                              (Physics2DTestMotionResult :< cls, Object :< cls) =>
+                              cls -> IO Float
+get_collision_safe_fraction cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindPhysics2DTestMotionResult_get_collision_safe_fraction
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Physics2DTestMotionResult
+           "get_collision_safe_fraction"
+           '[]
+           (IO Float)
+         where
+        nodeMethod
+          = Godot.Core.Physics2DTestMotionResult.get_collision_safe_fraction
+
+{-# NOINLINE bindPhysics2DTestMotionResult_get_collision_unsafe_fraction
+             #-}
+
+bindPhysics2DTestMotionResult_get_collision_unsafe_fraction ::
+                                                            MethodBind
+bindPhysics2DTestMotionResult_get_collision_unsafe_fraction
+  = unsafePerformIO $
+      withCString "Physics2DTestMotionResult" $
+        \ clsNamePtr ->
+          withCString "get_collision_unsafe_fraction" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_collision_unsafe_fraction ::
+                                (Physics2DTestMotionResult :< cls, Object :< cls) =>
+                                cls -> IO Float
+get_collision_unsafe_fraction cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindPhysics2DTestMotionResult_get_collision_unsafe_fraction
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Physics2DTestMotionResult
+           "get_collision_unsafe_fraction"
+           '[]
+           (IO Float)
+         where
+        nodeMethod
+          = Godot.Core.Physics2DTestMotionResult.get_collision_unsafe_fraction
 
 {-# NOINLINE bindPhysics2DTestMotionResult_get_motion #-}
 
@@ -306,7 +455,10 @@ get_motion cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DTestMotionResult "get_motion" '[]
            (IO Vector2)
@@ -335,7 +487,10 @@ get_motion_remainder cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DTestMotionResult
            "get_motion_remainder"

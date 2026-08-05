@@ -42,7 +42,10 @@ get_width cls
          godot_method_bind_call bindCurveTexture_get_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CurveTexture "get_width" '[] (IO Int) where
         nodeMethod = Godot.Core.CurveTexture.get_width
@@ -67,7 +70,10 @@ _update cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCurveTexture__update (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CurveTexture "_update" '[] (IO ()) where
         nodeMethod = Godot.Core.CurveTexture._update
@@ -93,7 +99,7 @@ get_curve cls
          godot_method_bind_call bindCurveTexture_get_curve (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CurveTexture "get_curve" '[] (IO Curve) where
         nodeMethod = Godot.Core.CurveTexture.get_curve
@@ -119,7 +125,10 @@ set_curve cls arg1
          godot_method_bind_call bindCurveTexture_set_curve (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CurveTexture "set_curve" '[Curve] (IO ()) where
         nodeMethod = Godot.Core.CurveTexture.set_curve
@@ -145,7 +154,10 @@ set_width cls arg1
          godot_method_bind_call bindCurveTexture_set_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CurveTexture "set_width" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CurveTexture.set_width

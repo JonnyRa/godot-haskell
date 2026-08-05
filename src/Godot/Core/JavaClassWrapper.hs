@@ -35,7 +35,7 @@ wrap cls arg1
          godot_method_bind_call bindJavaClassWrapper_wrap (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod JavaClassWrapper "wrap" '[GodotString]
            (IO JavaClass)

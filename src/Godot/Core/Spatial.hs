@@ -3,9 +3,13 @@
   MultiParamTypeClasses #-}
 module Godot.Core.Spatial
        (Godot.Core.Spatial._NOTIFICATION_ENTER_WORLD,
+        Godot.Core.Spatial._NOTIFICATION_EXIT_GAMEPLAY,
         Godot.Core.Spatial._NOTIFICATION_EXIT_WORLD,
+        Godot.Core.Spatial._NOTIFICATION_ENTER_GAMEPLAY,
         Godot.Core.Spatial._NOTIFICATION_TRANSFORM_CHANGED,
         Godot.Core.Spatial._NOTIFICATION_VISIBILITY_CHANGED,
+        Godot.Core.Spatial.sig_gameplay_entered,
+        Godot.Core.Spatial.sig_gameplay_exited,
         Godot.Core.Spatial.sig_visibility_changed,
         Godot.Core.Spatial._update_gizmo,
         Godot.Core.Spatial.force_update_transform,
@@ -60,14 +64,34 @@ import Godot.Core.Node()
 _NOTIFICATION_ENTER_WORLD :: Int
 _NOTIFICATION_ENTER_WORLD = 41
 
+_NOTIFICATION_EXIT_GAMEPLAY :: Int
+_NOTIFICATION_EXIT_GAMEPLAY = 46
+
 _NOTIFICATION_EXIT_WORLD :: Int
 _NOTIFICATION_EXIT_WORLD = 42
+
+_NOTIFICATION_ENTER_GAMEPLAY :: Int
+_NOTIFICATION_ENTER_GAMEPLAY = 45
 
 _NOTIFICATION_TRANSFORM_CHANGED :: Int
 _NOTIFICATION_TRANSFORM_CHANGED = 2000
 
 _NOTIFICATION_VISIBILITY_CHANGED :: Int
 _NOTIFICATION_VISIBILITY_CHANGED = 43
+
+-- | Emitted by portal system gameplay monitor when a node enters the gameplay area.
+sig_gameplay_entered :: Godot.Internal.Dispatch.Signal Spatial
+sig_gameplay_entered
+  = Godot.Internal.Dispatch.Signal "gameplay_entered"
+
+instance NodeSignal Spatial "gameplay_entered" '[]
+
+-- | Emitted by portal system gameplay monitor when a node exits the gameplay area.
+sig_gameplay_exited :: Godot.Internal.Dispatch.Signal Spatial
+sig_gameplay_exited
+  = Godot.Internal.Dispatch.Signal "gameplay_exited"
+
+instance NodeSignal Spatial "gameplay_exited" '[]
 
 -- | Emitted when node visibility changes.
 sig_visibility_changed :: Godot.Internal.Dispatch.Signal Spatial
@@ -128,7 +152,10 @@ _update_gizmo cls
          godot_method_bind_call bindSpatial__update_gizmo (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "_update_gizmo" '[] (IO ()) where
         nodeMethod = Godot.Core.Spatial._update_gizmo
@@ -155,7 +182,10 @@ force_update_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "force_update_transform" '[] (IO ())
          where
@@ -181,7 +211,7 @@ get_gizmo cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_get_gizmo (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Spatial "get_gizmo" '[] (IO SpatialGizmo) where
         nodeMethod = Godot.Core.Spatial.get_gizmo
@@ -208,7 +238,10 @@ get_global_transform cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "get_global_transform" '[]
            (IO Transform)
@@ -236,7 +269,7 @@ get_parent_spatial cls
          godot_method_bind_call bindSpatial_get_parent_spatial (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Spatial "get_parent_spatial" '[] (IO Spatial)
          where
@@ -264,7 +297,10 @@ get_rotation cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_get_rotation (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "get_rotation" '[] (IO Vector3) where
         nodeMethod = Godot.Core.Spatial.get_rotation
@@ -291,7 +327,10 @@ get_rotation_degrees cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "get_rotation_degrees" '[] (IO Vector3)
          where
@@ -316,7 +355,10 @@ get_scale cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_get_scale (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "get_scale" '[] (IO Vector3) where
         nodeMethod = Godot.Core.Spatial.get_scale
@@ -342,7 +384,10 @@ get_transform cls
          godot_method_bind_call bindSpatial_get_transform (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "get_transform" '[] (IO Transform)
          where
@@ -369,7 +414,10 @@ get_translation cls
          godot_method_bind_call bindSpatial_get_translation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "get_translation" '[] (IO Vector3)
          where
@@ -394,7 +442,7 @@ get_world cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_get_world (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Spatial "get_world" '[] (IO World) where
         nodeMethod = Godot.Core.Spatial.get_world
@@ -420,7 +468,10 @@ global_rotate cls arg1 arg2
          godot_method_bind_call bindSpatial_global_rotate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "global_rotate" '[Vector3, Float]
            (IO ())
@@ -447,7 +498,10 @@ global_scale cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_global_scale (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "global_scale" '[Vector3] (IO ()) where
         nodeMethod = Godot.Core.Spatial.global_scale
@@ -473,7 +527,10 @@ global_translate cls arg1
          godot_method_bind_call bindSpatial_global_translate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "global_translate" '[Vector3] (IO ())
          where
@@ -497,7 +554,9 @@ hide cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_hide (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "hide" '[] (IO ()) where
         nodeMethod = Godot.Core.Spatial.hide
@@ -526,7 +585,10 @@ is_local_transform_notification_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial
            "is_local_transform_notification_enabled"
@@ -557,7 +619,10 @@ is_scale_disabled cls
          godot_method_bind_call bindSpatial_is_scale_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "is_scale_disabled" '[] (IO Bool) where
         nodeMethod = Godot.Core.Spatial.is_scale_disabled
@@ -583,7 +648,10 @@ is_set_as_toplevel cls
          godot_method_bind_call bindSpatial_is_set_as_toplevel (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "is_set_as_toplevel" '[] (IO Bool)
          where
@@ -612,7 +680,10 @@ is_transform_notification_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "is_transform_notification_enabled" '[]
            (IO Bool)
@@ -638,7 +709,10 @@ is_visible cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_is_visible (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "is_visible" '[] (IO Bool) where
         nodeMethod = Godot.Core.Spatial.is_visible
@@ -664,7 +738,10 @@ is_visible_in_tree cls
          godot_method_bind_call bindSpatial_is_visible_in_tree (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "is_visible_in_tree" '[] (IO Bool)
          where
@@ -672,8 +749,9 @@ instance NodeMethod Spatial "is_visible_in_tree" '[] (IO Bool)
 
 {-# NOINLINE bindSpatial_look_at #-}
 
--- | Rotates itself so that the local -Z axis points towards the @target@ position.
---   				The transform will first be rotated around the given @up@ vector, and then fully aligned to the target by a further rotation around an axis perpendicular to both the @target@ and @up@ vectors.
+-- | Rotates the node so that the local forward axis (-Z) points toward the @target@ position.
+--   				The local up axis (+Y) points as close to the @up@ vector as possible while staying perpendicular to the local forward axis. The resulting transform is orthogonal, and the scale is preserved. Non-uniform scaling may not work correctly.
+--   				The @target@ position cannot be the same as the node's position, the @up@ vector cannot be zero, and the direction from the node's position to the @target@ vector cannot be parallel to the @up@ vector.
 --   				Operations take place in global space.
 bindSpatial_look_at :: MethodBind
 bindSpatial_look_at
@@ -684,8 +762,9 @@ bindSpatial_look_at
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Rotates itself so that the local -Z axis points towards the @target@ position.
---   				The transform will first be rotated around the given @up@ vector, and then fully aligned to the target by a further rotation around an axis perpendicular to both the @target@ and @up@ vectors.
+-- | Rotates the node so that the local forward axis (-Z) points toward the @target@ position.
+--   				The local up axis (+Y) points as close to the @up@ vector as possible while staying perpendicular to the local forward axis. The resulting transform is orthogonal, and the scale is preserved. Non-uniform scaling may not work correctly.
+--   				The @target@ position cannot be the same as the node's position, the @up@ vector cannot be zero, and the direction from the node's position to the @target@ vector cannot be parallel to the @up@ vector.
 --   				Operations take place in global space.
 look_at ::
           (Spatial :< cls, Object :< cls) =>
@@ -694,7 +773,10 @@ look_at cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_look_at (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "look_at" '[Vector3, Vector3] (IO ())
          where
@@ -723,7 +805,10 @@ look_at_from_position cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "look_at_from_position"
            '[Vector3, Vector3, Vector3]
@@ -751,7 +836,10 @@ orthonormalize cls
          godot_method_bind_call bindSpatial_orthonormalize (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "orthonormalize" '[] (IO ()) where
         nodeMethod = Godot.Core.Spatial.orthonormalize
@@ -775,7 +863,10 @@ rotate cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_rotate (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "rotate" '[Vector3, Float] (IO ())
          where
@@ -802,7 +893,10 @@ rotate_object_local cls arg1 arg2
          godot_method_bind_call bindSpatial_rotate_object_local (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "rotate_object_local" '[Vector3, Float]
            (IO ())
@@ -828,7 +922,10 @@ rotate_x cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_rotate_x (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "rotate_x" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Spatial.rotate_x
@@ -852,7 +949,10 @@ rotate_y cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_rotate_y (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "rotate_y" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Spatial.rotate_y
@@ -876,7 +976,10 @@ rotate_z cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_rotate_z (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "rotate_z" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Spatial.rotate_z
@@ -902,7 +1005,10 @@ scale_object_local cls arg1
          godot_method_bind_call bindSpatial_scale_object_local (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "scale_object_local" '[Vector3] (IO ())
          where
@@ -929,7 +1035,10 @@ set_as_toplevel cls arg1
          godot_method_bind_call bindSpatial_set_as_toplevel (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_as_toplevel" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Spatial.set_as_toplevel
@@ -955,7 +1064,10 @@ set_disable_scale cls arg1
          godot_method_bind_call bindSpatial_set_disable_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_disable_scale" '[Bool] (IO ())
          where
@@ -981,7 +1093,10 @@ set_gizmo cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_set_gizmo (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_gizmo" '[SpatialGizmo] (IO ())
          where
@@ -1009,7 +1124,10 @@ set_global_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_global_transform" '[Transform]
            (IO ())
@@ -1035,7 +1153,10 @@ set_identity cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_set_identity (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_identity" '[] (IO ()) where
         nodeMethod = Godot.Core.Spatial.set_identity
@@ -1063,7 +1184,10 @@ set_ignore_transform_notification cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_ignore_transform_notification"
            '[Bool]
@@ -1093,7 +1217,10 @@ set_notify_local_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_notify_local_transform" '[Bool]
            (IO ())
@@ -1102,7 +1229,7 @@ instance NodeMethod Spatial "set_notify_local_transform" '[Bool]
 
 {-# NOINLINE bindSpatial_set_notify_transform #-}
 
--- | Sets whether the node notifies about its global and local transformation changes. @Spatial@ will not propagate this by default.
+-- | Sets whether the node notifies about its global and local transformation changes. @Spatial@ will not propagate this by default, unless it is in the editor context and it has a valid gizmo.
 bindSpatial_set_notify_transform :: MethodBind
 bindSpatial_set_notify_transform
   = unsafePerformIO $
@@ -1112,7 +1239,7 @@ bindSpatial_set_notify_transform
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets whether the node notifies about its global and local transformation changes. @Spatial@ will not propagate this by default.
+-- | Sets whether the node notifies about its global and local transformation changes. @Spatial@ will not propagate this by default, unless it is in the editor context and it has a valid gizmo.
 set_notify_transform ::
                        (Spatial :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_notify_transform cls arg1
@@ -1122,7 +1249,10 @@ set_notify_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_notify_transform" '[Bool] (IO ())
          where
@@ -1150,7 +1280,10 @@ set_rotation cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_set_rotation (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_rotation" '[Vector3] (IO ()) where
         nodeMethod = Godot.Core.Spatial.set_rotation
@@ -1177,7 +1310,10 @@ set_rotation_degrees cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_rotation_degrees" '[Vector3]
            (IO ())
@@ -1204,7 +1340,10 @@ set_scale cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_set_scale (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_scale" '[Vector3] (IO ()) where
         nodeMethod = Godot.Core.Spatial.set_scale
@@ -1230,7 +1369,10 @@ set_transform cls arg1
          godot_method_bind_call bindSpatial_set_transform (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_transform" '[Transform] (IO ())
          where
@@ -1257,7 +1399,10 @@ set_translation cls arg1
          godot_method_bind_call bindSpatial_set_translation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_translation" '[Vector3] (IO ())
          where
@@ -1283,7 +1428,10 @@ set_visible cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_set_visible (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "set_visible" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Spatial.set_visible
@@ -1306,7 +1454,9 @@ show cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_show (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "show" '[] (IO ()) where
         nodeMethod = Godot.Core.Spatial.show
@@ -1331,7 +1481,10 @@ to_global cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_to_global (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "to_global" '[Vector3] (IO Vector3)
          where
@@ -1356,7 +1509,10 @@ to_local cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_to_local (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "to_local" '[Vector3] (IO Vector3)
          where
@@ -1384,7 +1540,10 @@ translate cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_translate (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "translate" '[Vector3] (IO ()) where
         nodeMethod = Godot.Core.Spatial.translate
@@ -1411,7 +1570,10 @@ translate_object_local cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "translate_object_local" '[Vector3]
            (IO ())
@@ -1437,7 +1599,10 @@ update_gizmo cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpatial_update_gizmo (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Spatial "update_gizmo" '[] (IO ()) where
         nodeMethod = Godot.Core.Spatial.update_gizmo

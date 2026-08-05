@@ -7,6 +7,7 @@ module Godot.Core.DynamicFont
         Godot.Core.DynamicFont._SPACING_CHAR,
         Godot.Core.DynamicFont._SPACING_BOTTOM,
         Godot.Core.DynamicFont.add_fallback,
+        Godot.Core.DynamicFont.get_available_chars,
         Godot.Core.DynamicFont.get_fallback,
         Godot.Core.DynamicFont.get_fallback_count,
         Godot.Core.DynamicFont.get_font_data,
@@ -123,12 +124,49 @@ add_fallback cls arg1
          godot_method_bind_call bindDynamicFont_add_fallback (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "add_fallback" '[DynamicFontData]
            (IO ())
          where
         nodeMethod = Godot.Core.DynamicFont.add_fallback
+
+{-# NOINLINE bindDynamicFont_get_available_chars #-}
+
+-- | Returns a string containing all the characters available in the main and all the fallback fonts.
+--   				If a given character is included in more than one font, it appears only once in the returned string.
+bindDynamicFont_get_available_chars :: MethodBind
+bindDynamicFont_get_available_chars
+  = unsafePerformIO $
+      withCString "DynamicFont" $
+        \ clsNamePtr ->
+          withCString "get_available_chars" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns a string containing all the characters available in the main and all the fallback fonts.
+--   				If a given character is included in more than one font, it appears only once in the returned string.
+get_available_chars ::
+                      (DynamicFont :< cls, Object :< cls) => cls -> IO GodotString
+get_available_chars cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindDynamicFont_get_available_chars
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod DynamicFont "get_available_chars" '[]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.DynamicFont.get_available_chars
 
 {-# NOINLINE bindDynamicFont_get_fallback #-}
 
@@ -152,7 +190,7 @@ get_fallback cls arg1
          godot_method_bind_call bindDynamicFont_get_fallback (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod DynamicFont "get_fallback" '[Int]
            (IO DynamicFontData)
@@ -181,7 +219,10 @@ get_fallback_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "get_fallback_count" '[] (IO Int)
          where
@@ -208,7 +249,7 @@ get_font_data cls
          godot_method_bind_call bindDynamicFont_get_font_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod DynamicFont "get_font_data" '[]
            (IO DynamicFontData)
@@ -239,7 +280,10 @@ get_outline_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "get_outline_color" '[] (IO Color)
          where
@@ -267,7 +311,10 @@ get_outline_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "get_outline_size" '[] (IO Int)
          where
@@ -292,7 +339,10 @@ get_size cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDynamicFont_get_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "get_size" '[] (IO Int) where
         nodeMethod = Godot.Core.DynamicFont.get_size
@@ -318,7 +368,10 @@ get_spacing cls arg1
          godot_method_bind_call bindDynamicFont_get_spacing (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "get_spacing" '[Int] (IO Int) where
         nodeMethod = Godot.Core.DynamicFont.get_spacing
@@ -344,7 +397,10 @@ get_use_filter cls
          godot_method_bind_call bindDynamicFont_get_use_filter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "get_use_filter" '[] (IO Bool)
          where
@@ -371,7 +427,10 @@ get_use_mipmaps cls
          godot_method_bind_call bindDynamicFont_get_use_mipmaps (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "get_use_mipmaps" '[] (IO Bool)
          where
@@ -398,7 +457,10 @@ remove_fallback cls arg1
          godot_method_bind_call bindDynamicFont_remove_fallback (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "remove_fallback" '[Int] (IO ())
          where
@@ -426,7 +488,10 @@ set_fallback cls arg1 arg2
          godot_method_bind_call bindDynamicFont_set_fallback (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "set_fallback"
            '[Int, DynamicFontData]
@@ -456,7 +521,10 @@ set_font_data cls arg1
          godot_method_bind_call bindDynamicFont_set_font_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "set_font_data" '[DynamicFontData]
            (IO ())
@@ -487,7 +555,10 @@ set_outline_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "set_outline_color" '[Color]
            (IO ())
@@ -516,7 +587,10 @@ set_outline_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "set_outline_size" '[Int] (IO ())
          where
@@ -542,7 +616,10 @@ set_size cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDynamicFont_set_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "set_size" '[Int] (IO ()) where
         nodeMethod = Godot.Core.DynamicFont.set_size
@@ -568,7 +645,10 @@ set_spacing cls arg1 arg2
          godot_method_bind_call bindDynamicFont_set_spacing (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "set_spacing" '[Int, Int] (IO ())
          where
@@ -595,7 +675,10 @@ set_use_filter cls arg1
          godot_method_bind_call bindDynamicFont_set_use_filter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "set_use_filter" '[Bool] (IO ())
          where
@@ -622,7 +705,10 @@ set_use_mipmaps cls arg1
          godot_method_bind_call bindDynamicFont_set_use_mipmaps (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DynamicFont "set_use_mipmaps" '[Bool] (IO ())
          where

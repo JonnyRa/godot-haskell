@@ -68,7 +68,10 @@ get_recognized_extensions cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ResourceSaver "get_recognized_extensions"
            '[Resource]
@@ -103,7 +106,10 @@ save cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindResourceSaver_save (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ResourceSaver "save"
            '[GodotString, Resource, Maybe Int]

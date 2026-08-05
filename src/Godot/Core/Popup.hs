@@ -67,7 +67,10 @@ is_exclusive cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopup_is_exclusive (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Popup "is_exclusive" '[] (IO Bool) where
         nodeMethod = Godot.Core.Popup.is_exclusive
@@ -92,7 +95,9 @@ popup cls arg1
       [defaultedVariant VariantRect2 (V2 (V2 0 0) (V2 0 0)) arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopup_popup (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Popup "popup" '[Maybe Rect2] (IO ()) where
         nodeMethod = Godot.Core.Popup.popup
@@ -117,7 +122,10 @@ popup_centered cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopup_popup_centered (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Popup "popup_centered" '[Maybe Vector2] (IO ())
          where
@@ -148,7 +156,10 @@ popup_centered_clamped cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Popup "popup_centered_clamped"
            '[Maybe Vector2, Maybe Float]
@@ -178,7 +189,10 @@ popup_centered_minsize cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Popup "popup_centered_minsize" '[Maybe Vector2]
            (IO ())
@@ -206,7 +220,10 @@ popup_centered_ratio cls arg1
          godot_method_bind_call bindPopup_popup_centered_ratio (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Popup "popup_centered_ratio" '[Maybe Float]
            (IO ())
@@ -232,7 +249,10 @@ set_as_minsize cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopup_set_as_minsize (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Popup "set_as_minsize" '[] (IO ()) where
         nodeMethod = Godot.Core.Popup.set_as_minsize
@@ -259,7 +279,10 @@ set_exclusive cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopup_set_exclusive (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Popup "set_exclusive" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Popup.set_exclusive

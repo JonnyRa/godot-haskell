@@ -58,7 +58,10 @@ get_bounce cls
          godot_method_bind_call bindPhysicsMaterial_get_bounce (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicsMaterial "get_bounce" '[] (IO Float)
          where
@@ -86,7 +89,10 @@ get_friction cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicsMaterial "get_friction" '[] (IO Float)
          where
@@ -114,7 +120,10 @@ is_absorbent cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicsMaterial "is_absorbent" '[] (IO Bool)
          where
@@ -141,7 +150,10 @@ is_rough cls
          godot_method_bind_call bindPhysicsMaterial_is_rough (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicsMaterial "is_rough" '[] (IO Bool) where
         nodeMethod = Godot.Core.PhysicsMaterial.is_rough
@@ -168,7 +180,10 @@ set_absorbent cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicsMaterial "set_absorbent" '[Bool] (IO ())
          where
@@ -195,7 +210,10 @@ set_bounce cls arg1
          godot_method_bind_call bindPhysicsMaterial_set_bounce (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicsMaterial "set_bounce" '[Float] (IO ())
          where
@@ -223,7 +241,10 @@ set_friction cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicsMaterial "set_friction" '[Float] (IO ())
          where
@@ -250,7 +271,10 @@ set_rough cls arg1
          godot_method_bind_call bindPhysicsMaterial_set_rough (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicsMaterial "set_rough" '[Bool] (IO ())
          where

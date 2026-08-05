@@ -35,6 +35,7 @@ module Godot.Core.BaseButton
         Godot.Core.BaseButton.set_enabled_focus_mode,
         Godot.Core.BaseButton.set_keep_pressed_outside,
         Godot.Core.BaseButton.set_pressed,
+        Godot.Core.BaseButton.set_pressed_no_signal,
         Godot.Core.BaseButton.set_shortcut,
         Godot.Core.BaseButton.set_shortcut_in_tooltip,
         Godot.Core.BaseButton.set_toggle_mode)
@@ -162,7 +163,10 @@ _gui_input cls arg1
          godot_method_bind_call bindBaseButton__gui_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "_gui_input" '[InputEvent] (IO ())
          where
@@ -187,7 +191,10 @@ _pressed cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBaseButton__pressed (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "_pressed" '[] (IO ()) where
         nodeMethod = Godot.Core.BaseButton._pressed
@@ -212,7 +219,10 @@ _toggled cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindBaseButton__toggled (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "_toggled" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.BaseButton._toggled
@@ -236,7 +246,10 @@ _unhandled_input cls arg1
          godot_method_bind_call bindBaseButton__unhandled_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "_unhandled_input" '[InputEvent]
            (IO ())
@@ -264,7 +277,10 @@ get_action_mode cls
          godot_method_bind_call bindBaseButton_get_action_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "get_action_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.BaseButton.get_action_mode
@@ -290,7 +306,7 @@ get_button_group cls
          godot_method_bind_call bindBaseButton_get_button_group (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod BaseButton "get_button_group" '[]
            (IO ButtonGroup)
@@ -320,7 +336,10 @@ get_button_mask cls
          godot_method_bind_call bindBaseButton_get_button_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "get_button_mask" '[] (IO Int) where
         nodeMethod = Godot.Core.BaseButton.get_button_mask
@@ -346,14 +365,17 @@ get_draw_mode cls
          godot_method_bind_call bindBaseButton_get_draw_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "get_draw_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.BaseButton.get_draw_mode
 
 {-# NOINLINE bindBaseButton_get_enabled_focus_mode #-}
 
--- | Focus access mode to use when switching between enabled/disabled (see @Control.focus_mode@ and @disabled@).
+-- | @i@Deprecated.@/i@ This property has been deprecated due to redundancy and will be removed in Godot 4.0. This property no longer has any effect when set. Please use @Control.focus_mode@ instead.
 bindBaseButton_get_enabled_focus_mode :: MethodBind
 bindBaseButton_get_enabled_focus_mode
   = unsafePerformIO $
@@ -363,7 +385,7 @@ bindBaseButton_get_enabled_focus_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Focus access mode to use when switching between enabled/disabled (see @Control.focus_mode@ and @disabled@).
+-- | @i@Deprecated.@/i@ This property has been deprecated due to redundancy and will be removed in Godot 4.0. This property no longer has any effect when set. Please use @Control.focus_mode@ instead.
 get_enabled_focus_mode ::
                          (BaseButton :< cls, Object :< cls) => cls -> IO Int
 get_enabled_focus_mode cls
@@ -373,7 +395,10 @@ get_enabled_focus_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "get_enabled_focus_mode" '[]
            (IO Int)
@@ -401,7 +426,7 @@ get_shortcut cls
          godot_method_bind_call bindBaseButton_get_shortcut (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod BaseButton "get_shortcut" '[] (IO ShortCut)
          where
@@ -427,7 +452,10 @@ is_disabled cls
          godot_method_bind_call bindBaseButton_is_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "is_disabled" '[] (IO Bool) where
         nodeMethod = Godot.Core.BaseButton.is_disabled
@@ -452,7 +480,10 @@ is_hovered cls
          godot_method_bind_call bindBaseButton_is_hovered (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "is_hovered" '[] (IO Bool) where
         nodeMethod = Godot.Core.BaseButton.is_hovered
@@ -481,7 +512,10 @@ is_keep_pressed_outside cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "is_keep_pressed_outside" '[]
            (IO Bool)
@@ -490,7 +524,8 @@ instance NodeMethod BaseButton "is_keep_pressed_outside" '[]
 
 {-# NOINLINE bindBaseButton_is_pressed #-}
 
--- | If @true@, the button's state is pressed. Means the button is pressed down or toggled (if @toggle_mode@ is active).
+-- | If @true@, the button's state is pressed. Means the button is pressed down or toggled (if @toggle_mode@ is active). Only works if @toggle_mode@ is @true@.
+--   			__Note:__ Setting @pressed@ will result in @signal toggled@ to be emitted. If you want to change the pressed state without emitting that signal, use @method set_pressed_no_signal@.
 bindBaseButton_is_pressed :: MethodBind
 bindBaseButton_is_pressed
   = unsafePerformIO $
@@ -500,7 +535,8 @@ bindBaseButton_is_pressed
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the button's state is pressed. Means the button is pressed down or toggled (if @toggle_mode@ is active).
+-- | If @true@, the button's state is pressed. Means the button is pressed down or toggled (if @toggle_mode@ is active). Only works if @toggle_mode@ is @true@.
+--   			__Note:__ Setting @pressed@ will result in @signal toggled@ to be emitted. If you want to change the pressed state without emitting that signal, use @method set_pressed_no_signal@.
 is_pressed :: (BaseButton :< cls, Object :< cls) => cls -> IO Bool
 is_pressed cls
   = withVariantArray []
@@ -508,7 +544,10 @@ is_pressed cls
          godot_method_bind_call bindBaseButton_is_pressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "is_pressed" '[] (IO Bool) where
         nodeMethod = Godot.Core.BaseButton.is_pressed
@@ -536,7 +575,10 @@ is_shortcut_in_tooltip_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "is_shortcut_in_tooltip_enabled" '[]
            (IO Bool)
@@ -564,7 +606,10 @@ is_toggle_mode cls
          godot_method_bind_call bindBaseButton_is_toggle_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "is_toggle_mode" '[] (IO Bool) where
         nodeMethod = Godot.Core.BaseButton.is_toggle_mode
@@ -590,7 +635,10 @@ set_action_mode cls arg1
          godot_method_bind_call bindBaseButton_set_action_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "set_action_mode" '[Int] (IO ())
          where
@@ -617,7 +665,10 @@ set_button_group cls arg1
          godot_method_bind_call bindBaseButton_set_button_group (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "set_button_group" '[ButtonGroup]
            (IO ())
@@ -647,7 +698,10 @@ set_button_mask cls arg1
          godot_method_bind_call bindBaseButton_set_button_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "set_button_mask" '[Int] (IO ())
          where
@@ -674,14 +728,17 @@ set_disabled cls arg1
          godot_method_bind_call bindBaseButton_set_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "set_disabled" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.BaseButton.set_disabled
 
 {-# NOINLINE bindBaseButton_set_enabled_focus_mode #-}
 
--- | Focus access mode to use when switching between enabled/disabled (see @Control.focus_mode@ and @disabled@).
+-- | @i@Deprecated.@/i@ This property has been deprecated due to redundancy and will be removed in Godot 4.0. This property no longer has any effect when set. Please use @Control.focus_mode@ instead.
 bindBaseButton_set_enabled_focus_mode :: MethodBind
 bindBaseButton_set_enabled_focus_mode
   = unsafePerformIO $
@@ -691,7 +748,7 @@ bindBaseButton_set_enabled_focus_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Focus access mode to use when switching between enabled/disabled (see @Control.focus_mode@ and @disabled@).
+-- | @i@Deprecated.@/i@ This property has been deprecated due to redundancy and will be removed in Godot 4.0. This property no longer has any effect when set. Please use @Control.focus_mode@ instead.
 set_enabled_focus_mode ::
                          (BaseButton :< cls, Object :< cls) => cls -> Int -> IO ()
 set_enabled_focus_mode cls arg1
@@ -701,7 +758,10 @@ set_enabled_focus_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "set_enabled_focus_mode" '[Int]
            (IO ())
@@ -732,7 +792,10 @@ set_keep_pressed_outside cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "set_keep_pressed_outside" '[Bool]
            (IO ())
@@ -741,7 +804,8 @@ instance NodeMethod BaseButton "set_keep_pressed_outside" '[Bool]
 
 {-# NOINLINE bindBaseButton_set_pressed #-}
 
--- | If @true@, the button's state is pressed. Means the button is pressed down or toggled (if @toggle_mode@ is active).
+-- | If @true@, the button's state is pressed. Means the button is pressed down or toggled (if @toggle_mode@ is active). Only works if @toggle_mode@ is @true@.
+--   			__Note:__ Setting @pressed@ will result in @signal toggled@ to be emitted. If you want to change the pressed state without emitting that signal, use @method set_pressed_no_signal@.
 bindBaseButton_set_pressed :: MethodBind
 bindBaseButton_set_pressed
   = unsafePerformIO $
@@ -751,7 +815,8 @@ bindBaseButton_set_pressed
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the button's state is pressed. Means the button is pressed down or toggled (if @toggle_mode@ is active).
+-- | If @true@, the button's state is pressed. Means the button is pressed down or toggled (if @toggle_mode@ is active). Only works if @toggle_mode@ is @true@.
+--   			__Note:__ Setting @pressed@ will result in @signal toggled@ to be emitted. If you want to change the pressed state without emitting that signal, use @method set_pressed_no_signal@.
 set_pressed ::
               (BaseButton :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_pressed cls arg1
@@ -760,10 +825,47 @@ set_pressed cls arg1
          godot_method_bind_call bindBaseButton_set_pressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "set_pressed" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.BaseButton.set_pressed
+
+{-# NOINLINE bindBaseButton_set_pressed_no_signal #-}
+
+-- | Changes the @pressed@ state of the button, without emitting @signal toggled@. Use when you just want to change the state of the button without sending the pressed event (e.g. when initializing scene). Only works if @toggle_mode@ is @true@.
+--   				__Note:__ This method doesn't unpress other buttons in its button @group@.
+bindBaseButton_set_pressed_no_signal :: MethodBind
+bindBaseButton_set_pressed_no_signal
+  = unsafePerformIO $
+      withCString "BaseButton" $
+        \ clsNamePtr ->
+          withCString "set_pressed_no_signal" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Changes the @pressed@ state of the button, without emitting @signal toggled@. Use when you just want to change the state of the button without sending the pressed event (e.g. when initializing scene). Only works if @toggle_mode@ is @true@.
+--   				__Note:__ This method doesn't unpress other buttons in its button @group@.
+set_pressed_no_signal ::
+                        (BaseButton :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_pressed_no_signal cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindBaseButton_set_pressed_no_signal
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod BaseButton "set_pressed_no_signal" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.BaseButton.set_pressed_no_signal
 
 {-# NOINLINE bindBaseButton_set_shortcut #-}
 
@@ -786,7 +888,10 @@ set_shortcut cls arg1
          godot_method_bind_call bindBaseButton_set_shortcut (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "set_shortcut" '[ShortCut] (IO ())
          where
@@ -814,7 +919,10 @@ set_shortcut_in_tooltip cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "set_shortcut_in_tooltip" '[Bool]
            (IO ())
@@ -842,7 +950,10 @@ set_toggle_mode cls arg1
          godot_method_bind_call bindBaseButton_set_toggle_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod BaseButton "set_toggle_mode" '[Bool] (IO ())
          where

@@ -86,7 +86,10 @@ get_controller_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRController "get_controller_id" '[] (IO Int)
          where
@@ -114,7 +117,10 @@ get_controller_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRController "get_controller_name" '[]
            (IO GodotString)
@@ -141,7 +147,10 @@ get_hand cls
          godot_method_bind_call bindARVRController_get_hand (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRController "get_hand" '[] (IO Int) where
         nodeMethod = Godot.Core.ARVRController.get_hand
@@ -168,7 +177,10 @@ get_is_active cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRController "get_is_active" '[] (IO Bool)
          where
@@ -196,7 +208,10 @@ get_joystick_axis cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRController "get_joystick_axis" '[Int]
            (IO Float)
@@ -225,7 +240,10 @@ get_joystick_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRController "get_joystick_id" '[] (IO Int)
          where
@@ -252,7 +270,7 @@ get_mesh cls
          godot_method_bind_call bindARVRController_get_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ARVRController "get_mesh" '[] (IO Mesh) where
         nodeMethod = Godot.Core.ARVRController.get_mesh
@@ -280,7 +298,10 @@ get_rumble cls
          godot_method_bind_call bindARVRController_get_rumble (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRController "get_rumble" '[] (IO Float)
          where
@@ -308,7 +329,10 @@ is_button_pressed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRController "is_button_pressed" '[Int]
            (IO Int)
@@ -343,7 +367,10 @@ set_controller_id cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRController "set_controller_id" '[Int]
            (IO ())
@@ -373,7 +400,10 @@ set_rumble cls arg1
          godot_method_bind_call bindARVRController_set_rumble (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRController "set_rumble" '[Float] (IO ())
          where

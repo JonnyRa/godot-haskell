@@ -68,7 +68,10 @@ draw cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStyleBox_draw (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBox "draw" '[Rid, Rect2] (IO ()) where
         nodeMethod = Godot.Core.StyleBox.draw
@@ -94,7 +97,10 @@ get_center_size cls
          godot_method_bind_call bindStyleBox_get_center_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBox "get_center_size" '[] (IO Vector2)
          where
@@ -122,7 +128,7 @@ get_current_item_drawn cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod StyleBox "get_current_item_drawn" '[]
            (IO CanvasItem)
@@ -150,7 +156,10 @@ get_default_margin cls arg1
          godot_method_bind_call bindStyleBox_get_default_margin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBox "get_default_margin" '[Int] (IO Float)
          where
@@ -178,7 +187,10 @@ get_margin cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStyleBox_get_margin (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBox "get_margin" '[Int] (IO Float) where
         nodeMethod = Godot.Core.StyleBox.get_margin
@@ -204,7 +216,10 @@ get_minimum_size cls
          godot_method_bind_call bindStyleBox_get_minimum_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBox "get_minimum_size" '[] (IO Vector2)
          where
@@ -229,7 +244,10 @@ get_offset cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStyleBox_get_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBox "get_offset" '[] (IO Vector2) where
         nodeMethod = Godot.Core.StyleBox.get_offset
@@ -255,7 +273,10 @@ set_default_margin cls arg1 arg2
          godot_method_bind_call bindStyleBox_set_default_margin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBox "set_default_margin" '[Int, Float]
            (IO ())
@@ -283,7 +304,10 @@ test_mask cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindStyleBox_test_mask (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod StyleBox "test_mask" '[Vector2, Rect2]
            (IO Bool)

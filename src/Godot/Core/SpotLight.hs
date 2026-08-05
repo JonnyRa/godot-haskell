@@ -36,7 +36,10 @@ get_param cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpotLight_get_param (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpotLight "get_param" '[Int] (IO Float) where
         nodeMethod = Godot.Core.SpotLight.get_param
@@ -61,7 +64,10 @@ set_param cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpotLight_set_param (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpotLight "set_param" '[Int, Float] (IO ())
          where
@@ -69,23 +75,23 @@ instance NodeMethod SpotLight "set_param" '[Int, Float] (IO ())
 
 instance NodeProperty SpotLight "spot_angle" Float 'False where
         nodeProperty
-          = (wrapIndexedGetter 5 get_param, wrapIndexedSetter 5 set_param,
+          = (wrapIndexedGetter 6 get_param, wrapIndexedSetter 6 set_param,
              Nothing)
 
 instance NodeProperty SpotLight "spot_angle_attenuation" Float
            'False
          where
         nodeProperty
-          = (wrapIndexedGetter 6 get_param, wrapIndexedSetter 6 set_param,
+          = (wrapIndexedGetter 7 get_param, wrapIndexedSetter 7 set_param,
              Nothing)
 
 instance NodeProperty SpotLight "spot_attenuation" Float 'False
          where
         nodeProperty
-          = (wrapIndexedGetter 4 get_param, wrapIndexedSetter 4 set_param,
+          = (wrapIndexedGetter 5 get_param, wrapIndexedSetter 5 set_param,
              Nothing)
 
 instance NodeProperty SpotLight "spot_range" Float 'False where
         nodeProperty
-          = (wrapIndexedGetter 3 get_param, wrapIndexedSetter 3 set_param,
+          = (wrapIndexedGetter 4 get_param, wrapIndexedSetter 4 set_param,
              Nothing)

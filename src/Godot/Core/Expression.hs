@@ -45,7 +45,7 @@ execute cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindExpression_execute (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Expression "execute"
            '[Maybe Array, Maybe Object, Maybe Bool]
@@ -74,7 +74,10 @@ get_error_text cls
          godot_method_bind_call bindExpression_get_error_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Expression "get_error_text" '[]
            (IO GodotString)
@@ -103,7 +106,10 @@ has_execute_failed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Expression "has_execute_failed" '[] (IO Bool)
          where
@@ -133,7 +139,10 @@ parse cls arg1 arg2
        defaultedVariant VariantPoolStringArray V.empty arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindExpression_parse (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Expression "parse"
            '[GodotString, Maybe PoolStringArray]

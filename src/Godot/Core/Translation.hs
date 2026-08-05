@@ -51,7 +51,10 @@ _get_messages cls
          godot_method_bind_call bindTranslation__get_messages (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Translation "_get_messages" '[]
            (IO PoolStringArray)
@@ -78,7 +81,10 @@ _set_messages cls arg1
          godot_method_bind_call bindTranslation__set_messages (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Translation "_set_messages" '[PoolStringArray]
            (IO ())
@@ -107,7 +113,10 @@ add_message cls arg1 arg2
          godot_method_bind_call bindTranslation_add_message (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Translation "add_message"
            '[GodotString, GodotString]
@@ -136,7 +145,10 @@ erase_message cls arg1
          godot_method_bind_call bindTranslation_erase_message (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Translation "erase_message" '[GodotString]
            (IO ())
@@ -164,7 +176,10 @@ get_locale cls
          godot_method_bind_call bindTranslation_get_locale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Translation "get_locale" '[] (IO GodotString)
          where
@@ -192,7 +207,10 @@ get_message cls arg1
          godot_method_bind_call bindTranslation_get_message (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Translation "get_message" '[GodotString]
            (IO GodotString)
@@ -221,7 +239,10 @@ get_message_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Translation "get_message_count" '[] (IO Int)
          where
@@ -249,7 +270,10 @@ get_message_list cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Translation "get_message_list" '[]
            (IO PoolStringArray)
@@ -277,7 +301,10 @@ set_locale cls arg1
          godot_method_bind_call bindTranslation_set_locale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Translation "set_locale" '[GodotString] (IO ())
          where

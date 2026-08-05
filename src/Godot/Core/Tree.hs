@@ -27,7 +27,7 @@ module Godot.Core.Tree
         Godot.Core.Tree._text_editor_modal_close,
         Godot.Core.Tree._value_editor_changed,
         Godot.Core.Tree.are_column_titles_visible, Godot.Core.Tree.clear,
-        Godot.Core.Tree.create_item,
+        Godot.Core.Tree.create_item, Godot.Core.Tree.edit_selected,
         Godot.Core.Tree.ensure_cursor_is_visible,
         Godot.Core.Tree.get_allow_reselect,
         Godot.Core.Tree.get_allow_rmb_select,
@@ -44,7 +44,7 @@ module Godot.Core.Tree
         Godot.Core.Tree.get_scroll, Godot.Core.Tree.get_select_mode,
         Godot.Core.Tree.get_selected, Godot.Core.Tree.get_selected_column,
         Godot.Core.Tree.is_folding_hidden, Godot.Core.Tree.is_root_hidden,
-        Godot.Core.Tree.set_allow_reselect,
+        Godot.Core.Tree.scroll_to_item, Godot.Core.Tree.set_allow_reselect,
         Godot.Core.Tree.set_allow_rmb_select,
         Godot.Core.Tree.set_column_expand,
         Godot.Core.Tree.set_column_min_width,
@@ -241,7 +241,10 @@ _gui_input cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree__gui_input (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "_gui_input" '[InputEvent] (IO ()) where
         nodeMethod = Godot.Core.Tree._gui_input
@@ -264,7 +267,10 @@ _popup_select cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree__popup_select (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "_popup_select" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tree._popup_select
@@ -288,7 +294,10 @@ _range_click_timeout cls
          godot_method_bind_call bindTree__range_click_timeout (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "_range_click_timeout" '[] (IO ()) where
         nodeMethod = Godot.Core.Tree._range_click_timeout
@@ -311,7 +320,10 @@ _scroll_moved cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree__scroll_moved (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "_scroll_moved" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Tree._scroll_moved
@@ -335,7 +347,10 @@ _text_editor_enter cls arg1
          godot_method_bind_call bindTree__text_editor_enter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "_text_editor_enter" '[GodotString]
            (IO ())
@@ -362,7 +377,10 @@ _text_editor_modal_close cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "_text_editor_modal_close" '[] (IO ())
          where
@@ -387,7 +405,10 @@ _value_editor_changed cls arg1
          godot_method_bind_call bindTree__value_editor_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "_value_editor_changed" '[Float] (IO ())
          where
@@ -415,7 +436,10 @@ are_column_titles_visible cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "are_column_titles_visible" '[] (IO Bool)
          where
@@ -439,14 +463,16 @@ clear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_clear (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.Tree.clear
 
 {-# NOINLINE bindTree_create_item #-}
 
--- | Creates an item in the tree and adds it as a child of @parent@.
+-- | Creates an item in the tree and adds it as a child of @parent@, which can be either a valid @TreeItem@ or @null@.
 --   				If @parent@ is @null@, the root item will be the parent, or the new item will be the root itself if the tree is empty.
 --   				The new item will be the @idx@th child of parent, or it will be the last child if there are not enough siblings.
 bindTree_create_item :: MethodBind
@@ -458,7 +484,7 @@ bindTree_create_item
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Creates an item in the tree and adds it as a child of @parent@.
+-- | Creates an item in the tree and adds it as a child of @parent@, which can be either a valid @TreeItem@ or @null@.
 --   				If @parent@ is @null@, the root item will be the parent, or the new item will be the root itself if the tree is empty.
 --   				The new item will be the @idx@th child of parent, or it will be the last child if there are not enough siblings.
 create_item ::
@@ -470,12 +496,39 @@ create_item cls arg1 arg2
        maybe (VariantInt (-1)) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_create_item (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Tree "create_item" '[Maybe Object, Maybe Int]
            (IO TreeItem)
          where
         nodeMethod = Godot.Core.Tree.create_item
+
+{-# NOINLINE bindTree_edit_selected #-}
+
+-- | Edits the selected tree item as if it was clicked. The item must be set editable with @method TreeItem.set_editable@. Returns @true@ if the item could be edited. Fails if no item is selected.
+bindTree_edit_selected :: MethodBind
+bindTree_edit_selected
+  = unsafePerformIO $
+      withCString "Tree" $
+        \ clsNamePtr ->
+          withCString "edit_selected" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Edits the selected tree item as if it was clicked. The item must be set editable with @method TreeItem.set_editable@. Returns @true@ if the item could be edited. Fails if no item is selected.
+edit_selected :: (Tree :< cls, Object :< cls) => cls -> IO Bool
+edit_selected cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTree_edit_selected (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Tree "edit_selected" '[] (IO Bool) where
+        nodeMethod = Godot.Core.Tree.edit_selected
 
 {-# NOINLINE bindTree_ensure_cursor_is_visible #-}
 
@@ -503,7 +556,10 @@ ensure_cursor_is_visible cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "ensure_cursor_is_visible" '[] (IO ())
          where
@@ -530,7 +586,10 @@ get_allow_reselect cls
          godot_method_bind_call bindTree_get_allow_reselect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_allow_reselect" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tree.get_allow_reselect
@@ -556,7 +615,10 @@ get_allow_rmb_select cls
          godot_method_bind_call bindTree_get_allow_rmb_select (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_allow_rmb_select" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tree.get_allow_rmb_select
@@ -582,7 +644,10 @@ get_column_at_position cls arg1
          godot_method_bind_call bindTree_get_column_at_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_column_at_position" '[Vector2]
            (IO Int)
@@ -610,7 +675,10 @@ get_column_title cls arg1
          godot_method_bind_call bindTree_get_column_title (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_column_title" '[Int] (IO GodotString)
          where
@@ -637,7 +705,10 @@ get_column_width cls arg1
          godot_method_bind_call bindTree_get_column_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_column_width" '[Int] (IO Int) where
         nodeMethod = Godot.Core.Tree.get_column_width
@@ -660,7 +731,10 @@ get_columns cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_get_columns (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_columns" '[] (IO Int) where
         nodeMethod = Godot.Core.Tree.get_columns
@@ -686,7 +760,10 @@ get_custom_popup_rect cls
          godot_method_bind_call bindTree_get_custom_popup_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_custom_popup_rect" '[] (IO Rect2)
          where
@@ -715,7 +792,10 @@ get_drop_mode_flags cls
          godot_method_bind_call bindTree_get_drop_mode_flags (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_drop_mode_flags" '[] (IO Int) where
         nodeMethod = Godot.Core.Tree.get_drop_mode_flags
@@ -746,7 +826,10 @@ get_drop_section_at_position cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_drop_section_at_position" '[Vector2]
            (IO Int)
@@ -755,7 +838,17 @@ instance NodeMethod Tree "get_drop_section_at_position" '[Vector2]
 
 {-# NOINLINE bindTree_get_edited #-}
 
--- | Returns the currently edited item. This is only available for custom cell mode.
+-- | Returns the currently edited item. Can be used with @signal item_edited@ to get the item that was modified.
+--   				
+--   @
+--   
+--   				func _ready():
+--   				    $Tree.item_edited.connect(on_Tree_item_edited)
+--   
+--   				func on_Tree_item_edited():
+--   				    print($Tree.get_edited()) # This item just got edited (e.g. checked).
+--   				
+--   @
 bindTree_get_edited :: MethodBind
 bindTree_get_edited
   = unsafePerformIO $
@@ -765,20 +858,30 @@ bindTree_get_edited
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the currently edited item. This is only available for custom cell mode.
+-- | Returns the currently edited item. Can be used with @signal item_edited@ to get the item that was modified.
+--   				
+--   @
+--   
+--   				func _ready():
+--   				    $Tree.item_edited.connect(on_Tree_item_edited)
+--   
+--   				func on_Tree_item_edited():
+--   				    print($Tree.get_edited()) # This item just got edited (e.g. checked).
+--   				
+--   @
 get_edited :: (Tree :< cls, Object :< cls) => cls -> IO TreeItem
 get_edited cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_get_edited (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Tree "get_edited" '[] (IO TreeItem) where
         nodeMethod = Godot.Core.Tree.get_edited
 
 {-# NOINLINE bindTree_get_edited_column #-}
 
--- | Returns the column for the currently edited item. This is only available for custom cell mode.
+-- | Returns the column for the currently edited item.
 bindTree_get_edited_column :: MethodBind
 bindTree_get_edited_column
   = unsafePerformIO $
@@ -788,7 +891,7 @@ bindTree_get_edited_column
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the column for the currently edited item. This is only available for custom cell mode.
+-- | Returns the column for the currently edited item.
 get_edited_column :: (Tree :< cls, Object :< cls) => cls -> IO Int
 get_edited_column cls
   = withVariantArray []
@@ -796,14 +899,17 @@ get_edited_column cls
          godot_method_bind_call bindTree_get_edited_column (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_edited_column" '[] (IO Int) where
         nodeMethod = Godot.Core.Tree.get_edited_column
 
 {-# NOINLINE bindTree_get_item_area_rect #-}
 
--- | Returns the rectangle area for the specified item. If @column@ is specified, only get the position and size of that column, otherwise get the rectangle containing all columns.
+-- | Returns the rectangle area for the specified @TreeItem@. If @column@ is specified, only get the position and size of that column, otherwise get the rectangle containing all columns.
 bindTree_get_item_area_rect :: MethodBind
 bindTree_get_item_area_rect
   = unsafePerformIO $
@@ -813,7 +919,7 @@ bindTree_get_item_area_rect
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the rectangle area for the specified item. If @column@ is specified, only get the position and size of that column, otherwise get the rectangle containing all columns.
+-- | Returns the rectangle area for the specified @TreeItem@. If @column@ is specified, only get the position and size of that column, otherwise get the rectangle containing all columns.
 get_item_area_rect ::
                      (Tree :< cls, Object :< cls) =>
                      cls -> Object -> Maybe Int -> IO Rect2
@@ -824,7 +930,10 @@ get_item_area_rect cls arg1 arg2
          godot_method_bind_call bindTree_get_item_area_rect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_item_area_rect" '[Object, Maybe Int]
            (IO Rect2)
@@ -852,7 +961,7 @@ get_item_at_position cls arg1
          godot_method_bind_call bindTree_get_item_at_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Tree "get_item_at_position" '[Vector2]
            (IO TreeItem)
@@ -861,7 +970,7 @@ instance NodeMethod Tree "get_item_at_position" '[Vector2]
 
 {-# NOINLINE bindTree_get_next_selected #-}
 
--- | Returns the next selected item after the given one, or @null@ if the end is reached.
+-- | Returns the next selected @TreeItem@ after the given one, or @null@ if the end is reached.
 --   				If @from@ is @null@, this returns the first selected item.
 bindTree_get_next_selected :: MethodBind
 bindTree_get_next_selected
@@ -872,7 +981,7 @@ bindTree_get_next_selected
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the next selected item after the given one, or @null@ if the end is reached.
+-- | Returns the next selected @TreeItem@ after the given one, or @null@ if the end is reached.
 --   				If @from@ is @null@, this returns the first selected item.
 get_next_selected ::
                     (Tree :< cls, Object :< cls) => cls -> Object -> IO TreeItem
@@ -882,7 +991,7 @@ get_next_selected cls arg1
          godot_method_bind_call bindTree_get_next_selected (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Tree "get_next_selected" '[Object]
            (IO TreeItem)
@@ -909,7 +1018,10 @@ get_pressed_button cls
          godot_method_bind_call bindTree_get_pressed_button (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_pressed_button" '[] (IO Int) where
         nodeMethod = Godot.Core.Tree.get_pressed_button
@@ -932,7 +1044,7 @@ get_root cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_get_root (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Tree "get_root" '[] (IO TreeItem) where
         nodeMethod = Godot.Core.Tree.get_root
@@ -955,7 +1067,10 @@ get_scroll cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_get_scroll (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_scroll" '[] (IO Vector2) where
         nodeMethod = Godot.Core.Tree.get_scroll
@@ -979,7 +1094,10 @@ get_select_mode cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_get_select_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_select_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Tree.get_select_mode
@@ -1007,7 +1125,7 @@ get_selected cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_get_selected (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Tree "get_selected" '[] (IO TreeItem) where
         nodeMethod = Godot.Core.Tree.get_selected
@@ -1037,7 +1155,10 @@ get_selected_column cls
          godot_method_bind_call bindTree_get_selected_column (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "get_selected_column" '[] (IO Int) where
         nodeMethod = Godot.Core.Tree.get_selected_column
@@ -1062,7 +1183,10 @@ is_folding_hidden cls
          godot_method_bind_call bindTree_is_folding_hidden (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "is_folding_hidden" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tree.is_folding_hidden
@@ -1086,10 +1210,41 @@ is_root_hidden cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_is_root_hidden (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "is_root_hidden" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tree.is_root_hidden
+
+{-# NOINLINE bindTree_scroll_to_item #-}
+
+-- | Causes the @Tree@ to jump to the specified @TreeItem@.
+bindTree_scroll_to_item :: MethodBind
+bindTree_scroll_to_item
+  = unsafePerformIO $
+      withCString "Tree" $
+        \ clsNamePtr ->
+          withCString "scroll_to_item" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Causes the @Tree@ to jump to the specified @TreeItem@.
+scroll_to_item ::
+                 (Tree :< cls, Object :< cls) => cls -> Object -> IO ()
+scroll_to_item cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTree_scroll_to_item (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Tree "scroll_to_item" '[Object] (IO ()) where
+        nodeMethod = Godot.Core.Tree.scroll_to_item
 
 {-# NOINLINE bindTree_set_allow_reselect #-}
 
@@ -1112,7 +1267,10 @@ set_allow_reselect cls arg1
          godot_method_bind_call bindTree_set_allow_reselect (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_allow_reselect" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Tree.set_allow_reselect
@@ -1138,7 +1296,10 @@ set_allow_rmb_select cls arg1
          godot_method_bind_call bindTree_set_allow_rmb_select (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_allow_rmb_select" '[Bool] (IO ())
          where
@@ -1165,7 +1326,10 @@ set_column_expand cls arg1 arg2
          godot_method_bind_call bindTree_set_column_expand (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_column_expand" '[Int, Bool] (IO ())
          where
@@ -1192,7 +1356,10 @@ set_column_min_width cls arg1 arg2
          godot_method_bind_call bindTree_set_column_min_width (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_column_min_width" '[Int, Int] (IO ())
          where
@@ -1219,7 +1386,10 @@ set_column_title cls arg1 arg2
          godot_method_bind_call bindTree_set_column_title (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_column_title" '[Int, GodotString]
            (IO ())
@@ -1248,7 +1418,10 @@ set_column_titles_visible cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_column_titles_visible" '[Bool]
            (IO ())
@@ -1273,7 +1446,10 @@ set_columns cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_set_columns (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_columns" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tree.set_columns
@@ -1301,7 +1477,10 @@ set_drop_mode_flags cls arg1
          godot_method_bind_call bindTree_set_drop_mode_flags (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_drop_mode_flags" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tree.set_drop_mode_flags
@@ -1327,7 +1506,10 @@ set_hide_folding cls arg1
          godot_method_bind_call bindTree_set_hide_folding (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_hide_folding" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Tree.set_hide_folding
@@ -1352,7 +1534,10 @@ set_hide_root cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_set_hide_root (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_hide_root" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Tree.set_hide_root
@@ -1377,7 +1562,10 @@ set_select_mode cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTree_set_select_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Tree "set_select_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tree.set_select_mode

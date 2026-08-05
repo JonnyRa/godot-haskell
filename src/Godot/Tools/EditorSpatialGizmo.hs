@@ -56,7 +56,10 @@ add_collision_segments cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "add_collision_segments"
            '[PoolVector3Array]
@@ -88,7 +91,10 @@ add_collision_triangles cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "add_collision_triangles"
            '[TriangleMesh]
@@ -125,7 +131,10 @@ add_handles cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "add_handles"
            '[PoolVector3Array, Material, Maybe Bool, Maybe Bool]
@@ -160,7 +169,10 @@ add_lines cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "add_lines"
            '[PoolVector3Array, Material, Maybe Bool, Maybe Color]
@@ -194,7 +206,10 @@ add_mesh cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindEditorSpatialGizmo_add_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "add_mesh"
            '[ArrayMesh, Maybe Bool, Maybe SkinReference, Maybe Material]
@@ -228,7 +243,10 @@ add_unscaled_billboard cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "add_unscaled_billboard"
            '[Material, Maybe Float, Maybe Color]
@@ -256,7 +274,10 @@ clear cls
          godot_method_bind_call bindEditorSpatialGizmo_clear (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "clear" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorSpatialGizmo.clear
@@ -286,7 +307,10 @@ commit_handle cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "commit_handle"
            '[Int, GodotVariant, Bool]
@@ -319,7 +343,10 @@ get_handle_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "get_handle_name" '[Int]
            (IO GodotString)
@@ -349,7 +376,7 @@ get_handle_value cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod EditorSpatialGizmo "get_handle_value" '[Int]
            (IO GodotVariant)
@@ -379,7 +406,7 @@ get_plugin cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorSpatialGizmo "get_plugin" '[]
            (IO EditorSpatialGizmoPlugin)
@@ -408,7 +435,7 @@ get_spatial_node cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorSpatialGizmo "get_spatial_node" '[]
            (IO Spatial)
@@ -437,7 +464,10 @@ is_handle_highlighted cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "is_handle_highlighted"
            '[Int]
@@ -466,7 +496,10 @@ redraw cls
          godot_method_bind_call bindEditorSpatialGizmo_redraw (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "redraw" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorSpatialGizmo.redraw
@@ -496,7 +529,10 @@ set_handle cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "set_handle"
            '[Int, Camera, Vector2]
@@ -526,7 +562,10 @@ set_hidden cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "set_hidden" '[Bool] (IO ())
          where
@@ -554,7 +593,10 @@ set_spatial_node cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "set_spatial_node" '[Node]
            (IO ())

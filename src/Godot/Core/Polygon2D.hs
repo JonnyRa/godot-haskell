@@ -150,7 +150,10 @@ _get_bones cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D__get_bones (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "_get_bones" '[] (IO Array) where
         nodeMethod = Godot.Core.Polygon2D._get_bones
@@ -173,7 +176,10 @@ _set_bones cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D__set_bones (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "_set_bones" '[Array] (IO ()) where
         nodeMethod = Godot.Core.Polygon2D._set_bones
@@ -198,7 +204,10 @@ _skeleton_bone_setup_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "_skeleton_bone_setup_changed" '[]
            (IO ())
@@ -226,7 +235,10 @@ add_bone cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D_add_bone (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "add_bone" '[NodePath, PoolRealArray]
            (IO ())
@@ -253,7 +265,10 @@ clear_bones cls
          godot_method_bind_call bindPolygon2D_clear_bones (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "clear_bones" '[] (IO ()) where
         nodeMethod = Godot.Core.Polygon2D.clear_bones
@@ -278,7 +293,10 @@ erase_bone cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D_erase_bone (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "erase_bone" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Polygon2D.erase_bone
@@ -304,7 +322,10 @@ get_antialiased cls
          godot_method_bind_call bindPolygon2D_get_antialiased (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_antialiased" '[] (IO Bool) where
         nodeMethod = Godot.Core.Polygon2D.get_antialiased
@@ -330,7 +351,10 @@ get_bone_count cls
          godot_method_bind_call bindPolygon2D_get_bone_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_bone_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Polygon2D.get_bone_count
@@ -356,7 +380,10 @@ get_bone_path cls arg1
          godot_method_bind_call bindPolygon2D_get_bone_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_bone_path" '[Int] (IO NodePath)
          where
@@ -383,7 +410,10 @@ get_bone_weights cls arg1
          godot_method_bind_call bindPolygon2D_get_bone_weights (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_bone_weights" '[Int]
            (IO PoolRealArray)
@@ -409,7 +439,10 @@ get_color cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D_get_color (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_color" '[] (IO Color) where
         nodeMethod = Godot.Core.Polygon2D.get_color
@@ -434,7 +467,10 @@ get_internal_vertex_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_internal_vertex_count" '[]
            (IO Int)
@@ -460,7 +496,10 @@ get_invert cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D_get_invert (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_invert" '[] (IO Bool) where
         nodeMethod = Godot.Core.Polygon2D.get_invert
@@ -486,7 +525,10 @@ get_invert_border cls
          godot_method_bind_call bindPolygon2D_get_invert_border (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_invert_border" '[] (IO Float)
          where
@@ -512,7 +554,10 @@ get_offset cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D_get_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_offset" '[] (IO Vector2) where
         nodeMethod = Godot.Core.Polygon2D.get_offset
@@ -540,7 +585,10 @@ get_polygon cls
          godot_method_bind_call bindPolygon2D_get_polygon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_polygon" '[]
            (IO PoolVector2Array)
@@ -566,7 +614,10 @@ get_polygons cls
          godot_method_bind_call bindPolygon2D_get_polygons (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_polygons" '[] (IO Array) where
         nodeMethod = Godot.Core.Polygon2D.get_polygons
@@ -590,7 +641,10 @@ get_skeleton cls
          godot_method_bind_call bindPolygon2D_get_skeleton (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_skeleton" '[] (IO NodePath)
          where
@@ -617,7 +671,7 @@ get_texture cls
          godot_method_bind_call bindPolygon2D_get_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Polygon2D "get_texture" '[] (IO Texture) where
         nodeMethod = Godot.Core.Polygon2D.get_texture
@@ -644,7 +698,10 @@ get_texture_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_texture_offset" '[] (IO Vector2)
          where
@@ -672,7 +729,10 @@ get_texture_rotation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_texture_rotation" '[] (IO Float)
          where
@@ -700,7 +760,10 @@ get_texture_rotation_degrees cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_texture_rotation_degrees" '[]
            (IO Float)
@@ -728,7 +791,10 @@ get_texture_scale cls
          godot_method_bind_call bindPolygon2D_get_texture_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_texture_scale" '[] (IO Vector2)
          where
@@ -753,7 +819,10 @@ get_uv cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D_get_uv (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_uv" '[] (IO PoolVector2Array)
          where
@@ -780,7 +849,10 @@ get_vertex_colors cls
          godot_method_bind_call bindPolygon2D_get_vertex_colors (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "get_vertex_colors" '[]
            (IO PoolColorArray)
@@ -808,7 +880,10 @@ set_antialiased cls arg1
          godot_method_bind_call bindPolygon2D_set_antialiased (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_antialiased" '[Bool] (IO ())
          where
@@ -836,7 +911,10 @@ set_bone_path cls arg1 arg2
          godot_method_bind_call bindPolygon2D_set_bone_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_bone_path" '[Int, NodePath]
            (IO ())
@@ -865,7 +943,10 @@ set_bone_weights cls arg1 arg2
          godot_method_bind_call bindPolygon2D_set_bone_weights (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_bone_weights"
            '[Int, PoolRealArray]
@@ -893,7 +974,10 @@ set_color cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D_set_color (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_color" '[Color] (IO ()) where
         nodeMethod = Godot.Core.Polygon2D.set_color
@@ -918,7 +1002,10 @@ set_internal_vertex_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_internal_vertex_count" '[Int]
            (IO ())
@@ -945,7 +1032,10 @@ set_invert cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D_set_invert (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_invert" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Polygon2D.set_invert
@@ -971,7 +1061,10 @@ set_invert_border cls arg1
          godot_method_bind_call bindPolygon2D_set_invert_border (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_invert_border" '[Float] (IO ())
          where
@@ -997,7 +1090,10 @@ set_offset cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D_set_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_offset" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.Polygon2D.set_offset
@@ -1026,7 +1122,10 @@ set_polygon cls arg1
          godot_method_bind_call bindPolygon2D_set_polygon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_polygon" '[PoolVector2Array]
            (IO ())
@@ -1052,7 +1151,10 @@ set_polygons cls arg1
          godot_method_bind_call bindPolygon2D_set_polygons (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_polygons" '[Array] (IO ()) where
         nodeMethod = Godot.Core.Polygon2D.set_polygons
@@ -1076,7 +1178,10 @@ set_skeleton cls arg1
          godot_method_bind_call bindPolygon2D_set_skeleton (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_skeleton" '[NodePath] (IO ())
          where
@@ -1103,7 +1208,10 @@ set_texture cls arg1
          godot_method_bind_call bindPolygon2D_set_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_texture" '[Texture] (IO ())
          where
@@ -1131,7 +1239,10 @@ set_texture_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_texture_offset" '[Vector2]
            (IO ())
@@ -1160,7 +1271,10 @@ set_texture_rotation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_texture_rotation" '[Float]
            (IO ())
@@ -1189,7 +1303,10 @@ set_texture_rotation_degrees cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_texture_rotation_degrees"
            '[Float]
@@ -1218,7 +1335,10 @@ set_texture_scale cls arg1
          godot_method_bind_call bindPolygon2D_set_texture_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_texture_scale" '[Vector2]
            (IO ())
@@ -1245,7 +1365,10 @@ set_uv cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPolygon2D_set_uv (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_uv" '[PoolVector2Array] (IO ())
          where
@@ -1272,7 +1395,10 @@ set_vertex_colors cls arg1
          godot_method_bind_call bindPolygon2D_set_vertex_colors (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Polygon2D "set_vertex_colors" '[PoolColorArray]
            (IO ())

@@ -53,7 +53,10 @@ get_anchor_id cls
          godot_method_bind_call bindARVRAnchor_get_anchor_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRAnchor "get_anchor_id" '[] (IO Int) where
         nodeMethod = Godot.Core.ARVRAnchor.get_anchor_id
@@ -79,7 +82,10 @@ get_anchor_name cls
          godot_method_bind_call bindARVRAnchor_get_anchor_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRAnchor "get_anchor_name" '[]
            (IO GodotString)
@@ -107,7 +113,10 @@ get_is_active cls
          godot_method_bind_call bindARVRAnchor_get_is_active (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRAnchor "get_is_active" '[] (IO Bool) where
         nodeMethod = Godot.Core.ARVRAnchor.get_is_active
@@ -131,7 +140,7 @@ get_mesh cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindARVRAnchor_get_mesh (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ARVRAnchor "get_mesh" '[] (IO Mesh) where
         nodeMethod = Godot.Core.ARVRAnchor.get_mesh
@@ -155,7 +164,10 @@ get_plane cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindARVRAnchor_get_plane (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRAnchor "get_plane" '[] (IO Plane) where
         nodeMethod = Godot.Core.ARVRAnchor.get_plane
@@ -179,7 +191,10 @@ get_size cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindARVRAnchor_get_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRAnchor "get_size" '[] (IO Vector3) where
         nodeMethod = Godot.Core.ARVRAnchor.get_size
@@ -205,7 +220,10 @@ set_anchor_id cls arg1
          godot_method_bind_call bindARVRAnchor_set_anchor_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVRAnchor "set_anchor_id" '[Int] (IO ()) where
         nodeMethod = Godot.Core.ARVRAnchor.set_anchor_id

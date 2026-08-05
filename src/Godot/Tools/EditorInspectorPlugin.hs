@@ -25,7 +25,7 @@ import Godot.Core.Reference()
 
 {-# NOINLINE bindEditorInspectorPlugin_add_custom_control #-}
 
--- | Adds a custom control, not necessarily a property editor.
+-- | Adds a custom control, which is not necessarily a property editor.
 bindEditorInspectorPlugin_add_custom_control :: MethodBind
 bindEditorInspectorPlugin_add_custom_control
   = unsafePerformIO $
@@ -35,7 +35,7 @@ bindEditorInspectorPlugin_add_custom_control
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a custom control, not necessarily a property editor.
+-- | Adds a custom control, which is not necessarily a property editor.
 add_custom_control ::
                      (EditorInspectorPlugin :< cls, Object :< cls) =>
                      cls -> Control -> IO ()
@@ -46,7 +46,10 @@ add_custom_control cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspectorPlugin "add_custom_control"
            '[Control]
@@ -56,7 +59,7 @@ instance NodeMethod EditorInspectorPlugin "add_custom_control"
 
 {-# NOINLINE bindEditorInspectorPlugin_add_property_editor #-}
 
--- | Adds a property editor, this must inherit @EditorProperty@.
+-- | Adds a property editor for an individual property. The @editor@ control must extend @EditorProperty@.
 bindEditorInspectorPlugin_add_property_editor :: MethodBind
 bindEditorInspectorPlugin_add_property_editor
   = unsafePerformIO $
@@ -66,7 +69,7 @@ bindEditorInspectorPlugin_add_property_editor
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a property editor, this must inherit @EditorProperty@.
+-- | Adds a property editor for an individual property. The @editor@ control must extend @EditorProperty@.
 add_property_editor ::
                       (EditorInspectorPlugin :< cls, Object :< cls) =>
                       cls -> GodotString -> Control -> IO ()
@@ -78,7 +81,10 @@ add_property_editor cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspectorPlugin "add_property_editor"
            '[GodotString, Control]
@@ -89,7 +95,7 @@ instance NodeMethod EditorInspectorPlugin "add_property_editor"
 {-# NOINLINE bindEditorInspectorPlugin_add_property_editor_for_multiple_properties
              #-}
 
--- | Adds an editor that allows modifying multiple properties, this must inherit @EditorProperty@.
+-- | Adds an editor that allows modifying multiple properties. The @editor@ control must extend @EditorProperty@.
 bindEditorInspectorPlugin_add_property_editor_for_multiple_properties ::
                                                                       MethodBind
 bindEditorInspectorPlugin_add_property_editor_for_multiple_properties
@@ -100,7 +106,7 @@ bindEditorInspectorPlugin_add_property_editor_for_multiple_properties
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds an editor that allows modifying multiple properties, this must inherit @EditorProperty@.
+-- | Adds an editor that allows modifying multiple properties. The @editor@ control must extend @EditorProperty@.
 add_property_editor_for_multiple_properties ::
                                               (EditorInspectorPlugin :< cls, Object :< cls) =>
                                               cls ->
@@ -113,7 +119,10 @@ add_property_editor_for_multiple_properties cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspectorPlugin
            "add_property_editor_for_multiple_properties"
@@ -146,7 +155,10 @@ can_handle cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspectorPlugin "can_handle" '[Object]
            (IO Bool)
@@ -176,7 +188,10 @@ parse_begin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspectorPlugin "parse_begin" '[Object]
            (IO ())
@@ -206,7 +221,10 @@ parse_category cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspectorPlugin "parse_category"
            '[Object, GodotString]
@@ -236,7 +254,10 @@ parse_end cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspectorPlugin "parse_end" '[] (IO ())
          where
@@ -269,7 +290,10 @@ parse_property cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorInspectorPlugin "parse_property"
            '[Object, Int, GodotString, Int, GodotString, Int]

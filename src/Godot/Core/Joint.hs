@@ -2,7 +2,8 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.Joint
-       (Godot.Core.Joint.get_exclude_nodes_from_collision,
+       (Godot.Core.Joint._body_exit_tree,
+        Godot.Core.Joint.get_exclude_nodes_from_collision,
         Godot.Core.Joint.get_node_a, Godot.Core.Joint.get_node_b,
         Godot.Core.Joint.get_solver_priority,
         Godot.Core.Joint.set_exclude_nodes_from_collision,
@@ -38,6 +39,32 @@ instance NodeProperty Joint "solver/priority" Int 'False where
           = (get_solver_priority, wrapDroppingSetter set_solver_priority,
              Nothing)
 
+{-# NOINLINE bindJoint__body_exit_tree #-}
+
+bindJoint__body_exit_tree :: MethodBind
+bindJoint__body_exit_tree
+  = unsafePerformIO $
+      withCString "Joint" $
+        \ clsNamePtr ->
+          withCString "_body_exit_tree" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_body_exit_tree :: (Joint :< cls, Object :< cls) => cls -> IO ()
+_body_exit_tree cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindJoint__body_exit_tree (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Joint "_body_exit_tree" '[] (IO ()) where
+        nodeMethod = Godot.Core.Joint._body_exit_tree
+
 {-# NOINLINE bindJoint_get_exclude_nodes_from_collision #-}
 
 -- | If @true@, the two bodies of the nodes are not able to collide with each other.
@@ -60,7 +87,10 @@ get_exclude_nodes_from_collision cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint "get_exclude_nodes_from_collision" '[]
            (IO Bool)
@@ -85,7 +115,10 @@ get_node_a cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindJoint_get_node_a (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint "get_node_a" '[] (IO NodePath) where
         nodeMethod = Godot.Core.Joint.get_node_a
@@ -108,7 +141,10 @@ get_node_b cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindJoint_get_node_b (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint "get_node_b" '[] (IO NodePath) where
         nodeMethod = Godot.Core.Joint.get_node_b
@@ -134,7 +170,10 @@ get_solver_priority cls
          godot_method_bind_call bindJoint_get_solver_priority (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint "get_solver_priority" '[] (IO Int) where
         nodeMethod = Godot.Core.Joint.get_solver_priority
@@ -161,7 +200,10 @@ set_exclude_nodes_from_collision cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint "set_exclude_nodes_from_collision"
            '[Bool]
@@ -188,7 +230,10 @@ set_node_a cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindJoint_set_node_a (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint "set_node_a" '[NodePath] (IO ()) where
         nodeMethod = Godot.Core.Joint.set_node_a
@@ -212,7 +257,10 @@ set_node_b cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindJoint_set_node_b (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint "set_node_b" '[NodePath] (IO ()) where
         nodeMethod = Godot.Core.Joint.set_node_b
@@ -238,7 +286,10 @@ set_solver_priority cls arg1
          godot_method_bind_call bindJoint_set_solver_priority (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Joint "set_solver_priority" '[Int] (IO ())
          where

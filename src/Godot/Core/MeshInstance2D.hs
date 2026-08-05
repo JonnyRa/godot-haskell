@@ -63,7 +63,7 @@ get_mesh cls
          godot_method_bind_call bindMeshInstance2D_get_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshInstance2D "get_mesh" '[] (IO Mesh) where
         nodeMethod = Godot.Core.MeshInstance2D.get_mesh
@@ -71,7 +71,7 @@ instance NodeMethod MeshInstance2D "get_mesh" '[] (IO Mesh) where
 {-# NOINLINE bindMeshInstance2D_get_normal_map #-}
 
 -- | The normal map that will be used if using the default @CanvasItemMaterial@.
---   			__Note:__ Godot expects the normal map to use X+, Y-, and Z+ coordinates. See @url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates@this page@/url@ for a comparison of normal map coordinates expected by popular engines.
+--   			__Note:__ Godot expects the normal map to use X+, Y+, and Z+ coordinates. See @url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates@this page@/url@ for a comparison of normal map coordinates expected by popular engines.
 bindMeshInstance2D_get_normal_map :: MethodBind
 bindMeshInstance2D_get_normal_map
   = unsafePerformIO $
@@ -82,7 +82,7 @@ bindMeshInstance2D_get_normal_map
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The normal map that will be used if using the default @CanvasItemMaterial@.
---   			__Note:__ Godot expects the normal map to use X+, Y-, and Z+ coordinates. See @url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates@this page@/url@ for a comparison of normal map coordinates expected by popular engines.
+--   			__Note:__ Godot expects the normal map to use X+, Y+, and Z+ coordinates. See @url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates@this page@/url@ for a comparison of normal map coordinates expected by popular engines.
 get_normal_map ::
                  (MeshInstance2D :< cls, Object :< cls) => cls -> IO Texture
 get_normal_map cls
@@ -92,7 +92,7 @@ get_normal_map cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshInstance2D "get_normal_map" '[]
            (IO Texture)
@@ -120,7 +120,7 @@ get_texture cls
          godot_method_bind_call bindMeshInstance2D_get_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MeshInstance2D "get_texture" '[] (IO Texture)
          where
@@ -147,7 +147,10 @@ set_mesh cls arg1
          godot_method_bind_call bindMeshInstance2D_set_mesh (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance2D "set_mesh" '[Mesh] (IO ()) where
         nodeMethod = Godot.Core.MeshInstance2D.set_mesh
@@ -155,7 +158,7 @@ instance NodeMethod MeshInstance2D "set_mesh" '[Mesh] (IO ()) where
 {-# NOINLINE bindMeshInstance2D_set_normal_map #-}
 
 -- | The normal map that will be used if using the default @CanvasItemMaterial@.
---   			__Note:__ Godot expects the normal map to use X+, Y-, and Z+ coordinates. See @url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates@this page@/url@ for a comparison of normal map coordinates expected by popular engines.
+--   			__Note:__ Godot expects the normal map to use X+, Y+, and Z+ coordinates. See @url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates@this page@/url@ for a comparison of normal map coordinates expected by popular engines.
 bindMeshInstance2D_set_normal_map :: MethodBind
 bindMeshInstance2D_set_normal_map
   = unsafePerformIO $
@@ -166,7 +169,7 @@ bindMeshInstance2D_set_normal_map
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The normal map that will be used if using the default @CanvasItemMaterial@.
---   			__Note:__ Godot expects the normal map to use X+, Y-, and Z+ coordinates. See @url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates@this page@/url@ for a comparison of normal map coordinates expected by popular engines.
+--   			__Note:__ Godot expects the normal map to use X+, Y+, and Z+ coordinates. See @url=http://wiki.polycount.com/wiki/Normal_Map_Technical_Details#Common_Swizzle_Coordinates@this page@/url@ for a comparison of normal map coordinates expected by popular engines.
 set_normal_map ::
                  (MeshInstance2D :< cls, Object :< cls) => cls -> Texture -> IO ()
 set_normal_map cls arg1
@@ -176,7 +179,10 @@ set_normal_map cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance2D "set_normal_map" '[Texture]
            (IO ())
@@ -204,7 +210,10 @@ set_texture cls arg1
          godot_method_bind_call bindMeshInstance2D_set_texture (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MeshInstance2D "set_texture" '[Texture] (IO ())
          where

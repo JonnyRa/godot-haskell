@@ -194,7 +194,10 @@ _action_pressed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_action_pressed" '[] (IO ())
          where
@@ -220,7 +223,10 @@ _cancel_pressed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_cancel_pressed" '[] (IO ())
          where
@@ -247,7 +253,10 @@ _dir_entered cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_dir_entered" '[GodotString]
            (IO ())
@@ -274,7 +283,10 @@ _favorite_move_down cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_favorite_move_down" '[]
            (IO ())
@@ -301,7 +313,10 @@ _favorite_move_up cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_favorite_move_up" '[]
            (IO ())
@@ -328,7 +343,10 @@ _favorite_pressed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_favorite_pressed" '[]
            (IO ())
@@ -355,7 +373,10 @@ _favorite_selected cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_favorite_selected" '[Int]
            (IO ())
@@ -383,7 +404,10 @@ _file_entered cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_file_entered" '[GodotString]
            (IO ())
@@ -410,7 +434,10 @@ _filter_selected cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_filter_selected" '[Int]
            (IO ())
@@ -436,7 +463,10 @@ _go_back cls
          godot_method_bind_call bindEditorFileDialog__go_back (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_go_back" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorFileDialog._go_back
@@ -461,7 +491,10 @@ _go_forward cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_go_forward" '[] (IO ())
          where
@@ -485,7 +518,10 @@ _go_up cls
          godot_method_bind_call bindEditorFileDialog__go_up (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_go_up" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorFileDialog._go_up
@@ -510,7 +546,10 @@ _item_db_selected cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_item_db_selected" '[Int]
            (IO ())
@@ -539,7 +578,10 @@ _item_list_item_rmb_selected cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_item_list_item_rmb_selected"
            '[Int, Vector2]
@@ -568,7 +610,10 @@ _item_list_rmb_clicked cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_item_list_rmb_clicked"
            '[Vector2]
@@ -596,7 +641,10 @@ _item_menu_id_pressed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_item_menu_id_pressed" '[Int]
            (IO ())
@@ -623,7 +671,10 @@ _item_selected cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_item_selected" '[Int]
            (IO ())
@@ -650,7 +701,10 @@ _items_clear_selection cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_items_clear_selection" '[]
            (IO ())
@@ -676,7 +730,10 @@ _make_dir cls
          godot_method_bind_call bindEditorFileDialog__make_dir (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_make_dir" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorFileDialog._make_dir
@@ -701,7 +758,10 @@ _make_dir_confirm cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_make_dir_confirm" '[]
            (IO ())
@@ -729,7 +789,10 @@ _multi_selected cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_multi_selected" '[Int, Bool]
            (IO ())
@@ -756,7 +819,10 @@ _recent_selected cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_recent_selected" '[Int]
            (IO ())
@@ -783,7 +849,10 @@ _save_confirm_pressed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_save_confirm_pressed" '[]
            (IO ())
@@ -810,7 +879,10 @@ _select_drive cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_select_drive" '[Int] (IO ())
          where
@@ -838,7 +910,10 @@ _thumbnail_done cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_thumbnail_done"
            '[GodotString, Texture, Texture, GodotVariant]
@@ -868,7 +943,10 @@ _thumbnail_result cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_thumbnail_result"
            '[GodotString, Texture, Texture, GodotVariant]
@@ -897,7 +975,10 @@ _unhandled_input cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_unhandled_input"
            '[InputEvent]
@@ -925,7 +1006,10 @@ _update_dir cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_update_dir" '[] (IO ())
          where
@@ -951,7 +1035,10 @@ _update_file_list cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_update_file_list" '[]
            (IO ())
@@ -978,7 +1065,10 @@ _update_file_name cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "_update_file_name" '[]
            (IO ())
@@ -1009,7 +1099,10 @@ add_filter cls arg1
          godot_method_bind_call bindEditorFileDialog_add_filter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "add_filter" '[GodotString]
            (IO ())
@@ -1038,7 +1131,10 @@ clear_filters cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "clear_filters" '[] (IO ())
          where
@@ -1065,7 +1161,10 @@ get_access cls
          godot_method_bind_call bindEditorFileDialog_get_access (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "get_access" '[] (IO Int)
          where
@@ -1093,7 +1192,10 @@ get_current_dir cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "get_current_dir" '[]
            (IO GodotString)
@@ -1122,7 +1224,10 @@ get_current_file cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "get_current_file" '[]
            (IO GodotString)
@@ -1151,7 +1256,10 @@ get_current_path cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "get_current_path" '[]
            (IO GodotString)
@@ -1180,7 +1288,10 @@ get_display_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "get_display_mode" '[]
            (IO Int)
@@ -1208,7 +1319,10 @@ get_mode cls
          godot_method_bind_call bindEditorFileDialog_get_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "get_mode" '[] (IO Int) where
         nodeMethod = Godot.Tools.EditorFileDialog.get_mode
@@ -1216,6 +1330,7 @@ instance NodeMethod EditorFileDialog "get_mode" '[] (IO Int) where
 {-# NOINLINE bindEditorFileDialog_get_vbox #-}
 
 -- | Returns the @VBoxContainer@ used to display the file system.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindEditorFileDialog_get_vbox :: MethodBind
 bindEditorFileDialog_get_vbox
   = unsafePerformIO $
@@ -1226,6 +1341,7 @@ bindEditorFileDialog_get_vbox
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the @VBoxContainer@ used to display the file system.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_vbox ::
            (EditorFileDialog :< cls, Object :< cls) => cls -> IO VBoxContainer
 get_vbox cls
@@ -1234,7 +1350,7 @@ get_vbox cls
          godot_method_bind_call bindEditorFileDialog_get_vbox (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorFileDialog "get_vbox" '[]
            (IO VBoxContainer)
@@ -1262,7 +1378,10 @@ invalidate cls
          godot_method_bind_call bindEditorFileDialog_invalidate (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "invalidate" '[] (IO ()) where
         nodeMethod = Godot.Tools.EditorFileDialog.invalidate
@@ -1290,7 +1409,10 @@ is_overwrite_warning_disabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog
            "is_overwrite_warning_disabled"
@@ -1322,7 +1444,10 @@ is_showing_hidden_files cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "is_showing_hidden_files" '[]
            (IO Bool)
@@ -1350,7 +1475,10 @@ set_access cls arg1
          godot_method_bind_call bindEditorFileDialog_set_access (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "set_access" '[Int] (IO ())
          where
@@ -1379,7 +1507,10 @@ set_current_dir cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "set_current_dir"
            '[GodotString]
@@ -1410,7 +1541,10 @@ set_current_file cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "set_current_file"
            '[GodotString]
@@ -1441,7 +1575,10 @@ set_current_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "set_current_path"
            '[GodotString]
@@ -1472,7 +1609,10 @@ set_disable_overwrite_warning cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog
            "set_disable_overwrite_warning"
@@ -1504,7 +1644,10 @@ set_display_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "set_display_mode" '[Int]
            (IO ())
@@ -1532,7 +1675,10 @@ set_mode cls arg1
          godot_method_bind_call bindEditorFileDialog_set_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "set_mode" '[Int] (IO ())
          where
@@ -1560,7 +1706,10 @@ set_show_hidden_files cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorFileDialog "set_show_hidden_files"
            '[Bool]

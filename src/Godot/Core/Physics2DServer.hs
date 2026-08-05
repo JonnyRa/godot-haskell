@@ -159,6 +159,7 @@ module Godot.Core.Physics2DServer
         Godot.Core.Physics2DServer.rectangle_shape_create,
         Godot.Core.Physics2DServer.segment_shape_create,
         Godot.Core.Physics2DServer.set_active,
+        Godot.Core.Physics2DServer.set_collision_iterations,
         Godot.Core.Physics2DServer.shape_get_data,
         Godot.Core.Physics2DServer.shape_get_type,
         Godot.Core.Physics2DServer.shape_set_data,
@@ -401,7 +402,10 @@ area_add_shape cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_add_shape"
            '[Rid, Rid, Maybe Transform2d, Maybe Bool]
@@ -431,7 +435,10 @@ area_attach_canvas_instance_id cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "area_attach_canvas_instance_id"
@@ -465,7 +472,10 @@ area_attach_object_instance_id cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "area_attach_object_instance_id"
@@ -497,7 +507,10 @@ area_clear_shapes cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_clear_shapes" '[Rid]
            (IO ())
@@ -506,7 +519,7 @@ instance NodeMethod Physics2DServer "area_clear_shapes" '[Rid]
 
 {-# NOINLINE bindPhysics2DServer_area_create #-}
 
--- | Creates an @Area2D@.
+-- | Creates an @Area2D@. After creating an @Area2D@ with this method, assign it to a space using @method area_set_space@ to use the created @Area2D@ in the physics world.
 bindPhysics2DServer_area_create :: MethodBind
 bindPhysics2DServer_area_create
   = unsafePerformIO $
@@ -516,7 +529,7 @@ bindPhysics2DServer_area_create
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Creates an @Area2D@.
+-- | Creates an @Area2D@. After creating an @Area2D@ with this method, assign it to a space using @method area_set_space@ to use the created @Area2D@ in the physics world.
 area_create ::
               (Physics2DServer :< cls, Object :< cls) => cls -> IO Rid
 area_create cls
@@ -525,7 +538,10 @@ area_create cls
          godot_method_bind_call bindPhysics2DServer_area_create (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_create" '[] (IO Rid)
          where
@@ -552,7 +568,10 @@ area_get_canvas_instance_id cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_get_canvas_instance_id"
            '[Rid]
@@ -583,7 +602,10 @@ area_get_object_instance_id cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_get_object_instance_id"
            '[Rid]
@@ -614,7 +636,7 @@ area_get_param cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Physics2DServer "area_get_param" '[Rid, Int]
            (IO GodotVariant)
@@ -644,7 +666,10 @@ area_get_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_get_shape" '[Rid, Int]
            (IO Rid)
@@ -673,7 +698,10 @@ area_get_shape_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_get_shape_count" '[Rid]
            (IO Int)
@@ -703,7 +731,10 @@ area_get_shape_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_get_shape_transform"
            '[Rid, Int]
@@ -733,7 +764,10 @@ area_get_space cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_get_space" '[Rid]
            (IO Rid)
@@ -763,7 +797,10 @@ area_get_space_override_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_get_space_override_mode"
            '[Rid]
@@ -795,7 +832,10 @@ area_get_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_get_transform" '[Rid]
            (IO Transform2d)
@@ -825,7 +865,10 @@ area_remove_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_remove_shape" '[Rid, Int]
            (IO ())
@@ -854,7 +897,10 @@ area_set_area_monitor_callback cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "area_set_area_monitor_callback"
@@ -887,7 +933,10 @@ area_set_collision_layer cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_collision_layer"
            '[Rid, Int]
@@ -918,7 +967,10 @@ area_set_collision_mask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_collision_mask"
            '[Rid, Int]
@@ -960,7 +1012,10 @@ area_set_monitor_callback cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_monitor_callback"
            '[Rid, Object, GodotString]
@@ -989,7 +1044,10 @@ area_set_monitorable cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_monitorable"
            '[Rid, Bool]
@@ -1020,7 +1078,10 @@ area_set_param cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_param"
            '[Rid, Int, GodotVariant]
@@ -1051,7 +1112,10 @@ area_set_shape cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_shape"
            '[Rid, Int, Rid]
@@ -1082,7 +1146,10 @@ area_set_shape_disabled cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_shape_disabled"
            '[Rid, Int, Bool]
@@ -1113,7 +1180,10 @@ area_set_shape_transform cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_shape_transform"
            '[Rid, Int, Transform2d]
@@ -1144,7 +1214,10 @@ area_set_space cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_space" '[Rid, Rid]
            (IO ())
@@ -1175,7 +1248,10 @@ area_set_space_override_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_space_override_mode"
            '[Rid, Int]
@@ -1207,7 +1283,10 @@ area_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "area_set_transform"
            '[Rid, Transform2d]
@@ -1236,7 +1315,10 @@ body_add_central_force cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_add_central_force"
            '[Rid, Vector2]
@@ -1268,7 +1350,10 @@ body_add_collision_exception cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_add_collision_exception"
            '[Rid, Rid]
@@ -1300,7 +1385,10 @@ body_add_force cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_add_force"
            '[Rid, Vector2, Vector2]
@@ -1336,7 +1424,10 @@ body_add_shape cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_add_shape"
            '[Rid, Rid, Maybe Transform2d, Maybe Bool]
@@ -1365,7 +1456,10 @@ body_add_torque cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_add_torque" '[Rid, Float]
            (IO ())
@@ -1394,7 +1488,10 @@ body_apply_central_impulse cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_apply_central_impulse"
            '[Rid, Vector2]
@@ -1425,7 +1522,10 @@ body_apply_impulse cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_apply_impulse"
            '[Rid, Vector2, Vector2]
@@ -1455,7 +1555,10 @@ body_apply_torque_impulse cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_apply_torque_impulse"
            '[Rid, Float]
@@ -1485,7 +1588,10 @@ body_attach_canvas_instance_id cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_attach_canvas_instance_id"
@@ -1519,7 +1625,10 @@ body_attach_object_instance_id cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_attach_object_instance_id"
@@ -1551,7 +1660,10 @@ body_clear_shapes cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_clear_shapes" '[Rid]
            (IO ())
@@ -1579,7 +1691,10 @@ body_create cls
          godot_method_bind_call bindPhysics2DServer_body_create (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_create" '[] (IO Rid)
          where
@@ -1606,7 +1721,10 @@ body_get_canvas_instance_id cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_get_canvas_instance_id"
            '[Rid]
@@ -1636,7 +1754,10 @@ body_get_collision_layer cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_get_collision_layer"
            '[Rid]
@@ -1666,7 +1787,10 @@ body_get_collision_mask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_get_collision_mask"
            '[Rid]
@@ -1700,7 +1824,10 @@ body_get_continuous_collision_detection_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_get_continuous_collision_detection_mode"
@@ -1712,7 +1839,7 @@ instance NodeMethod Physics2DServer
 
 {-# NOINLINE bindPhysics2DServer_body_get_direct_state #-}
 
--- | Returns the @Physics2DDirectBodyState@ of the body.
+-- | Returns the @Physics2DDirectBodyState@ of the body. Returns @null@ if the body is destroyed or removed from the physics space.
 bindPhysics2DServer_body_get_direct_state :: MethodBind
 bindPhysics2DServer_body_get_direct_state
   = unsafePerformIO $
@@ -1722,7 +1849,7 @@ bindPhysics2DServer_body_get_direct_state
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the @Physics2DDirectBodyState@ of the body.
+-- | Returns the @Physics2DDirectBodyState@ of the body. Returns @null@ if the body is destroyed or removed from the physics space.
 body_get_direct_state ::
                         (Physics2DServer :< cls, Object :< cls) =>
                         cls -> Rid -> IO Physics2DDirectBodyState
@@ -1733,7 +1860,7 @@ body_get_direct_state cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Physics2DServer "body_get_direct_state" '[Rid]
            (IO Physics2DDirectBodyState)
@@ -1763,7 +1890,10 @@ body_get_max_contacts_reported cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_get_max_contacts_reported"
@@ -1795,7 +1925,10 @@ body_get_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_get_mode" '[Rid] (IO Int)
          where
@@ -1824,7 +1957,10 @@ body_get_object_instance_id cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_get_object_instance_id"
            '[Rid]
@@ -1855,7 +1991,10 @@ body_get_param cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_get_param" '[Rid, Int]
            (IO Float)
@@ -1885,7 +2024,10 @@ body_get_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_get_shape" '[Rid, Int]
            (IO Rid)
@@ -1914,7 +2056,10 @@ body_get_shape_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_get_shape_count" '[Rid]
            (IO Int)
@@ -1944,7 +2089,7 @@ body_get_shape_metadata cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Physics2DServer "body_get_shape_metadata"
            '[Rid, Int]
@@ -1975,7 +2120,10 @@ body_get_shape_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_get_shape_transform"
            '[Rid, Int]
@@ -2005,7 +2153,10 @@ body_get_space cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_get_space" '[Rid]
            (IO Rid)
@@ -2035,7 +2186,7 @@ body_get_state cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Physics2DServer "body_get_state" '[Rid, Int]
            (IO GodotVariant)
@@ -2068,7 +2219,10 @@ body_is_omitting_force_integration cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_is_omitting_force_integration"
@@ -2103,7 +2257,10 @@ body_remove_collision_exception cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_remove_collision_exception"
@@ -2136,7 +2293,10 @@ body_remove_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_remove_shape" '[Rid, Int]
            (IO ())
@@ -2166,7 +2326,10 @@ body_set_axis_velocity cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_axis_velocity"
            '[Rid, Vector2]
@@ -2197,7 +2360,10 @@ body_set_collision_layer cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_collision_layer"
            '[Rid, Int]
@@ -2228,7 +2394,10 @@ body_set_collision_mask cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_collision_mask"
            '[Rid, Int]
@@ -2264,7 +2433,10 @@ body_set_continuous_collision_detection_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_set_continuous_collision_detection_mode"
@@ -2303,7 +2475,10 @@ body_set_force_integration_callback cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_set_force_integration_callback"
@@ -2337,7 +2512,10 @@ body_set_max_contacts_reported cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_set_max_contacts_reported"
@@ -2370,7 +2548,10 @@ body_set_mode cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_mode" '[Rid, Int]
            (IO ())
@@ -2402,7 +2583,10 @@ body_set_omit_force_integration cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_set_omit_force_integration"
@@ -2435,7 +2619,10 @@ body_set_param cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_param"
            '[Rid, Int, Float]
@@ -2466,7 +2653,10 @@ body_set_shape cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_shape"
            '[Rid, Int, Rid]
@@ -2501,7 +2691,10 @@ body_set_shape_as_one_way_collision cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer
            "body_set_shape_as_one_way_collision"
@@ -2534,7 +2727,10 @@ body_set_shape_disabled cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_shape_disabled"
            '[Rid, Int, Bool]
@@ -2565,7 +2761,10 @@ body_set_shape_metadata cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_shape_metadata"
            '[Rid, Int, GodotVariant]
@@ -2596,7 +2795,10 @@ body_set_shape_transform cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_shape_transform"
            '[Rid, Int, Transform2d]
@@ -2627,7 +2829,10 @@ body_set_space cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_space" '[Rid, Rid]
            (IO ())
@@ -2659,7 +2864,10 @@ body_set_state cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_set_state"
            '[Rid, Int, GodotVariant]
@@ -2686,22 +2894,30 @@ body_test_motion ::
                      Rid ->
                        Transform2d ->
                          Vector2 ->
-                           Bool -> Maybe Float -> Maybe Physics2DTestMotionResult -> IO Bool
-body_test_motion cls arg1 arg2 arg3 arg4 arg5 arg6
+                           Bool ->
+                             Maybe Float ->
+                               Maybe Physics2DTestMotionResult ->
+                                 Maybe Bool -> Maybe Array -> IO Bool
+body_test_motion cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
   = withVariantArray
       [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4,
        maybe (VariantReal (0.08)) toVariant arg5,
-       maybe VariantNil toVariant arg6]
+       maybe VariantNil toVariant arg6,
+       maybe (VariantBool True) toVariant arg7,
+       defaultedVariant VariantArray V.empty arg8]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPhysics2DServer_body_test_motion
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "body_test_motion"
            '[Rid, Transform2d, Vector2, Bool, Maybe Float,
-             Maybe Physics2DTestMotionResult]
+             Maybe Physics2DTestMotionResult, Maybe Bool, Maybe Array]
            (IO Bool)
          where
         nodeMethod = Godot.Core.Physics2DServer.body_test_motion
@@ -2726,7 +2942,10 @@ capsule_shape_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "capsule_shape_create" '[]
            (IO Rid)
@@ -2753,7 +2972,10 @@ circle_shape_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "circle_shape_create" '[]
            (IO Rid)
@@ -2781,7 +3003,10 @@ concave_polygon_shape_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "concave_polygon_shape_create"
            '[]
@@ -2811,7 +3036,10 @@ convex_polygon_shape_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "convex_polygon_shape_create"
            '[]
@@ -2845,7 +3073,10 @@ damped_spring_joint_create cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "damped_spring_joint_create"
            '[Vector2, Vector2, Rid, Maybe Rid]
@@ -2877,7 +3108,10 @@ damped_string_joint_get_param cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "damped_string_joint_get_param"
            '[Rid, Int]
@@ -2910,7 +3144,10 @@ damped_string_joint_set_param cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "damped_string_joint_set_param"
            '[Rid, Int, Float]
@@ -2940,7 +3177,10 @@ free_rid cls arg1
          godot_method_bind_call bindPhysics2DServer_free_rid (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "free_rid" '[Rid] (IO ()) where
         nodeMethod = Godot.Core.Physics2DServer.free_rid
@@ -2967,7 +3207,10 @@ get_process_info cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "get_process_info" '[Int]
            (IO Int)
@@ -3000,7 +3243,10 @@ groove_joint_create cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "groove_joint_create"
            '[Vector2, Vector2, Vector2, Maybe Rid, Maybe Rid]
@@ -3031,7 +3277,10 @@ joint_get_param cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "joint_get_param" '[Rid, Int]
            (IO Float)
@@ -3060,7 +3309,10 @@ joint_get_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "joint_get_type" '[Rid]
            (IO Int)
@@ -3090,7 +3342,10 @@ joint_set_param cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "joint_set_param"
            '[Rid, Int, Float]
@@ -3118,7 +3373,10 @@ line_shape_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "line_shape_create" '[]
            (IO Rid)
@@ -3149,7 +3407,10 @@ pin_joint_create cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "pin_joint_create"
            '[Vector2, Rid, Maybe Rid]
@@ -3177,7 +3438,10 @@ ray_shape_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "ray_shape_create" '[] (IO Rid)
          where
@@ -3203,7 +3467,10 @@ rectangle_shape_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "rectangle_shape_create" '[]
            (IO Rid)
@@ -3230,7 +3497,10 @@ segment_shape_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "segment_shape_create" '[]
            (IO Rid)
@@ -3258,11 +3528,47 @@ set_active cls arg1
          godot_method_bind_call bindPhysics2DServer_set_active (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "set_active" '[Bool] (IO ())
          where
         nodeMethod = Godot.Core.Physics2DServer.set_active
+
+{-# NOINLINE bindPhysics2DServer_set_collision_iterations #-}
+
+-- | Sets the amount of iterations for calculating velocities of colliding bodies. The greater the amount of iterations, the more accurate the collisions will be. However, a greater amount of iterations requires more CPU power, which can decrease performance. The default value is @8@.
+bindPhysics2DServer_set_collision_iterations :: MethodBind
+bindPhysics2DServer_set_collision_iterations
+  = unsafePerformIO $
+      withCString "Physics2DServer" $
+        \ clsNamePtr ->
+          withCString "set_collision_iterations" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the amount of iterations for calculating velocities of colliding bodies. The greater the amount of iterations, the more accurate the collisions will be. However, a greater amount of iterations requires more CPU power, which can decrease performance. The default value is @8@.
+set_collision_iterations ::
+                           (Physics2DServer :< cls, Object :< cls) => cls -> Int -> IO ()
+set_collision_iterations cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPhysics2DServer_set_collision_iterations
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Physics2DServer "set_collision_iterations"
+           '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Physics2DServer.set_collision_iterations
 
 {-# NOINLINE bindPhysics2DServer_shape_get_data #-}
 
@@ -3287,7 +3593,7 @@ shape_get_data cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Physics2DServer "shape_get_data" '[Rid]
            (IO GodotVariant)
@@ -3316,7 +3622,10 @@ shape_get_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "shape_get_type" '[Rid]
            (IO Int)
@@ -3346,7 +3655,10 @@ shape_set_data cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "shape_set_data"
            '[Rid, GodotVariant]
@@ -3376,7 +3688,10 @@ space_create cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "space_create" '[] (IO Rid)
          where
@@ -3405,7 +3720,7 @@ space_get_direct_state cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Physics2DServer "space_get_direct_state" '[Rid]
            (IO Physics2DDirectSpaceState)
@@ -3435,7 +3750,10 @@ space_get_param cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "space_get_param" '[Rid, Int]
            (IO Float)
@@ -3464,7 +3782,10 @@ space_is_active cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "space_is_active" '[Rid]
            (IO Bool)
@@ -3494,7 +3815,10 @@ space_set_active cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "space_set_active" '[Rid, Bool]
            (IO ())
@@ -3524,7 +3848,10 @@ space_set_param cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DServer "space_set_param"
            '[Rid, Int, Float]

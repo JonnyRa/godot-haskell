@@ -45,7 +45,10 @@ _shader_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ShaderMaterial "_shader_changed" '[] (IO ())
          where
@@ -72,7 +75,7 @@ get_shader cls
          godot_method_bind_call bindShaderMaterial_get_shader (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod ShaderMaterial "get_shader" '[] (IO Shader)
          where
@@ -101,7 +104,7 @@ get_shader_param cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod ShaderMaterial "get_shader_param"
            '[GodotString]
@@ -132,7 +135,10 @@ property_can_revert cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ShaderMaterial "property_can_revert"
            '[GodotString]
@@ -163,7 +169,7 @@ property_get_revert cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod ShaderMaterial "property_get_revert"
            '[GodotString]
@@ -192,7 +198,10 @@ set_shader cls arg1
          godot_method_bind_call bindShaderMaterial_set_shader (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ShaderMaterial "set_shader" '[Shader] (IO ())
          where
@@ -200,7 +209,8 @@ instance NodeMethod ShaderMaterial "set_shader" '[Shader] (IO ())
 
 {-# NOINLINE bindShaderMaterial_set_shader_param #-}
 
--- | Changes the value set for this material of a uniform in the shader. __Note:__ @param@ must match the name of the uniform in the code exactly.
+-- | Changes the value set for this material of a uniform in the shader.
+--   				__Note:__ @param@ must match the name of the uniform in the code exactly.
 bindShaderMaterial_set_shader_param :: MethodBind
 bindShaderMaterial_set_shader_param
   = unsafePerformIO $
@@ -210,7 +220,8 @@ bindShaderMaterial_set_shader_param
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Changes the value set for this material of a uniform in the shader. __Note:__ @param@ must match the name of the uniform in the code exactly.
+-- | Changes the value set for this material of a uniform in the shader.
+--   				__Note:__ @param@ must match the name of the uniform in the code exactly.
 set_shader_param ::
                    (ShaderMaterial :< cls, Object :< cls) =>
                    cls -> GodotString -> GodotVariant -> IO ()
@@ -221,7 +232,10 @@ set_shader_param cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ShaderMaterial "set_shader_param"
            '[GodotString, GodotVariant]

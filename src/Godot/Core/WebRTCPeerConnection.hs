@@ -97,7 +97,10 @@ add_ice_candidate cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCPeerConnection "add_ice_candidate"
            '[GodotString, Int, GodotString]
@@ -124,7 +127,10 @@ close cls
          godot_method_bind_call bindWebRTCPeerConnection_close (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCPeerConnection "close" '[] (IO ()) where
         nodeMethod = Godot.Core.WebRTCPeerConnection.close
@@ -151,7 +157,7 @@ create_data_channel cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod WebRTCPeerConnection "create_data_channel"
            '[GodotString, Maybe Dictionary]
@@ -179,7 +185,10 @@ create_offer cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCPeerConnection "create_offer" '[]
            (IO Int)
@@ -207,7 +216,10 @@ get_connection_state cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCPeerConnection "get_connection_state" '[]
            (IO Int)
@@ -236,7 +248,10 @@ initialize cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCPeerConnection "initialize"
            '[Maybe Dictionary]
@@ -263,7 +278,10 @@ poll cls
          godot_method_bind_call bindWebRTCPeerConnection_poll (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCPeerConnection "poll" '[] (IO Int) where
         nodeMethod = Godot.Core.WebRTCPeerConnection.poll
@@ -290,7 +308,10 @@ set_local_description cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCPeerConnection "set_local_description"
            '[GodotString, GodotString]
@@ -320,7 +341,10 @@ set_remote_description cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCPeerConnection "set_remote_description"
            '[GodotString, GodotString]

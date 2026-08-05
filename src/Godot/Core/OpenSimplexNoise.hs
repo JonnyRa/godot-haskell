@@ -66,16 +66,19 @@ bindOpenSimplexNoise_get_image
 
 get_image ::
             (OpenSimplexNoise :< cls, Object :< cls) =>
-            cls -> Int -> Int -> IO Image
-get_image cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
+            cls -> Int -> Int -> Maybe Vector2 -> IO Image
+get_image cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, toVariant arg2,
+       defaultedVariant VariantVector2 (V2 0 0) arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOpenSimplexNoise_get_image (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
-instance NodeMethod OpenSimplexNoise "get_image" '[Int, Int]
+instance NodeMethod OpenSimplexNoise "get_image"
+           '[Int, Int, Maybe Vector2]
            (IO Image)
          where
         nodeMethod = Godot.Core.OpenSimplexNoise.get_image
@@ -100,7 +103,10 @@ get_lacunarity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_lacunarity" '[]
            (IO Float)
@@ -128,7 +134,10 @@ get_noise_1d cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_noise_1d" '[Float]
            (IO Float)
@@ -156,7 +165,10 @@ get_noise_2d cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_noise_2d" '[Float, Float]
            (IO Float)
@@ -184,7 +196,10 @@ get_noise_2dv cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_noise_2dv" '[Vector2]
            (IO Float)
@@ -212,7 +227,10 @@ get_noise_3d cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_noise_3d"
            '[Float, Float, Float]
@@ -241,7 +259,10 @@ get_noise_3dv cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_noise_3dv" '[Vector3]
            (IO Float)
@@ -270,7 +291,10 @@ get_noise_4d cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_noise_4d"
            '[Float, Float, Float, Float]
@@ -298,7 +322,10 @@ get_octaves cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_octaves" '[] (IO Int)
          where
@@ -323,7 +350,10 @@ get_period cls
          godot_method_bind_call bindOpenSimplexNoise_get_period (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_period" '[] (IO Float)
          where
@@ -349,7 +379,10 @@ get_persistence cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_persistence" '[]
            (IO Float)
@@ -376,7 +409,7 @@ get_seamless_image cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod OpenSimplexNoise "get_seamless_image" '[Int]
            (IO Image)
@@ -402,7 +435,10 @@ get_seed cls
          godot_method_bind_call bindOpenSimplexNoise_get_seed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "get_seed" '[] (IO Int) where
         nodeMethod = Godot.Core.OpenSimplexNoise.get_seed
@@ -427,7 +463,10 @@ set_lacunarity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "set_lacunarity" '[Float]
            (IO ())
@@ -454,7 +493,10 @@ set_octaves cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "set_octaves" '[Int] (IO ())
          where
@@ -479,7 +521,10 @@ set_period cls arg1
          godot_method_bind_call bindOpenSimplexNoise_set_period (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "set_period" '[Float] (IO ())
          where
@@ -505,7 +550,10 @@ set_persistence cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "set_persistence" '[Float]
            (IO ())
@@ -531,7 +579,10 @@ set_seed cls arg1
          godot_method_bind_call bindOpenSimplexNoise_set_seed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OpenSimplexNoise "set_seed" '[Int] (IO ())
          where

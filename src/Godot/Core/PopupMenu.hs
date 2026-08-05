@@ -24,6 +24,7 @@ module Godot.Core.PopupMenu
         Godot.Core.PopupMenu.add_shortcut,
         Godot.Core.PopupMenu.add_submenu_item, Godot.Core.PopupMenu.clear,
         Godot.Core.PopupMenu.get_allow_search,
+        Godot.Core.PopupMenu.get_current_index,
         Godot.Core.PopupMenu.get_item_accelerator,
         Godot.Core.PopupMenu.get_item_count,
         Godot.Core.PopupMenu.get_item_icon,
@@ -152,7 +153,10 @@ _get_items cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopupMenu__get_items (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "_get_items" '[] (IO Array) where
         nodeMethod = Godot.Core.PopupMenu._get_items
@@ -175,7 +179,10 @@ _gui_input cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopupMenu__gui_input (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "_gui_input" '[InputEvent] (IO ())
          where
@@ -199,7 +206,10 @@ _set_items cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopupMenu__set_items (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "_set_items" '[Array] (IO ()) where
         nodeMethod = Godot.Core.PopupMenu._set_items
@@ -223,7 +233,10 @@ _submenu_timeout cls
          godot_method_bind_call bindPopupMenu__submenu_timeout (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "_submenu_timeout" '[] (IO ()) where
         nodeMethod = Godot.Core.PopupMenu._submenu_timeout
@@ -256,7 +269,10 @@ add_check_item cls arg1 arg2 arg3
          godot_method_bind_call bindPopupMenu_add_check_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_check_item"
            '[GodotString, Maybe Int, Maybe Int]
@@ -293,7 +309,10 @@ add_check_shortcut cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_check_shortcut"
            '[ShortCut, Maybe Int, Maybe Bool]
@@ -331,7 +350,10 @@ add_icon_check_item cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_icon_check_item"
            '[Texture, GodotString, Maybe Int, Maybe Int]
@@ -369,7 +391,10 @@ add_icon_check_shortcut cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_icon_check_shortcut"
            '[Texture, ShortCut, Maybe Int, Maybe Bool]
@@ -404,7 +429,10 @@ add_icon_item cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindPopupMenu_add_icon_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_icon_item"
            '[Texture, GodotString, Maybe Int, Maybe Int]
@@ -438,7 +466,10 @@ add_icon_radio_check_item cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_icon_radio_check_item"
            '[Texture, GodotString, Maybe Int, Maybe Int]
@@ -472,7 +503,10 @@ add_icon_radio_check_shortcut cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_icon_radio_check_shortcut"
            '[Texture, ShortCut, Maybe Int, Maybe Bool]
@@ -507,7 +541,10 @@ add_icon_shortcut cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindPopupMenu_add_icon_shortcut (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_icon_shortcut"
            '[Texture, ShortCut, Maybe Int, Maybe Bool]
@@ -540,7 +577,10 @@ add_item cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopupMenu_add_item (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_item"
            '[GodotString, Maybe Int, Maybe Int]
@@ -580,7 +620,10 @@ add_multistate_item cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_multistate_item"
            '[GodotString, Int, Maybe Int, Maybe Int, Maybe Int]
@@ -617,7 +660,10 @@ add_radio_check_item cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_radio_check_item"
            '[GodotString, Maybe Int, Maybe Int]
@@ -654,7 +700,10 @@ add_radio_check_shortcut cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_radio_check_shortcut"
            '[ShortCut, Maybe Int, Maybe Bool]
@@ -664,7 +713,8 @@ instance NodeMethod PopupMenu "add_radio_check_shortcut"
 
 {-# NOINLINE bindPopupMenu_add_separator #-}
 
--- | Adds a separator between items. Separators also occupy an index.
+-- | Adds a separator between items. Separators also occupy an index, which you can set by using the @id@ parameter.
+--   				A @label@ can optionally be provided, which will appear at the center of the separator.
 bindPopupMenu_add_separator :: MethodBind
 bindPopupMenu_add_separator
   = unsafePerformIO $
@@ -674,19 +724,26 @@ bindPopupMenu_add_separator
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a separator between items. Separators also occupy an index.
+-- | Adds a separator between items. Separators also occupy an index, which you can set by using the @id@ parameter.
+--   				A @label@ can optionally be provided, which will appear at the center of the separator.
 add_separator ::
                 (PopupMenu :< cls, Object :< cls) =>
-                cls -> Maybe GodotString -> IO ()
-add_separator cls arg1
-  = withVariantArray [defaultedVariant VariantString "" arg1]
+                cls -> Maybe GodotString -> Maybe Int -> IO ()
+add_separator cls arg1 arg2
+  = withVariantArray
+      [defaultedVariant VariantString "" arg1,
+       maybe (VariantInt (-1)) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopupMenu_add_separator (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod PopupMenu "add_separator" '[Maybe GodotString]
+instance NodeMethod PopupMenu "add_separator"
+           '[Maybe GodotString, Maybe Int]
            (IO ())
          where
         nodeMethod = Godot.Core.PopupMenu.add_separator
@@ -717,7 +774,10 @@ add_shortcut cls arg1 arg2 arg3
          godot_method_bind_call bindPopupMenu_add_shortcut (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_shortcut"
            '[ShortCut, Maybe Int, Maybe Bool]
@@ -751,7 +811,10 @@ add_submenu_item cls arg1 arg2 arg3
          godot_method_bind_call bindPopupMenu_add_submenu_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "add_submenu_item"
            '[GodotString, GodotString, Maybe Int]
@@ -777,14 +840,17 @@ clear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPopupMenu_clear (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.PopupMenu.clear
 
 {-# NOINLINE bindPopupMenu_get_allow_search #-}
 
--- | If @true@, allows to navigate @PopupMenu@ with letter keys.
+-- | If @true@, allows navigating @PopupMenu@ with letter keys.
 bindPopupMenu_get_allow_search :: MethodBind
 bindPopupMenu_get_allow_search
   = unsafePerformIO $
@@ -794,7 +860,7 @@ bindPopupMenu_get_allow_search
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, allows to navigate @PopupMenu@ with letter keys.
+-- | If @true@, allows navigating @PopupMenu@ with letter keys.
 get_allow_search ::
                    (PopupMenu :< cls, Object :< cls) => cls -> IO Bool
 get_allow_search cls
@@ -803,11 +869,44 @@ get_allow_search cls
          godot_method_bind_call bindPopupMenu_get_allow_search (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "get_allow_search" '[] (IO Bool)
          where
         nodeMethod = Godot.Core.PopupMenu.get_allow_search
+
+{-# NOINLINE bindPopupMenu_get_current_index #-}
+
+-- | Returns the index of the currently focused item. Returns @-1@ if no item is focused.
+bindPopupMenu_get_current_index :: MethodBind
+bindPopupMenu_get_current_index
+  = unsafePerformIO $
+      withCString "PopupMenu" $
+        \ clsNamePtr ->
+          withCString "get_current_index" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the index of the currently focused item. Returns @-1@ if no item is focused.
+get_current_index ::
+                    (PopupMenu :< cls, Object :< cls) => cls -> IO Int
+get_current_index cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPopupMenu_get_current_index (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod PopupMenu "get_current_index" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.PopupMenu.get_current_index
 
 {-# NOINLINE bindPopupMenu_get_item_accelerator #-}
 
@@ -831,7 +930,10 @@ get_item_accelerator cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "get_item_accelerator" '[Int]
            (IO Int)
@@ -859,7 +961,10 @@ get_item_count cls
          godot_method_bind_call bindPopupMenu_get_item_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "get_item_count" '[] (IO Int) where
         nodeMethod = Godot.Core.PopupMenu.get_item_count
@@ -885,7 +990,7 @@ get_item_icon cls arg1
          godot_method_bind_call bindPopupMenu_get_item_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod PopupMenu "get_item_icon" '[Int] (IO Texture)
          where
@@ -912,7 +1017,10 @@ get_item_id cls arg1
          godot_method_bind_call bindPopupMenu_get_item_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "get_item_id" '[Int] (IO Int) where
         nodeMethod = Godot.Core.PopupMenu.get_item_id
@@ -938,7 +1046,10 @@ get_item_index cls arg1
          godot_method_bind_call bindPopupMenu_get_item_index (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "get_item_index" '[Int] (IO Int)
          where
@@ -965,7 +1076,7 @@ get_item_metadata cls arg1
          godot_method_bind_call bindPopupMenu_get_item_metadata (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod PopupMenu "get_item_metadata" '[Int]
            (IO GodotVariant)
@@ -993,7 +1104,7 @@ get_item_shortcut cls arg1
          godot_method_bind_call bindPopupMenu_get_item_shortcut (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod PopupMenu "get_item_shortcut" '[Int]
            (IO ShortCut)
@@ -1021,7 +1132,10 @@ get_item_submenu cls arg1
          godot_method_bind_call bindPopupMenu_get_item_submenu (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "get_item_submenu" '[Int]
            (IO GodotString)
@@ -1049,7 +1163,10 @@ get_item_text cls arg1
          godot_method_bind_call bindPopupMenu_get_item_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "get_item_text" '[Int]
            (IO GodotString)
@@ -1077,7 +1194,10 @@ get_item_tooltip cls arg1
          godot_method_bind_call bindPopupMenu_get_item_tooltip (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "get_item_tooltip" '[Int]
            (IO GodotString)
@@ -1106,7 +1226,10 @@ get_submenu_popup_delay cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "get_submenu_popup_delay" '[]
            (IO Float)
@@ -1136,7 +1259,10 @@ is_hide_on_checkable_item_selection cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "is_hide_on_checkable_item_selection"
            '[]
@@ -1167,7 +1293,10 @@ is_hide_on_item_selection cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "is_hide_on_item_selection" '[]
            (IO Bool)
@@ -1197,7 +1326,10 @@ is_hide_on_state_item_selection cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "is_hide_on_state_item_selection" '[]
            (IO Bool)
@@ -1226,7 +1358,10 @@ is_hide_on_window_lose_focus cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "is_hide_on_window_lose_focus" '[]
            (IO Bool)
@@ -1256,7 +1391,10 @@ is_item_checkable cls arg1
          godot_method_bind_call bindPopupMenu_is_item_checkable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "is_item_checkable" '[Int] (IO Bool)
          where
@@ -1283,7 +1421,10 @@ is_item_checked cls arg1
          godot_method_bind_call bindPopupMenu_is_item_checked (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "is_item_checked" '[Int] (IO Bool)
          where
@@ -1312,7 +1453,10 @@ is_item_disabled cls arg1
          godot_method_bind_call bindPopupMenu_is_item_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "is_item_disabled" '[Int] (IO Bool)
          where
@@ -1342,7 +1486,10 @@ is_item_radio_checkable cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "is_item_radio_checkable" '[Int]
            (IO Bool)
@@ -1370,7 +1517,10 @@ is_item_separator cls arg1
          godot_method_bind_call bindPopupMenu_is_item_separator (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "is_item_separator" '[Int] (IO Bool)
          where
@@ -1398,7 +1548,10 @@ is_item_shortcut_disabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "is_item_shortcut_disabled" '[Int]
            (IO Bool)
@@ -1428,14 +1581,17 @@ remove_item cls arg1
          godot_method_bind_call bindPopupMenu_remove_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "remove_item" '[Int] (IO ()) where
         nodeMethod = Godot.Core.PopupMenu.remove_item
 
 {-# NOINLINE bindPopupMenu_set_allow_search #-}
 
--- | If @true@, allows to navigate @PopupMenu@ with letter keys.
+-- | If @true@, allows navigating @PopupMenu@ with letter keys.
 bindPopupMenu_set_allow_search :: MethodBind
 bindPopupMenu_set_allow_search
   = unsafePerformIO $
@@ -1445,7 +1601,7 @@ bindPopupMenu_set_allow_search
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, allows to navigate @PopupMenu@ with letter keys.
+-- | If @true@, allows navigating @PopupMenu@ with letter keys.
 set_allow_search ::
                    (PopupMenu :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_allow_search cls arg1
@@ -1454,7 +1610,10 @@ set_allow_search cls arg1
          godot_method_bind_call bindPopupMenu_set_allow_search (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_allow_search" '[Bool] (IO ())
          where
@@ -1483,7 +1642,10 @@ set_hide_on_checkable_item_selection cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu
            "set_hide_on_checkable_item_selection"
@@ -1515,7 +1677,10 @@ set_hide_on_item_selection cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_hide_on_item_selection" '[Bool]
            (IO ())
@@ -1545,7 +1710,10 @@ set_hide_on_state_item_selection cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_hide_on_state_item_selection"
            '[Bool]
@@ -1575,7 +1743,10 @@ set_hide_on_window_lose_focus cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_hide_on_window_lose_focus"
            '[Bool]
@@ -1605,7 +1776,10 @@ set_item_accelerator cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_accelerator" '[Int, Int]
            (IO ())
@@ -1636,7 +1810,10 @@ set_item_as_checkable cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_as_checkable" '[Int, Bool]
            (IO ())
@@ -1665,7 +1842,10 @@ set_item_as_radio_checkable cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_as_radio_checkable"
            '[Int, Bool]
@@ -1695,7 +1875,10 @@ set_item_as_separator cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_as_separator" '[Int, Bool]
            (IO ())
@@ -1723,7 +1906,10 @@ set_item_checked cls arg1 arg2
          godot_method_bind_call bindPopupMenu_set_item_checked (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_checked" '[Int, Bool]
            (IO ())
@@ -1751,7 +1937,10 @@ set_item_disabled cls arg1 arg2
          godot_method_bind_call bindPopupMenu_set_item_disabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_disabled" '[Int, Bool]
            (IO ())
@@ -1779,7 +1968,10 @@ set_item_icon cls arg1 arg2
          godot_method_bind_call bindPopupMenu_set_item_icon (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_icon" '[Int, Texture]
            (IO ())
@@ -1807,7 +1999,10 @@ set_item_id cls arg1 arg2
          godot_method_bind_call bindPopupMenu_set_item_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_id" '[Int, Int] (IO ())
          where
@@ -1835,7 +2030,10 @@ set_item_metadata cls arg1 arg2
          godot_method_bind_call bindPopupMenu_set_item_metadata (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_metadata"
            '[Int, GodotVariant]
@@ -1845,7 +2043,7 @@ instance NodeMethod PopupMenu "set_item_metadata"
 
 {-# NOINLINE bindPopupMenu_set_item_multistate #-}
 
--- | Sets the state of an multistate item. See @method add_multistate_item@ for details.
+-- | Sets the state of a multistate item. See @method add_multistate_item@ for details.
 bindPopupMenu_set_item_multistate :: MethodBind
 bindPopupMenu_set_item_multistate
   = unsafePerformIO $
@@ -1855,7 +2053,7 @@ bindPopupMenu_set_item_multistate
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the state of an multistate item. See @method add_multistate_item@ for details.
+-- | Sets the state of a multistate item. See @method add_multistate_item@ for details.
 set_item_multistate ::
                       (PopupMenu :< cls, Object :< cls) => cls -> Int -> Int -> IO ()
 set_item_multistate cls arg1 arg2
@@ -1865,7 +2063,10 @@ set_item_multistate cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_multistate" '[Int, Int]
            (IO ())
@@ -1896,7 +2097,10 @@ set_item_shortcut cls arg1 arg2 arg3
          godot_method_bind_call bindPopupMenu_set_item_shortcut (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_shortcut"
            '[Int, ShortCut, Maybe Bool]
@@ -1926,7 +2130,10 @@ set_item_shortcut_disabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_shortcut_disabled"
            '[Int, Bool]
@@ -1956,7 +2163,10 @@ set_item_submenu cls arg1 arg2
          godot_method_bind_call bindPopupMenu_set_item_submenu (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_submenu"
            '[Int, GodotString]
@@ -1986,7 +2196,10 @@ set_item_text cls arg1 arg2
          godot_method_bind_call bindPopupMenu_set_item_text (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_text" '[Int, GodotString]
            (IO ())
@@ -2015,7 +2228,10 @@ set_item_tooltip cls arg1 arg2
          godot_method_bind_call bindPopupMenu_set_item_tooltip (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_item_tooltip"
            '[Int, GodotString]
@@ -2045,7 +2261,10 @@ set_submenu_popup_delay cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "set_submenu_popup_delay" '[Float]
            (IO ())
@@ -2074,7 +2293,10 @@ toggle_item_checked cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "toggle_item_checked" '[Int] (IO ())
          where
@@ -2082,7 +2304,7 @@ instance NodeMethod PopupMenu "toggle_item_checked" '[Int] (IO ())
 
 {-# NOINLINE bindPopupMenu_toggle_item_multistate #-}
 
--- | Cycle to the next state of an multistate item. See @method add_multistate_item@ for details.
+-- | Cycle to the next state of a multistate item. See @method add_multistate_item@ for details.
 bindPopupMenu_toggle_item_multistate :: MethodBind
 bindPopupMenu_toggle_item_multistate
   = unsafePerformIO $
@@ -2092,7 +2314,7 @@ bindPopupMenu_toggle_item_multistate
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Cycle to the next state of an multistate item. See @method add_multistate_item@ for details.
+-- | Cycle to the next state of a multistate item. See @method add_multistate_item@ for details.
 toggle_item_multistate ::
                          (PopupMenu :< cls, Object :< cls) => cls -> Int -> IO ()
 toggle_item_multistate cls arg1
@@ -2102,7 +2324,10 @@ toggle_item_multistate cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PopupMenu "toggle_item_multistate" '[Int]
            (IO ())

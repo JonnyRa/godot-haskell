@@ -66,7 +66,10 @@ add_input_port cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "add_input_port"
            '[Int, Int, GodotString]
@@ -98,7 +101,10 @@ add_output_port cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "add_output_port"
            '[Int, Int, GodotString]
@@ -129,7 +135,10 @@ clear_input_ports cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "clear_input_ports"
            '[]
@@ -160,7 +169,10 @@ clear_output_ports cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "clear_output_ports"
            '[]
@@ -193,7 +205,10 @@ get_free_input_port_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase
            "get_free_input_port_id"
@@ -227,7 +242,10 @@ get_free_output_port_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase
            "get_free_output_port_id"
@@ -260,7 +278,10 @@ get_input_port_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase
            "get_input_port_count"
@@ -272,7 +293,7 @@ instance NodeMethod VisualShaderNodeGroupBase
 
 {-# NOINLINE bindVisualShaderNodeGroupBase_get_inputs #-}
 
--- | Returns a @String@ description of the input ports as as colon-separated list using the format @id,type,name;@ (see @method add_input_port@).
+-- | Returns a @String@ description of the input ports as a colon-separated list using the format @id,type,name;@ (see @method add_input_port@).
 bindVisualShaderNodeGroupBase_get_inputs :: MethodBind
 bindVisualShaderNodeGroupBase_get_inputs
   = unsafePerformIO $
@@ -282,7 +303,7 @@ bindVisualShaderNodeGroupBase_get_inputs
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a @String@ description of the input ports as as colon-separated list using the format @id,type,name;@ (see @method add_input_port@).
+-- | Returns a @String@ description of the input ports as a colon-separated list using the format @id,type,name;@ (see @method add_input_port@).
 get_inputs ::
              (VisualShaderNodeGroupBase :< cls, Object :< cls) =>
              cls -> IO GodotString
@@ -293,7 +314,10 @@ get_inputs cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "get_inputs" '[]
            (IO GodotString)
@@ -324,7 +348,10 @@ get_output_port_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase
            "get_output_port_count"
@@ -336,7 +363,7 @@ instance NodeMethod VisualShaderNodeGroupBase
 
 {-# NOINLINE bindVisualShaderNodeGroupBase_get_outputs #-}
 
--- | Returns a @String@ description of the output ports as as colon-separated list using the format @id,type,name;@ (see @method add_output_port@).
+-- | Returns a @String@ description of the output ports as a colon-separated list using the format @id,type,name;@ (see @method add_output_port@).
 bindVisualShaderNodeGroupBase_get_outputs :: MethodBind
 bindVisualShaderNodeGroupBase_get_outputs
   = unsafePerformIO $
@@ -346,7 +373,7 @@ bindVisualShaderNodeGroupBase_get_outputs
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a @String@ description of the output ports as as colon-separated list using the format @id,type,name;@ (see @method add_output_port@).
+-- | Returns a @String@ description of the output ports as a colon-separated list using the format @id,type,name;@ (see @method add_output_port@).
 get_outputs ::
               (VisualShaderNodeGroupBase :< cls, Object :< cls) =>
               cls -> IO GodotString
@@ -357,7 +384,10 @@ get_outputs cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "get_outputs" '[]
            (IO GodotString)
@@ -387,7 +417,10 @@ get_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "get_size" '[]
            (IO Vector2)
@@ -417,7 +450,10 @@ has_input_port cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "has_input_port"
            '[Int]
@@ -449,7 +485,10 @@ has_output_port cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "has_output_port"
            '[Int]
@@ -481,7 +520,10 @@ is_valid_port_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "is_valid_port_name"
            '[GodotString]
@@ -514,7 +556,10 @@ remove_input_port cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "remove_input_port"
            '[Int]
@@ -546,7 +591,10 @@ remove_output_port cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "remove_output_port"
            '[Int]
@@ -579,7 +627,10 @@ set_input_port_name cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "set_input_port_name"
            '[Int, GodotString]
@@ -612,7 +663,10 @@ set_input_port_type cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "set_input_port_type"
            '[Int, Int]
@@ -644,7 +698,10 @@ set_inputs cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "set_inputs"
            '[GodotString]
@@ -676,7 +733,10 @@ set_output_port_name cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase
            "set_output_port_name"
@@ -710,7 +770,10 @@ set_output_port_type cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase
            "set_output_port_type"
@@ -743,7 +806,10 @@ set_outputs cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "set_outputs"
            '[GodotString]
@@ -774,7 +840,10 @@ set_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualShaderNodeGroupBase "set_size" '[Vector2]
            (IO ())

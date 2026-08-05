@@ -20,7 +20,8 @@ module Godot.Core.Input
         Godot.Core.Input.action_press, Godot.Core.Input.action_release,
         Godot.Core.Input.add_joy_mapping,
         Godot.Core.Input.get_accelerometer,
-        Godot.Core.Input.get_action_strength,
+        Godot.Core.Input.get_action_raw_strength,
+        Godot.Core.Input.get_action_strength, Godot.Core.Input.get_axis,
         Godot.Core.Input.get_connected_joypads,
         Godot.Core.Input.get_current_cursor_shape,
         Godot.Core.Input.get_gravity, Godot.Core.Input.get_gyroscope,
@@ -35,7 +36,7 @@ module Godot.Core.Input
         Godot.Core.Input.get_last_mouse_speed,
         Godot.Core.Input.get_magnetometer,
         Godot.Core.Input.get_mouse_button_mask,
-        Godot.Core.Input.get_mouse_mode,
+        Godot.Core.Input.get_mouse_mode, Godot.Core.Input.get_vector,
         Godot.Core.Input.is_action_just_pressed,
         Godot.Core.Input.is_action_just_released,
         Godot.Core.Input.is_action_pressed,
@@ -162,7 +163,10 @@ action_press cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_action_press (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "action_press"
            '[GodotString, Maybe Float]
@@ -190,7 +194,10 @@ action_release cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_action_release (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "action_release" '[GodotString] (IO ())
          where
@@ -219,7 +226,10 @@ add_joy_mapping cls arg1 arg2
          godot_method_bind_call bindInput_add_joy_mapping (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "add_joy_mapping"
            '[GodotString, Maybe Bool]
@@ -229,9 +239,9 @@ instance NodeMethod Input "add_joy_mapping"
 
 {-# NOINLINE bindInput_get_accelerometer #-}
 
--- | Returns the acceleration of the device's accelerometer, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
+-- | Returns the acceleration of the device's accelerometer sensor, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
 --   				Note this method returns an empty @Vector3@ when running from the editor even when your device has an accelerometer. You must export your project to a supported device to read values from the accelerometer.
---   				__Note:__ This method only works on iOS, Android, and UWP. On other platforms, it always returns @Vector3.ZERO@.
+--   				__Note:__ This method only works on iOS, Android, and UWP. On other platforms, it always returns @Vector3.ZERO@. On Android the unit of measurement for each axis is m/s² while on iOS and UWP it's a multiple of the Earth's gravitational acceleration @g@ (~9.81 m/s²).
 bindInput_get_accelerometer :: MethodBind
 bindInput_get_accelerometer
   = unsafePerformIO $
@@ -241,9 +251,9 @@ bindInput_get_accelerometer
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the acceleration of the device's accelerometer, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
+-- | Returns the acceleration of the device's accelerometer sensor, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
 --   				Note this method returns an empty @Vector3@ when running from the editor even when your device has an accelerometer. You must export your project to a supported device to read values from the accelerometer.
---   				__Note:__ This method only works on iOS, Android, and UWP. On other platforms, it always returns @Vector3.ZERO@.
+--   				__Note:__ This method only works on iOS, Android, and UWP. On other platforms, it always returns @Vector3.ZERO@. On Android the unit of measurement for each axis is m/s² while on iOS and UWP it's a multiple of the Earth's gravitational acceleration @g@ (~9.81 m/s²).
 get_accelerometer ::
                     (Input :< cls, Object :< cls) => cls -> IO Vector3
 get_accelerometer cls
@@ -252,15 +262,56 @@ get_accelerometer cls
          godot_method_bind_call bindInput_get_accelerometer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_accelerometer" '[] (IO Vector3)
          where
         nodeMethod = Godot.Core.Input.get_accelerometer
 
+{-# NOINLINE bindInput_get_action_raw_strength #-}
+
+-- | Returns a value between 0 and 1 representing the raw intensity of the given action, ignoring the action's deadzone. In most cases, you should use @method get_action_strength@ instead.
+--   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+bindInput_get_action_raw_strength :: MethodBind
+bindInput_get_action_raw_strength
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "get_action_raw_strength" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns a value between 0 and 1 representing the raw intensity of the given action, ignoring the action's deadzone. In most cases, you should use @method get_action_strength@ instead.
+--   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+get_action_raw_strength ::
+                          (Input :< cls, Object :< cls) =>
+                          cls -> GodotString -> Maybe Bool -> IO Float
+get_action_raw_strength cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_get_action_raw_strength
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "get_action_raw_strength"
+           '[GodotString, Maybe Bool]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.Input.get_action_raw_strength
+
 {-# NOINLINE bindInput_get_action_strength #-}
 
 -- | Returns a value between 0 and 1 representing the intensity of the given action. In a joypad, for example, the further away the axis (analog sticks or L2, R2 triggers) is from the dead zone, the closer the value will be to 1. If the action is mapped to a control that has no axis as the keyboard, the value returned will be 0 or 1.
+--   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 bindInput_get_action_strength :: MethodBind
 bindInput_get_action_strength
   = unsafePerformIO $
@@ -271,20 +322,59 @@ bindInput_get_action_strength
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns a value between 0 and 1 representing the intensity of the given action. In a joypad, for example, the further away the axis (analog sticks or L2, R2 triggers) is from the dead zone, the closer the value will be to 1. If the action is mapped to a control that has no axis as the keyboard, the value returned will be 0 or 1.
+--   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 get_action_strength ::
-                      (Input :< cls, Object :< cls) => cls -> GodotString -> IO Float
-get_action_strength cls arg1
-  = withVariantArray [toVariant arg1]
+                      (Input :< cls, Object :< cls) =>
+                      cls -> GodotString -> Maybe Bool -> IO Float
+get_action_strength cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_get_action_strength (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod Input "get_action_strength" '[GodotString]
+instance NodeMethod Input "get_action_strength"
+           '[GodotString, Maybe Bool]
            (IO Float)
          where
         nodeMethod = Godot.Core.Input.get_action_strength
+
+{-# NOINLINE bindInput_get_axis #-}
+
+-- | Get axis input by specifying two actions, one negative and one positive.
+--   				This is a shorthand for writing @Input.get_action_strength("positive_action") - Input.get_action_strength("negative_action")@.
+bindInput_get_axis :: MethodBind
+bindInput_get_axis
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "get_axis" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Get axis input by specifying two actions, one negative and one positive.
+--   				This is a shorthand for writing @Input.get_action_strength("positive_action") - Input.get_action_strength("negative_action")@.
+get_axis ::
+           (Input :< cls, Object :< cls) =>
+           cls -> GodotString -> GodotString -> IO Float
+get_axis cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_get_axis (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "get_axis" '[GodotString, GodotString]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.Input.get_axis
 
 {-# NOINLINE bindInput_get_connected_joypads #-}
 
@@ -307,7 +397,10 @@ get_connected_joypads cls
          godot_method_bind_call bindInput_get_connected_joypads (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_connected_joypads" '[] (IO Array)
          where
@@ -335,7 +428,10 @@ get_current_cursor_shape cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_current_cursor_shape" '[] (IO Int)
          where
@@ -343,8 +439,8 @@ instance NodeMethod Input "get_current_cursor_shape" '[] (IO Int)
 
 {-# NOINLINE bindInput_get_gravity #-}
 
--- | Returns the gravity of the device's accelerometer, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
---   				__Note:__ This method only works on Android and iOS. On other platforms, it always returns @Vector3.ZERO@.
+-- | Returns the gravity of the device's accelerometer sensor, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
+--   				__Note:__ This method only works on Android and iOS. On other platforms, it always returns @Vector3.ZERO@. On Android the unit of measurement for each axis is m/s² while on iOS it's a multiple of the Earth's gravitational acceleration @g@ (~9.81 m/s²).
 bindInput_get_gravity :: MethodBind
 bindInput_get_gravity
   = unsafePerformIO $
@@ -354,23 +450,26 @@ bindInput_get_gravity
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the gravity of the device's accelerometer, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
---   				__Note:__ This method only works on Android and iOS. On other platforms, it always returns @Vector3.ZERO@.
+-- | Returns the gravity of the device's accelerometer sensor, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
+--   				__Note:__ This method only works on Android and iOS. On other platforms, it always returns @Vector3.ZERO@. On Android the unit of measurement for each axis is m/s² while on iOS it's a multiple of the Earth's gravitational acceleration @g@ (~9.81 m/s²).
 get_gravity :: (Input :< cls, Object :< cls) => cls -> IO Vector3
 get_gravity cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_get_gravity (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_gravity" '[] (IO Vector3) where
         nodeMethod = Godot.Core.Input.get_gravity
 
 {-# NOINLINE bindInput_get_gyroscope #-}
 
--- | Returns the rotation rate in rad/s around a device's X, Y, and Z axes of the gyroscope, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
---   				__Note:__ This method only works on Android. On other platforms, it always returns @Vector3.ZERO@.
+-- | Returns the rotation rate in rad/s around a device's X, Y, and Z axes of the gyroscope sensor, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
+--   				__Note:__ This method only works on Android and iOS. On other platforms, it always returns @Vector3.ZERO@.
 bindInput_get_gyroscope :: MethodBind
 bindInput_get_gyroscope
   = unsafePerformIO $
@@ -380,15 +479,18 @@ bindInput_get_gyroscope
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the rotation rate in rad/s around a device's X, Y, and Z axes of the gyroscope, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
---   				__Note:__ This method only works on Android. On other platforms, it always returns @Vector3.ZERO@.
+-- | Returns the rotation rate in rad/s around a device's X, Y, and Z axes of the gyroscope sensor, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
+--   				__Note:__ This method only works on Android and iOS. On other platforms, it always returns @Vector3.ZERO@.
 get_gyroscope :: (Input :< cls, Object :< cls) => cls -> IO Vector3
 get_gyroscope cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_get_gyroscope (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_gyroscope" '[] (IO Vector3) where
         nodeMethod = Godot.Core.Input.get_gyroscope
@@ -413,7 +515,10 @@ get_joy_axis cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_get_joy_axis (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_joy_axis" '[Int, Int] (IO Float)
          where
@@ -441,7 +546,10 @@ get_joy_axis_index_from_string cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_joy_axis_index_from_string"
            '[GodotString]
@@ -470,7 +578,10 @@ get_joy_axis_string cls arg1
          godot_method_bind_call bindInput_get_joy_axis_string (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_joy_axis_string" '[Int]
            (IO GodotString)
@@ -499,7 +610,10 @@ get_joy_button_index_from_string cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_joy_button_index_from_string"
            '[GodotString]
@@ -528,7 +642,10 @@ get_joy_button_string cls arg1
          godot_method_bind_call bindInput_get_joy_button_string (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_joy_button_string" '[Int]
            (IO GodotString)
@@ -555,7 +672,10 @@ get_joy_guid cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_get_joy_guid (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_joy_guid" '[Int] (IO GodotString)
          where
@@ -581,7 +701,10 @@ get_joy_name cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_get_joy_name (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_joy_name" '[Int] (IO GodotString)
          where
@@ -609,7 +732,10 @@ get_joy_vibration_duration cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_joy_vibration_duration" '[Int]
            (IO Float)
@@ -638,7 +764,10 @@ get_joy_vibration_strength cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_joy_vibration_strength" '[Int]
            (IO Vector2)
@@ -666,7 +795,10 @@ get_last_mouse_speed cls
          godot_method_bind_call bindInput_get_last_mouse_speed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_last_mouse_speed" '[] (IO Vector2)
          where
@@ -674,8 +806,8 @@ instance NodeMethod Input "get_last_mouse_speed" '[] (IO Vector2)
 
 {-# NOINLINE bindInput_get_magnetometer #-}
 
--- | Returns the the magnetic field strength in micro-Tesla for all axes of the device's magnetometer, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
---   				__Note:__ This method only works on Android and UWP. On other platforms, it always returns @Vector3.ZERO@.
+-- | Returns the magnetic field strength in micro-Tesla for all axes of the device's magnetometer sensor, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
+--   				__Note:__ This method only works on Android, iOS and UWP. On other platforms, it always returns @Vector3.ZERO@.
 bindInput_get_magnetometer :: MethodBind
 bindInput_get_magnetometer
   = unsafePerformIO $
@@ -685,8 +817,8 @@ bindInput_get_magnetometer
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the the magnetic field strength in micro-Tesla for all axes of the device's magnetometer, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
---   				__Note:__ This method only works on Android and UWP. On other platforms, it always returns @Vector3.ZERO@.
+-- | Returns the magnetic field strength in micro-Tesla for all axes of the device's magnetometer sensor, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
+--   				__Note:__ This method only works on Android, iOS and UWP. On other platforms, it always returns @Vector3.ZERO@.
 get_magnetometer ::
                    (Input :< cls, Object :< cls) => cls -> IO Vector3
 get_magnetometer cls
@@ -695,7 +827,10 @@ get_magnetometer cls
          godot_method_bind_call bindInput_get_magnetometer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_magnetometer" '[] (IO Vector3) where
         nodeMethod = Godot.Core.Input.get_magnetometer
@@ -721,7 +856,10 @@ get_mouse_button_mask cls
          godot_method_bind_call bindInput_get_mouse_button_mask (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_mouse_button_mask" '[] (IO Int)
          where
@@ -746,15 +884,60 @@ get_mouse_mode cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_get_mouse_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "get_mouse_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Input.get_mouse_mode
+
+{-# NOINLINE bindInput_get_vector #-}
+
+-- | Gets an input vector by specifying four actions for the positive and negative X and Y axes.
+--   				This method is useful when getting vector input, such as from a joystick, directional pad, arrows, or WASD. The vector has its length limited to 1 and has a circular deadzone, which is useful for using vector input as movement.
+--   				By default, the deadzone is automatically calculated from the average of the action deadzones. However, you can override the deadzone to be whatever you want (on the range of 0 to 1).
+bindInput_get_vector :: MethodBind
+bindInput_get_vector
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "get_vector" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Gets an input vector by specifying four actions for the positive and negative X and Y axes.
+--   				This method is useful when getting vector input, such as from a joystick, directional pad, arrows, or WASD. The vector has its length limited to 1 and has a circular deadzone, which is useful for using vector input as movement.
+--   				By default, the deadzone is automatically calculated from the average of the action deadzones. However, you can override the deadzone to be whatever you want (on the range of 0 to 1).
+get_vector ::
+             (Input :< cls, Object :< cls) =>
+             cls ->
+               GodotString ->
+                 GodotString ->
+                   GodotString -> GodotString -> Maybe Float -> IO Vector2
+get_vector cls arg1 arg2 arg3 arg4 arg5
+  = withVariantArray
+      [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4,
+       maybe (VariantReal (-1)) toVariant arg5]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_get_vector (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "get_vector"
+           '[GodotString, GodotString, GodotString, GodotString, Maybe Float]
+           (IO Vector2)
+         where
+        nodeMethod = Godot.Core.Input.get_vector
 
 {-# NOINLINE bindInput_is_action_just_pressed #-}
 
 -- | Returns @true@ when the user starts pressing the action event, meaning it's @true@ only on the frame that the user pressed down the button.
 --   				This is useful for code that needs to run only once when an action is pressed, instead of every frame while it's pressed.
+--   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_just_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 bindInput_is_action_just_pressed :: MethodBind
 bindInput_is_action_just_pressed
   = unsafePerformIO $
@@ -766,18 +949,26 @@ bindInput_is_action_just_pressed
 
 -- | Returns @true@ when the user starts pressing the action event, meaning it's @true@ only on the frame that the user pressed down the button.
 --   				This is useful for code that needs to run only once when an action is pressed, instead of every frame while it's pressed.
+--   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_just_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 is_action_just_pressed ::
-                         (Input :< cls, Object :< cls) => cls -> GodotString -> IO Bool
-is_action_just_pressed cls arg1
-  = withVariantArray [toVariant arg1]
+                         (Input :< cls, Object :< cls) =>
+                         cls -> GodotString -> Maybe Bool -> IO Bool
+is_action_just_pressed cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_is_action_just_pressed
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod Input "is_action_just_pressed" '[GodotString]
+instance NodeMethod Input "is_action_just_pressed"
+           '[GodotString, Maybe Bool]
            (IO Bool)
          where
         nodeMethod = Godot.Core.Input.is_action_just_pressed
@@ -785,6 +976,7 @@ instance NodeMethod Input "is_action_just_pressed" '[GodotString]
 {-# NOINLINE bindInput_is_action_just_released #-}
 
 -- | Returns @true@ when the user stops pressing the action event, meaning it's @true@ only on the frame that the user released the button.
+--   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 bindInput_is_action_just_released :: MethodBind
 bindInput_is_action_just_released
   = unsafePerformIO $
@@ -795,18 +987,25 @@ bindInput_is_action_just_released
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ when the user stops pressing the action event, meaning it's @true@ only on the frame that the user released the button.
+--   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 is_action_just_released ::
-                          (Input :< cls, Object :< cls) => cls -> GodotString -> IO Bool
-is_action_just_released cls arg1
-  = withVariantArray [toVariant arg1]
+                          (Input :< cls, Object :< cls) =>
+                          cls -> GodotString -> Maybe Bool -> IO Bool
+is_action_just_released cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_is_action_just_released
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod Input "is_action_just_released" '[GodotString]
+instance NodeMethod Input "is_action_just_released"
+           '[GodotString, Maybe Bool]
            (IO Bool)
          where
         nodeMethod = Godot.Core.Input.is_action_just_released
@@ -814,6 +1013,8 @@ instance NodeMethod Input "is_action_just_released" '[GodotString]
 {-# NOINLINE bindInput_is_action_pressed #-}
 
 -- | Returns @true@ if you are pressing the action event. Note that if an action has multiple buttons assigned and more than one of them is pressed, releasing one button will release the action, even if some other button assigned to this action is still pressed.
+--   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 bindInput_is_action_pressed :: MethodBind
 bindInput_is_action_pressed
   = unsafePerformIO $
@@ -824,17 +1025,25 @@ bindInput_is_action_pressed
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ if you are pressing the action event. Note that if an action has multiple buttons assigned and more than one of them is pressed, releasing one button will release the action, even if some other button assigned to this action is still pressed.
+--   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 is_action_pressed ::
-                    (Input :< cls, Object :< cls) => cls -> GodotString -> IO Bool
-is_action_pressed cls arg1
-  = withVariantArray [toVariant arg1]
+                    (Input :< cls, Object :< cls) =>
+                    cls -> GodotString -> Maybe Bool -> IO Bool
+is_action_pressed cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_is_action_pressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod Input "is_action_pressed" '[GodotString]
+instance NodeMethod Input "is_action_pressed"
+           '[GodotString, Maybe Bool]
            (IO Bool)
          where
         nodeMethod = Godot.Core.Input.is_action_pressed
@@ -860,7 +1069,10 @@ is_joy_button_pressed cls arg1 arg2
          godot_method_bind_call bindInput_is_joy_button_pressed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "is_joy_button_pressed" '[Int, Int]
            (IO Bool)
@@ -887,14 +1099,19 @@ is_joy_known cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_is_joy_known (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "is_joy_known" '[Int] (IO Bool) where
         nodeMethod = Godot.Core.Input.is_joy_known
 
 {-# NOINLINE bindInput_is_key_pressed #-}
 
--- | Returns @true@ if you are pressing the key. You can pass a @enum KeyList@ constant.
+-- | Returns @true@ if you are pressing the key in the current keyboard layout. You can pass a @enum KeyList@ constant.
+--   				@method is_key_pressed@ is only recommended over @method is_physical_key_pressed@ in non-game applications. This ensures that shortcut keys behave as expected depending on the user's keyboard layout, as keyboard shortcuts are generally dependent on the keyboard layout in non-game applications. If in doubt, use @method is_physical_key_pressed@.
+--   				__Note:__ Due to keyboard ghosting, @method is_key_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 bindInput_is_key_pressed :: MethodBind
 bindInput_is_key_pressed
   = unsafePerformIO $
@@ -904,7 +1121,9 @@ bindInput_is_key_pressed
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if you are pressing the key. You can pass a @enum KeyList@ constant.
+-- | Returns @true@ if you are pressing the key in the current keyboard layout. You can pass a @enum KeyList@ constant.
+--   				@method is_key_pressed@ is only recommended over @method is_physical_key_pressed@ in non-game applications. This ensures that shortcut keys behave as expected depending on the user's keyboard layout, as keyboard shortcuts are generally dependent on the keyboard layout in non-game applications. If in doubt, use @method is_physical_key_pressed@.
+--   				__Note:__ Due to keyboard ghosting, @method is_key_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 is_key_pressed ::
                  (Input :< cls, Object :< cls) => cls -> Int -> IO Bool
 is_key_pressed cls arg1
@@ -912,7 +1131,10 @@ is_key_pressed cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_is_key_pressed (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "is_key_pressed" '[Int] (IO Bool) where
         nodeMethod = Godot.Core.Input.is_key_pressed
@@ -939,7 +1161,10 @@ is_mouse_button_pressed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "is_mouse_button_pressed" '[Int]
            (IO Bool)
@@ -972,7 +1197,10 @@ joy_connection_changed cls arg1 arg2 arg3 arg4
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "joy_connection_changed"
            '[Int, Bool, GodotString, GodotString]
@@ -1021,7 +1249,10 @@ parse_input_event cls arg1
          godot_method_bind_call bindInput_parse_input_event (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "parse_input_event" '[InputEvent] (IO ())
          where
@@ -1048,7 +1279,10 @@ remove_joy_mapping cls arg1
          godot_method_bind_call bindInput_remove_joy_mapping (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "remove_joy_mapping" '[GodotString]
            (IO ())
@@ -1088,7 +1322,10 @@ set_custom_mouse_cursor cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "set_custom_mouse_cursor"
            '[Resource, Maybe Int, Maybe Vector2]
@@ -1122,7 +1359,10 @@ set_default_cursor_shape cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "set_default_cursor_shape" '[Maybe Int]
            (IO ())
@@ -1149,7 +1389,10 @@ set_mouse_mode cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindInput_set_mouse_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "set_mouse_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Input.set_mouse_mode
@@ -1178,7 +1421,10 @@ set_use_accumulated_input cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "set_use_accumulated_input" '[Bool]
            (IO ())
@@ -1211,7 +1457,10 @@ start_joy_vibration cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindInput_start_joy_vibration (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "start_joy_vibration"
            '[Int, Float, Float, Maybe Float]
@@ -1240,7 +1489,10 @@ stop_joy_vibration cls arg1
          godot_method_bind_call bindInput_stop_joy_vibration (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "stop_joy_vibration" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Input.stop_joy_vibration
@@ -1248,7 +1500,7 @@ instance NodeMethod Input "stop_joy_vibration" '[Int] (IO ()) where
 {-# NOINLINE bindInput_vibrate_handheld #-}
 
 -- | Vibrate Android and iOS devices.
---   				__Note:__ It needs VIBRATE permission for Android at export settings. iOS does not support duration.
+--   				__Note:__ It needs @VIBRATE@ permission for Android at export settings. iOS does not support duration.
 bindInput_vibrate_handheld :: MethodBind
 bindInput_vibrate_handheld
   = unsafePerformIO $
@@ -1259,7 +1511,7 @@ bindInput_vibrate_handheld
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Vibrate Android and iOS devices.
---   				__Note:__ It needs VIBRATE permission for Android at export settings. iOS does not support duration.
+--   				__Note:__ It needs @VIBRATE@ permission for Android at export settings. iOS does not support duration.
 vibrate_handheld ::
                    (Input :< cls, Object :< cls) => cls -> Maybe Int -> IO ()
 vibrate_handheld cls arg1
@@ -1268,7 +1520,10 @@ vibrate_handheld cls arg1
          godot_method_bind_call bindInput_vibrate_handheld (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "vibrate_handheld" '[Maybe Int] (IO ())
          where
@@ -1276,7 +1531,8 @@ instance NodeMethod Input "vibrate_handheld" '[Maybe Int] (IO ())
 
 {-# NOINLINE bindInput_warp_mouse_position #-}
 
--- | Sets the mouse position to the specified vector.
+-- | Sets the mouse position to the specified vector, provided in pixels and relative to an origin at the upper left corner of the game window.
+--   				Mouse position is clipped to the limits of the screen resolution, or to the limits of the game window if @enum MouseMode@ is set to @MOUSE_MODE_CONFINED@.
 bindInput_warp_mouse_position :: MethodBind
 bindInput_warp_mouse_position
   = unsafePerformIO $
@@ -1286,7 +1542,8 @@ bindInput_warp_mouse_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the mouse position to the specified vector.
+-- | Sets the mouse position to the specified vector, provided in pixels and relative to an origin at the upper left corner of the game window.
+--   				Mouse position is clipped to the limits of the screen resolution, or to the limits of the game window if @enum MouseMode@ is set to @MOUSE_MODE_CONFINED@.
 warp_mouse_position ::
                       (Input :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 warp_mouse_position cls arg1
@@ -1295,7 +1552,10 @@ warp_mouse_position cls arg1
          godot_method_bind_call bindInput_warp_mouse_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Input "warp_mouse_position" '[Vector2] (IO ())
          where

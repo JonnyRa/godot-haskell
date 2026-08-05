@@ -152,7 +152,10 @@ _get_color_array cls
          godot_method_bind_call bindMultiMesh__get_color_array (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "_get_color_array" '[]
            (IO PoolColorArray)
@@ -179,7 +182,10 @@ _get_custom_data_array cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "_get_custom_data_array" '[]
            (IO PoolColorArray)
@@ -206,7 +212,10 @@ _get_transform_2d_array cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "_get_transform_2d_array" '[]
            (IO PoolVector2Array)
@@ -233,7 +242,10 @@ _get_transform_array cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "_get_transform_array" '[]
            (IO PoolVector3Array)
@@ -259,7 +271,10 @@ _set_color_array cls arg1
          godot_method_bind_call bindMultiMesh__set_color_array (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "_set_color_array" '[PoolColorArray]
            (IO ())
@@ -286,7 +301,10 @@ _set_custom_data_array cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "_set_custom_data_array"
            '[PoolColorArray]
@@ -315,7 +333,10 @@ _set_transform_2d_array cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "_set_transform_2d_array"
            '[PoolVector2Array]
@@ -344,7 +365,10 @@ _set_transform_array cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "_set_transform_array"
            '[PoolVector3Array]
@@ -371,7 +395,10 @@ get_aabb cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMultiMesh_get_aabb (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "get_aabb" '[] (IO Aabb) where
         nodeMethod = Godot.Core.MultiMesh.get_aabb
@@ -397,7 +424,10 @@ get_color_format cls
          godot_method_bind_call bindMultiMesh_get_color_format (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "get_color_format" '[] (IO Int) where
         nodeMethod = Godot.Core.MultiMesh.get_color_format
@@ -424,7 +454,10 @@ get_custom_data_format cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "get_custom_data_format" '[] (IO Int)
          where
@@ -452,7 +485,10 @@ get_instance_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "get_instance_color" '[Int]
            (IO Color)
@@ -481,7 +517,10 @@ get_instance_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "get_instance_count" '[] (IO Int)
          where
@@ -509,7 +548,10 @@ get_instance_custom_data cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "get_instance_custom_data" '[Int]
            (IO Color)
@@ -538,7 +580,10 @@ get_instance_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "get_instance_transform" '[Int]
            (IO Transform)
@@ -567,7 +612,10 @@ get_instance_transform_2d cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "get_instance_transform_2d" '[Int]
            (IO Transform2d)
@@ -593,7 +641,7 @@ get_mesh cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMultiMesh_get_mesh (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod MultiMesh "get_mesh" '[] (IO Mesh) where
         nodeMethod = Godot.Core.MultiMesh.get_mesh
@@ -620,7 +668,10 @@ get_transform_format cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "get_transform_format" '[] (IO Int)
          where
@@ -648,7 +699,10 @@ get_visible_instance_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "get_visible_instance_count" '[]
            (IO Int)
@@ -680,7 +734,10 @@ set_as_bulk_array cls arg1
          godot_method_bind_call bindMultiMesh_set_as_bulk_array (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_as_bulk_array" '[PoolRealArray]
            (IO ())
@@ -708,7 +765,10 @@ set_color_format cls arg1
          godot_method_bind_call bindMultiMesh_set_color_format (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_color_format" '[Int] (IO ())
          where
@@ -736,7 +796,10 @@ set_custom_data_format cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_custom_data_format" '[Int]
            (IO ())
@@ -745,7 +808,7 @@ instance NodeMethod MultiMesh "set_custom_data_format" '[Int]
 
 {-# NOINLINE bindMultiMesh_set_instance_color #-}
 
--- | Sets the color of a specific instance.
+-- | Sets the color of a specific instance by @i@multiplying@/i@ the mesh's existing vertex colors.
 --   				For the color to take effect, ensure that @color_format@ is non-@null@ on the @MultiMesh@ and @SpatialMaterial.vertex_color_use_as_albedo@ is @true@ on the material.
 bindMultiMesh_set_instance_color :: MethodBind
 bindMultiMesh_set_instance_color
@@ -756,7 +819,7 @@ bindMultiMesh_set_instance_color
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the color of a specific instance.
+-- | Sets the color of a specific instance by @i@multiplying@/i@ the mesh's existing vertex colors.
 --   				For the color to take effect, ensure that @color_format@ is non-@null@ on the @MultiMesh@ and @SpatialMaterial.vertex_color_use_as_albedo@ is @true@ on the material.
 set_instance_color ::
                      (MultiMesh :< cls, Object :< cls) => cls -> Int -> Color -> IO ()
@@ -767,7 +830,10 @@ set_instance_color cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_instance_color" '[Int, Color]
            (IO ())
@@ -796,7 +862,10 @@ set_instance_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_instance_count" '[Int] (IO ())
          where
@@ -824,7 +893,10 @@ set_instance_custom_data cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_instance_custom_data"
            '[Int, Color]
@@ -855,7 +927,10 @@ set_instance_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_instance_transform"
            '[Int, Transform]
@@ -886,7 +961,10 @@ set_instance_transform_2d cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_instance_transform_2d"
            '[Int, Transform2d]
@@ -914,7 +992,10 @@ set_mesh cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMultiMesh_set_mesh (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_mesh" '[Mesh] (IO ()) where
         nodeMethod = Godot.Core.MultiMesh.set_mesh
@@ -941,7 +1022,10 @@ set_transform_format cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_transform_format" '[Int] (IO ())
          where
@@ -969,7 +1053,10 @@ set_visible_instance_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MultiMesh "set_visible_instance_count" '[Int]
            (IO ())

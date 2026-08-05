@@ -154,7 +154,10 @@ _focusable_focused cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "_focusable_focused" '[Int]
            (IO ())
@@ -181,7 +184,10 @@ _gui_input cls arg1
          godot_method_bind_call bindEditorProperty__gui_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "_gui_input" '[InputEvent]
            (IO ())
@@ -210,7 +216,10 @@ add_focusable cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "add_focusable" '[Control]
            (IO ())
@@ -244,7 +253,10 @@ emit_changed cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindEditorProperty_emit_changed (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "emit_changed"
            '[GodotString, GodotVariant, Maybe GodotString, Maybe Bool]
@@ -274,7 +286,7 @@ get_edited_object cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod EditorProperty "get_edited_object" '[]
            (IO Object)
@@ -303,7 +315,10 @@ get_edited_property cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "get_edited_property" '[]
            (IO GodotString)
@@ -331,7 +346,10 @@ get_label cls
          godot_method_bind_call bindEditorProperty_get_label (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "get_label" '[] (IO GodotString)
          where
@@ -339,7 +357,7 @@ instance NodeMethod EditorProperty "get_label" '[] (IO GodotString)
 
 {-# NOINLINE bindEditorProperty_get_tooltip_text #-}
 
--- | Override if you want to allow a custom tooltip over your property.
+-- | Must be implemented to provide a custom tooltip to the property editor.
 bindEditorProperty_get_tooltip_text :: MethodBind
 bindEditorProperty_get_tooltip_text
   = unsafePerformIO $
@@ -349,7 +367,7 @@ bindEditorProperty_get_tooltip_text
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Override if you want to allow a custom tooltip over your property.
+-- | Must be implemented to provide a custom tooltip to the property editor.
 get_tooltip_text ::
                    (EditorProperty :< cls, Object :< cls) => cls -> IO GodotString
 get_tooltip_text cls
@@ -359,7 +377,10 @@ get_tooltip_text cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "get_tooltip_text" '[]
            (IO GodotString)
@@ -387,7 +408,10 @@ is_checkable cls
          godot_method_bind_call bindEditorProperty_is_checkable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "is_checkable" '[] (IO Bool)
          where
@@ -414,14 +438,17 @@ is_checked cls
          godot_method_bind_call bindEditorProperty_is_checked (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "is_checked" '[] (IO Bool) where
         nodeMethod = Godot.Tools.EditorProperty.is_checked
 
 {-# NOINLINE bindEditorProperty_is_draw_red #-}
 
--- | Used by the inspector, set to @true@ when the property must draw with error color. This is used for editable children's properties.
+-- | Used by the inspector, set to @true@ when the property is drawn with the editor theme's warning color. This is used for editable children's properties.
 bindEditorProperty_is_draw_red :: MethodBind
 bindEditorProperty_is_draw_red
   = unsafePerformIO $
@@ -431,7 +458,7 @@ bindEditorProperty_is_draw_red
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Used by the inspector, set to @true@ when the property must draw with error color. This is used for editable children's properties.
+-- | Used by the inspector, set to @true@ when the property is drawn with the editor theme's warning color. This is used for editable children's properties.
 is_draw_red ::
               (EditorProperty :< cls, Object :< cls) => cls -> IO Bool
 is_draw_red cls
@@ -440,7 +467,10 @@ is_draw_red cls
          godot_method_bind_call bindEditorProperty_is_draw_red (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "is_draw_red" '[] (IO Bool)
          where
@@ -467,7 +497,10 @@ is_keying cls
          godot_method_bind_call bindEditorProperty_is_keying (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "is_keying" '[] (IO Bool) where
         nodeMethod = Godot.Tools.EditorProperty.is_keying
@@ -493,7 +526,10 @@ is_read_only cls
          godot_method_bind_call bindEditorProperty_is_read_only (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "is_read_only" '[] (IO Bool)
          where
@@ -501,7 +537,7 @@ instance NodeMethod EditorProperty "is_read_only" '[] (IO Bool)
 
 {-# NOINLINE bindEditorProperty_set_bottom_editor #-}
 
--- | Adds controls with this function if you want them on the bottom (below the label).
+-- | Puts the @editor@ control below the property label. The control must be previously added using @method Node.add_child@.
 bindEditorProperty_set_bottom_editor :: MethodBind
 bindEditorProperty_set_bottom_editor
   = unsafePerformIO $
@@ -511,7 +547,7 @@ bindEditorProperty_set_bottom_editor
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds controls with this function if you want them on the bottom (below the label).
+-- | Puts the @editor@ control below the property label. The control must be previously added using @method Node.add_child@.
 set_bottom_editor ::
                     (EditorProperty :< cls, Object :< cls) => cls -> Control -> IO ()
 set_bottom_editor cls arg1
@@ -521,7 +557,10 @@ set_bottom_editor cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "set_bottom_editor" '[Control]
            (IO ())
@@ -550,7 +589,10 @@ set_checkable cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "set_checkable" '[Bool] (IO ())
          where
@@ -577,7 +619,10 @@ set_checked cls arg1
          godot_method_bind_call bindEditorProperty_set_checked (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "set_checked" '[Bool] (IO ())
          where
@@ -585,7 +630,7 @@ instance NodeMethod EditorProperty "set_checked" '[Bool] (IO ())
 
 {-# NOINLINE bindEditorProperty_set_draw_red #-}
 
--- | Used by the inspector, set to @true@ when the property must draw with error color. This is used for editable children's properties.
+-- | Used by the inspector, set to @true@ when the property is drawn with the editor theme's warning color. This is used for editable children's properties.
 bindEditorProperty_set_draw_red :: MethodBind
 bindEditorProperty_set_draw_red
   = unsafePerformIO $
@@ -595,7 +640,7 @@ bindEditorProperty_set_draw_red
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Used by the inspector, set to @true@ when the property must draw with error color. This is used for editable children's properties.
+-- | Used by the inspector, set to @true@ when the property is drawn with the editor theme's warning color. This is used for editable children's properties.
 set_draw_red ::
                (EditorProperty :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_draw_red cls arg1
@@ -604,7 +649,10 @@ set_draw_red cls arg1
          godot_method_bind_call bindEditorProperty_set_draw_red (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "set_draw_red" '[Bool] (IO ())
          where
@@ -631,7 +679,10 @@ set_keying cls arg1
          godot_method_bind_call bindEditorProperty_set_keying (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "set_keying" '[Bool] (IO ())
          where
@@ -659,7 +710,10 @@ set_label cls arg1
          godot_method_bind_call bindEditorProperty_set_label (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "set_label" '[GodotString]
            (IO ())
@@ -688,7 +742,10 @@ set_read_only cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "set_read_only" '[Bool] (IO ())
          where
@@ -716,7 +773,10 @@ update_property cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorProperty "update_property" '[] (IO ())
          where

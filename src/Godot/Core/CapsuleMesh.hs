@@ -41,7 +41,8 @@ instance NodeProperty CapsuleMesh "rings" Int 'False where
 
 {-# NOINLINE bindCapsuleMesh_get_mid_height #-}
 
--- | Height of the capsule mesh from the center point.
+-- | Height of the middle cylindrical part of the capsule (without the hemispherical ends).
+--   			__Note:__ The capsule's total height is equal to @mid_height@ + 2 * @radius@.
 bindCapsuleMesh_get_mid_height :: MethodBind
 bindCapsuleMesh_get_mid_height
   = unsafePerformIO $
@@ -51,7 +52,8 @@ bindCapsuleMesh_get_mid_height
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Height of the capsule mesh from the center point.
+-- | Height of the middle cylindrical part of the capsule (without the hemispherical ends).
+--   			__Note:__ The capsule's total height is equal to @mid_height@ + 2 * @radius@.
 get_mid_height ::
                  (CapsuleMesh :< cls, Object :< cls) => cls -> IO Float
 get_mid_height cls
@@ -60,7 +62,10 @@ get_mid_height cls
          godot_method_bind_call bindCapsuleMesh_get_mid_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleMesh "get_mid_height" '[] (IO Float)
          where
@@ -88,7 +93,10 @@ get_radial_segments cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleMesh "get_radial_segments" '[] (IO Int)
          where
@@ -115,7 +123,10 @@ get_radius cls
          godot_method_bind_call bindCapsuleMesh_get_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleMesh "get_radius" '[] (IO Float) where
         nodeMethod = Godot.Core.CapsuleMesh.get_radius
@@ -140,14 +151,18 @@ get_rings cls
          godot_method_bind_call bindCapsuleMesh_get_rings (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleMesh "get_rings" '[] (IO Int) where
         nodeMethod = Godot.Core.CapsuleMesh.get_rings
 
 {-# NOINLINE bindCapsuleMesh_set_mid_height #-}
 
--- | Height of the capsule mesh from the center point.
+-- | Height of the middle cylindrical part of the capsule (without the hemispherical ends).
+--   			__Note:__ The capsule's total height is equal to @mid_height@ + 2 * @radius@.
 bindCapsuleMesh_set_mid_height :: MethodBind
 bindCapsuleMesh_set_mid_height
   = unsafePerformIO $
@@ -157,7 +172,8 @@ bindCapsuleMesh_set_mid_height
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Height of the capsule mesh from the center point.
+-- | Height of the middle cylindrical part of the capsule (without the hemispherical ends).
+--   			__Note:__ The capsule's total height is equal to @mid_height@ + 2 * @radius@.
 set_mid_height ::
                  (CapsuleMesh :< cls, Object :< cls) => cls -> Float -> IO ()
 set_mid_height cls arg1
@@ -166,7 +182,10 @@ set_mid_height cls arg1
          godot_method_bind_call bindCapsuleMesh_set_mid_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleMesh "set_mid_height" '[Float] (IO ())
          where
@@ -194,7 +213,10 @@ set_radial_segments cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleMesh "set_radial_segments" '[Int]
            (IO ())
@@ -222,7 +244,10 @@ set_radius cls arg1
          godot_method_bind_call bindCapsuleMesh_set_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleMesh "set_radius" '[Float] (IO ()) where
         nodeMethod = Godot.Core.CapsuleMesh.set_radius
@@ -248,7 +273,10 @@ set_rings cls arg1
          godot_method_bind_call bindCapsuleMesh_set_rings (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CapsuleMesh "set_rings" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CapsuleMesh.set_rings

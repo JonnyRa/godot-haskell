@@ -55,7 +55,7 @@ _FILTER_PASS = 1
 _FILTER_STOP :: Int
 _FILTER_STOP = 2
 
--- | Called when the node was removed from the graph.
+-- | Emitted when the node was removed from the graph.
 sig_removed_from_graph ::
                        Godot.Internal.Dispatch.Signal AnimationNode
 sig_removed_from_graph
@@ -98,7 +98,10 @@ _get_filters cls
          godot_method_bind_call bindAnimationNode__get_filters (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "_get_filters" '[] (IO Array)
          where
@@ -123,7 +126,10 @@ _set_filters cls arg1
          godot_method_bind_call bindAnimationNode__set_filters (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "_set_filters" '[Array] (IO ())
          where
@@ -151,7 +157,10 @@ add_input cls arg1
          godot_method_bind_call bindAnimationNode_add_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "add_input" '[GodotString]
            (IO ())
@@ -183,7 +192,10 @@ blend_animation cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "blend_animation"
            '[GodotString, Float, Float, Bool, Float]
@@ -218,7 +230,10 @@ blend_input cls arg1 arg2 arg3 arg4 arg5 arg6
          godot_method_bind_call bindAnimationNode_blend_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "blend_input"
            '[Int, Float, Bool, Float, Maybe Int, Maybe Bool]
@@ -254,7 +269,10 @@ blend_node cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
          godot_method_bind_call bindAnimationNode_blend_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "blend_node"
            '[GodotString, AnimationNode, Float, Bool, Float, Maybe Int,
@@ -284,7 +302,10 @@ get_caption cls
          godot_method_bind_call bindAnimationNode_get_caption (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "get_caption" '[]
            (IO GodotString)
@@ -314,7 +335,7 @@ get_child_by_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AnimationNode "get_child_by_name"
            '[GodotString]
@@ -344,7 +365,10 @@ get_child_nodes cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "get_child_nodes" '[]
            (IO Dictionary)
@@ -373,7 +397,10 @@ get_input_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "get_input_count" '[] (IO Int)
          where
@@ -402,7 +429,10 @@ get_input_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "get_input_name" '[Int]
            (IO GodotString)
@@ -431,7 +461,7 @@ get_parameter cls arg1
          godot_method_bind_call bindAnimationNode_get_parameter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod AnimationNode "get_parameter" '[GodotString]
            (IO GodotVariant)
@@ -462,7 +492,7 @@ get_parameter_default_value cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod AnimationNode "get_parameter_default_value"
            '[GodotString]
@@ -492,7 +522,10 @@ get_parameter_list cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "get_parameter_list" '[]
            (IO Array)
@@ -520,7 +553,10 @@ has_filter cls
          godot_method_bind_call bindAnimationNode_has_filter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "has_filter" '[] (IO GodotString)
          where
@@ -548,7 +584,10 @@ is_filter_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "is_filter_enabled" '[] (IO Bool)
          where
@@ -556,7 +595,7 @@ instance NodeMethod AnimationNode "is_filter_enabled" '[] (IO Bool)
 
 {-# NOINLINE bindAnimationNode_is_path_filtered #-}
 
--- | Returns @true@ whether a given path is filtered.
+-- | Returns whether the given path is filtered.
 bindAnimationNode_is_path_filtered :: MethodBind
 bindAnimationNode_is_path_filtered
   = unsafePerformIO $
@@ -566,7 +605,7 @@ bindAnimationNode_is_path_filtered
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ whether a given path is filtered.
+-- | Returns whether the given path is filtered.
 is_path_filtered ::
                    (AnimationNode :< cls, Object :< cls) => cls -> NodePath -> IO Bool
 is_path_filtered cls arg1
@@ -576,7 +615,10 @@ is_path_filtered cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "is_path_filtered" '[NodePath]
            (IO Bool)
@@ -609,7 +651,10 @@ process cls arg1 arg2
          godot_method_bind_call bindAnimationNode_process (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "process" '[Float, Bool] (IO ())
          where
@@ -636,7 +681,10 @@ remove_input cls arg1
          godot_method_bind_call bindAnimationNode_remove_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "remove_input" '[Int] (IO ())
          where
@@ -664,7 +712,10 @@ set_filter_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "set_filter_enabled" '[Bool]
            (IO ())
@@ -694,7 +745,10 @@ set_filter_path cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "set_filter_path"
            '[NodePath, Bool]
@@ -704,7 +758,7 @@ instance NodeMethod AnimationNode "set_filter_path"
 
 {-# NOINLINE bindAnimationNode_set_parameter #-}
 
--- | Sets a custom parameter. These are used as local storage, because resources can be reused across the tree or scenes.
+-- | Sets a custom parameter. These are used as local memory, because resources can be reused across the tree or scenes.
 bindAnimationNode_set_parameter :: MethodBind
 bindAnimationNode_set_parameter
   = unsafePerformIO $
@@ -714,7 +768,7 @@ bindAnimationNode_set_parameter
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets a custom parameter. These are used as local storage, because resources can be reused across the tree or scenes.
+-- | Sets a custom parameter. These are used as local memory, because resources can be reused across the tree or scenes.
 set_parameter ::
                 (AnimationNode :< cls, Object :< cls) =>
                 cls -> GodotString -> GodotVariant -> IO ()
@@ -724,7 +778,10 @@ set_parameter cls arg1 arg2
          godot_method_bind_call bindAnimationNode_set_parameter (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AnimationNode "set_parameter"
            '[GodotString, GodotVariant]

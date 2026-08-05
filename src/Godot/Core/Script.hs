@@ -50,7 +50,10 @@ can_instance cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindScript_can_instance (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "can_instance" '[] (IO Bool) where
         nodeMethod = Godot.Core.Script.can_instance
@@ -76,7 +79,7 @@ get_base_script cls
          godot_method_bind_call bindScript_get_base_script (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Script "get_base_script" '[] (IO Script) where
         nodeMethod = Godot.Core.Script.get_base_script
@@ -103,7 +106,10 @@ get_instance_base_type cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "get_instance_base_type" '[]
            (IO GodotString)
@@ -133,7 +139,7 @@ get_property_default_value cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Script "get_property_default_value"
            '[GodotString]
@@ -163,7 +169,10 @@ get_script_constant_map cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "get_script_constant_map" '[]
            (IO Dictionary)
@@ -192,7 +201,10 @@ get_script_method_list cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "get_script_method_list" '[] (IO Array)
          where
@@ -220,7 +232,10 @@ get_script_property_list cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "get_script_property_list" '[]
            (IO Array)
@@ -249,7 +264,10 @@ get_script_signal_list cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "get_script_signal_list" '[] (IO Array)
          where
@@ -276,7 +294,10 @@ get_source_code cls
          godot_method_bind_call bindScript_get_source_code (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "get_source_code" '[] (IO GodotString)
          where
@@ -303,7 +324,10 @@ has_script_signal cls arg1
          godot_method_bind_call bindScript_has_script_signal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "has_script_signal" '[GodotString]
            (IO Bool)
@@ -330,7 +354,10 @@ has_source_code cls
          godot_method_bind_call bindScript_has_source_code (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "has_source_code" '[] (IO Bool) where
         nodeMethod = Godot.Core.Script.has_source_code
@@ -355,7 +382,10 @@ instance_has cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindScript_instance_has (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "instance_has" '[Object] (IO Bool) where
         nodeMethod = Godot.Core.Script.instance_has
@@ -378,7 +408,10 @@ is_tool cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindScript_is_tool (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "is_tool" '[] (IO Bool) where
         nodeMethod = Godot.Core.Script.is_tool
@@ -402,7 +435,10 @@ reload cls arg1
   = withVariantArray [maybe (VariantBool False) toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindScript_reload (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "reload" '[Maybe Bool] (IO Int) where
         nodeMethod = Godot.Core.Script.reload
@@ -428,7 +464,10 @@ set_source_code cls arg1
          godot_method_bind_call bindScript_set_source_code (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Script "set_source_code" '[GodotString] (IO ())
          where

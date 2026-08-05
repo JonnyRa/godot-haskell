@@ -9,6 +9,7 @@ module Godot.Core.WebSocketServer
         Godot.Core.WebSocketServer.disconnect_peer,
         Godot.Core.WebSocketServer.get_bind_ip,
         Godot.Core.WebSocketServer.get_ca_chain,
+        Godot.Core.WebSocketServer.get_handshake_timeout,
         Godot.Core.WebSocketServer.get_peer_address,
         Godot.Core.WebSocketServer.get_peer_port,
         Godot.Core.WebSocketServer.get_private_key,
@@ -18,6 +19,7 @@ module Godot.Core.WebSocketServer
         Godot.Core.WebSocketServer.listen,
         Godot.Core.WebSocketServer.set_bind_ip,
         Godot.Core.WebSocketServer.set_ca_chain,
+        Godot.Core.WebSocketServer.set_handshake_timeout,
         Godot.Core.WebSocketServer.set_private_key,
         Godot.Core.WebSocketServer.set_ssl_certificate,
         Godot.Core.WebSocketServer.stop)
@@ -74,6 +76,13 @@ instance NodeProperty WebSocketServer "ca_chain" X509Certificate
         nodeProperty
           = (get_ca_chain, wrapDroppingSetter set_ca_chain, Nothing)
 
+instance NodeProperty WebSocketServer "handshake_timeout" Float
+           'False
+         where
+        nodeProperty
+          = (get_handshake_timeout, wrapDroppingSetter set_handshake_timeout,
+             Nothing)
+
 instance NodeProperty WebSocketServer "private_key" CryptoKey
            'False
          where
@@ -111,7 +120,10 @@ disconnect_peer cls arg1 arg2 arg3
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "disconnect_peer"
            '[Int, Maybe Int, Maybe GodotString]
@@ -138,7 +150,10 @@ get_bind_ip cls
          godot_method_bind_call bindWebSocketServer_get_bind_ip (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "get_bind_ip" '[]
            (IO GodotString)
@@ -166,12 +181,42 @@ get_ca_chain cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod WebSocketServer "get_ca_chain" '[]
            (IO X509Certificate)
          where
         nodeMethod = Godot.Core.WebSocketServer.get_ca_chain
+
+{-# NOINLINE bindWebSocketServer_get_handshake_timeout #-}
+
+bindWebSocketServer_get_handshake_timeout :: MethodBind
+bindWebSocketServer_get_handshake_timeout
+  = unsafePerformIO $
+      withCString "WebSocketServer" $
+        \ clsNamePtr ->
+          withCString "get_handshake_timeout" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_handshake_timeout ::
+                        (WebSocketServer :< cls, Object :< cls) => cls -> IO Float
+get_handshake_timeout cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindWebSocketServer_get_handshake_timeout
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod WebSocketServer "get_handshake_timeout" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.WebSocketServer.get_handshake_timeout
 
 {-# NOINLINE bindWebSocketServer_get_peer_address #-}
 
@@ -194,7 +239,10 @@ get_peer_address cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "get_peer_address" '[Int]
            (IO GodotString)
@@ -221,7 +269,10 @@ get_peer_port cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "get_peer_port" '[Int] (IO Int)
          where
@@ -247,7 +298,7 @@ get_private_key cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod WebSocketServer "get_private_key" '[]
            (IO CryptoKey)
@@ -275,7 +326,7 @@ get_ssl_certificate cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod WebSocketServer "get_ssl_certificate" '[]
            (IO X509Certificate)
@@ -301,7 +352,10 @@ has_peer cls arg1
          godot_method_bind_call bindWebSocketServer_has_peer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "has_peer" '[Int] (IO Bool)
          where
@@ -327,7 +381,10 @@ is_listening cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "is_listening" '[] (IO Bool)
          where
@@ -356,7 +413,10 @@ listen cls arg1 arg2 arg3
          godot_method_bind_call bindWebSocketServer_listen (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "listen"
            '[Int, Maybe PoolStringArray, Maybe Bool]
@@ -384,7 +444,10 @@ set_bind_ip cls arg1
          godot_method_bind_call bindWebSocketServer_set_bind_ip (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "set_bind_ip" '[GodotString]
            (IO ())
@@ -412,13 +475,47 @@ set_ca_chain cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "set_ca_chain"
            '[X509Certificate]
            (IO ())
          where
         nodeMethod = Godot.Core.WebSocketServer.set_ca_chain
+
+{-# NOINLINE bindWebSocketServer_set_handshake_timeout #-}
+
+bindWebSocketServer_set_handshake_timeout :: MethodBind
+bindWebSocketServer_set_handshake_timeout
+  = unsafePerformIO $
+      withCString "WebSocketServer" $
+        \ clsNamePtr ->
+          withCString "set_handshake_timeout" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_handshake_timeout ::
+                        (WebSocketServer :< cls, Object :< cls) => cls -> Float -> IO ()
+set_handshake_timeout cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindWebSocketServer_set_handshake_timeout
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod WebSocketServer "set_handshake_timeout"
+           '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.WebSocketServer.set_handshake_timeout
 
 {-# NOINLINE bindWebSocketServer_set_private_key #-}
 
@@ -441,7 +538,10 @@ set_private_key cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "set_private_key" '[CryptoKey]
            (IO ())
@@ -469,7 +569,10 @@ set_ssl_certificate cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "set_ssl_certificate"
            '[X509Certificate]
@@ -494,7 +597,10 @@ stop cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindWebSocketServer_stop (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebSocketServer "stop" '[] (IO ()) where
         nodeMethod = Godot.Core.WebSocketServer.stop

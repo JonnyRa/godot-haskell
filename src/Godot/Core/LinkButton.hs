@@ -59,7 +59,10 @@ get_text cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLinkButton_get_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LinkButton "get_text" '[] (IO GodotString)
          where
@@ -87,7 +90,10 @@ get_underline_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LinkButton "get_underline_mode" '[] (IO Int)
          where
@@ -113,7 +119,10 @@ set_text cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLinkButton_set_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LinkButton "set_text" '[GodotString] (IO ())
          where
@@ -141,7 +150,10 @@ set_underline_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LinkButton "set_underline_mode" '[Int] (IO ())
          where

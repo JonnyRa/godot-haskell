@@ -23,7 +23,7 @@ import Data.Colour.SRGB(sRGB)
 import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
-import Godot.Core.Spatial()
+import Godot.Core.CullInstance()
 
 instance NodeProperty VisualInstance "layers" Int 'False where
         nodeProperty
@@ -49,7 +49,10 @@ _get_visual_instance_rid cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualInstance "_get_visual_instance_rid" '[]
            (IO Rid)
@@ -77,7 +80,10 @@ get_aabb cls
          godot_method_bind_call bindVisualInstance_get_aabb (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualInstance "get_aabb" '[] (IO Aabb) where
         nodeMethod = Godot.Core.VisualInstance.get_aabb
@@ -102,7 +108,10 @@ get_base cls
          godot_method_bind_call bindVisualInstance_get_base (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualInstance "get_base" '[] (IO Rid) where
         nodeMethod = Godot.Core.VisualInstance.get_base
@@ -128,7 +137,10 @@ get_instance cls
          godot_method_bind_call bindVisualInstance_get_instance (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualInstance "get_instance" '[] (IO Rid)
          where
@@ -158,7 +170,10 @@ get_layer_mask cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualInstance "get_layer_mask" '[] (IO Int)
          where
@@ -186,7 +201,10 @@ get_layer_mask_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualInstance "get_layer_mask_bit" '[Int]
            (IO Bool)
@@ -217,7 +235,10 @@ get_transformed_aabb cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualInstance "get_transformed_aabb" '[]
            (IO Aabb)
@@ -245,7 +266,10 @@ set_base cls arg1
          godot_method_bind_call bindVisualInstance_set_base (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualInstance "set_base" '[Rid] (IO ()) where
         nodeMethod = Godot.Core.VisualInstance.set_base
@@ -274,7 +298,10 @@ set_layer_mask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualInstance "set_layer_mask" '[Int] (IO ())
          where
@@ -303,7 +330,10 @@ set_layer_mask_bit cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod VisualInstance "set_layer_mask_bit"
            '[Int, Bool]

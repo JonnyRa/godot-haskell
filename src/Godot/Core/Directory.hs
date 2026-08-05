@@ -49,7 +49,10 @@ change_dir cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDirectory_change_dir (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "change_dir" '[GodotString] (IO Int)
          where
@@ -77,7 +80,10 @@ copy cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDirectory_copy (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "copy" '[GodotString, GodotString]
            (IO Int)
@@ -105,7 +111,10 @@ current_is_dir cls
          godot_method_bind_call bindDirectory_current_is_dir (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "current_is_dir" '[] (IO Bool) where
         nodeMethod = Godot.Core.Directory.current_is_dir
@@ -130,7 +139,10 @@ dir_exists cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDirectory_dir_exists (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "dir_exists" '[GodotString] (IO Bool)
          where
@@ -157,7 +169,10 @@ file_exists cls arg1
          godot_method_bind_call bindDirectory_file_exists (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "file_exists" '[GodotString]
            (IO Bool)
@@ -185,7 +200,10 @@ get_current_dir cls
          godot_method_bind_call bindDirectory_get_current_dir (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "get_current_dir" '[]
            (IO GodotString)
@@ -213,7 +231,10 @@ get_current_drive cls
          godot_method_bind_call bindDirectory_get_current_drive (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "get_current_drive" '[] (IO Int)
          where
@@ -221,7 +242,7 @@ instance NodeMethod Directory "get_current_drive" '[] (IO Int)
 
 {-# NOINLINE bindDirectory_get_drive #-}
 
--- | On Windows, returns the name of the drive (partition) passed as an argument (e.g. @C:@). On other platforms, or if the requested drive does not existed, the method returns an empty String.
+-- | On Windows, returns the name of the drive (partition) passed as an argument (e.g. @C:@). On other platforms, or if the requested drive does not exist, the method returns an empty String.
 bindDirectory_get_drive :: MethodBind
 bindDirectory_get_drive
   = unsafePerformIO $
@@ -231,7 +252,7 @@ bindDirectory_get_drive
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | On Windows, returns the name of the drive (partition) passed as an argument (e.g. @C:@). On other platforms, or if the requested drive does not existed, the method returns an empty String.
+-- | On Windows, returns the name of the drive (partition) passed as an argument (e.g. @C:@). On other platforms, or if the requested drive does not exist, the method returns an empty String.
 get_drive ::
             (Directory :< cls, Object :< cls) => cls -> Int -> IO GodotString
 get_drive cls arg1
@@ -239,7 +260,10 @@ get_drive cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDirectory_get_drive (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "get_drive" '[Int] (IO GodotString)
          where
@@ -266,7 +290,10 @@ get_drive_count cls
          godot_method_bind_call bindDirectory_get_drive_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "get_drive_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Directory.get_drive_count
@@ -293,7 +320,10 @@ get_next cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDirectory_get_next (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "get_next" '[] (IO GodotString) where
         nodeMethod = Godot.Core.Directory.get_next
@@ -319,14 +349,17 @@ get_space_left cls
          godot_method_bind_call bindDirectory_get_space_left (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "get_space_left" '[] (IO Int) where
         nodeMethod = Godot.Core.Directory.get_space_left
 
 {-# NOINLINE bindDirectory_list_dir_begin #-}
 
--- | Initializes the stream used to list all files and directories using the @method get_next@ function, closing the current opened stream if needed. Once the stream has been processed, it should typically be closed with @method list_dir_end@.
+-- | Initializes the stream used to list all files and directories using the @method get_next@ function, closing the currently opened stream if needed. Once the stream has been processed, it should typically be closed with @method list_dir_end@.
 --   				If @skip_navigational@ is @true@, @.@ and @..@ are filtered out.
 --   				If @skip_hidden@ is @true@, hidden files are filtered out.
 bindDirectory_list_dir_begin :: MethodBind
@@ -338,7 +371,7 @@ bindDirectory_list_dir_begin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Initializes the stream used to list all files and directories using the @method get_next@ function, closing the current opened stream if needed. Once the stream has been processed, it should typically be closed with @method list_dir_end@.
+-- | Initializes the stream used to list all files and directories using the @method get_next@ function, closing the currently opened stream if needed. Once the stream has been processed, it should typically be closed with @method list_dir_end@.
 --   				If @skip_navigational@ is @true@, @.@ and @..@ are filtered out.
 --   				If @skip_hidden@ is @true@, hidden files are filtered out.
 list_dir_begin ::
@@ -352,7 +385,10 @@ list_dir_begin cls arg1 arg2
          godot_method_bind_call bindDirectory_list_dir_begin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "list_dir_begin"
            '[Maybe Bool, Maybe Bool]
@@ -362,7 +398,7 @@ instance NodeMethod Directory "list_dir_begin"
 
 {-# NOINLINE bindDirectory_list_dir_end #-}
 
--- | Closes the current stream opened with @method list_dir_begin@ (whether it has been fully processed with @method get_next@ or not does not matter).
+-- | Closes the current stream opened with @method list_dir_begin@ (whether it has been fully processed with @method get_next@ does not matter).
 bindDirectory_list_dir_end :: MethodBind
 bindDirectory_list_dir_end
   = unsafePerformIO $
@@ -372,7 +408,7 @@ bindDirectory_list_dir_end
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Closes the current stream opened with @method list_dir_begin@ (whether it has been fully processed with @method get_next@ or not does not matter).
+-- | Closes the current stream opened with @method list_dir_begin@ (whether it has been fully processed with @method get_next@ does not matter).
 list_dir_end :: (Directory :< cls, Object :< cls) => cls -> IO ()
 list_dir_end cls
   = withVariantArray []
@@ -380,7 +416,10 @@ list_dir_end cls
          godot_method_bind_call bindDirectory_list_dir_end (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "list_dir_end" '[] (IO ()) where
         nodeMethod = Godot.Core.Directory.list_dir_end
@@ -407,7 +446,10 @@ make_dir cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDirectory_make_dir (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "make_dir" '[GodotString] (IO Int)
          where
@@ -437,7 +479,10 @@ make_dir_recursive cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "make_dir_recursive" '[GodotString]
            (IO Int)
@@ -465,7 +510,10 @@ open cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDirectory_open (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "open" '[GodotString] (IO Int) where
         nodeMethod = Godot.Core.Directory.open
@@ -491,7 +539,10 @@ remove cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDirectory_remove (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "remove" '[GodotString] (IO Int)
          where
@@ -499,7 +550,7 @@ instance NodeMethod Directory "remove" '[GodotString] (IO Int)
 
 {-# NOINLINE bindDirectory_rename #-}
 
--- | Renames (move) the @from@ file to the @to@ destination. Both arguments should be paths to files, either relative or absolute. If the destination file exists and is not access-protected, it will be overwritten.
+-- | Renames (move) the @from@ file or directory to the @to@ destination. Both arguments should be paths to files or directories, either relative or absolute. If the destination file or directory exists and is not access-protected, it will be overwritten.
 --   				Returns one of the @enum Error@ code constants (@OK@ on success).
 bindDirectory_rename :: MethodBind
 bindDirectory_rename
@@ -510,7 +561,7 @@ bindDirectory_rename
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Renames (move) the @from@ file to the @to@ destination. Both arguments should be paths to files, either relative or absolute. If the destination file exists and is not access-protected, it will be overwritten.
+-- | Renames (move) the @from@ file or directory to the @to@ destination. Both arguments should be paths to files or directories, either relative or absolute. If the destination file or directory exists and is not access-protected, it will be overwritten.
 --   				Returns one of the @enum Error@ code constants (@OK@ on success).
 rename ::
          (Directory :< cls, Object :< cls) =>
@@ -519,7 +570,10 @@ rename cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindDirectory_rename (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Directory "rename" '[GodotString, GodotString]
            (IO Int)

@@ -6,14 +6,24 @@ module Godot.Core.CollisionObject
         Godot.Core.CollisionObject.sig_mouse_entered,
         Godot.Core.CollisionObject.sig_mouse_exited,
         Godot.Core.CollisionObject._input_event,
+        Godot.Core.CollisionObject._shape_changed,
+        Godot.Core.CollisionObject._update_debug_shapes,
         Godot.Core.CollisionObject.create_shape_owner,
         Godot.Core.CollisionObject.get_capture_input_on_drag,
+        Godot.Core.CollisionObject.get_collision_layer,
+        Godot.Core.CollisionObject.get_collision_layer_bit,
+        Godot.Core.CollisionObject.get_collision_mask,
+        Godot.Core.CollisionObject.get_collision_mask_bit,
         Godot.Core.CollisionObject.get_rid,
         Godot.Core.CollisionObject.get_shape_owners,
         Godot.Core.CollisionObject.is_ray_pickable,
         Godot.Core.CollisionObject.is_shape_owner_disabled,
         Godot.Core.CollisionObject.remove_shape_owner,
         Godot.Core.CollisionObject.set_capture_input_on_drag,
+        Godot.Core.CollisionObject.set_collision_layer,
+        Godot.Core.CollisionObject.set_collision_layer_bit,
+        Godot.Core.CollisionObject.set_collision_mask,
+        Godot.Core.CollisionObject.set_collision_mask_bit,
         Godot.Core.CollisionObject.set_ray_pickable,
         Godot.Core.CollisionObject.shape_find_owner,
         Godot.Core.CollisionObject.shape_owner_add_shape,
@@ -39,7 +49,7 @@ import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Spatial()
 
--- | Emitted when @method _input_event@ receives an event. See its description for details.
+-- | Emitted when the object receives an unhandled @InputEvent@. @position@ is the location in world space of the mouse pointer on the surface of the shape with index @shape_idx@ and @normal@ is the normal vector of the surface at that point.
 sig_input_event :: Godot.Internal.Dispatch.Signal CollisionObject
 sig_input_event = Godot.Internal.Dispatch.Signal "input_event"
 
@@ -58,6 +68,18 @@ sig_mouse_exited = Godot.Internal.Dispatch.Signal "mouse_exited"
 
 instance NodeSignal CollisionObject "mouse_exited" '[]
 
+instance NodeProperty CollisionObject "collision_layer" Int 'False
+         where
+        nodeProperty
+          = (get_collision_layer, wrapDroppingSetter set_collision_layer,
+             Nothing)
+
+instance NodeProperty CollisionObject "collision_mask" Int 'False
+         where
+        nodeProperty
+          = (get_collision_mask, wrapDroppingSetter set_collision_mask,
+             Nothing)
+
 instance NodeProperty CollisionObject "input_capture_on_drag" Bool
            'False
          where
@@ -73,7 +95,7 @@ instance NodeProperty CollisionObject "input_ray_pickable" Bool
 
 {-# NOINLINE bindCollisionObject__input_event #-}
 
--- | Accepts unhandled @InputEvent@s. @click_position@ is the clicked location in world space and @click_normal@ is the normal vector extending from the clicked surface of the @Shape@ at @shape_idx@. Connect to the @input_event@ signal to easily pick up these events.
+-- | Receives unhandled @InputEvent@s. @position@ is the location in world space of the mouse pointer on the surface of the shape with index @shape_idx@ and @normal@ is the normal vector of the surface at that point. Connect to the @signal input_event@ signal to easily pick up these events.
 bindCollisionObject__input_event :: MethodBind
 bindCollisionObject__input_event
   = unsafePerformIO $
@@ -83,7 +105,7 @@ bindCollisionObject__input_event
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Accepts unhandled @InputEvent@s. @click_position@ is the clicked location in world space and @click_normal@ is the normal vector extending from the clicked surface of the @Shape@ at @shape_idx@. Connect to the @input_event@ signal to easily pick up these events.
+-- | Receives unhandled @InputEvent@s. @position@ is the location in world space of the mouse pointer on the surface of the shape with index @shape_idx@ and @normal@ is the normal vector of the surface at that point. Connect to the @signal input_event@ signal to easily pick up these events.
 _input_event ::
                (CollisionObject :< cls, Object :< cls) =>
                cls -> Object -> InputEvent -> Vector3 -> Vector3 -> Int -> IO ()
@@ -96,13 +118,76 @@ _input_event cls arg1 arg2 arg3 arg4 arg5
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "_input_event"
            '[Object, InputEvent, Vector3, Vector3, Int]
            (IO ())
          where
         nodeMethod = Godot.Core.CollisionObject._input_event
+
+{-# NOINLINE bindCollisionObject__shape_changed #-}
+
+bindCollisionObject__shape_changed :: MethodBind
+bindCollisionObject__shape_changed
+  = unsafePerformIO $
+      withCString "CollisionObject" $
+        \ clsNamePtr ->
+          withCString "_shape_changed" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_shape_changed ::
+                 (CollisionObject :< cls, Object :< cls) => cls -> Shape -> IO ()
+_shape_changed cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject__shape_changed
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject "_shape_changed" '[Shape]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CollisionObject._shape_changed
+
+{-# NOINLINE bindCollisionObject__update_debug_shapes #-}
+
+bindCollisionObject__update_debug_shapes :: MethodBind
+bindCollisionObject__update_debug_shapes
+  = unsafePerformIO $
+      withCString "CollisionObject" $
+        \ clsNamePtr ->
+          withCString "_update_debug_shapes" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_update_debug_shapes ::
+                       (CollisionObject :< cls, Object :< cls) => cls -> IO ()
+_update_debug_shapes cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject__update_debug_shapes
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject "_update_debug_shapes" '[]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CollisionObject._update_debug_shapes
 
 {-# NOINLINE bindCollisionObject_create_shape_owner #-}
 
@@ -126,7 +211,10 @@ create_shape_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "create_shape_owner" '[Object]
            (IO Int)
@@ -156,12 +244,148 @@ get_capture_input_on_drag cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "get_capture_input_on_drag" '[]
            (IO Bool)
          where
         nodeMethod = Godot.Core.CollisionObject.get_capture_input_on_drag
+
+{-# NOINLINE bindCollisionObject_get_collision_layer #-}
+
+-- | The physics layers this CollisionObject3D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+bindCollisionObject_get_collision_layer :: MethodBind
+bindCollisionObject_get_collision_layer
+  = unsafePerformIO $
+      withCString "CollisionObject" $
+        \ clsNamePtr ->
+          withCString "get_collision_layer" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The physics layers this CollisionObject3D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+get_collision_layer ::
+                      (CollisionObject :< cls, Object :< cls) => cls -> IO Int
+get_collision_layer cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject_get_collision_layer
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject "get_collision_layer" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.CollisionObject.get_collision_layer
+
+{-# NOINLINE bindCollisionObject_get_collision_layer_bit #-}
+
+-- | Returns whether or not the specified @bit@ of the @collision_layer@ is set.
+bindCollisionObject_get_collision_layer_bit :: MethodBind
+bindCollisionObject_get_collision_layer_bit
+  = unsafePerformIO $
+      withCString "CollisionObject" $
+        \ clsNamePtr ->
+          withCString "get_collision_layer_bit" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns whether or not the specified @bit@ of the @collision_layer@ is set.
+get_collision_layer_bit ::
+                          (CollisionObject :< cls, Object :< cls) => cls -> Int -> IO Bool
+get_collision_layer_bit cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject_get_collision_layer_bit
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject "get_collision_layer_bit"
+           '[Int]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.CollisionObject.get_collision_layer_bit
+
+{-# NOINLINE bindCollisionObject_get_collision_mask #-}
+
+-- | The physics layers this CollisionObject3D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+bindCollisionObject_get_collision_mask :: MethodBind
+bindCollisionObject_get_collision_mask
+  = unsafePerformIO $
+      withCString "CollisionObject" $
+        \ clsNamePtr ->
+          withCString "get_collision_mask" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The physics layers this CollisionObject3D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+get_collision_mask ::
+                     (CollisionObject :< cls, Object :< cls) => cls -> IO Int
+get_collision_mask cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject_get_collision_mask
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject "get_collision_mask" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.CollisionObject.get_collision_mask
+
+{-# NOINLINE bindCollisionObject_get_collision_mask_bit #-}
+
+-- | Returns whether or not the specified @bit@ of the @collision_mask@ is set.
+bindCollisionObject_get_collision_mask_bit :: MethodBind
+bindCollisionObject_get_collision_mask_bit
+  = unsafePerformIO $
+      withCString "CollisionObject" $
+        \ clsNamePtr ->
+          withCString "get_collision_mask_bit" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns whether or not the specified @bit@ of the @collision_mask@ is set.
+get_collision_mask_bit ::
+                         (CollisionObject :< cls, Object :< cls) => cls -> Int -> IO Bool
+get_collision_mask_bit cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject_get_collision_mask_bit
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject "get_collision_mask_bit" '[Int]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.CollisionObject.get_collision_mask_bit
 
 {-# NOINLINE bindCollisionObject_get_rid #-}
 
@@ -183,7 +407,10 @@ get_rid cls
          godot_method_bind_call bindCollisionObject_get_rid (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "get_rid" '[] (IO Rid) where
         nodeMethod = Godot.Core.CollisionObject.get_rid
@@ -210,7 +437,10 @@ get_shape_owners cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "get_shape_owners" '[]
            (IO Array)
@@ -219,7 +449,7 @@ instance NodeMethod CollisionObject "get_shape_owners" '[]
 
 {-# NOINLINE bindCollisionObject_is_ray_pickable #-}
 
--- | If @true@, the @CollisionObject@'s shapes will respond to @RayCast@s.
+-- | If @true@, this object is pickable. A pickable object can detect the mouse pointer entering/leaving, and if the mouse is inside it, report input events. Requires at least one @collision_layer@ bit to be set.
 bindCollisionObject_is_ray_pickable :: MethodBind
 bindCollisionObject_is_ray_pickable
   = unsafePerformIO $
@@ -229,7 +459,7 @@ bindCollisionObject_is_ray_pickable
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the @CollisionObject@'s shapes will respond to @RayCast@s.
+-- | If @true@, this object is pickable. A pickable object can detect the mouse pointer entering/leaving, and if the mouse is inside it, report input events. Requires at least one @collision_layer@ bit to be set.
 is_ray_pickable ::
                   (CollisionObject :< cls, Object :< cls) => cls -> IO Bool
 is_ray_pickable cls
@@ -239,7 +469,10 @@ is_ray_pickable cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "is_ray_pickable" '[] (IO Bool)
          where
@@ -267,7 +500,10 @@ is_shape_owner_disabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "is_shape_owner_disabled"
            '[Int]
@@ -297,7 +533,10 @@ remove_shape_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "remove_shape_owner" '[Int]
            (IO ())
@@ -327,7 +566,10 @@ set_capture_input_on_drag cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "set_capture_input_on_drag"
            '[Bool]
@@ -335,9 +577,149 @@ instance NodeMethod CollisionObject "set_capture_input_on_drag"
          where
         nodeMethod = Godot.Core.CollisionObject.set_capture_input_on_drag
 
+{-# NOINLINE bindCollisionObject_set_collision_layer #-}
+
+-- | The physics layers this CollisionObject3D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+bindCollisionObject_set_collision_layer :: MethodBind
+bindCollisionObject_set_collision_layer
+  = unsafePerformIO $
+      withCString "CollisionObject" $
+        \ clsNamePtr ->
+          withCString "set_collision_layer" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The physics layers this CollisionObject3D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+set_collision_layer ::
+                      (CollisionObject :< cls, Object :< cls) => cls -> Int -> IO ()
+set_collision_layer cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject_set_collision_layer
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject "set_collision_layer" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CollisionObject.set_collision_layer
+
+{-# NOINLINE bindCollisionObject_set_collision_layer_bit #-}
+
+-- | If @value@ is @true@, sets the specified @bit@ in the the @collision_layer@.
+--   				If @value@ is @false@, clears the specified @bit@ in the the @collision_layer@.
+bindCollisionObject_set_collision_layer_bit :: MethodBind
+bindCollisionObject_set_collision_layer_bit
+  = unsafePerformIO $
+      withCString "CollisionObject" $
+        \ clsNamePtr ->
+          withCString "set_collision_layer_bit" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @value@ is @true@, sets the specified @bit@ in the the @collision_layer@.
+--   				If @value@ is @false@, clears the specified @bit@ in the the @collision_layer@.
+set_collision_layer_bit ::
+                          (CollisionObject :< cls, Object :< cls) =>
+                          cls -> Int -> Bool -> IO ()
+set_collision_layer_bit cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject_set_collision_layer_bit
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject "set_collision_layer_bit"
+           '[Int, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CollisionObject.set_collision_layer_bit
+
+{-# NOINLINE bindCollisionObject_set_collision_mask #-}
+
+-- | The physics layers this CollisionObject3D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+bindCollisionObject_set_collision_mask :: MethodBind
+bindCollisionObject_set_collision_mask
+  = unsafePerformIO $
+      withCString "CollisionObject" $
+        \ clsNamePtr ->
+          withCString "set_collision_mask" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The physics layers this CollisionObject3D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+set_collision_mask ::
+                     (CollisionObject :< cls, Object :< cls) => cls -> Int -> IO ()
+set_collision_mask cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject_set_collision_mask
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject "set_collision_mask" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CollisionObject.set_collision_mask
+
+{-# NOINLINE bindCollisionObject_set_collision_mask_bit #-}
+
+-- | If @value@ is @true@, sets the specified @bit@ in the the @collision_mask@.
+--   				If @value@ is @false@, clears the specified @bit@ in the the @collision_mask@.
+bindCollisionObject_set_collision_mask_bit :: MethodBind
+bindCollisionObject_set_collision_mask_bit
+  = unsafePerformIO $
+      withCString "CollisionObject" $
+        \ clsNamePtr ->
+          withCString "set_collision_mask_bit" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @value@ is @true@, sets the specified @bit@ in the the @collision_mask@.
+--   				If @value@ is @false@, clears the specified @bit@ in the the @collision_mask@.
+set_collision_mask_bit ::
+                         (CollisionObject :< cls, Object :< cls) =>
+                         cls -> Int -> Bool -> IO ()
+set_collision_mask_bit cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCollisionObject_set_collision_mask_bit
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CollisionObject "set_collision_mask_bit"
+           '[Int, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CollisionObject.set_collision_mask_bit
+
 {-# NOINLINE bindCollisionObject_set_ray_pickable #-}
 
--- | If @true@, the @CollisionObject@'s shapes will respond to @RayCast@s.
+-- | If @true@, this object is pickable. A pickable object can detect the mouse pointer entering/leaving, and if the mouse is inside it, report input events. Requires at least one @collision_layer@ bit to be set.
 bindCollisionObject_set_ray_pickable :: MethodBind
 bindCollisionObject_set_ray_pickable
   = unsafePerformIO $
@@ -347,7 +729,7 @@ bindCollisionObject_set_ray_pickable
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the @CollisionObject@'s shapes will respond to @RayCast@s.
+-- | If @true@, this object is pickable. A pickable object can detect the mouse pointer entering/leaving, and if the mouse is inside it, report input events. Requires at least one @collision_layer@ bit to be set.
 set_ray_pickable ::
                    (CollisionObject :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_ray_pickable cls arg1
@@ -357,7 +739,10 @@ set_ray_pickable cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "set_ray_pickable" '[Bool]
            (IO ())
@@ -386,7 +771,10 @@ shape_find_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "shape_find_owner" '[Int]
            (IO Int)
@@ -416,7 +804,10 @@ shape_owner_add_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "shape_owner_add_shape"
            '[Int, Shape]
@@ -446,7 +837,10 @@ shape_owner_clear_shapes cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "shape_owner_clear_shapes"
            '[Int]
@@ -476,7 +870,7 @@ shape_owner_get_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CollisionObject "shape_owner_get_owner" '[Int]
            (IO Object)
@@ -506,7 +900,7 @@ shape_owner_get_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CollisionObject "shape_owner_get_shape"
            '[Int, Int]
@@ -537,7 +931,10 @@ shape_owner_get_shape_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "shape_owner_get_shape_count"
            '[Int]
@@ -569,7 +966,10 @@ shape_owner_get_shape_index cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "shape_owner_get_shape_index"
            '[Int, Int]
@@ -601,7 +1001,10 @@ shape_owner_get_transform cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "shape_owner_get_transform"
            '[Int]
@@ -632,7 +1035,10 @@ shape_owner_remove_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "shape_owner_remove_shape"
            '[Int, Int]
@@ -663,7 +1069,10 @@ shape_owner_set_disabled cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "shape_owner_set_disabled"
            '[Int, Bool]
@@ -695,7 +1104,10 @@ shape_owner_set_transform cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CollisionObject "shape_owner_set_transform"
            '[Int, Transform]

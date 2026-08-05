@@ -68,7 +68,7 @@ instance NodeProperty CharFXTransform "visible" Bool 'False where
 
 {-# NOINLINE bindCharFXTransform_get_absolute_index #-}
 
--- | The index of the current character (starting from 0). Setting this property won't affect drawing.
+-- | The index of the current character (starting from 0) for the @RichTextLabel@'s BBCode text. Setting this property won't affect drawing.
 bindCharFXTransform_get_absolute_index :: MethodBind
 bindCharFXTransform_get_absolute_index
   = unsafePerformIO $
@@ -78,7 +78,7 @@ bindCharFXTransform_get_absolute_index
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The index of the current character (starting from 0). Setting this property won't affect drawing.
+-- | The index of the current character (starting from 0) for the @RichTextLabel@'s BBCode text. Setting this property won't affect drawing.
 get_absolute_index ::
                      (CharFXTransform :< cls, Object :< cls) => cls -> IO Int
 get_absolute_index cls
@@ -88,7 +88,10 @@ get_absolute_index cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "get_absolute_index" '[]
            (IO Int)
@@ -133,7 +136,10 @@ get_character cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "get_character" '[] (IO Int)
          where
@@ -160,7 +166,10 @@ get_color cls
          godot_method_bind_call bindCharFXTransform_get_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "get_color" '[] (IO Color)
          where
@@ -168,7 +177,7 @@ instance NodeMethod CharFXTransform "get_color" '[] (IO Color)
 
 {-# NOINLINE bindCharFXTransform_get_elapsed_time #-}
 
--- | The time elapsed since the @RichTextLabel@ was added to the scene tree (in seconds). Time stops when the project is paused, unless the @RichTextLabel@'s @Node.pause_mode@ is set to @Node.PAUSE_MODE_PROCESS@.
+-- | The time elapsed since the @RichTextLabel@ was added to the scene tree (in seconds). Time stops when the @RichTextLabel@ is paused (see @Node.pause_mode@). Resets when the text in the @RichTextLabel@ is changed.
 --   			__Note:__ Time still passes while the @RichTextLabel@ is hidden.
 bindCharFXTransform_get_elapsed_time :: MethodBind
 bindCharFXTransform_get_elapsed_time
@@ -179,7 +188,7 @@ bindCharFXTransform_get_elapsed_time
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The time elapsed since the @RichTextLabel@ was added to the scene tree (in seconds). Time stops when the project is paused, unless the @RichTextLabel@'s @Node.pause_mode@ is set to @Node.PAUSE_MODE_PROCESS@.
+-- | The time elapsed since the @RichTextLabel@ was added to the scene tree (in seconds). Time stops when the @RichTextLabel@ is paused (see @Node.pause_mode@). Resets when the text in the @RichTextLabel@ is changed.
 --   			__Note:__ Time still passes while the @RichTextLabel@ is hidden.
 get_elapsed_time ::
                    (CharFXTransform :< cls, Object :< cls) => cls -> IO Float
@@ -190,7 +199,10 @@ get_elapsed_time cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "get_elapsed_time" '[]
            (IO Float)
@@ -233,7 +245,10 @@ get_environment cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "get_environment" '[]
            (IO Dictionary)
@@ -261,7 +276,10 @@ get_offset cls
          godot_method_bind_call bindCharFXTransform_get_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "get_offset" '[] (IO Vector2)
          where
@@ -269,7 +287,7 @@ instance NodeMethod CharFXTransform "get_offset" '[] (IO Vector2)
 
 {-# NOINLINE bindCharFXTransform_get_relative_index #-}
 
--- | The index of the current character (starting from 0). Setting this property won't affect drawing.
+-- | The index of the current character (starting from 0) for this @RichTextEffect@ custom block. Setting this property won't affect drawing.
 bindCharFXTransform_get_relative_index :: MethodBind
 bindCharFXTransform_get_relative_index
   = unsafePerformIO $
@@ -279,7 +297,7 @@ bindCharFXTransform_get_relative_index
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The index of the current character (starting from 0). Setting this property won't affect drawing.
+-- | The index of the current character (starting from 0) for this @RichTextEffect@ custom block. Setting this property won't affect drawing.
 get_relative_index ::
                      (CharFXTransform :< cls, Object :< cls) => cls -> IO Int
 get_relative_index cls
@@ -289,7 +307,10 @@ get_relative_index cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "get_relative_index" '[]
            (IO Int)
@@ -317,7 +338,10 @@ is_visible cls
          godot_method_bind_call bindCharFXTransform_is_visible (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "is_visible" '[] (IO Bool)
          where
@@ -325,7 +349,7 @@ instance NodeMethod CharFXTransform "is_visible" '[] (IO Bool)
 
 {-# NOINLINE bindCharFXTransform_set_absolute_index #-}
 
--- | The index of the current character (starting from 0). Setting this property won't affect drawing.
+-- | The index of the current character (starting from 0) for the @RichTextLabel@'s BBCode text. Setting this property won't affect drawing.
 bindCharFXTransform_set_absolute_index :: MethodBind
 bindCharFXTransform_set_absolute_index
   = unsafePerformIO $
@@ -335,7 +359,7 @@ bindCharFXTransform_set_absolute_index
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The index of the current character (starting from 0). Setting this property won't affect drawing.
+-- | The index of the current character (starting from 0) for the @RichTextLabel@'s BBCode text. Setting this property won't affect drawing.
 set_absolute_index ::
                      (CharFXTransform :< cls, Object :< cls) => cls -> Int -> IO ()
 set_absolute_index cls arg1
@@ -345,7 +369,10 @@ set_absolute_index cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "set_absolute_index" '[Int]
            (IO ())
@@ -390,7 +417,10 @@ set_character cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "set_character" '[Int] (IO ())
          where
@@ -417,7 +447,10 @@ set_color cls arg1
          godot_method_bind_call bindCharFXTransform_set_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "set_color" '[Color] (IO ())
          where
@@ -425,7 +458,7 @@ instance NodeMethod CharFXTransform "set_color" '[Color] (IO ())
 
 {-# NOINLINE bindCharFXTransform_set_elapsed_time #-}
 
--- | The time elapsed since the @RichTextLabel@ was added to the scene tree (in seconds). Time stops when the project is paused, unless the @RichTextLabel@'s @Node.pause_mode@ is set to @Node.PAUSE_MODE_PROCESS@.
+-- | The time elapsed since the @RichTextLabel@ was added to the scene tree (in seconds). Time stops when the @RichTextLabel@ is paused (see @Node.pause_mode@). Resets when the text in the @RichTextLabel@ is changed.
 --   			__Note:__ Time still passes while the @RichTextLabel@ is hidden.
 bindCharFXTransform_set_elapsed_time :: MethodBind
 bindCharFXTransform_set_elapsed_time
@@ -436,7 +469,7 @@ bindCharFXTransform_set_elapsed_time
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The time elapsed since the @RichTextLabel@ was added to the scene tree (in seconds). Time stops when the project is paused, unless the @RichTextLabel@'s @Node.pause_mode@ is set to @Node.PAUSE_MODE_PROCESS@.
+-- | The time elapsed since the @RichTextLabel@ was added to the scene tree (in seconds). Time stops when the @RichTextLabel@ is paused (see @Node.pause_mode@). Resets when the text in the @RichTextLabel@ is changed.
 --   			__Note:__ Time still passes while the @RichTextLabel@ is hidden.
 set_elapsed_time ::
                    (CharFXTransform :< cls, Object :< cls) => cls -> Float -> IO ()
@@ -447,7 +480,10 @@ set_elapsed_time cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "set_elapsed_time" '[Float]
            (IO ())
@@ -491,7 +527,10 @@ set_environment cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "set_environment" '[Dictionary]
            (IO ())
@@ -519,7 +558,10 @@ set_offset cls arg1
          godot_method_bind_call bindCharFXTransform_set_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "set_offset" '[Vector2] (IO ())
          where
@@ -527,7 +569,7 @@ instance NodeMethod CharFXTransform "set_offset" '[Vector2] (IO ())
 
 {-# NOINLINE bindCharFXTransform_set_relative_index #-}
 
--- | The index of the current character (starting from 0). Setting this property won't affect drawing.
+-- | The index of the current character (starting from 0) for this @RichTextEffect@ custom block. Setting this property won't affect drawing.
 bindCharFXTransform_set_relative_index :: MethodBind
 bindCharFXTransform_set_relative_index
   = unsafePerformIO $
@@ -537,7 +579,7 @@ bindCharFXTransform_set_relative_index
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The index of the current character (starting from 0). Setting this property won't affect drawing.
+-- | The index of the current character (starting from 0) for this @RichTextEffect@ custom block. Setting this property won't affect drawing.
 set_relative_index ::
                      (CharFXTransform :< cls, Object :< cls) => cls -> Int -> IO ()
 set_relative_index cls arg1
@@ -547,7 +589,10 @@ set_relative_index cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "set_relative_index" '[Int]
            (IO ())
@@ -576,7 +621,10 @@ set_visibility cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CharFXTransform "set_visibility" '[Bool]
            (IO ())

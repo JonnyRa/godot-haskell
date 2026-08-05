@@ -44,7 +44,10 @@ get_world_scale cls
          godot_method_bind_call bindARVROrigin_get_world_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVROrigin "get_world_scale" '[] (IO Float)
          where
@@ -73,7 +76,10 @@ set_world_scale cls arg1
          godot_method_bind_call bindARVROrigin_set_world_scale (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod ARVROrigin "set_world_scale" '[Float] (IO ())
          where

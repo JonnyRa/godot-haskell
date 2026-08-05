@@ -62,7 +62,10 @@ _get_animations cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "_get_animations" '[] (IO Array)
          where
@@ -89,7 +92,10 @@ _get_frames cls
          godot_method_bind_call bindSpriteFrames__get_frames (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "_get_frames" '[] (IO Array) where
         nodeMethod = Godot.Core.SpriteFrames._get_frames
@@ -114,7 +120,10 @@ _set_animations cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "_set_animations" '[Array] (IO ())
          where
@@ -141,7 +150,10 @@ _set_frames cls arg1
          godot_method_bind_call bindSpriteFrames__set_frames (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "_set_frames" '[Array] (IO ())
          where
@@ -168,7 +180,10 @@ add_animation cls arg1
          godot_method_bind_call bindSpriteFrames_add_animation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "add_animation" '[GodotString]
            (IO ())
@@ -199,7 +214,10 @@ add_frame cls arg1 arg2 arg3
          godot_method_bind_call bindSpriteFrames_add_frame (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "add_frame"
            '[GodotString, Texture, Maybe Int]
@@ -227,7 +245,10 @@ clear cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSpriteFrames_clear (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "clear" '[GodotString] (IO ())
          where
@@ -253,14 +274,17 @@ clear_all cls
          godot_method_bind_call bindSpriteFrames_clear_all (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "clear_all" '[] (IO ()) where
         nodeMethod = Godot.Core.SpriteFrames.clear_all
 
 {-# NOINLINE bindSpriteFrames_get_animation_loop #-}
 
--- | If @true@, the given animation will loop.
+-- | Returns @true@ if the given animation is configured to loop when it finishes playing. Otherwise, returns @false@.
 bindSpriteFrames_get_animation_loop :: MethodBind
 bindSpriteFrames_get_animation_loop
   = unsafePerformIO $
@@ -270,7 +294,7 @@ bindSpriteFrames_get_animation_loop
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the given animation will loop.
+-- | Returns @true@ if the given animation is configured to loop when it finishes playing. Otherwise, returns @false@.
 get_animation_loop ::
                      (SpriteFrames :< cls, Object :< cls) =>
                      cls -> GodotString -> IO Bool
@@ -281,7 +305,10 @@ get_animation_loop cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "get_animation_loop"
            '[GodotString]
@@ -311,7 +338,10 @@ get_animation_names cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "get_animation_names" '[]
            (IO PoolStringArray)
@@ -341,7 +371,10 @@ get_animation_speed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "get_animation_speed"
            '[GodotString]
@@ -371,7 +404,7 @@ get_frame cls arg1 arg2
          godot_method_bind_call bindSpriteFrames_get_frame (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod SpriteFrames "get_frame" '[GodotString, Int]
            (IO Texture)
@@ -401,7 +434,10 @@ get_frame_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "get_frame_count" '[GodotString]
            (IO Int)
@@ -430,7 +466,10 @@ has_animation cls arg1
          godot_method_bind_call bindSpriteFrames_has_animation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "has_animation" '[GodotString]
            (IO Bool)
@@ -459,7 +498,10 @@ remove_animation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "remove_animation" '[GodotString]
            (IO ())
@@ -488,7 +530,10 @@ remove_frame cls arg1 arg2
          godot_method_bind_call bindSpriteFrames_remove_frame (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "remove_frame" '[GodotString, Int]
            (IO ())
@@ -518,7 +563,10 @@ rename_animation cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "rename_animation"
            '[GodotString, GodotString]
@@ -549,7 +597,10 @@ set_animation_loop cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "set_animation_loop"
            '[GodotString, Bool]
@@ -580,7 +631,10 @@ set_animation_speed cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "set_animation_speed"
            '[GodotString, Float]
@@ -610,7 +664,10 @@ set_frame cls arg1 arg2 arg3
          godot_method_bind_call bindSpriteFrames_set_frame (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SpriteFrames "set_frame"
            '[GodotString, Int, Texture]

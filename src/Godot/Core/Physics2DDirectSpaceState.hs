@@ -24,8 +24,9 @@ import Godot.Core.Object()
 
 {-# NOINLINE bindPhysics2DDirectSpaceState_cast_motion #-}
 
--- | Checks how far the shape can travel toward a point. If the shape can not move, the array will be empty.
---   				__Note:__ Both the shape and the motion are supplied through a @Physics2DShapeQueryParameters@ object. The method will return an array with two floats between 0 and 1, both representing a fraction of @motion@. The first is how far the shape can move without triggering a collision, and the second is the point at which a collision will occur. If no collision is detected, the returned array will be @@1, 1@@.
+-- | Checks how far a @Shape2D@ can move without colliding. All the parameters for the query, including the shape and the motion, are supplied through a @Physics2DShapeQueryParameters@ object.
+--   				Returns an array with the safe and unsafe proportions (between 0 and 1) of the motion. The safe proportion is the maximum fraction of the motion that can be made without a collision. The unsafe proportion is the minimum fraction of the distance that must be moved for a collision. If no collision is detected a result of @@1.0, 1.0@@ will be returned.
+--   				__Note:__ Any @Shape2D@s that the shape is already colliding with e.g. inside of, will be ignored. Use @method collide_shape@ to determine the @Shape2D@s that the shape is already colliding with.
 bindPhysics2DDirectSpaceState_cast_motion :: MethodBind
 bindPhysics2DDirectSpaceState_cast_motion
   = unsafePerformIO $
@@ -35,8 +36,9 @@ bindPhysics2DDirectSpaceState_cast_motion
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Checks how far the shape can travel toward a point. If the shape can not move, the array will be empty.
---   				__Note:__ Both the shape and the motion are supplied through a @Physics2DShapeQueryParameters@ object. The method will return an array with two floats between 0 and 1, both representing a fraction of @motion@. The first is how far the shape can move without triggering a collision, and the second is the point at which a collision will occur. If no collision is detected, the returned array will be @@1, 1@@.
+-- | Checks how far a @Shape2D@ can move without colliding. All the parameters for the query, including the shape and the motion, are supplied through a @Physics2DShapeQueryParameters@ object.
+--   				Returns an array with the safe and unsafe proportions (between 0 and 1) of the motion. The safe proportion is the maximum fraction of the motion that can be made without a collision. The unsafe proportion is the minimum fraction of the distance that must be moved for a collision. If no collision is detected a result of @@1.0, 1.0@@ will be returned.
+--   				__Note:__ Any @Shape2D@s that the shape is already colliding with e.g. inside of, will be ignored. Use @method collide_shape@ to determine the @Shape2D@s that the shape is already colliding with.
 cast_motion ::
               (Physics2DDirectSpaceState :< cls, Object :< cls) =>
               cls -> Physics2DShapeQueryParameters -> IO Array
@@ -47,7 +49,10 @@ cast_motion cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectSpaceState "cast_motion"
            '[Physics2DShapeQueryParameters]
@@ -79,7 +84,10 @@ collide_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectSpaceState "collide_shape"
            '[Physics2DShapeQueryParameters, Maybe Int]
@@ -126,7 +134,10 @@ get_rest_info cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectSpaceState "get_rest_info"
            '[Physics2DShapeQueryParameters]
@@ -136,13 +147,15 @@ instance NodeMethod Physics2DDirectSpaceState "get_rest_info"
 
 {-# NOINLINE bindPhysics2DDirectSpaceState_intersect_point #-}
 
--- | Checks whether a point is inside any shape. The shapes the point is inside of are returned in an array containing dictionaries with the following fields:
+-- | Checks whether a point is inside any solid shape. The shapes the point is inside of are returned in an array containing dictionaries with the following fields:
 --   				@collider@: The colliding object.
 --   				@collider_id@: The colliding object's ID.
 --   				@metadata@: The intersecting shape's metadata. This metadata is different from @method Object.get_meta@, and is set with @method Physics2DServer.shape_set_data@.
 --   				@rid@: The intersecting object's @RID@.
 --   				@shape@: The shape index of the colliding shape.
---   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody@s or @Area@s, respectively.
+--   				The number of intersections can be limited with the @max_results@ parameter, to reduce the processing time.
+--   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody2D@s or @Area2D@s, respectively.
+--   				__Note:__ @ConcavePolygonShape2D@s and @CollisionPolygon2D@s in @Segments@ build mode are not solid shapes. Therefore, they will not be detected.
 bindPhysics2DDirectSpaceState_intersect_point :: MethodBind
 bindPhysics2DDirectSpaceState_intersect_point
   = unsafePerformIO $
@@ -152,13 +165,15 @@ bindPhysics2DDirectSpaceState_intersect_point
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Checks whether a point is inside any shape. The shapes the point is inside of are returned in an array containing dictionaries with the following fields:
+-- | Checks whether a point is inside any solid shape. The shapes the point is inside of are returned in an array containing dictionaries with the following fields:
 --   				@collider@: The colliding object.
 --   				@collider_id@: The colliding object's ID.
 --   				@metadata@: The intersecting shape's metadata. This metadata is different from @method Object.get_meta@, and is set with @method Physics2DServer.shape_set_data@.
 --   				@rid@: The intersecting object's @RID@.
 --   				@shape@: The shape index of the colliding shape.
---   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody@s or @Area@s, respectively.
+--   				The number of intersections can be limited with the @max_results@ parameter, to reduce the processing time.
+--   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody2D@s or @Area2D@s, respectively.
+--   				__Note:__ @ConcavePolygonShape2D@s and @CollisionPolygon2D@s in @Segments@ build mode are not solid shapes. Therefore, they will not be detected.
 intersect_point ::
                   (Physics2DDirectSpaceState :< cls, Object :< cls) =>
                   cls ->
@@ -178,7 +193,10 @@ intersect_point cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectSpaceState "intersect_point"
            '[Vector2, Maybe Int, Maybe Array, Maybe Int, Maybe Bool,
@@ -190,6 +208,15 @@ instance NodeMethod Physics2DDirectSpaceState "intersect_point"
 {-# NOINLINE bindPhysics2DDirectSpaceState_intersect_point_on_canvas
              #-}
 
+-- | Checks whether a point is inside any solid shape, in a specific canvas layer given by @canvas_instance_id@. The shapes the point is inside of are returned in an array containing dictionaries with the following fields:
+--   				@collider@: The colliding object.
+--   				@collider_id@: The colliding object's ID.
+--   				@metadata@: The intersecting shape's metadata. This metadata is different from @method Object.get_meta@, and is set with @method Physics2DServer.shape_set_data@.
+--   				@rid@: The intersecting object's @RID@.
+--   				@shape@: The shape index of the colliding shape.
+--   				The number of intersections can be limited with the @max_results@ parameter, to reduce the processing time.
+--   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody2D@s or @Area2D@s, respectively.
+--   				__Note:__ @ConcavePolygonShape2D@s and @CollisionPolygon2D@s in @Segments@ build mode are not solid shapes. Therefore, they will not be detected.
 bindPhysics2DDirectSpaceState_intersect_point_on_canvas ::
                                                         MethodBind
 bindPhysics2DDirectSpaceState_intersect_point_on_canvas
@@ -200,6 +227,15 @@ bindPhysics2DDirectSpaceState_intersect_point_on_canvas
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Checks whether a point is inside any solid shape, in a specific canvas layer given by @canvas_instance_id@. The shapes the point is inside of are returned in an array containing dictionaries with the following fields:
+--   				@collider@: The colliding object.
+--   				@collider_id@: The colliding object's ID.
+--   				@metadata@: The intersecting shape's metadata. This metadata is different from @method Object.get_meta@, and is set with @method Physics2DServer.shape_set_data@.
+--   				@rid@: The intersecting object's @RID@.
+--   				@shape@: The shape index of the colliding shape.
+--   				The number of intersections can be limited with the @max_results@ parameter, to reduce the processing time.
+--   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody2D@s or @Area2D@s, respectively.
+--   				__Note:__ @ConcavePolygonShape2D@s and @CollisionPolygon2D@s in @Segments@ build mode are not solid shapes. Therefore, they will not be detected.
 intersect_point_on_canvas ::
                             (Physics2DDirectSpaceState :< cls, Object :< cls) =>
                             cls ->
@@ -221,7 +257,10 @@ intersect_point_on_canvas cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectSpaceState
            "intersect_point_on_canvas"
@@ -243,7 +282,7 @@ instance NodeMethod Physics2DDirectSpaceState
 --   				@rid@: The intersecting object's @RID@.
 --   				@shape@: The shape index of the colliding shape.
 --   				If the ray did not intersect anything, then an empty dictionary is returned instead.
---   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody@s or @Area@s, respectively.
+--   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody2D@s or @Area2D@s, respectively.
 bindPhysics2DDirectSpaceState_intersect_ray :: MethodBind
 bindPhysics2DDirectSpaceState_intersect_ray
   = unsafePerformIO $
@@ -262,7 +301,7 @@ bindPhysics2DDirectSpaceState_intersect_ray
 --   				@rid@: The intersecting object's @RID@.
 --   				@shape@: The shape index of the colliding shape.
 --   				If the ray did not intersect anything, then an empty dictionary is returned instead.
---   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody@s or @Area@s, respectively.
+--   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody2D@s or @Area2D@s, respectively.
 intersect_ray ::
                 (Physics2DDirectSpaceState :< cls, Object :< cls) =>
                 cls ->
@@ -282,7 +321,10 @@ intersect_ray cls arg1 arg2 arg3 arg4 arg5 arg6
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectSpaceState "intersect_ray"
            '[Vector2, Vector2, Maybe Array, Maybe Int, Maybe Bool, Maybe Bool]
@@ -329,7 +371,10 @@ intersect_shape cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Physics2DDirectSpaceState "intersect_shape"
            '[Physics2DShapeQueryParameters, Maybe Int]

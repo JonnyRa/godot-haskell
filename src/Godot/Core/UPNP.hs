@@ -176,7 +176,10 @@ add_device cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUPNP_add_device (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "add_device" '[UPNPDevice] (IO ()) where
         nodeMethod = Godot.Core.UPNP.add_device
@@ -208,7 +211,10 @@ add_port_mapping cls arg1 arg2 arg3 arg4 arg5
          godot_method_bind_call bindUPNP_add_port_mapping (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "add_port_mapping"
            '[Int, Maybe Int, Maybe GodotString, Maybe GodotString, Maybe Int]
@@ -233,7 +239,10 @@ clear_devices cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUPNP_clear_devices (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "clear_devices" '[] (IO ()) where
         nodeMethod = Godot.Core.UPNP.clear_devices
@@ -259,7 +268,10 @@ delete_port_mapping cls arg1 arg2
          godot_method_bind_call bindUPNP_delete_port_mapping (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "delete_port_mapping"
            '[Int, Maybe GodotString]
@@ -288,7 +300,10 @@ discover cls arg1 arg2 arg3
        defaultedVariant VariantString "InternetGatewayDevice" arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUPNP_discover (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "discover"
            '[Maybe Int, Maybe Int, Maybe GodotString]
@@ -313,7 +328,7 @@ get_device cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUPNP_get_device (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod UPNP "get_device" '[Int] (IO UPNPDevice) where
         nodeMethod = Godot.Core.UPNP.get_device
@@ -336,7 +351,10 @@ get_device_count cls
          godot_method_bind_call bindUPNP_get_device_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "get_device_count" '[] (IO Int) where
         nodeMethod = Godot.Core.UPNP.get_device_count
@@ -361,7 +379,10 @@ get_discover_local_port cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "get_discover_local_port" '[] (IO Int)
          where
@@ -387,7 +408,10 @@ get_discover_multicast_if cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "get_discover_multicast_if" '[]
            (IO GodotString)
@@ -410,7 +434,7 @@ get_gateway cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUPNP_get_gateway (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod UPNP "get_gateway" '[] (IO UPNPDevice) where
         nodeMethod = Godot.Core.UPNP.get_gateway
@@ -433,7 +457,10 @@ is_discover_ipv6 cls
          godot_method_bind_call bindUPNP_is_discover_ipv6 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "is_discover_ipv6" '[] (IO Bool) where
         nodeMethod = Godot.Core.UPNP.is_discover_ipv6
@@ -457,7 +484,10 @@ query_external_address cls
          godot_method_bind_call bindUPNP_query_external_address (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "query_external_address" '[]
            (IO GodotString)
@@ -482,7 +512,10 @@ remove_device cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUPNP_remove_device (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "remove_device" '[Int] (IO ()) where
         nodeMethod = Godot.Core.UPNP.remove_device
@@ -504,7 +537,10 @@ set_device cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindUPNP_set_device (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "set_device" '[Int, UPNPDevice] (IO ())
          where
@@ -529,7 +565,10 @@ set_discover_ipv6 cls arg1
          godot_method_bind_call bindUPNP_set_discover_ipv6 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "set_discover_ipv6" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.UPNP.set_discover_ipv6
@@ -554,7 +593,10 @@ set_discover_local_port cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "set_discover_local_port" '[Int] (IO ())
          where
@@ -580,7 +622,10 @@ set_discover_multicast_if cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNP "set_discover_multicast_if" '[GodotString]
            (IO ())

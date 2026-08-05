@@ -6,17 +6,18 @@ module Godot.Core.OS
         Godot.Core.OS._SCREEN_ORIENTATION_SENSOR_PORTRAIT,
         Godot.Core.OS._SCREEN_ORIENTATION_SENSOR,
         Godot.Core.OS._DAY_THURSDAY, Godot.Core.OS._POWERSTATE_UNKNOWN,
-        Godot.Core.OS._MONTH_MARCH, Godot.Core.OS._DAY_FRIDAY,
-        Godot.Core.OS._SYSTEM_DIR_DOWNLOADS, Godot.Core.OS._MONTH_NOVEMBER,
-        Godot.Core.OS._MONTH_JULY, Godot.Core.OS._SYSTEM_DIR_PICTURES,
-        Godot.Core.OS._MONTH_DECEMBER, Godot.Core.OS._DAY_TUESDAY,
-        Godot.Core.OS._SYSTEM_DIR_DESKTOP, Godot.Core.OS._DAY_MONDAY,
-        Godot.Core.OS._SYSTEM_DIR_MUSIC,
+        Godot.Core.OS._OPENGL_CONTEXT, Godot.Core.OS._MONTH_MARCH,
+        Godot.Core.OS._DAY_FRIDAY, Godot.Core.OS._SYSTEM_DIR_DOWNLOADS,
+        Godot.Core.OS._MONTH_NOVEMBER, Godot.Core.OS._MONTH_JULY,
+        Godot.Core.OS._SYSTEM_DIR_PICTURES, Godot.Core.OS._MONTH_DECEMBER,
+        Godot.Core.OS._DAY_TUESDAY, Godot.Core.OS._SYSTEM_DIR_DESKTOP,
+        Godot.Core.OS._DAY_MONDAY, Godot.Core.OS._SYSTEM_DIR_MUSIC,
         Godot.Core.OS._SYSTEM_DIR_RINGTONES, Godot.Core.OS._MONTH_AUGUST,
         Godot.Core.OS._SYSTEM_DIR_DOCUMENTS,
         Godot.Core.OS._SYSTEM_DIR_MOVIES, Godot.Core.OS._SYSTEM_DIR_DCIM,
         Godot.Core.OS._POWERSTATE_CHARGED, Godot.Core.OS._MONTH_APRIL,
         Godot.Core.OS._POWERSTATE_ON_BATTERY, Godot.Core.OS._DAY_SUNDAY,
+        Godot.Core.OS._DISPLAY_HANDLE, Godot.Core.OS._APPLICATION_HANDLE,
         Godot.Core.OS._MONTH_MAY,
         Godot.Core.OS._SCREEN_ORIENTATION_REVERSE_PORTRAIT,
         Godot.Core.OS._MONTH_JANUARY, Godot.Core.OS._MONTH_OCTOBER,
@@ -26,13 +27,16 @@ module Godot.Core.OS
         Godot.Core.OS._POWERSTATE_CHARGING, Godot.Core.OS._MONTH_FEBRUARY,
         Godot.Core.OS._MONTH_JUNE,
         Godot.Core.OS._SCREEN_ORIENTATION_REVERSE_LANDSCAPE,
-        Godot.Core.OS._DAY_SATURDAY,
+        Godot.Core.OS._DAY_SATURDAY, Godot.Core.OS._WINDOW_VIEW,
+        Godot.Core.OS._WINDOW_HANDLE,
         Godot.Core.OS._SCREEN_ORIENTATION_LANDSCAPE,
         Godot.Core.OS._DAY_WEDNESDAY, Godot.Core.OS._VIDEO_DRIVER_GLES3,
         Godot.Core.OS.get_clipboard, Godot.Core.OS.set_clipboard,
         Godot.Core.OS.get_current_screen, Godot.Core.OS.set_current_screen,
-        Godot.Core.OS.get_exit_code, Godot.Core.OS.set_exit_code,
-        Godot.Core.OS.is_keep_screen_on, Godot.Core.OS.set_keep_screen_on,
+        Godot.Core.OS.is_delta_smoothing_enabled,
+        Godot.Core.OS.set_delta_smoothing, Godot.Core.OS.get_exit_code,
+        Godot.Core.OS.set_exit_code, Godot.Core.OS.is_keep_screen_on,
+        Godot.Core.OS.set_keep_screen_on,
         Godot.Core.OS.is_in_low_processor_usage_mode,
         Godot.Core.OS.set_low_processor_usage_mode,
         Godot.Core.OS.get_low_processor_usage_mode_sleep_usec,
@@ -43,6 +47,8 @@ module Godot.Core.OS
         Godot.Core.OS.set_min_window_size,
         Godot.Core.OS.get_screen_orientation,
         Godot.Core.OS.set_screen_orientation,
+        Godot.Core.OS.get_current_tablet_driver,
+        Godot.Core.OS.set_current_tablet_driver,
         Godot.Core.OS.is_vsync_enabled, Godot.Core.OS.set_use_vsync,
         Godot.Core.OS.is_vsync_via_compositor_enabled,
         Godot.Core.OS.set_vsync_via_compositor,
@@ -68,30 +74,35 @@ module Godot.Core.OS
         Godot.Core.OS.dump_resources_to_file, Godot.Core.OS.execute,
         Godot.Core.OS.find_scancode_from_string,
         Godot.Core.OS.get_audio_driver_count,
-        Godot.Core.OS.get_audio_driver_name,
-        Godot.Core.OS.get_cmdline_args,
+        Godot.Core.OS.get_audio_driver_name, Godot.Core.OS.get_cache_dir,
+        Godot.Core.OS.get_cmdline_args, Godot.Core.OS.get_config_dir,
         Godot.Core.OS.get_connected_midi_inputs,
-        Godot.Core.OS.get_current_video_driver, Godot.Core.OS.get_date,
-        Godot.Core.OS.get_datetime,
+        Godot.Core.OS.get_current_video_driver, Godot.Core.OS.get_data_dir,
+        Godot.Core.OS.get_date, Godot.Core.OS.get_datetime,
         Godot.Core.OS.get_datetime_from_unix_time,
         Godot.Core.OS.get_dynamic_memory_usage,
         Godot.Core.OS.get_environment, Godot.Core.OS.get_executable_path,
         Godot.Core.OS.get_granted_permissions,
         Godot.Core.OS.get_ime_selection, Godot.Core.OS.get_ime_text,
         Godot.Core.OS.get_latin_keyboard_variant, Godot.Core.OS.get_locale,
-        Godot.Core.OS.get_model_name, Godot.Core.OS.get_name,
+        Godot.Core.OS.get_locale_language, Godot.Core.OS.get_model_name,
+        Godot.Core.OS.get_name, Godot.Core.OS.get_native_handle,
         Godot.Core.OS.get_power_percent_left,
         Godot.Core.OS.get_power_seconds_left,
         Godot.Core.OS.get_power_state, Godot.Core.OS.get_process_id,
         Godot.Core.OS.get_processor_count,
         Godot.Core.OS.get_real_window_size,
         Godot.Core.OS.get_scancode_string, Godot.Core.OS.get_screen_count,
-        Godot.Core.OS.get_screen_dpi, Godot.Core.OS.get_screen_position,
+        Godot.Core.OS.get_screen_dpi, Godot.Core.OS.get_screen_max_scale,
+        Godot.Core.OS.get_screen_position, Godot.Core.OS.get_screen_scale,
         Godot.Core.OS.get_screen_size, Godot.Core.OS.get_splash_tick_msec,
         Godot.Core.OS.get_static_memory_peak_usage,
         Godot.Core.OS.get_static_memory_usage,
         Godot.Core.OS.get_system_dir, Godot.Core.OS.get_system_time_msecs,
-        Godot.Core.OS.get_system_time_secs, Godot.Core.OS.get_ticks_msec,
+        Godot.Core.OS.get_system_time_secs,
+        Godot.Core.OS.get_tablet_driver_count,
+        Godot.Core.OS.get_tablet_driver_name,
+        Godot.Core.OS.get_thread_caller_id, Godot.Core.OS.get_ticks_msec,
         Godot.Core.OS.get_ticks_usec, Godot.Core.OS.get_time,
         Godot.Core.OS.get_time_zone_info, Godot.Core.OS.get_unique_id,
         Godot.Core.OS.get_unix_time,
@@ -113,7 +124,12 @@ module Godot.Core.OS
         Godot.Core.OS.is_scancode_unicode, Godot.Core.OS.is_stdout_verbose,
         Godot.Core.OS.is_userfs_persistent,
         Godot.Core.OS.is_window_always_on_top,
-        Godot.Core.OS.is_window_focused, Godot.Core.OS.kill,
+        Godot.Core.OS.is_window_focused,
+        Godot.Core.OS.keyboard_get_current_layout,
+        Godot.Core.OS.keyboard_get_layout_count,
+        Godot.Core.OS.keyboard_get_layout_language,
+        Godot.Core.OS.keyboard_get_layout_name,
+        Godot.Core.OS.keyboard_set_current_layout, Godot.Core.OS.kill,
         Godot.Core.OS.move_window_to_foreground,
         Godot.Core.OS.native_video_is_playing,
         Godot.Core.OS.native_video_pause, Godot.Core.OS.native_video_play,
@@ -124,11 +140,13 @@ module Godot.Core.OS
         Godot.Core.OS.print_resources_by_type,
         Godot.Core.OS.print_resources_in_use,
         Godot.Core.OS.request_attention, Godot.Core.OS.request_permission,
-        Godot.Core.OS.request_permissions, Godot.Core.OS.set_icon,
-        Godot.Core.OS.set_ime_active, Godot.Core.OS.set_ime_position,
-        Godot.Core.OS.set_native_icon, Godot.Core.OS.set_thread_name,
+        Godot.Core.OS.request_permissions, Godot.Core.OS.set_environment,
+        Godot.Core.OS.set_icon, Godot.Core.OS.set_ime_active,
+        Godot.Core.OS.set_ime_position, Godot.Core.OS.set_native_icon,
+        Godot.Core.OS.set_thread_name,
         Godot.Core.OS.set_use_file_access_save_and_swap,
         Godot.Core.OS.set_window_always_on_top,
+        Godot.Core.OS.set_window_mouse_passthrough,
         Godot.Core.OS.set_window_title, Godot.Core.OS.shell_open,
         Godot.Core.OS.show_virtual_keyboard)
        where
@@ -158,6 +176,9 @@ _DAY_THURSDAY = 4
 
 _POWERSTATE_UNKNOWN :: Int
 _POWERSTATE_UNKNOWN = 0
+
+_OPENGL_CONTEXT :: Int
+_OPENGL_CONTEXT = 4
 
 _MONTH_MARCH :: Int
 _MONTH_MARCH = 3
@@ -219,6 +240,12 @@ _POWERSTATE_ON_BATTERY = 1
 _DAY_SUNDAY :: Int
 _DAY_SUNDAY = 0
 
+_DISPLAY_HANDLE :: Int
+_DISPLAY_HANDLE = 1
+
+_APPLICATION_HANDLE :: Int
+_APPLICATION_HANDLE = 0
+
 _MONTH_MAY :: Int
 _MONTH_MAY = 5
 
@@ -258,6 +285,12 @@ _SCREEN_ORIENTATION_REVERSE_LANDSCAPE = 2
 _DAY_SATURDAY :: Int
 _DAY_SATURDAY = 6
 
+_WINDOW_VIEW :: Int
+_WINDOW_VIEW = 3
+
+_WINDOW_HANDLE :: Int
+_WINDOW_HANDLE = 2
+
 _SCREEN_ORIENTATION_LANDSCAPE :: Int
 _SCREEN_ORIENTATION_LANDSCAPE = 0
 
@@ -286,7 +319,10 @@ get_clipboard cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_clipboard (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_clipboard" '[] (IO GodotString) where
         nodeMethod = Godot.Core.OS.get_clipboard
@@ -310,7 +346,10 @@ set_clipboard cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_set_clipboard (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_clipboard" '[GodotString] (IO ()) where
         nodeMethod = Godot.Core.OS.set_clipboard
@@ -339,7 +378,10 @@ get_current_screen cls
          godot_method_bind_call bindOS_get_current_screen (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_current_screen" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_current_screen
@@ -365,7 +407,10 @@ set_current_screen cls arg1
          godot_method_bind_call bindOS_set_current_screen (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_current_screen" '[Int] (IO ()) where
         nodeMethod = Godot.Core.OS.set_current_screen
@@ -374,6 +419,71 @@ instance NodeProperty OS "current_screen" Int 'False where
         nodeProperty
           = (get_current_screen, wrapDroppingSetter set_current_screen,
              Nothing)
+
+{-# NOINLINE bindOS_is_delta_smoothing_enabled #-}
+
+-- | If @true@, the engine filters the time delta measured between each frame, and attempts to compensate for random variation. This will only operate on systems where V-Sync is active.
+bindOS_is_delta_smoothing_enabled :: MethodBind
+bindOS_is_delta_smoothing_enabled
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "is_delta_smoothing_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the engine filters the time delta measured between each frame, and attempts to compensate for random variation. This will only operate on systems where V-Sync is active.
+is_delta_smoothing_enabled ::
+                             (OS :< cls, Object :< cls) => cls -> IO Bool
+is_delta_smoothing_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_is_delta_smoothing_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "is_delta_smoothing_enabled" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.OS.is_delta_smoothing_enabled
+
+{-# NOINLINE bindOS_set_delta_smoothing #-}
+
+-- | If @true@, the engine filters the time delta measured between each frame, and attempts to compensate for random variation. This will only operate on systems where V-Sync is active.
+bindOS_set_delta_smoothing :: MethodBind
+bindOS_set_delta_smoothing
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "set_delta_smoothing" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the engine filters the time delta measured between each frame, and attempts to compensate for random variation. This will only operate on systems where V-Sync is active.
+set_delta_smoothing ::
+                      (OS :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_delta_smoothing cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_set_delta_smoothing (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "set_delta_smoothing" '[Bool] (IO ()) where
+        nodeMethod = Godot.Core.OS.set_delta_smoothing
+
+instance NodeProperty OS "delta_smoothing" Bool 'False where
+        nodeProperty
+          = (is_delta_smoothing_enabled,
+             wrapDroppingSetter set_delta_smoothing, Nothing)
 
 {-# NOINLINE bindOS_get_exit_code #-}
 
@@ -395,7 +505,10 @@ get_exit_code cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_exit_code (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_exit_code" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_exit_code
@@ -420,7 +533,10 @@ set_exit_code cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_set_exit_code (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_exit_code" '[Int] (IO ()) where
         nodeMethod = Godot.Core.OS.set_exit_code
@@ -448,7 +564,10 @@ is_keep_screen_on cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_is_keep_screen_on (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_keep_screen_on" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_keep_screen_on
@@ -474,7 +593,10 @@ set_keep_screen_on cls arg1
          godot_method_bind_call bindOS_set_keep_screen_on (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_keep_screen_on" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.OS.set_keep_screen_on
@@ -506,7 +628,10 @@ is_in_low_processor_usage_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_in_low_processor_usage_mode" '[]
            (IO Bool)
@@ -535,7 +660,10 @@ set_low_processor_usage_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_low_processor_usage_mode" '[Bool]
            (IO ())
@@ -571,7 +699,10 @@ get_low_processor_usage_mode_sleep_usec cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_low_processor_usage_mode_sleep_usec"
            '[]
@@ -602,7 +733,10 @@ set_low_processor_usage_mode_sleep_usec cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_low_processor_usage_mode_sleep_usec"
            '[Int]
@@ -639,7 +773,10 @@ get_max_window_size cls
          godot_method_bind_call bindOS_get_max_window_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_max_window_size" '[] (IO Vector2) where
         nodeMethod = Godot.Core.OS.get_max_window_size
@@ -665,7 +802,10 @@ set_max_window_size cls arg1
          godot_method_bind_call bindOS_set_max_window_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_max_window_size" '[Vector2] (IO ())
          where
@@ -678,7 +818,8 @@ instance NodeProperty OS "max_window_size" Vector2 'False where
 
 {-# NOINLINE bindOS_get_min_window_size #-}
 
--- | The minimum size of the window (without counting window manager decorations). Does not affect fullscreen mode. Set to @(0, 0)@ to reset to the system default value.
+-- | The minimum size of the window in pixels (without counting window manager decorations). Does not affect fullscreen mode. Set to @(0, 0)@ to reset to the system's default value.
+--   			__Note:__ By default, the project window has a minimum size of @Vector2(64, 64)@. This prevents issues that can arise when the window is resized to a near-zero size.
 bindOS_get_min_window_size :: MethodBind
 bindOS_get_min_window_size
   = unsafePerformIO $
@@ -688,7 +829,8 @@ bindOS_get_min_window_size
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The minimum size of the window (without counting window manager decorations). Does not affect fullscreen mode. Set to @(0, 0)@ to reset to the system default value.
+-- | The minimum size of the window in pixels (without counting window manager decorations). Does not affect fullscreen mode. Set to @(0, 0)@ to reset to the system's default value.
+--   			__Note:__ By default, the project window has a minimum size of @Vector2(64, 64)@. This prevents issues that can arise when the window is resized to a near-zero size.
 get_min_window_size ::
                       (OS :< cls, Object :< cls) => cls -> IO Vector2
 get_min_window_size cls
@@ -697,14 +839,18 @@ get_min_window_size cls
          godot_method_bind_call bindOS_get_min_window_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_min_window_size" '[] (IO Vector2) where
         nodeMethod = Godot.Core.OS.get_min_window_size
 
 {-# NOINLINE bindOS_set_min_window_size #-}
 
--- | The minimum size of the window (without counting window manager decorations). Does not affect fullscreen mode. Set to @(0, 0)@ to reset to the system default value.
+-- | The minimum size of the window in pixels (without counting window manager decorations). Does not affect fullscreen mode. Set to @(0, 0)@ to reset to the system's default value.
+--   			__Note:__ By default, the project window has a minimum size of @Vector2(64, 64)@. This prevents issues that can arise when the window is resized to a near-zero size.
 bindOS_set_min_window_size :: MethodBind
 bindOS_set_min_window_size
   = unsafePerformIO $
@@ -714,7 +860,8 @@ bindOS_set_min_window_size
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The minimum size of the window (without counting window manager decorations). Does not affect fullscreen mode. Set to @(0, 0)@ to reset to the system default value.
+-- | The minimum size of the window in pixels (without counting window manager decorations). Does not affect fullscreen mode. Set to @(0, 0)@ to reset to the system's default value.
+--   			__Note:__ By default, the project window has a minimum size of @Vector2(64, 64)@. This prevents issues that can arise when the window is resized to a near-zero size.
 set_min_window_size ::
                       (OS :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_min_window_size cls arg1
@@ -723,7 +870,10 @@ set_min_window_size cls arg1
          godot_method_bind_call bindOS_set_min_window_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_min_window_size" '[Vector2] (IO ())
          where
@@ -755,7 +905,10 @@ get_screen_orientation cls
          godot_method_bind_call bindOS_get_screen_orientation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_screen_orientation" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_screen_orientation
@@ -781,7 +934,10 @@ set_screen_orientation cls arg1
          godot_method_bind_call bindOS_set_screen_orientation (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_screen_orientation" '[Int] (IO ())
          where
@@ -791,6 +947,75 @@ instance NodeProperty OS "screen_orientation" Int 'False where
         nodeProperty
           = (get_screen_orientation,
              wrapDroppingSetter set_screen_orientation, Nothing)
+
+{-# NOINLINE bindOS_get_current_tablet_driver #-}
+
+-- | The current tablet driver in use.
+bindOS_get_current_tablet_driver :: MethodBind
+bindOS_get_current_tablet_driver
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_current_tablet_driver" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The current tablet driver in use.
+get_current_tablet_driver ::
+                            (OS :< cls, Object :< cls) => cls -> IO GodotString
+get_current_tablet_driver cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_current_tablet_driver
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_current_tablet_driver" '[]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.OS.get_current_tablet_driver
+
+{-# NOINLINE bindOS_set_current_tablet_driver #-}
+
+-- | The current tablet driver in use.
+bindOS_set_current_tablet_driver :: MethodBind
+bindOS_set_current_tablet_driver
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "set_current_tablet_driver" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The current tablet driver in use.
+set_current_tablet_driver ::
+                            (OS :< cls, Object :< cls) => cls -> GodotString -> IO ()
+set_current_tablet_driver cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_set_current_tablet_driver
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "set_current_tablet_driver" '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.OS.set_current_tablet_driver
+
+instance NodeProperty OS "tablet_driver" GodotString 'False where
+        nodeProperty
+          = (get_current_tablet_driver,
+             wrapDroppingSetter set_current_tablet_driver, Nothing)
 
 {-# NOINLINE bindOS_is_vsync_enabled #-}
 
@@ -811,7 +1036,10 @@ is_vsync_enabled cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_is_vsync_enabled (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_vsync_enabled" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_vsync_enabled
@@ -834,7 +1062,10 @@ set_use_vsync cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_set_use_vsync (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_use_vsync" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.OS.set_use_vsync
@@ -869,7 +1100,10 @@ is_vsync_via_compositor_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_vsync_via_compositor_enabled" '[]
            (IO Bool)
@@ -901,7 +1135,10 @@ set_vsync_via_compositor cls arg1
          godot_method_bind_call bindOS_set_vsync_via_compositor (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_vsync_via_compositor" '[Bool] (IO ())
          where
@@ -935,7 +1172,10 @@ get_borderless_window cls
          godot_method_bind_call bindOS_get_borderless_window (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_borderless_window" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.get_borderless_window
@@ -963,7 +1203,10 @@ set_borderless_window cls arg1
          godot_method_bind_call bindOS_set_borderless_window (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_borderless_window" '[Bool] (IO ())
          where
@@ -995,7 +1238,10 @@ is_window_fullscreen cls
          godot_method_bind_call bindOS_is_window_fullscreen (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_window_fullscreen" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_window_fullscreen
@@ -1021,7 +1267,10 @@ set_window_fullscreen cls arg1
          godot_method_bind_call bindOS_set_window_fullscreen (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_window_fullscreen" '[Bool] (IO ())
          where
@@ -1052,7 +1301,10 @@ is_window_maximized cls
          godot_method_bind_call bindOS_is_window_maximized (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_window_maximized" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_window_maximized
@@ -1078,7 +1330,10 @@ set_window_maximized cls arg1
          godot_method_bind_call bindOS_set_window_maximized (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_window_maximized" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.OS.set_window_maximized
@@ -1108,7 +1363,10 @@ is_window_minimized cls
          godot_method_bind_call bindOS_is_window_minimized (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_window_minimized" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_window_minimized
@@ -1134,7 +1392,10 @@ set_window_minimized cls arg1
          godot_method_bind_call bindOS_set_window_minimized (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_window_minimized" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.OS.set_window_minimized
@@ -1146,10 +1407,10 @@ instance NodeProperty OS "window_minimized" Bool 'False where
 
 {-# NOINLINE bindOS_get_window_per_pixel_transparency_enabled #-}
 
--- | If @true@, the window background is transparent and window frame is removed.
+-- | If @true@, the window background is transparent and the window frame is removed.
 --   			Use @get_tree().get_root().set_transparent_background(true)@ to disable main viewport background rendering.
---   			__Note:__ This property has no effect if __Project > Project Settings > Display > Window > Per-pixel transparency > Allowed__ setting is disabled.
---   			__Note:__ This property is implemented on HTML5, Linux, macOS and Windows.
+--   			__Note:__ This property has no effect if @ProjectSettings.display/window/per_pixel_transparency/allowed@ setting is disabled.
+--   			__Note:__ This property is implemented on HTML5, Linux, macOS, Windows, and Android. It can't be changed at runtime for Android. Use @ProjectSettings.display/window/per_pixel_transparency/enabled@ to set it at startup instead.
 bindOS_get_window_per_pixel_transparency_enabled :: MethodBind
 bindOS_get_window_per_pixel_transparency_enabled
   = unsafePerformIO $
@@ -1159,10 +1420,10 @@ bindOS_get_window_per_pixel_transparency_enabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the window background is transparent and window frame is removed.
+-- | If @true@, the window background is transparent and the window frame is removed.
 --   			Use @get_tree().get_root().set_transparent_background(true)@ to disable main viewport background rendering.
---   			__Note:__ This property has no effect if __Project > Project Settings > Display > Window > Per-pixel transparency > Allowed__ setting is disabled.
---   			__Note:__ This property is implemented on HTML5, Linux, macOS and Windows.
+--   			__Note:__ This property has no effect if @ProjectSettings.display/window/per_pixel_transparency/allowed@ setting is disabled.
+--   			__Note:__ This property is implemented on HTML5, Linux, macOS, Windows, and Android. It can't be changed at runtime for Android. Use @ProjectSettings.display/window/per_pixel_transparency/enabled@ to set it at startup instead.
 get_window_per_pixel_transparency_enabled ::
                                             (OS :< cls, Object :< cls) => cls -> IO Bool
 get_window_per_pixel_transparency_enabled cls
@@ -1173,7 +1434,10 @@ get_window_per_pixel_transparency_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_window_per_pixel_transparency_enabled"
            '[]
@@ -1184,10 +1448,10 @@ instance NodeMethod OS "get_window_per_pixel_transparency_enabled"
 
 {-# NOINLINE bindOS_set_window_per_pixel_transparency_enabled #-}
 
--- | If @true@, the window background is transparent and window frame is removed.
+-- | If @true@, the window background is transparent and the window frame is removed.
 --   			Use @get_tree().get_root().set_transparent_background(true)@ to disable main viewport background rendering.
---   			__Note:__ This property has no effect if __Project > Project Settings > Display > Window > Per-pixel transparency > Allowed__ setting is disabled.
---   			__Note:__ This property is implemented on HTML5, Linux, macOS and Windows.
+--   			__Note:__ This property has no effect if @ProjectSettings.display/window/per_pixel_transparency/allowed@ setting is disabled.
+--   			__Note:__ This property is implemented on HTML5, Linux, macOS, Windows, and Android. It can't be changed at runtime for Android. Use @ProjectSettings.display/window/per_pixel_transparency/enabled@ to set it at startup instead.
 bindOS_set_window_per_pixel_transparency_enabled :: MethodBind
 bindOS_set_window_per_pixel_transparency_enabled
   = unsafePerformIO $
@@ -1197,10 +1461,10 @@ bindOS_set_window_per_pixel_transparency_enabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the window background is transparent and window frame is removed.
+-- | If @true@, the window background is transparent and the window frame is removed.
 --   			Use @get_tree().get_root().set_transparent_background(true)@ to disable main viewport background rendering.
---   			__Note:__ This property has no effect if __Project > Project Settings > Display > Window > Per-pixel transparency > Allowed__ setting is disabled.
---   			__Note:__ This property is implemented on HTML5, Linux, macOS and Windows.
+--   			__Note:__ This property has no effect if @ProjectSettings.display/window/per_pixel_transparency/allowed@ setting is disabled.
+--   			__Note:__ This property is implemented on HTML5, Linux, macOS, Windows, and Android. It can't be changed at runtime for Android. Use @ProjectSettings.display/window/per_pixel_transparency/enabled@ to set it at startup instead.
 set_window_per_pixel_transparency_enabled ::
                                             (OS :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_window_per_pixel_transparency_enabled cls arg1
@@ -1211,7 +1475,10 @@ set_window_per_pixel_transparency_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_window_per_pixel_transparency_enabled"
            '[Bool]
@@ -1250,7 +1517,10 @@ get_window_position cls
          godot_method_bind_call bindOS_get_window_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_window_position" '[] (IO Vector2) where
         nodeMethod = Godot.Core.OS.get_window_position
@@ -1276,7 +1546,10 @@ set_window_position cls arg1
          godot_method_bind_call bindOS_set_window_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_window_position" '[Vector2] (IO ())
          where
@@ -1307,7 +1580,10 @@ is_window_resizable cls
          godot_method_bind_call bindOS_is_window_resizable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_window_resizable" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_window_resizable
@@ -1333,7 +1609,10 @@ set_window_resizable cls arg1
          godot_method_bind_call bindOS_set_window_resizable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_window_resizable" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.OS.set_window_resizable
@@ -1362,7 +1641,10 @@ get_window_size cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_window_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_window_size" '[] (IO Vector2) where
         nodeMethod = Godot.Core.OS.get_window_size
@@ -1387,7 +1669,10 @@ set_window_size cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_set_window_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_window_size" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.OS.set_window_size
@@ -1417,7 +1702,9 @@ alert cls arg1 arg2
       [toVariant arg1, defaultedVariant VariantString "Alert!" arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_alert (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "alert" '[GodotString, Maybe GodotString]
            (IO ())
@@ -1442,7 +1729,9 @@ can_draw cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_can_draw (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "can_draw" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.can_draw
@@ -1466,7 +1755,10 @@ can_use_threads cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_can_use_threads (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "can_use_threads" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.can_use_threads
@@ -1489,7 +1781,10 @@ center_window cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_center_window (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "center_window" '[] (IO ()) where
         nodeMethod = Godot.Core.OS.center_window
@@ -1515,14 +1810,19 @@ close_midi_inputs cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_close_midi_inputs (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "close_midi_inputs" '[] (IO ()) where
         nodeMethod = Godot.Core.OS.close_midi_inputs
 
 {-# NOINLINE bindOS_delay_msec #-}
 
--- | Delay execution of the current thread by @msec@ milliseconds.
+-- | Delays execution of the current thread by @msec@ milliseconds. @msec@ must be greater than or equal to @0@. Otherwise, @method delay_msec@ will do nothing and will print an error message.
+--   				__Note:__ @method delay_msec@ is a @i@blocking@/i@ way to delay code execution. To delay code execution in a non-blocking way, see @method SceneTree.create_timer@. Yielding with @method SceneTree.create_timer@ will delay the execution of code placed below the @yield@ without affecting the rest of the project (or editor, for @EditorPlugin@s and @EditorScript@s).
+--   				__Note:__ When @method delay_msec@ is called on the main thread, it will freeze the project and will prevent it from redrawing and registering input until the delay has passed. When using @method delay_msec@ as part of an @EditorPlugin@ or @EditorScript@, it will freeze the editor but won't freeze the project if it is currently running (since the project is an independent child process).
 bindOS_delay_msec :: MethodBind
 bindOS_delay_msec
   = unsafePerformIO $
@@ -1532,20 +1832,27 @@ bindOS_delay_msec
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Delay execution of the current thread by @msec@ milliseconds.
+-- | Delays execution of the current thread by @msec@ milliseconds. @msec@ must be greater than or equal to @0@. Otherwise, @method delay_msec@ will do nothing and will print an error message.
+--   				__Note:__ @method delay_msec@ is a @i@blocking@/i@ way to delay code execution. To delay code execution in a non-blocking way, see @method SceneTree.create_timer@. Yielding with @method SceneTree.create_timer@ will delay the execution of code placed below the @yield@ without affecting the rest of the project (or editor, for @EditorPlugin@s and @EditorScript@s).
+--   				__Note:__ When @method delay_msec@ is called on the main thread, it will freeze the project and will prevent it from redrawing and registering input until the delay has passed. When using @method delay_msec@ as part of an @EditorPlugin@ or @EditorScript@, it will freeze the editor but won't freeze the project if it is currently running (since the project is an independent child process).
 delay_msec :: (OS :< cls, Object :< cls) => cls -> Int -> IO ()
 delay_msec cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_delay_msec (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "delay_msec" '[Int] (IO ()) where
         nodeMethod = Godot.Core.OS.delay_msec
 
 {-# NOINLINE bindOS_delay_usec #-}
 
--- | Delay execution of the current thread by @usec@ microseconds.
+-- | Delays execution of the current thread by @usec@ microseconds. @usec@ must be greater than or equal to @0@. Otherwise, @method delay_usec@ will do nothing and will print an error message.
+--   				__Note:__ @method delay_usec@ is a @i@blocking@/i@ way to delay code execution. To delay code execution in a non-blocking way, see @method SceneTree.create_timer@. Yielding with @method SceneTree.create_timer@ will delay the execution of code placed below the @yield@ without affecting the rest of the project (or editor, for @EditorPlugin@s and @EditorScript@s).
+--   				__Note:__ When @method delay_usec@ is called on the main thread, it will freeze the project and will prevent it from redrawing and registering input until the delay has passed. When using @method delay_usec@ as part of an @EditorPlugin@ or @EditorScript@, it will freeze the editor but won't freeze the project if it is currently running (since the project is an independent child process).
 bindOS_delay_usec :: MethodBind
 bindOS_delay_usec
   = unsafePerformIO $
@@ -1555,13 +1862,18 @@ bindOS_delay_usec
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Delay execution of the current thread by @usec@ microseconds.
+-- | Delays execution of the current thread by @usec@ microseconds. @usec@ must be greater than or equal to @0@. Otherwise, @method delay_usec@ will do nothing and will print an error message.
+--   				__Note:__ @method delay_usec@ is a @i@blocking@/i@ way to delay code execution. To delay code execution in a non-blocking way, see @method SceneTree.create_timer@. Yielding with @method SceneTree.create_timer@ will delay the execution of code placed below the @yield@ without affecting the rest of the project (or editor, for @EditorPlugin@s and @EditorScript@s).
+--   				__Note:__ When @method delay_usec@ is called on the main thread, it will freeze the project and will prevent it from redrawing and registering input until the delay has passed. When using @method delay_usec@ as part of an @EditorPlugin@ or @EditorScript@, it will freeze the editor but won't freeze the project if it is currently running (since the project is an independent child process).
 delay_usec :: (OS :< cls, Object :< cls) => cls -> Int -> IO ()
 delay_usec cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_delay_usec (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "delay_usec" '[Int] (IO ()) where
         nodeMethod = Godot.Core.OS.delay_usec
@@ -1589,7 +1901,10 @@ dump_memory_to_file cls arg1
          godot_method_bind_call bindOS_dump_memory_to_file (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "dump_memory_to_file" '[GodotString] (IO ())
          where
@@ -1620,7 +1935,10 @@ dump_resources_to_file cls arg1
          godot_method_bind_call bindOS_dump_resources_to_file (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "dump_resources_to_file" '[GodotString]
            (IO ())
@@ -1661,6 +1979,9 @@ instance NodeMethod OS "dump_resources_to_file" '[GodotString]
 --   @
 --   
 --   				__Note:__ This method is implemented on Android, iOS, Linux, macOS and Windows.
+--   				__Note:__ To execute a Windows command interpreter built-in command, specify @cmd.exe@ in @path@, @/c@ as the first argument, and the desired command as the second argument.
+--   				__Note:__ To execute a PowerShell built-in command, specify @powershell.exe@ in @path@, @-Command@ as the first argument, and the desired command as the second argument.
+--   				__Note:__ To execute a Unix shell built-in command, specify shell executable name in @path@, @-c@ as the first argument, and the desired command as the second argument.
 bindOS_execute :: MethodBind
 bindOS_execute
   = unsafePerformIO $
@@ -1702,6 +2023,9 @@ bindOS_execute
 --   @
 --   
 --   				__Note:__ This method is implemented on Android, iOS, Linux, macOS and Windows.
+--   				__Note:__ To execute a Windows command interpreter built-in command, specify @cmd.exe@ in @path@, @/c@ as the first argument, and the desired command as the second argument.
+--   				__Note:__ To execute a PowerShell built-in command, specify @powershell.exe@ in @path@, @-Command@ as the first argument, and the desired command as the second argument.
+--   				__Note:__ To execute a Unix shell built-in command, specify shell executable name in @path@, @-c@ as the first argument, and the desired command as the second argument.
 execute ::
           (OS :< cls, Object :< cls) =>
           cls ->
@@ -1716,7 +2040,9 @@ execute cls arg1 arg2 arg3 arg4 arg5
        maybe (VariantBool False) toVariant arg5]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_execute (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "execute"
            '[GodotString, PoolStringArray, Maybe Bool, Maybe Array,
@@ -1747,7 +2073,10 @@ find_scancode_from_string cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "find_scancode_from_string" '[GodotString]
            (IO Int)
@@ -1775,7 +2104,10 @@ get_audio_driver_count cls
          godot_method_bind_call bindOS_get_audio_driver_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_audio_driver_count" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_audio_driver_count
@@ -1801,19 +2133,51 @@ get_audio_driver_name cls arg1
          godot_method_bind_call bindOS_get_audio_driver_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_audio_driver_name" '[Int]
            (IO GodotString)
          where
         nodeMethod = Godot.Core.OS.get_audio_driver_name
 
+{-# NOINLINE bindOS_get_cache_dir #-}
+
+-- | Returns the @i@global@/i@ cache data directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_CACHE_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_config_dir@ and @method get_data_dir@.
+--   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
+bindOS_get_cache_dir :: MethodBind
+bindOS_get_cache_dir
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_cache_dir" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the @i@global@/i@ cache data directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_CACHE_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_config_dir@ and @method get_data_dir@.
+--   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
+get_cache_dir ::
+                (OS :< cls, Object :< cls) => cls -> IO GodotString
+get_cache_dir cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_cache_dir (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_cache_dir" '[] (IO GodotString) where
+        nodeMethod = Godot.Core.OS.get_cache_dir
+
 {-# NOINLINE bindOS_get_cmdline_args #-}
 
 -- | Returns the command-line arguments passed to the engine.
 --   				Command-line arguments can be written in any form, including both @--key value@ and @--key=value@ forms so they can be properly parsed, as long as custom command-line arguments do not conflict with engine arguments.
 --   				You can also incorporate environment variables using the @method get_environment@ method.
---   				You can set @editor/main_run_args@ in the Project Settings to define command-line arguments to be passed by the editor when running the project.
+--   				You can set @ProjectSettings.editor/main_run_args@ to define command-line arguments to be passed by the editor when running the project.
 --   				Here's a minimal example on how to parse command-line arguments into a dictionary using the @--key=value@ form for arguments:
 --   				
 --   @
@@ -1837,7 +2201,7 @@ bindOS_get_cmdline_args
 -- | Returns the command-line arguments passed to the engine.
 --   				Command-line arguments can be written in any form, including both @--key value@ and @--key=value@ forms so they can be properly parsed, as long as custom command-line arguments do not conflict with engine arguments.
 --   				You can also incorporate environment variables using the @method get_environment@ method.
---   				You can set @editor/main_run_args@ in the Project Settings to define command-line arguments to be passed by the editor when running the project.
+--   				You can set @ProjectSettings.editor/main_run_args@ to define command-line arguments to be passed by the editor when running the project.
 --   				Here's a minimal example on how to parse command-line arguments into a dictionary using the @--key=value@ form for arguments:
 --   				
 --   @
@@ -1856,11 +2220,44 @@ get_cmdline_args cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_cmdline_args (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_cmdline_args" '[] (IO PoolStringArray)
          where
         nodeMethod = Godot.Core.OS.get_cmdline_args
+
+{-# NOINLINE bindOS_get_config_dir #-}
+
+-- | Returns the @i@global@/i@ user configuration directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_CONFIG_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_data_dir@.
+--   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
+bindOS_get_config_dir :: MethodBind
+bindOS_get_config_dir
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_config_dir" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the @i@global@/i@ user configuration directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_CONFIG_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_data_dir@.
+--   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
+get_config_dir ::
+                 (OS :< cls, Object :< cls) => cls -> IO GodotString
+get_config_dir cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_config_dir (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_config_dir" '[] (IO GodotString) where
+        nodeMethod = Godot.Core.OS.get_config_dir
 
 {-# NOINLINE bindOS_get_connected_midi_inputs #-}
 
@@ -1888,7 +2285,10 @@ get_connected_midi_inputs cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_connected_midi_inputs" '[]
            (IO PoolStringArray)
@@ -1916,11 +2316,42 @@ get_current_video_driver cls
          godot_method_bind_call bindOS_get_current_video_driver (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_current_video_driver" '[] (IO Int)
          where
         nodeMethod = Godot.Core.OS.get_current_video_driver
+
+{-# NOINLINE bindOS_get_data_dir #-}
+
+-- | Returns the @i@global@/i@ user data directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_DATA_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_config_dir@.
+--   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
+bindOS_get_data_dir :: MethodBind
+bindOS_get_data_dir
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_data_dir" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the @i@global@/i@ user data directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_DATA_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_config_dir@.
+--   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
+get_data_dir :: (OS :< cls, Object :< cls) => cls -> IO GodotString
+get_data_dir cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_data_dir (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_data_dir" '[] (IO GodotString) where
+        nodeMethod = Godot.Core.OS.get_data_dir
 
 {-# NOINLINE bindOS_get_date #-}
 
@@ -1941,7 +2372,9 @@ get_date cls arg1
   = withVariantArray [maybe (VariantBool False) toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_date (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_date" '[Maybe Bool] (IO Dictionary)
          where
@@ -1966,7 +2399,10 @@ get_datetime cls arg1
   = withVariantArray [maybe (VariantBool False) toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_datetime (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_datetime" '[Maybe Bool] (IO Dictionary)
          where
@@ -1996,7 +2432,10 @@ get_datetime_from_unix_time cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_datetime_from_unix_time" '[Int]
            (IO Dictionary)
@@ -2024,7 +2463,10 @@ get_dynamic_memory_usage cls
          godot_method_bind_call bindOS_get_dynamic_memory_usage (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_dynamic_memory_usage" '[] (IO Int)
          where
@@ -2032,7 +2474,8 @@ instance NodeMethod OS "get_dynamic_memory_usage" '[] (IO Int)
 
 {-# NOINLINE bindOS_get_environment #-}
 
--- | Returns an environment variable.
+-- | Returns the value of an environment variable. Returns an empty string if the environment variable doesn't exist.
+--   				__Note:__ Double-check the casing of @variable@. Environment variable names are case-sensitive on all platforms except Windows.
 bindOS_get_environment :: MethodBind
 bindOS_get_environment
   = unsafePerformIO $
@@ -2042,7 +2485,8 @@ bindOS_get_environment
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns an environment variable.
+-- | Returns the value of an environment variable. Returns an empty string if the environment variable doesn't exist.
+--   				__Note:__ Double-check the casing of @variable@. Environment variable names are case-sensitive on all platforms except Windows.
 get_environment ::
                   (OS :< cls, Object :< cls) => cls -> GodotString -> IO GodotString
 get_environment cls arg1
@@ -2050,7 +2494,10 @@ get_environment cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_environment (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_environment" '[GodotString]
            (IO GodotString)
@@ -2078,7 +2525,10 @@ get_executable_path cls
          godot_method_bind_call bindOS_get_executable_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_executable_path" '[] (IO GodotString)
          where
@@ -2086,7 +2536,7 @@ instance NodeMethod OS "get_executable_path" '[] (IO GodotString)
 
 {-# NOINLINE bindOS_get_granted_permissions #-}
 
--- | With this function you can get the list of dangerous permissions that have been granted to the Android application.
+-- | With this function, you can get the list of dangerous permissions that have been granted to the Android application.
 --   				__Note:__ This method is implemented on Android.
 bindOS_get_granted_permissions :: MethodBind
 bindOS_get_granted_permissions
@@ -2097,7 +2547,7 @@ bindOS_get_granted_permissions
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | With this function you can get the list of dangerous permissions that have been granted to the Android application.
+-- | With this function, you can get the list of dangerous permissions that have been granted to the Android application.
 --   				__Note:__ This method is implemented on Android.
 get_granted_permissions ::
                           (OS :< cls, Object :< cls) => cls -> IO PoolStringArray
@@ -2107,7 +2557,10 @@ get_granted_permissions cls
          godot_method_bind_call bindOS_get_granted_permissions (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_granted_permissions" '[]
            (IO PoolStringArray)
@@ -2138,7 +2591,10 @@ get_ime_selection cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_ime_selection (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_ime_selection" '[] (IO Vector2) where
         nodeMethod = Godot.Core.OS.get_ime_selection
@@ -2165,7 +2621,10 @@ get_ime_text cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_ime_text (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_ime_text" '[] (IO GodotString) where
         nodeMethod = Godot.Core.OS.get_ime_text
@@ -2196,7 +2655,10 @@ get_latin_keyboard_variant cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_latin_keyboard_variant" '[]
            (IO GodotString)
@@ -2205,7 +2667,12 @@ instance NodeMethod OS "get_latin_keyboard_variant" '[]
 
 {-# NOINLINE bindOS_get_locale #-}
 
--- | Returns the host OS locale.
+-- | Returns the host OS locale as a string of the form @language_Script_COUNTRY_VARIANT@extra@. If you want only the language code and not the fully specified locale from the OS, you can use @method get_locale_language@.
+--   				@language@ - 2 or 3-letter @url=https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes@language code@/url@, in lower case.
+--   				@Script@ - optional, 4-letter @url=https://en.wikipedia.org/wiki/ISO_15924@script code@/url@, in title case.
+--   				@COUNTRY@ - optional, 2 or 3-letter @url=https://en.wikipedia.org/wiki/ISO_3166-1@country code@/url@, in upper case.
+--   				@VARIANT@ - optional, language variant, region and sort order. Variant can have any number of underscored keywords.
+--   				@extra@ - optional, semicolon separated list of additional key words. Currency, calendar, sort order and numbering system information.
 bindOS_get_locale :: MethodBind
 bindOS_get_locale
   = unsafePerformIO $
@@ -2215,16 +2682,56 @@ bindOS_get_locale
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the host OS locale.
+-- | Returns the host OS locale as a string of the form @language_Script_COUNTRY_VARIANT@extra@. If you want only the language code and not the fully specified locale from the OS, you can use @method get_locale_language@.
+--   				@language@ - 2 or 3-letter @url=https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes@language code@/url@, in lower case.
+--   				@Script@ - optional, 4-letter @url=https://en.wikipedia.org/wiki/ISO_15924@script code@/url@, in title case.
+--   				@COUNTRY@ - optional, 2 or 3-letter @url=https://en.wikipedia.org/wiki/ISO_3166-1@country code@/url@, in upper case.
+--   				@VARIANT@ - optional, language variant, region and sort order. Variant can have any number of underscored keywords.
+--   				@extra@ - optional, semicolon separated list of additional key words. Currency, calendar, sort order and numbering system information.
 get_locale :: (OS :< cls, Object :< cls) => cls -> IO GodotString
 get_locale cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_locale (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_locale" '[] (IO GodotString) where
         nodeMethod = Godot.Core.OS.get_locale
+
+{-# NOINLINE bindOS_get_locale_language #-}
+
+-- | Returns the host OS locale's 2 or 3-letter @url=https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes@language code@/url@ as a string which should be consistent on all platforms. This is equivalent to extracting the @language@ part of the @method get_locale@ string.
+--   				This can be used to narrow down fully specified locale strings to only the "common" language code, when you don't need the additional information about country code or variants. For example, for a French Canadian user with @fr_CA@ locale, this would return @fr@.
+bindOS_get_locale_language :: MethodBind
+bindOS_get_locale_language
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_locale_language" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the host OS locale's 2 or 3-letter @url=https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes@language code@/url@ as a string which should be consistent on all platforms. This is equivalent to extracting the @language@ part of the @method get_locale@ string.
+--   				This can be used to narrow down fully specified locale strings to only the "common" language code, when you don't need the additional information about country code or variants. For example, for a French Canadian user with @fr_CA@ locale, this would return @fr@.
+get_locale_language ::
+                      (OS :< cls, Object :< cls) => cls -> IO GodotString
+get_locale_language cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_locale_language (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_locale_language" '[] (IO GodotString)
+         where
+        nodeMethod = Godot.Core.OS.get_locale_language
 
 {-# NOINLINE bindOS_get_model_name #-}
 
@@ -2248,7 +2755,10 @@ get_model_name cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_model_name (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_model_name" '[] (IO GodotString) where
         nodeMethod = Godot.Core.OS.get_model_name
@@ -2271,10 +2781,42 @@ get_name cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_name (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_name" '[] (IO GodotString) where
         nodeMethod = Godot.Core.OS.get_name
+
+{-# NOINLINE bindOS_get_native_handle #-}
+
+-- | Returns internal structure pointers for use in GDNative plugins.
+--   				__Note:__ This method is implemented on Linux and Windows (other OSs will soon be supported).
+bindOS_get_native_handle :: MethodBind
+bindOS_get_native_handle
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_native_handle" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns internal structure pointers for use in GDNative plugins.
+--   				__Note:__ This method is implemented on Linux and Windows (other OSs will soon be supported).
+get_native_handle ::
+                    (OS :< cls, Object :< cls) => cls -> Int -> IO Int
+get_native_handle cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_native_handle (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_native_handle" '[Int] (IO Int) where
+        nodeMethod = Godot.Core.OS.get_native_handle
 
 {-# NOINLINE bindOS_get_power_percent_left #-}
 
@@ -2299,7 +2841,10 @@ get_power_percent_left cls
          godot_method_bind_call bindOS_get_power_percent_left (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_power_percent_left" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_power_percent_left
@@ -2327,7 +2872,10 @@ get_power_seconds_left cls
          godot_method_bind_call bindOS_get_power_seconds_left (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_power_seconds_left" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_power_seconds_left
@@ -2353,7 +2901,10 @@ get_power_state cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_power_state (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_power_state" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_power_state
@@ -2379,7 +2930,10 @@ get_process_id cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_process_id (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_process_id" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_process_id
@@ -2404,7 +2958,10 @@ get_processor_count cls
          godot_method_bind_call bindOS_get_processor_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_processor_count" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_processor_count
@@ -2430,7 +2987,10 @@ get_real_window_size cls
          godot_method_bind_call bindOS_get_real_window_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_real_window_size" '[] (IO Vector2)
          where
@@ -2459,7 +3019,10 @@ get_scancode_string cls arg1
          godot_method_bind_call bindOS_get_scancode_string (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_scancode_string" '[Int]
            (IO GodotString)
@@ -2485,7 +3048,10 @@ get_screen_count cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_screen_count (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_screen_count" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_screen_count
@@ -2493,7 +3059,8 @@ instance NodeMethod OS "get_screen_count" '[] (IO Int) where
 {-# NOINLINE bindOS_get_screen_dpi #-}
 
 -- | Returns the dots per inch density of the specified screen. If @screen@ is @-1@ (the default value), the current screen will be used.
---   				On Android devices, the actual screen densities are grouped into six generalized densities:
+--   				__Note:__ On macOS, returned value is inaccurate if fractional display scaling mode is used.
+--   				__Note:__ On Android devices, the actual screen densities are grouped into six generalized densities:
 --   				
 --   @
 --   
@@ -2517,7 +3084,8 @@ bindOS_get_screen_dpi
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the dots per inch density of the specified screen. If @screen@ is @-1@ (the default value), the current screen will be used.
---   				On Android devices, the actual screen densities are grouped into six generalized densities:
+--   				__Note:__ On macOS, returned value is inaccurate if fractional display scaling mode is used.
+--   				__Note:__ On Android devices, the actual screen densities are grouped into six generalized densities:
 --   				
 --   @
 --   
@@ -2538,10 +3106,46 @@ get_screen_dpi cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_screen_dpi (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_screen_dpi" '[Maybe Int] (IO Int) where
         nodeMethod = Godot.Core.OS.get_screen_dpi
+
+{-# NOINLINE bindOS_get_screen_max_scale #-}
+
+-- | Return the greatest scale factor of all screens.
+--   				__Note:__ On macOS returned value is @2.0@ if there is at least one hiDPI (Retina) screen in the system, and @1.0@ in all other cases.
+--   				__Note:__ This method is implemented on macOS.
+bindOS_get_screen_max_scale :: MethodBind
+bindOS_get_screen_max_scale
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_screen_max_scale" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Return the greatest scale factor of all screens.
+--   				__Note:__ On macOS returned value is @2.0@ if there is at least one hiDPI (Retina) screen in the system, and @1.0@ in all other cases.
+--   				__Note:__ This method is implemented on macOS.
+get_screen_max_scale ::
+                       (OS :< cls, Object :< cls) => cls -> IO Float
+get_screen_max_scale cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_screen_max_scale (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_screen_max_scale" '[] (IO Float) where
+        nodeMethod = Godot.Core.OS.get_screen_max_scale
 
 {-# NOINLINE bindOS_get_screen_position #-}
 
@@ -2564,12 +3168,48 @@ get_screen_position cls arg1
          godot_method_bind_call bindOS_get_screen_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_screen_position" '[Maybe Int]
            (IO Vector2)
          where
         nodeMethod = Godot.Core.OS.get_screen_position
+
+{-# NOINLINE bindOS_get_screen_scale #-}
+
+-- | Return the scale factor of the specified screen by index. If @screen@ is @-1@ (the default value), the current screen will be used.
+--   				__Note:__ On macOS returned value is @2.0@ for hiDPI (Retina) screen, and @1.0@ for all other cases.
+--   				__Note:__ This method is implemented on macOS.
+bindOS_get_screen_scale :: MethodBind
+bindOS_get_screen_scale
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_screen_scale" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Return the scale factor of the specified screen by index. If @screen@ is @-1@ (the default value), the current screen will be used.
+--   				__Note:__ On macOS returned value is @2.0@ for hiDPI (Retina) screen, and @1.0@ for all other cases.
+--   				__Note:__ This method is implemented on macOS.
+get_screen_scale ::
+                   (OS :< cls, Object :< cls) => cls -> Maybe Int -> IO Float
+get_screen_scale cls arg1
+  = withVariantArray [maybe (VariantInt (-1)) toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_screen_scale (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_screen_scale" '[Maybe Int] (IO Float)
+         where
+        nodeMethod = Godot.Core.OS.get_screen_scale
 
 {-# NOINLINE bindOS_get_screen_size #-}
 
@@ -2591,7 +3231,10 @@ get_screen_size cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_screen_size (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_screen_size" '[Maybe Int] (IO Vector2)
          where
@@ -2617,7 +3260,10 @@ get_splash_tick_msec cls
          godot_method_bind_call bindOS_get_splash_tick_msec (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_splash_tick_msec" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_splash_tick_msec
@@ -2644,7 +3290,10 @@ get_static_memory_peak_usage cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_static_memory_peak_usage" '[] (IO Int)
          where
@@ -2652,7 +3301,7 @@ instance NodeMethod OS "get_static_memory_peak_usage" '[] (IO Int)
 
 {-# NOINLINE bindOS_get_static_memory_usage #-}
 
--- | Returns the amount of static memory being used by the program in bytes.
+-- | Returns the amount of static memory being used by the program in bytes (only works in debug).
 bindOS_get_static_memory_usage :: MethodBind
 bindOS_get_static_memory_usage
   = unsafePerformIO $
@@ -2662,7 +3311,7 @@ bindOS_get_static_memory_usage
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the amount of static memory being used by the program in bytes.
+-- | Returns the amount of static memory being used by the program in bytes (only works in debug).
 get_static_memory_usage ::
                           (OS :< cls, Object :< cls) => cls -> IO Int
 get_static_memory_usage cls
@@ -2671,7 +3320,10 @@ get_static_memory_usage cls
          godot_method_bind_call bindOS_get_static_memory_usage (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_static_memory_usage" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_static_memory_usage
@@ -2680,6 +3332,7 @@ instance NodeMethod OS "get_static_memory_usage" '[] (IO Int) where
 
 -- | Returns the actual path to commonly used folders across different platforms. Available locations are specified in @enum SystemDir@.
 --   				__Note:__ This method is implemented on Android, Linux, macOS and Windows.
+--   				__Note:__ Shared storage is implemented on Android and allows to differentiate between app specific and shared directories. Shared directories have additional restrictions on Android.
 bindOS_get_system_dir :: MethodBind
 bindOS_get_system_dir
   = unsafePerformIO $
@@ -2691,16 +3344,23 @@ bindOS_get_system_dir
 
 -- | Returns the actual path to commonly used folders across different platforms. Available locations are specified in @enum SystemDir@.
 --   				__Note:__ This method is implemented on Android, Linux, macOS and Windows.
+--   				__Note:__ Shared storage is implemented on Android and allows to differentiate between app specific and shared directories. Shared directories have additional restrictions on Android.
 get_system_dir ::
-                 (OS :< cls, Object :< cls) => cls -> Int -> IO GodotString
-get_system_dir cls arg1
-  = withVariantArray [toVariant arg1]
+                 (OS :< cls, Object :< cls) =>
+                 cls -> Int -> Maybe Bool -> IO GodotString
+get_system_dir cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool True) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_system_dir (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod OS "get_system_dir" '[Int] (IO GodotString)
+instance NodeMethod OS "get_system_dir" '[Int, Maybe Bool]
+           (IO GodotString)
          where
         nodeMethod = Godot.Core.OS.get_system_dir
 
@@ -2725,7 +3385,10 @@ get_system_time_msecs cls
          godot_method_bind_call bindOS_get_system_time_msecs (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_system_time_msecs" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_system_time_msecs
@@ -2750,10 +3413,107 @@ get_system_time_secs cls
          godot_method_bind_call bindOS_get_system_time_secs (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_system_time_secs" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_system_time_secs
+
+{-# NOINLINE bindOS_get_tablet_driver_count #-}
+
+-- | Returns the total number of available tablet drivers.
+--   				__Note:__ This method is implemented on Windows.
+bindOS_get_tablet_driver_count :: MethodBind
+bindOS_get_tablet_driver_count
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_tablet_driver_count" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the total number of available tablet drivers.
+--   				__Note:__ This method is implemented on Windows.
+get_tablet_driver_count ::
+                          (OS :< cls, Object :< cls) => cls -> IO Int
+get_tablet_driver_count cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_tablet_driver_count (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_tablet_driver_count" '[] (IO Int) where
+        nodeMethod = Godot.Core.OS.get_tablet_driver_count
+
+{-# NOINLINE bindOS_get_tablet_driver_name #-}
+
+-- | Returns the tablet driver name for the given index.
+--   				__Note:__ This method is implemented on Windows.
+bindOS_get_tablet_driver_name :: MethodBind
+bindOS_get_tablet_driver_name
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_tablet_driver_name" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the tablet driver name for the given index.
+--   				__Note:__ This method is implemented on Windows.
+get_tablet_driver_name ::
+                         (OS :< cls, Object :< cls) => cls -> Int -> IO GodotString
+get_tablet_driver_name cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_tablet_driver_name (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_tablet_driver_name" '[Int]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.OS.get_tablet_driver_name
+
+{-# NOINLINE bindOS_get_thread_caller_id #-}
+
+-- | Returns the ID of the current thread. This can be used in logs to ease debugging of multi-threaded applications.
+--   				__Note:__ Thread IDs are not deterministic and may be reused across application restarts.
+bindOS_get_thread_caller_id :: MethodBind
+bindOS_get_thread_caller_id
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_thread_caller_id" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the ID of the current thread. This can be used in logs to ease debugging of multi-threaded applications.
+--   				__Note:__ Thread IDs are not deterministic and may be reused across application restarts.
+get_thread_caller_id :: (OS :< cls, Object :< cls) => cls -> IO Int
+get_thread_caller_id cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_thread_caller_id (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_thread_caller_id" '[] (IO Int) where
+        nodeMethod = Godot.Core.OS.get_thread_caller_id
 
 {-# NOINLINE bindOS_get_ticks_msec #-}
 
@@ -2774,7 +3534,10 @@ get_ticks_msec cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_ticks_msec (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_ticks_msec" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_ticks_msec
@@ -2798,7 +3561,10 @@ get_ticks_usec cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_ticks_usec (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_ticks_usec" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_ticks_usec
@@ -2822,7 +3588,9 @@ get_time cls arg1
   = withVariantArray [maybe (VariantBool False) toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_time (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_time" '[Maybe Bool] (IO Dictionary)
          where
@@ -2849,7 +3617,10 @@ get_time_zone_info cls
          godot_method_bind_call bindOS_get_time_zone_info (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_time_zone_info" '[] (IO Dictionary)
          where
@@ -2858,6 +3629,7 @@ instance NodeMethod OS "get_time_zone_info" '[] (IO Dictionary)
 {-# NOINLINE bindOS_get_unique_id #-}
 
 -- | Returns a string that is unique to the device.
+--   				__Note:__ This string may change without notice if the user reinstalls/upgrades their operating system or changes their hardware. This means it should generally not be used to encrypt persistent data as the data saved before an unexpected ID change would become inaccessible. The returned string may also be falsified using external programs, so do not rely on the string returned by @method get_unique_id@ for security purposes.
 --   				__Note:__ Returns an empty string on HTML5 and UWP, as this method isn't implemented on those platforms yet.
 bindOS_get_unique_id :: MethodBind
 bindOS_get_unique_id
@@ -2869,6 +3641,7 @@ bindOS_get_unique_id
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns a string that is unique to the device.
+--   				__Note:__ This string may change without notice if the user reinstalls/upgrades their operating system or changes their hardware. This means it should generally not be used to encrypt persistent data as the data saved before an unexpected ID change would become inaccessible. The returned string may also be falsified using external programs, so do not rely on the string returned by @method get_unique_id@ for security purposes.
 --   				__Note:__ Returns an empty string on HTML5 and UWP, as this method isn't implemented on those platforms yet.
 get_unique_id ::
                 (OS :< cls, Object :< cls) => cls -> IO GodotString
@@ -2876,14 +3649,18 @@ get_unique_id cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_unique_id (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_unique_id" '[] (IO GodotString) where
         nodeMethod = Godot.Core.OS.get_unique_id
 
 {-# NOINLINE bindOS_get_unix_time #-}
 
--- | Returns the current UNIX epoch timestamp.
+-- | Returns the current UNIX epoch timestamp in seconds.
+--   				__Important:__ This is the system clock that the user can manually set. __Never use__ this method for precise time calculation since its results are also subject to automatic adjustments by the operating system. __Always use__ @method get_ticks_usec@ or @method get_ticks_msec@ for precise time calculation instead, since they are guaranteed to be monotonic (i.e. never decrease).
 bindOS_get_unix_time :: MethodBind
 bindOS_get_unix_time
   = unsafePerformIO $
@@ -2893,13 +3670,17 @@ bindOS_get_unix_time
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the current UNIX epoch timestamp.
+-- | Returns the current UNIX epoch timestamp in seconds.
+--   				__Important:__ This is the system clock that the user can manually set. __Never use__ this method for precise time calculation since its results are also subject to automatic adjustments by the operating system. __Always use__ @method get_ticks_usec@ or @method get_ticks_msec@ for precise time calculation instead, since they are guaranteed to be monotonic (i.e. never decrease).
 get_unix_time :: (OS :< cls, Object :< cls) => cls -> IO Int
 get_unix_time cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_unix_time (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_unix_time" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_unix_time
@@ -2908,6 +3689,7 @@ instance NodeMethod OS "get_unix_time" '[] (IO Int) where
 
 -- | Gets an epoch time value from a dictionary of time values.
 --   				@datetime@ must be populated with the following keys: @year@, @month@, @day@, @hour@, @minute@, @second@.
+--   				If the dictionary is empty @0@ is returned. If some keys are omitted, they default to the equivalent values for the UNIX epoch timestamp 0 (1970-01-01 at 00:00:00 UTC).
 --   				You can pass the output from @method get_datetime_from_unix_time@ directly into this function. Daylight Savings Time (@dst@), if present, is ignored.
 bindOS_get_unix_time_from_datetime :: MethodBind
 bindOS_get_unix_time_from_datetime
@@ -2920,6 +3702,7 @@ bindOS_get_unix_time_from_datetime
 
 -- | Gets an epoch time value from a dictionary of time values.
 --   				@datetime@ must be populated with the following keys: @year@, @month@, @day@, @hour@, @minute@, @second@.
+--   				If the dictionary is empty @0@ is returned. If some keys are omitted, they default to the equivalent values for the UNIX epoch timestamp 0 (1970-01-01 at 00:00:00 UTC).
 --   				You can pass the output from @method get_datetime_from_unix_time@ directly into this function. Daylight Savings Time (@dst@), if present, is ignored.
 get_unix_time_from_datetime ::
                               (OS :< cls, Object :< cls) => cls -> Dictionary -> IO Int
@@ -2930,7 +3713,10 @@ get_unix_time_from_datetime cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_unix_time_from_datetime" '[Dictionary]
            (IO Int)
@@ -2944,6 +3730,7 @@ instance NodeMethod OS "get_unix_time_from_datetime" '[Dictionary]
 --   				On macOS, this is @~/Library/Application Support/Godot/app_userdata/@project_name@@, or @~/Library/Application Support/@custom_name@@ if @use_custom_user_dir@ is set.
 --   				On Windows, this is @%APPDATA%\Godot\app_userdata\@project_name@@, or @%APPDATA%\@custom_name@@ if @use_custom_user_dir@ is set. @%APPDATA%@ expands to @%USERPROFILE%\AppData\Roaming@.
 --   				If the project name is empty, @user://@ falls back to @res://@.
+--   				Not to be confused with @method get_data_dir@, which returns the @i@global@/i@ (non-project-specific) user data directory.
 bindOS_get_user_data_dir :: MethodBind
 bindOS_get_user_data_dir
   = unsafePerformIO $
@@ -2958,6 +3745,7 @@ bindOS_get_user_data_dir
 --   				On macOS, this is @~/Library/Application Support/Godot/app_userdata/@project_name@@, or @~/Library/Application Support/@custom_name@@ if @use_custom_user_dir@ is set.
 --   				On Windows, this is @%APPDATA%\Godot\app_userdata\@project_name@@, or @%APPDATA%\@custom_name@@ if @use_custom_user_dir@ is set. @%APPDATA%@ expands to @%USERPROFILE%\AppData\Roaming@.
 --   				If the project name is empty, @user://@ falls back to @res://@.
+--   				Not to be confused with @method get_data_dir@, which returns the @i@global@/i@ (non-project-specific) user data directory.
 get_user_data_dir ::
                     (OS :< cls, Object :< cls) => cls -> IO GodotString
 get_user_data_dir cls
@@ -2965,7 +3753,10 @@ get_user_data_dir cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_get_user_data_dir (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_user_data_dir" '[] (IO GodotString)
          where
@@ -2992,7 +3783,10 @@ get_video_driver_count cls
          godot_method_bind_call bindOS_get_video_driver_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_video_driver_count" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_video_driver_count
@@ -3018,7 +3812,10 @@ get_video_driver_name cls arg1
          godot_method_bind_call bindOS_get_video_driver_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_video_driver_name" '[Int]
            (IO GodotString)
@@ -3047,7 +3844,10 @@ get_virtual_keyboard_height cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_virtual_keyboard_height" '[] (IO Int)
          where
@@ -3074,7 +3874,10 @@ get_window_safe_area cls
          godot_method_bind_call bindOS_get_window_safe_area (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "get_window_safe_area" '[] (IO Rect2) where
         nodeMethod = Godot.Core.OS.get_window_safe_area
@@ -3105,7 +3908,10 @@ global_menu_add_item cls arg1 arg2 arg3 arg4
          godot_method_bind_call bindOS_global_menu_add_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "global_menu_add_item"
            '[GodotString, GodotString, GodotVariant, GodotVariant]
@@ -3137,7 +3943,10 @@ global_menu_add_separator cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "global_menu_add_separator" '[GodotString]
            (IO ())
@@ -3166,7 +3975,10 @@ global_menu_clear cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_global_menu_clear (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "global_menu_clear" '[GodotString] (IO ())
          where
@@ -3195,7 +4007,10 @@ global_menu_remove_item cls arg1 arg2
          godot_method_bind_call bindOS_global_menu_remove_item (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "global_menu_remove_item"
            '[GodotString, Int]
@@ -3205,7 +4020,8 @@ instance NodeMethod OS "global_menu_remove_item"
 
 {-# NOINLINE bindOS_has_environment #-}
 
--- | Returns @true@ if an environment variable exists.
+-- | Returns @true@ if the environment variable with the name @variable@ exists.
+--   				__Note:__ Double-check the casing of @variable@. Environment variable names are case-sensitive on all platforms except Windows.
 bindOS_has_environment :: MethodBind
 bindOS_has_environment
   = unsafePerformIO $
@@ -3215,7 +4031,8 @@ bindOS_has_environment
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if an environment variable exists.
+-- | Returns @true@ if the environment variable with the name @variable@ exists.
+--   				__Note:__ Double-check the casing of @variable@. Environment variable names are case-sensitive on all platforms except Windows.
 has_environment ::
                   (OS :< cls, Object :< cls) => cls -> GodotString -> IO Bool
 has_environment cls arg1
@@ -3223,7 +4040,10 @@ has_environment cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_has_environment (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "has_environment" '[GodotString] (IO Bool)
          where
@@ -3231,7 +4051,7 @@ instance NodeMethod OS "has_environment" '[GodotString] (IO Bool)
 
 {-# NOINLINE bindOS_has_feature #-}
 
--- | Returns @true@ if the feature for the given feature tag is supported in the currently running instance, depending on platform, build etc. Can be used to check whether you're currently running a debug build, on a certain platform or arch, etc. Refer to the @url=https://docs.godotengine.org/en/latest/getting_started/workflow/export/feature_tags.html@Feature Tags@/url@ documentation for more details.
+-- | Returns @true@ if the feature for the given feature tag is supported in the currently running instance, depending on the platform, build etc. Can be used to check whether you're currently running a debug build, on a certain platform or arch, etc. Refer to the @url=https://docs.godotengine.org/en/3.4/tutorials/export/feature_tags.html@Feature Tags@/url@ documentation for more details.
 --   				__Note:__ Tag names are case-sensitive.
 bindOS_has_feature :: MethodBind
 bindOS_has_feature
@@ -3242,7 +4062,7 @@ bindOS_has_feature
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if the feature for the given feature tag is supported in the currently running instance, depending on platform, build etc. Can be used to check whether you're currently running a debug build, on a certain platform or arch, etc. Refer to the @url=https://docs.godotengine.org/en/latest/getting_started/workflow/export/feature_tags.html@Feature Tags@/url@ documentation for more details.
+-- | Returns @true@ if the feature for the given feature tag is supported in the currently running instance, depending on the platform, build etc. Can be used to check whether you're currently running a debug build, on a certain platform or arch, etc. Refer to the @url=https://docs.godotengine.org/en/3.4/tutorials/export/feature_tags.html@Feature Tags@/url@ documentation for more details.
 --   				__Note:__ Tag names are case-sensitive.
 has_feature ::
               (OS :< cls, Object :< cls) => cls -> GodotString -> IO Bool
@@ -3250,7 +4070,10 @@ has_feature cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_has_feature (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "has_feature" '[GodotString] (IO Bool) where
         nodeMethod = Godot.Core.OS.has_feature
@@ -3276,7 +4099,10 @@ has_touchscreen_ui_hint cls
          godot_method_bind_call bindOS_has_touchscreen_ui_hint (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "has_touchscreen_ui_hint" '[] (IO Bool)
          where
@@ -3303,7 +4129,10 @@ has_virtual_keyboard cls
          godot_method_bind_call bindOS_has_virtual_keyboard (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "has_virtual_keyboard" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.has_virtual_keyboard
@@ -3328,7 +4157,10 @@ hide_virtual_keyboard cls
          godot_method_bind_call bindOS_hide_virtual_keyboard (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "hide_virtual_keyboard" '[] (IO ()) where
         nodeMethod = Godot.Core.OS.hide_virtual_keyboard
@@ -3356,7 +4188,10 @@ is_debug_build cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_is_debug_build (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_debug_build" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_debug_build
@@ -3383,7 +4218,10 @@ is_ok_left_and_cancel_right cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_ok_left_and_cancel_right" '[] (IO Bool)
          where
@@ -3410,7 +4248,10 @@ is_scancode_unicode cls arg1
          godot_method_bind_call bindOS_is_scancode_unicode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_scancode_unicode" '[Int] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_scancode_unicode
@@ -3434,7 +4275,10 @@ is_stdout_verbose cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_is_stdout_verbose (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_stdout_verbose" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_stdout_verbose
@@ -3460,7 +4304,10 @@ is_userfs_persistent cls
          godot_method_bind_call bindOS_is_userfs_persistent (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_userfs_persistent" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_userfs_persistent
@@ -3486,7 +4333,10 @@ is_window_always_on_top cls
          godot_method_bind_call bindOS_is_window_always_on_top (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_window_always_on_top" '[] (IO Bool)
          where
@@ -3513,10 +4363,179 @@ is_window_focused cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_is_window_focused (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "is_window_focused" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.is_window_focused
+
+{-# NOINLINE bindOS_keyboard_get_current_layout #-}
+
+-- | Returns active keyboard layout index.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+bindOS_keyboard_get_current_layout :: MethodBind
+bindOS_keyboard_get_current_layout
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "keyboard_get_current_layout" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns active keyboard layout index.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+keyboard_get_current_layout ::
+                              (OS :< cls, Object :< cls) => cls -> IO Int
+keyboard_get_current_layout cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_keyboard_get_current_layout
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "keyboard_get_current_layout" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.OS.keyboard_get_current_layout
+
+{-# NOINLINE bindOS_keyboard_get_layout_count #-}
+
+-- | Returns the number of keyboard layouts.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+bindOS_keyboard_get_layout_count :: MethodBind
+bindOS_keyboard_get_layout_count
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "keyboard_get_layout_count" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the number of keyboard layouts.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+keyboard_get_layout_count ::
+                            (OS :< cls, Object :< cls) => cls -> IO Int
+keyboard_get_layout_count cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_keyboard_get_layout_count
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "keyboard_get_layout_count" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.OS.keyboard_get_layout_count
+
+{-# NOINLINE bindOS_keyboard_get_layout_language #-}
+
+-- | Returns the ISO-639/BCP-47 language code of the keyboard layout at position @index@.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+bindOS_keyboard_get_layout_language :: MethodBind
+bindOS_keyboard_get_layout_language
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "keyboard_get_layout_language" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the ISO-639/BCP-47 language code of the keyboard layout at position @index@.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+keyboard_get_layout_language ::
+                               (OS :< cls, Object :< cls) => cls -> Int -> IO GodotString
+keyboard_get_layout_language cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_keyboard_get_layout_language
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "keyboard_get_layout_language" '[Int]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.OS.keyboard_get_layout_language
+
+{-# NOINLINE bindOS_keyboard_get_layout_name #-}
+
+-- | Returns the localized name of the keyboard layout at position @index@.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+bindOS_keyboard_get_layout_name :: MethodBind
+bindOS_keyboard_get_layout_name
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "keyboard_get_layout_name" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the localized name of the keyboard layout at position @index@.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+keyboard_get_layout_name ::
+                           (OS :< cls, Object :< cls) => cls -> Int -> IO GodotString
+keyboard_get_layout_name cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_keyboard_get_layout_name (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "keyboard_get_layout_name" '[Int]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.OS.keyboard_get_layout_name
+
+{-# NOINLINE bindOS_keyboard_set_current_layout #-}
+
+-- | Sets active keyboard layout.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+bindOS_keyboard_set_current_layout :: MethodBind
+bindOS_keyboard_set_current_layout
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "keyboard_set_current_layout" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets active keyboard layout.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+keyboard_set_current_layout ::
+                              (OS :< cls, Object :< cls) => cls -> Int -> IO ()
+keyboard_set_current_layout cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_keyboard_set_current_layout
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "keyboard_set_current_layout" '[Int] (IO ())
+         where
+        nodeMethod = Godot.Core.OS.keyboard_set_current_layout
 
 {-# NOINLINE bindOS_kill #-}
 
@@ -3540,7 +4559,9 @@ kill cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_kill (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "kill" '[Int] (IO Int) where
         nodeMethod = Godot.Core.OS.kill
@@ -3569,7 +4590,10 @@ move_window_to_foreground cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "move_window_to_foreground" '[] (IO ())
          where
@@ -3578,7 +4602,7 @@ instance NodeMethod OS "move_window_to_foreground" '[] (IO ())
 {-# NOINLINE bindOS_native_video_is_playing #-}
 
 -- | Returns @true@ if native video is playing.
---   				__Note:__ This method is implemented on Android and iOS.
+--   				__Note:__ This method is only implemented on iOS.
 bindOS_native_video_is_playing :: MethodBind
 bindOS_native_video_is_playing
   = unsafePerformIO $
@@ -3589,7 +4613,7 @@ bindOS_native_video_is_playing
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ if native video is playing.
---   				__Note:__ This method is implemented on Android and iOS.
+--   				__Note:__ This method is only implemented on iOS.
 native_video_is_playing ::
                           (OS :< cls, Object :< cls) => cls -> IO Bool
 native_video_is_playing cls
@@ -3598,7 +4622,10 @@ native_video_is_playing cls
          godot_method_bind_call bindOS_native_video_is_playing (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "native_video_is_playing" '[] (IO Bool)
          where
@@ -3607,7 +4634,7 @@ instance NodeMethod OS "native_video_is_playing" '[] (IO Bool)
 {-# NOINLINE bindOS_native_video_pause #-}
 
 -- | Pauses native video playback.
---   				__Note:__ This method is implemented on Android and iOS.
+--   				__Note:__ This method is only implemented on iOS.
 bindOS_native_video_pause :: MethodBind
 bindOS_native_video_pause
   = unsafePerformIO $
@@ -3618,7 +4645,7 @@ bindOS_native_video_pause
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Pauses native video playback.
---   				__Note:__ This method is implemented on Android and iOS.
+--   				__Note:__ This method is only implemented on iOS.
 native_video_pause :: (OS :< cls, Object :< cls) => cls -> IO ()
 native_video_pause cls
   = withVariantArray []
@@ -3626,7 +4653,10 @@ native_video_pause cls
          godot_method_bind_call bindOS_native_video_pause (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "native_video_pause" '[] (IO ()) where
         nodeMethod = Godot.Core.OS.native_video_pause
@@ -3634,7 +4664,7 @@ instance NodeMethod OS "native_video_pause" '[] (IO ()) where
 {-# NOINLINE bindOS_native_video_play #-}
 
 -- | Plays native video from the specified path, at the given volume and with audio and subtitle tracks.
---   				__Note:__ This method is implemented on Android and iOS, and the current Android implementation does not support the @volume@, @audio_track@ and @subtitle_track@ options.
+--   				__Note:__ This method is only implemented on iOS.
 bindOS_native_video_play :: MethodBind
 bindOS_native_video_play
   = unsafePerformIO $
@@ -3645,7 +4675,7 @@ bindOS_native_video_play
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Plays native video from the specified path, at the given volume and with audio and subtitle tracks.
---   				__Note:__ This method is implemented on Android and iOS, and the current Android implementation does not support the @volume@, @audio_track@ and @subtitle_track@ options.
+--   				__Note:__ This method is only implemented on iOS.
 native_video_play ::
                     (OS :< cls, Object :< cls) =>
                     cls -> GodotString -> Float -> GodotString -> GodotString -> IO Int
@@ -3655,7 +4685,10 @@ native_video_play cls arg1 arg2 arg3 arg4
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_native_video_play (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "native_video_play"
            '[GodotString, Float, GodotString, GodotString]
@@ -3666,7 +4699,7 @@ instance NodeMethod OS "native_video_play"
 {-# NOINLINE bindOS_native_video_stop #-}
 
 -- | Stops native video playback.
---   				__Note:__ This method is implemented on Android and iOS.
+--   				__Note:__ This method is implemented on iOS.
 bindOS_native_video_stop :: MethodBind
 bindOS_native_video_stop
   = unsafePerformIO $
@@ -3677,14 +4710,17 @@ bindOS_native_video_stop
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Stops native video playback.
---   				__Note:__ This method is implemented on Android and iOS.
+--   				__Note:__ This method is implemented on iOS.
 native_video_stop :: (OS :< cls, Object :< cls) => cls -> IO ()
 native_video_stop cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_native_video_stop (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "native_video_stop" '[] (IO ()) where
         nodeMethod = Godot.Core.OS.native_video_stop
@@ -3692,7 +4728,7 @@ instance NodeMethod OS "native_video_stop" '[] (IO ()) where
 {-# NOINLINE bindOS_native_video_unpause #-}
 
 -- | Resumes native video playback.
---   				__Note:__ This method is implemented on Android and iOS.
+--   				__Note:__ This method is implemented on iOS.
 bindOS_native_video_unpause :: MethodBind
 bindOS_native_video_unpause
   = unsafePerformIO $
@@ -3703,7 +4739,7 @@ bindOS_native_video_unpause
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Resumes native video playback.
---   				__Note:__ This method is implemented on Android and iOS.
+--   				__Note:__ This method is implemented on iOS.
 native_video_unpause :: (OS :< cls, Object :< cls) => cls -> IO ()
 native_video_unpause cls
   = withVariantArray []
@@ -3711,7 +4747,10 @@ native_video_unpause cls
          godot_method_bind_call bindOS_native_video_unpause (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "native_video_unpause" '[] (IO ()) where
         nodeMethod = Godot.Core.OS.native_video_unpause
@@ -3737,7 +4776,10 @@ open_midi_inputs cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_open_midi_inputs (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "open_midi_inputs" '[] (IO ()) where
         nodeMethod = Godot.Core.OS.open_midi_inputs
@@ -3763,7 +4805,10 @@ print_all_resources cls arg1
          godot_method_bind_call bindOS_print_all_resources (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "print_all_resources" '[Maybe GodotString]
            (IO ())
@@ -3792,7 +4837,10 @@ print_all_textures_by_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "print_all_textures_by_size" '[] (IO ())
          where
@@ -3819,7 +4867,10 @@ print_resources_by_type cls arg1
          godot_method_bind_call bindOS_print_resources_by_type (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "print_resources_by_type" '[PoolStringArray]
            (IO ())
@@ -3847,7 +4898,10 @@ print_resources_in_use cls arg1
          godot_method_bind_call bindOS_print_resources_in_use (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "print_resources_in_use" '[Maybe Bool]
            (IO ())
@@ -3875,7 +4929,10 @@ request_attention cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_request_attention (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "request_attention" '[] (IO ()) where
         nodeMethod = Godot.Core.OS.request_attention
@@ -3901,7 +4958,10 @@ request_permission cls arg1
          godot_method_bind_call bindOS_request_permission (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "request_permission" '[GodotString]
            (IO Bool)
@@ -3910,7 +4970,7 @@ instance NodeMethod OS "request_permission" '[GodotString]
 
 {-# NOINLINE bindOS_request_permissions #-}
 
--- | With this function you can request dangerous permissions since normal permissions are automatically granted at install time in Android application.
+-- | With this function, you can request dangerous permissions since normal permissions are automatically granted at install time in Android applications.
 --   				__Note:__ This method is implemented on Android.
 bindOS_request_permissions :: MethodBind
 bindOS_request_permissions
@@ -3921,7 +4981,7 @@ bindOS_request_permissions
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | With this function you can request dangerous permissions since normal permissions are automatically granted at install time in Android application.
+-- | With this function, you can request dangerous permissions since normal permissions are automatically granted at install time in Android applications.
 --   				__Note:__ This method is implemented on Android.
 request_permissions :: (OS :< cls, Object :< cls) => cls -> IO Bool
 request_permissions cls
@@ -3930,10 +4990,47 @@ request_permissions cls
          godot_method_bind_call bindOS_request_permissions (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "request_permissions" '[] (IO Bool) where
         nodeMethod = Godot.Core.OS.request_permissions
+
+{-# NOINLINE bindOS_set_environment #-}
+
+-- | Sets the value of the environment variable @variable@ to @value@. The environment variable will be set for the Godot process and any process executed with @method execute@ after running @method set_environment@. The environment variable will @i@not@/i@ persist to processes run after the Godot process was terminated.
+--   				__Note:__ Double-check the casing of @variable@. Environment variable names are case-sensitive on all platforms except Windows.
+bindOS_set_environment :: MethodBind
+bindOS_set_environment
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "set_environment" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the value of the environment variable @variable@ to @value@. The environment variable will be set for the Godot process and any process executed with @method execute@ after running @method set_environment@. The environment variable will @i@not@/i@ persist to processes run after the Godot process was terminated.
+--   				__Note:__ Double-check the casing of @variable@. Environment variable names are case-sensitive on all platforms except Windows.
+set_environment ::
+                  (OS :< cls, Object :< cls) =>
+                  cls -> GodotString -> GodotString -> IO Bool
+set_environment cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_set_environment (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "set_environment"
+           '[GodotString, GodotString]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.OS.set_environment
 
 {-# NOINLINE bindOS_set_icon #-}
 
@@ -3957,7 +5054,9 @@ set_icon cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_set_icon (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_icon" '[Image] (IO ()) where
         nodeMethod = Godot.Core.OS.set_icon
@@ -3990,7 +5089,10 @@ set_ime_active cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_set_ime_active (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_ime_active" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.OS.set_ime_active
@@ -4017,7 +5119,10 @@ set_ime_position cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_set_ime_position (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_ime_position" '[Vector2] (IO ()) where
         nodeMethod = Godot.Core.OS.set_ime_position
@@ -4046,7 +5151,10 @@ set_native_icon cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_set_native_icon (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_native_icon" '[GodotString] (IO ())
          where
@@ -4072,7 +5180,10 @@ set_thread_name cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_set_thread_name (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_thread_name" '[GodotString] (IO Int)
          where
@@ -4100,7 +5211,10 @@ set_use_file_access_save_and_swap cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_use_file_access_save_and_swap" '[Bool]
            (IO ())
@@ -4130,11 +5244,81 @@ set_window_always_on_top cls arg1
          godot_method_bind_call bindOS_set_window_always_on_top (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_window_always_on_top" '[Bool] (IO ())
          where
         nodeMethod = Godot.Core.OS.set_window_always_on_top
+
+{-# NOINLINE bindOS_set_window_mouse_passthrough #-}
+
+-- | Sets a polygonal region of the window which accepts mouse events. Mouse events outside the region will be passed through.
+--   				Passing an empty array will disable passthrough support (all mouse events will be intercepted by the window, which is the default behavior).
+--   				
+--   @
+--   
+--   				# Set region, using Path2D node.
+--   				OS.set_window_mouse_passthrough($Path2D.curve.get_baked_points())
+--   
+--   				# Set region, using Polygon2D node.
+--   				OS.set_window_mouse_passthrough($Polygon2D.polygon)
+--   
+--   				# Reset region to default.
+--   				OS.set_window_mouse_passthrough(@@)
+--   				
+--   @
+--   
+--   				__Note:__ On Windows, the portion of a window that lies outside the region is not drawn, while on Linux and macOS it is.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+bindOS_set_window_mouse_passthrough :: MethodBind
+bindOS_set_window_mouse_passthrough
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "set_window_mouse_passthrough" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets a polygonal region of the window which accepts mouse events. Mouse events outside the region will be passed through.
+--   				Passing an empty array will disable passthrough support (all mouse events will be intercepted by the window, which is the default behavior).
+--   				
+--   @
+--   
+--   				# Set region, using Path2D node.
+--   				OS.set_window_mouse_passthrough($Path2D.curve.get_baked_points())
+--   
+--   				# Set region, using Polygon2D node.
+--   				OS.set_window_mouse_passthrough($Polygon2D.polygon)
+--   
+--   				# Reset region to default.
+--   				OS.set_window_mouse_passthrough(@@)
+--   				
+--   @
+--   
+--   				__Note:__ On Windows, the portion of a window that lies outside the region is not drawn, while on Linux and macOS it is.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+set_window_mouse_passthrough ::
+                               (OS :< cls, Object :< cls) => cls -> PoolVector2Array -> IO ()
+set_window_mouse_passthrough cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_set_window_mouse_passthrough
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "set_window_mouse_passthrough"
+           '[PoolVector2Array]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.OS.set_window_mouse_passthrough
 
 {-# NOINLINE bindOS_set_window_title #-}
 
@@ -4160,7 +5344,10 @@ set_window_title cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_set_window_title (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "set_window_title" '[GodotString] (IO ())
          where
@@ -4195,7 +5382,10 @@ shell_open cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_shell_open (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod OS "shell_open" '[GodotString] (IO Int) where
         nodeMethod = Godot.Core.OS.shell_open
@@ -4220,16 +5410,23 @@ bindOS_show_virtual_keyboard
 --   				The @multiline@ parameter needs to be set to @true@ to be able to enter multiple lines of text, as in @TextEdit@.
 --   				__Note:__ This method is implemented on Android, iOS and UWP.
 show_virtual_keyboard ::
-                        (OS :< cls, Object :< cls) => cls -> Maybe GodotString -> IO ()
-show_virtual_keyboard cls arg1
-  = withVariantArray [defaultedVariant VariantString "" arg1]
+                        (OS :< cls, Object :< cls) =>
+                        cls -> Maybe GodotString -> Maybe Bool -> IO ()
+show_virtual_keyboard cls arg1 arg2
+  = withVariantArray
+      [defaultedVariant VariantString "" arg1,
+       maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_show_virtual_keyboard (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod OS "show_virtual_keyboard" '[Maybe GodotString]
+instance NodeMethod OS "show_virtual_keyboard"
+           '[Maybe GodotString, Maybe Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.OS.show_virtual_keyboard

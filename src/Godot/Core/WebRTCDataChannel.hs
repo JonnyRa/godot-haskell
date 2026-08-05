@@ -9,6 +9,7 @@ module Godot.Core.WebRTCDataChannel
         Godot.Core.WebRTCDataChannel._STATE_OPEN,
         Godot.Core.WebRTCDataChannel._WRITE_MODE_BINARY,
         Godot.Core.WebRTCDataChannel.close,
+        Godot.Core.WebRTCDataChannel.get_buffered_amount,
         Godot.Core.WebRTCDataChannel.get_id,
         Godot.Core.WebRTCDataChannel.get_label,
         Godot.Core.WebRTCDataChannel.get_max_packet_life_time,
@@ -75,10 +76,43 @@ close cls
          godot_method_bind_call bindWebRTCDataChannel_close (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "close" '[] (IO ()) where
         nodeMethod = Godot.Core.WebRTCDataChannel.close
+
+{-# NOINLINE bindWebRTCDataChannel_get_buffered_amount #-}
+
+bindWebRTCDataChannel_get_buffered_amount :: MethodBind
+bindWebRTCDataChannel_get_buffered_amount
+  = unsafePerformIO $
+      withCString "WebRTCDataChannel" $
+        \ clsNamePtr ->
+          withCString "get_buffered_amount" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_buffered_amount ::
+                      (WebRTCDataChannel :< cls, Object :< cls) => cls -> IO Int
+get_buffered_amount cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindWebRTCDataChannel_get_buffered_amount
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod WebRTCDataChannel "get_buffered_amount" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.WebRTCDataChannel.get_buffered_amount
 
 {-# NOINLINE bindWebRTCDataChannel_get_id #-}
 
@@ -99,7 +133,10 @@ get_id cls
          godot_method_bind_call bindWebRTCDataChannel_get_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "get_id" '[] (IO Int) where
         nodeMethod = Godot.Core.WebRTCDataChannel.get_id
@@ -123,7 +160,10 @@ get_label cls
          godot_method_bind_call bindWebRTCDataChannel_get_label (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "get_label" '[]
            (IO GodotString)
@@ -151,7 +191,10 @@ get_max_packet_life_time cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "get_max_packet_life_time"
            '[]
@@ -179,7 +222,10 @@ get_max_retransmits cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "get_max_retransmits" '[]
            (IO Int)
@@ -206,7 +252,10 @@ get_protocol cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "get_protocol" '[]
            (IO GodotString)
@@ -233,7 +282,10 @@ get_ready_state cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "get_ready_state" '[]
            (IO Int)
@@ -260,7 +312,10 @@ get_write_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "get_write_mode" '[] (IO Int)
          where
@@ -286,7 +341,10 @@ is_negotiated cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "is_negotiated" '[] (IO Bool)
          where
@@ -312,7 +370,10 @@ is_ordered cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "is_ordered" '[] (IO Bool)
          where
@@ -336,7 +397,10 @@ poll cls
          godot_method_bind_call bindWebRTCDataChannel_poll (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "poll" '[] (IO Int) where
         nodeMethod = Godot.Core.WebRTCDataChannel.poll
@@ -361,7 +425,10 @@ set_write_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "set_write_mode" '[Int]
            (IO ())
@@ -388,7 +455,10 @@ was_string_packet cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WebRTCDataChannel "was_string_packet" '[]
            (IO Bool)

@@ -150,7 +150,10 @@ clear_current cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_clear_current (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "clear_current" '[Maybe Bool] (IO ())
          where
@@ -176,14 +179,17 @@ get_camera_rid cls
          godot_method_bind_call bindCamera_get_camera_rid (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_camera_rid" '[] (IO Rid) where
         nodeMethod = Godot.Core.Camera.get_camera_rid
 
 {-# NOINLINE bindCamera_get_camera_transform #-}
 
--- | Gets the camera transform. Subclassed cameras such as @InterpolatedCamera@ may provide different transforms than the @Node@ transform.
+-- | Returns the transform of the camera plus the vertical (@v_offset@) and horizontal (@h_offset@) offsets; and any other adjustments made to the position and orientation of the camera by subclassed cameras such as @ClippedCamera@, @InterpolatedCamera@ and @ARVRCamera@.
 bindCamera_get_camera_transform :: MethodBind
 bindCamera_get_camera_transform
   = unsafePerformIO $
@@ -193,7 +199,7 @@ bindCamera_get_camera_transform
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the camera transform. Subclassed cameras such as @InterpolatedCamera@ may provide different transforms than the @Node@ transform.
+-- | Returns the transform of the camera plus the vertical (@v_offset@) and horizontal (@h_offset@) offsets; and any other adjustments made to the position and orientation of the camera by subclassed cameras such as @ClippedCamera@, @InterpolatedCamera@ and @ARVRCamera@.
 get_camera_transform ::
                        (Camera :< cls, Object :< cls) => cls -> IO Transform
 get_camera_transform cls
@@ -202,7 +208,10 @@ get_camera_transform cls
          godot_method_bind_call bindCamera_get_camera_transform (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_camera_transform" '[]
            (IO Transform)
@@ -228,7 +237,10 @@ get_cull_mask cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_get_cull_mask (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_cull_mask" '[] (IO Int) where
         nodeMethod = Godot.Core.Camera.get_cull_mask
@@ -254,7 +266,10 @@ get_cull_mask_bit cls arg1
          godot_method_bind_call bindCamera_get_cull_mask_bit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_cull_mask_bit" '[Int] (IO Bool)
          where
@@ -262,7 +277,8 @@ instance NodeMethod Camera "get_cull_mask_bit" '[Int] (IO Bool)
 
 {-# NOINLINE bindCamera_get_doppler_tracking #-}
 
--- | If not @DOPPLER_TRACKING_DISABLED@, this camera will simulate the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ for objects changed in particular @_process@ methods. See @enum DopplerTracking@ for possible values.
+-- | If not @DOPPLER_TRACKING_DISABLED@, this camera will simulate the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ for objects changed in particular @_process@ methods. The Doppler effect is only simulated for @AudioStreamPlayer3D@ nodes that have @AudioStreamPlayer3D.doppler_tracking@ set to a value other than @AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED@.
+--   			__Note:__ To toggle the Doppler effect preview in the editor, use the Perspective menu in the top-left corner of the 3D viewport and toggle __Enable Doppler__.
 bindCamera_get_doppler_tracking :: MethodBind
 bindCamera_get_doppler_tracking
   = unsafePerformIO $
@@ -272,7 +288,8 @@ bindCamera_get_doppler_tracking
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If not @DOPPLER_TRACKING_DISABLED@, this camera will simulate the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ for objects changed in particular @_process@ methods. See @enum DopplerTracking@ for possible values.
+-- | If not @DOPPLER_TRACKING_DISABLED@, this camera will simulate the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ for objects changed in particular @_process@ methods. The Doppler effect is only simulated for @AudioStreamPlayer3D@ nodes that have @AudioStreamPlayer3D.doppler_tracking@ set to a value other than @AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED@.
+--   			__Note:__ To toggle the Doppler effect preview in the editor, use the Perspective menu in the top-left corner of the 3D viewport and toggle __Enable Doppler__.
 get_doppler_tracking ::
                        (Camera :< cls, Object :< cls) => cls -> IO Int
 get_doppler_tracking cls
@@ -281,7 +298,10 @@ get_doppler_tracking cls
          godot_method_bind_call bindCamera_get_doppler_tracking (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_doppler_tracking" '[] (IO Int)
          where
@@ -308,7 +328,7 @@ get_environment cls
          godot_method_bind_call bindCamera_get_environment (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Camera "get_environment" '[] (IO Environment)
          where
@@ -317,6 +337,11 @@ instance NodeMethod Camera "get_environment" '[] (IO Environment)
 {-# NOINLINE bindCamera_get_fov #-}
 
 -- | The camera's field of view angle (in degrees). Only applicable in perspective mode. Since @keep_aspect@ locks one axis, @fov@ sets the other axis' field of view angle.
+--   			For reference, the default vertical field of view value (@70.0@) is equivalent to a horizontal FOV of:
+--   			- ~86.07 degrees in a 4:3 viewport
+--   			- ~96.50 degrees in a 16:10 viewport
+--   			- ~102.45 degrees in a 16:9 viewport
+--   			- ~117.06 degrees in a 21:9 viewport
 bindCamera_get_fov :: MethodBind
 bindCamera_get_fov
   = unsafePerformIO $
@@ -327,19 +352,27 @@ bindCamera_get_fov
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The camera's field of view angle (in degrees). Only applicable in perspective mode. Since @keep_aspect@ locks one axis, @fov@ sets the other axis' field of view angle.
+--   			For reference, the default vertical field of view value (@70.0@) is equivalent to a horizontal FOV of:
+--   			- ~86.07 degrees in a 4:3 viewport
+--   			- ~96.50 degrees in a 16:10 viewport
+--   			- ~102.45 degrees in a 16:9 viewport
+--   			- ~117.06 degrees in a 21:9 viewport
 get_fov :: (Camera :< cls, Object :< cls) => cls -> IO Float
 get_fov cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_get_fov (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_fov" '[] (IO Float) where
         nodeMethod = Godot.Core.Camera.get_fov
 
 {-# NOINLINE bindCamera_get_frustum #-}
 
--- | Returns the camera's frustum planes in world-space units as an array of @Plane@s in the following order: near, far, left, top, right, bottom. Not to be confused with @frustum_offset@.
+-- | Returns the camera's frustum planes in world space units as an array of @Plane@s in the following order: near, far, left, top, right, bottom. Not to be confused with @frustum_offset@.
 bindCamera_get_frustum :: MethodBind
 bindCamera_get_frustum
   = unsafePerformIO $
@@ -349,14 +382,17 @@ bindCamera_get_frustum
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the camera's frustum planes in world-space units as an array of @Plane@s in the following order: near, far, left, top, right, bottom. Not to be confused with @frustum_offset@.
+-- | Returns the camera's frustum planes in world space units as an array of @Plane@s in the following order: near, far, left, top, right, bottom. Not to be confused with @frustum_offset@.
 get_frustum :: (Camera :< cls, Object :< cls) => cls -> IO Array
 get_frustum cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_get_frustum (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_frustum" '[] (IO Array) where
         nodeMethod = Godot.Core.Camera.get_frustum
@@ -382,7 +418,10 @@ get_frustum_offset cls
          godot_method_bind_call bindCamera_get_frustum_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_frustum_offset" '[] (IO Vector2)
          where
@@ -407,7 +446,10 @@ get_h_offset cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_get_h_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_h_offset" '[] (IO Float) where
         nodeMethod = Godot.Core.Camera.get_h_offset
@@ -433,7 +475,10 @@ get_keep_aspect_mode cls
          godot_method_bind_call bindCamera_get_keep_aspect_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_keep_aspect_mode" '[] (IO Int)
          where
@@ -459,7 +504,10 @@ get_projection cls
          godot_method_bind_call bindCamera_get_projection (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_projection" '[] (IO Int) where
         nodeMethod = Godot.Core.Camera.get_projection
@@ -482,7 +530,10 @@ get_size cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_get_size (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_size" '[] (IO Float) where
         nodeMethod = Godot.Core.Camera.get_size
@@ -506,7 +557,10 @@ get_v_offset cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_get_v_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_v_offset" '[] (IO Float) where
         nodeMethod = Godot.Core.Camera.get_v_offset
@@ -529,7 +583,10 @@ get_zfar cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_get_zfar (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_zfar" '[] (IO Float) where
         nodeMethod = Godot.Core.Camera.get_zfar
@@ -552,7 +609,10 @@ get_znear cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_get_znear (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "get_znear" '[] (IO Float) where
         nodeMethod = Godot.Core.Camera.get_znear
@@ -576,7 +636,10 @@ is_current cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_is_current (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "is_current" '[] (IO Bool) where
         nodeMethod = Godot.Core.Camera.is_current
@@ -604,7 +667,10 @@ is_position_behind cls arg1
          godot_method_bind_call bindCamera_is_position_behind (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "is_position_behind" '[Vector3]
            (IO Bool)
@@ -630,7 +696,10 @@ make_current cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_make_current (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "make_current" '[] (IO ()) where
         nodeMethod = Godot.Core.Camera.make_current
@@ -657,7 +726,10 @@ project_local_ray_normal cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "project_local_ray_normal" '[Vector2]
            (IO Vector3)
@@ -666,7 +738,7 @@ instance NodeMethod Camera "project_local_ray_normal" '[Vector2]
 
 {-# NOINLINE bindCamera_project_position #-}
 
--- | Returns the 3D point in worldspace that maps to the given 2D coordinate in the @Viewport@ rectangle on a plane that is the given @z_depth@ distance into the scene away from the camera.
+-- | Returns the 3D point in world space that maps to the given 2D coordinate in the @Viewport@ rectangle on a plane that is the given @z_depth@ distance into the scene away from the camera.
 bindCamera_project_position :: MethodBind
 bindCamera_project_position
   = unsafePerformIO $
@@ -676,7 +748,7 @@ bindCamera_project_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the 3D point in worldspace that maps to the given 2D coordinate in the @Viewport@ rectangle on a plane that is the given @z_depth@ distance into the scene away from the camera.
+-- | Returns the 3D point in world space that maps to the given 2D coordinate in the @Viewport@ rectangle on a plane that is the given @z_depth@ distance into the scene away from the camera.
 project_position ::
                    (Camera :< cls, Object :< cls) =>
                    cls -> Vector2 -> Float -> IO Vector3
@@ -686,7 +758,10 @@ project_position cls arg1 arg2
          godot_method_bind_call bindCamera_project_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "project_position" '[Vector2, Float]
            (IO Vector3)
@@ -695,7 +770,7 @@ instance NodeMethod Camera "project_position" '[Vector2, Float]
 
 {-# NOINLINE bindCamera_project_ray_normal #-}
 
--- | Returns a normal vector in worldspace, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
+-- | Returns a normal vector in world space, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
 bindCamera_project_ray_normal :: MethodBind
 bindCamera_project_ray_normal
   = unsafePerformIO $
@@ -705,7 +780,7 @@ bindCamera_project_ray_normal
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a normal vector in worldspace, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
+-- | Returns a normal vector in world space, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
 project_ray_normal ::
                      (Camera :< cls, Object :< cls) => cls -> Vector2 -> IO Vector3
 project_ray_normal cls arg1
@@ -714,7 +789,10 @@ project_ray_normal cls arg1
          godot_method_bind_call bindCamera_project_ray_normal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "project_ray_normal" '[Vector2]
            (IO Vector3)
@@ -723,7 +801,7 @@ instance NodeMethod Camera "project_ray_normal" '[Vector2]
 
 {-# NOINLINE bindCamera_project_ray_origin #-}
 
--- | Returns a 3D position in worldspace, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
+-- | Returns a 3D position in world space, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
 bindCamera_project_ray_origin :: MethodBind
 bindCamera_project_ray_origin
   = unsafePerformIO $
@@ -733,7 +811,7 @@ bindCamera_project_ray_origin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a 3D position in worldspace, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
+-- | Returns a 3D position in world space, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
 project_ray_origin ::
                      (Camera :< cls, Object :< cls) => cls -> Vector2 -> IO Vector3
 project_ray_origin cls arg1
@@ -742,7 +820,10 @@ project_ray_origin cls arg1
          godot_method_bind_call bindCamera_project_ray_origin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "project_ray_origin" '[Vector2]
            (IO Vector3)
@@ -769,7 +850,10 @@ set_cull_mask cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_set_cull_mask (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_cull_mask" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Camera.set_cull_mask
@@ -795,7 +879,10 @@ set_cull_mask_bit cls arg1 arg2
          godot_method_bind_call bindCamera_set_cull_mask_bit (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_cull_mask_bit" '[Int, Bool] (IO ())
          where
@@ -821,14 +908,18 @@ set_current cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_set_current (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_current" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Camera.set_current
 
 {-# NOINLINE bindCamera_set_doppler_tracking #-}
 
--- | If not @DOPPLER_TRACKING_DISABLED@, this camera will simulate the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ for objects changed in particular @_process@ methods. See @enum DopplerTracking@ for possible values.
+-- | If not @DOPPLER_TRACKING_DISABLED@, this camera will simulate the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ for objects changed in particular @_process@ methods. The Doppler effect is only simulated for @AudioStreamPlayer3D@ nodes that have @AudioStreamPlayer3D.doppler_tracking@ set to a value other than @AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED@.
+--   			__Note:__ To toggle the Doppler effect preview in the editor, use the Perspective menu in the top-left corner of the 3D viewport and toggle __Enable Doppler__.
 bindCamera_set_doppler_tracking :: MethodBind
 bindCamera_set_doppler_tracking
   = unsafePerformIO $
@@ -838,7 +929,8 @@ bindCamera_set_doppler_tracking
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If not @DOPPLER_TRACKING_DISABLED@, this camera will simulate the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ for objects changed in particular @_process@ methods. See @enum DopplerTracking@ for possible values.
+-- | If not @DOPPLER_TRACKING_DISABLED@, this camera will simulate the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ for objects changed in particular @_process@ methods. The Doppler effect is only simulated for @AudioStreamPlayer3D@ nodes that have @AudioStreamPlayer3D.doppler_tracking@ set to a value other than @AudioStreamPlayer3D.DOPPLER_TRACKING_DISABLED@.
+--   			__Note:__ To toggle the Doppler effect preview in the editor, use the Perspective menu in the top-left corner of the 3D viewport and toggle __Enable Doppler__.
 set_doppler_tracking ::
                        (Camera :< cls, Object :< cls) => cls -> Int -> IO ()
 set_doppler_tracking cls arg1
@@ -847,7 +939,10 @@ set_doppler_tracking cls arg1
          godot_method_bind_call bindCamera_set_doppler_tracking (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_doppler_tracking" '[Int] (IO ())
          where
@@ -874,7 +969,10 @@ set_environment cls arg1
          godot_method_bind_call bindCamera_set_environment (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_environment" '[Environment] (IO ())
          where
@@ -883,6 +981,11 @@ instance NodeMethod Camera "set_environment" '[Environment] (IO ())
 {-# NOINLINE bindCamera_set_fov #-}
 
 -- | The camera's field of view angle (in degrees). Only applicable in perspective mode. Since @keep_aspect@ locks one axis, @fov@ sets the other axis' field of view angle.
+--   			For reference, the default vertical field of view value (@70.0@) is equivalent to a horizontal FOV of:
+--   			- ~86.07 degrees in a 4:3 viewport
+--   			- ~96.50 degrees in a 16:10 viewport
+--   			- ~102.45 degrees in a 16:9 viewport
+--   			- ~117.06 degrees in a 21:9 viewport
 bindCamera_set_fov :: MethodBind
 bindCamera_set_fov
   = unsafePerformIO $
@@ -893,19 +996,27 @@ bindCamera_set_fov
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The camera's field of view angle (in degrees). Only applicable in perspective mode. Since @keep_aspect@ locks one axis, @fov@ sets the other axis' field of view angle.
+--   			For reference, the default vertical field of view value (@70.0@) is equivalent to a horizontal FOV of:
+--   			- ~86.07 degrees in a 4:3 viewport
+--   			- ~96.50 degrees in a 16:10 viewport
+--   			- ~102.45 degrees in a 16:9 viewport
+--   			- ~117.06 degrees in a 21:9 viewport
 set_fov :: (Camera :< cls, Object :< cls) => cls -> Float -> IO ()
 set_fov cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_set_fov (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_fov" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Camera.set_fov
 
 {-# NOINLINE bindCamera_set_frustum #-}
 
--- | Sets the camera projection to frustum mode (see @PROJECTION_FRUSTUM@), by specifying a @size@, an @offset@, and the @z_near@ and @z_far@ clip planes in world-space units.
+-- | Sets the camera projection to frustum mode (see @PROJECTION_FRUSTUM@), by specifying a @size@, an @offset@, and the @z_near@ and @z_far@ clip planes in world space units.
 bindCamera_set_frustum :: MethodBind
 bindCamera_set_frustum
   = unsafePerformIO $
@@ -915,7 +1026,7 @@ bindCamera_set_frustum
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the camera projection to frustum mode (see @PROJECTION_FRUSTUM@), by specifying a @size@, an @offset@, and the @z_near@ and @z_far@ clip planes in world-space units.
+-- | Sets the camera projection to frustum mode (see @PROJECTION_FRUSTUM@), by specifying a @size@, an @offset@, and the @z_near@ and @z_far@ clip planes in world space units.
 set_frustum ::
               (Camera :< cls, Object :< cls) =>
               cls -> Float -> Vector2 -> Float -> Float -> IO ()
@@ -925,7 +1036,10 @@ set_frustum cls arg1 arg2 arg3 arg4
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_set_frustum (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_frustum"
            '[Float, Vector2, Float, Float]
@@ -954,7 +1068,10 @@ set_frustum_offset cls arg1
          godot_method_bind_call bindCamera_set_frustum_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_frustum_offset" '[Vector2] (IO ())
          where
@@ -980,7 +1097,10 @@ set_h_offset cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_set_h_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_h_offset" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Camera.set_h_offset
@@ -1006,7 +1126,10 @@ set_keep_aspect_mode cls arg1
          godot_method_bind_call bindCamera_set_keep_aspect_mode (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_keep_aspect_mode" '[Int] (IO ())
          where
@@ -1014,7 +1137,7 @@ instance NodeMethod Camera "set_keep_aspect_mode" '[Int] (IO ())
 
 {-# NOINLINE bindCamera_set_orthogonal #-}
 
--- | Sets the camera projection to orthogonal mode (see @PROJECTION_ORTHOGONAL@), by specifying a @size@, and the @z_near@ and @z_far@ clip planes in world-space units. (As a hint, 2D games often use this projection, with values specified in pixels.)
+-- | Sets the camera projection to orthogonal mode (see @PROJECTION_ORTHOGONAL@), by specifying a @size@, and the @z_near@ and @z_far@ clip planes in world space units. (As a hint, 2D games often use this projection, with values specified in pixels.)
 bindCamera_set_orthogonal :: MethodBind
 bindCamera_set_orthogonal
   = unsafePerformIO $
@@ -1024,7 +1147,7 @@ bindCamera_set_orthogonal
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the camera projection to orthogonal mode (see @PROJECTION_ORTHOGONAL@), by specifying a @size@, and the @z_near@ and @z_far@ clip planes in world-space units. (As a hint, 2D games often use this projection, with values specified in pixels.)
+-- | Sets the camera projection to orthogonal mode (see @PROJECTION_ORTHOGONAL@), by specifying a @size@, and the @z_near@ and @z_far@ clip planes in world space units. (As a hint, 2D games often use this projection, with values specified in pixels.)
 set_orthogonal ::
                  (Camera :< cls, Object :< cls) =>
                  cls -> Float -> Float -> Float -> IO ()
@@ -1034,7 +1157,10 @@ set_orthogonal cls arg1 arg2 arg3
          godot_method_bind_call bindCamera_set_orthogonal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_orthogonal" '[Float, Float, Float]
            (IO ())
@@ -1043,7 +1169,7 @@ instance NodeMethod Camera "set_orthogonal" '[Float, Float, Float]
 
 {-# NOINLINE bindCamera_set_perspective #-}
 
--- | Sets the camera projection to perspective mode (see @PROJECTION_PERSPECTIVE@), by specifying a @fov@ (field of view) angle in degrees, and the @z_near@ and @z_far@ clip planes in world-space units.
+-- | Sets the camera projection to perspective mode (see @PROJECTION_PERSPECTIVE@), by specifying a @fov@ (field of view) angle in degrees, and the @z_near@ and @z_far@ clip planes in world space units.
 bindCamera_set_perspective :: MethodBind
 bindCamera_set_perspective
   = unsafePerformIO $
@@ -1053,7 +1179,7 @@ bindCamera_set_perspective
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the camera projection to perspective mode (see @PROJECTION_PERSPECTIVE@), by specifying a @fov@ (field of view) angle in degrees, and the @z_near@ and @z_far@ clip planes in world-space units.
+-- | Sets the camera projection to perspective mode (see @PROJECTION_PERSPECTIVE@), by specifying a @fov@ (field of view) angle in degrees, and the @z_near@ and @z_far@ clip planes in world space units.
 set_perspective ::
                   (Camera :< cls, Object :< cls) =>
                   cls -> Float -> Float -> Float -> IO ()
@@ -1063,7 +1189,10 @@ set_perspective cls arg1 arg2 arg3
          godot_method_bind_call bindCamera_set_perspective (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_perspective" '[Float, Float, Float]
            (IO ())
@@ -1091,7 +1220,10 @@ set_projection cls arg1
          godot_method_bind_call bindCamera_set_projection (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_projection" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Camera.set_projection
@@ -1114,7 +1246,10 @@ set_size cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_set_size (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_size" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Camera.set_size
@@ -1139,7 +1274,10 @@ set_v_offset cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_set_v_offset (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_v_offset" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Camera.set_v_offset
@@ -1162,7 +1300,10 @@ set_zfar cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_set_zfar (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_zfar" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Camera.set_zfar
@@ -1186,14 +1327,27 @@ set_znear cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCamera_set_znear (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "set_znear" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Camera.set_znear
 
 {-# NOINLINE bindCamera_unproject_position #-}
 
--- | Returns the 2D coordinate in the @Viewport@ rectangle that maps to the given 3D point in worldspace.
+-- | Returns the 2D coordinate in the @Viewport@ rectangle that maps to the given 3D point in world space.
+--   				__Note:__ When using this to position GUI elements over a 3D viewport, use @method is_position_behind@ to prevent them from appearing if the 3D point is behind the camera:
+--   				
+--   @
+--   
+--   				# This code block is part of a script that inherits from Spatial.
+--   				# `control` is a reference to a node inheriting from Control.
+--   				control.visible = not get_viewport().get_camera().is_position_behind(global_transform.origin)
+--   				control.rect_position = get_viewport().get_camera().unproject_position(global_transform.origin)
+--   				
+--   @
 bindCamera_unproject_position :: MethodBind
 bindCamera_unproject_position
   = unsafePerformIO $
@@ -1203,7 +1357,17 @@ bindCamera_unproject_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the 2D coordinate in the @Viewport@ rectangle that maps to the given 3D point in worldspace.
+-- | Returns the 2D coordinate in the @Viewport@ rectangle that maps to the given 3D point in world space.
+--   				__Note:__ When using this to position GUI elements over a 3D viewport, use @method is_position_behind@ to prevent them from appearing if the 3D point is behind the camera:
+--   				
+--   @
+--   
+--   				# This code block is part of a script that inherits from Spatial.
+--   				# `control` is a reference to a node inheriting from Control.
+--   				control.visible = not get_viewport().get_camera().is_position_behind(global_transform.origin)
+--   				control.rect_position = get_viewport().get_camera().unproject_position(global_transform.origin)
+--   				
+--   @
 unproject_position ::
                      (Camera :< cls, Object :< cls) => cls -> Vector3 -> IO Vector2
 unproject_position cls arg1
@@ -1212,7 +1376,10 @@ unproject_position cls arg1
          godot_method_bind_call bindCamera_unproject_position (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Camera "unproject_position" '[Vector3]
            (IO Vector2)

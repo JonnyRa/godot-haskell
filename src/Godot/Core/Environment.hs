@@ -12,6 +12,7 @@ module Godot.Core.Environment
         Godot.Core.Environment._BG_SKY,
         Godot.Core.Environment._SSAO_QUALITY_MEDIUM,
         Godot.Core.Environment._GLOW_BLEND_MODE_SOFTLIGHT,
+        Godot.Core.Environment._TONE_MAPPER_ACES_FITTED,
         Godot.Core.Environment._TONE_MAPPER_LINEAR,
         Godot.Core.Environment._BG_MAX,
         Godot.Core.Environment._BG_COLOR_SKY,
@@ -226,6 +227,9 @@ _SSAO_QUALITY_MEDIUM = 1
 
 _GLOW_BLEND_MODE_SOFTLIGHT :: Int
 _GLOW_BLEND_MODE_SOFTLIGHT = 2
+
+_TONE_MAPPER_ACES_FITTED :: Int
+_TONE_MAPPER_ACES_FITTED = 4
 
 _TONE_MAPPER_LINEAR :: Int
 _TONE_MAPPER_LINEAR = 0
@@ -802,7 +806,10 @@ get_adjustment_brightness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_adjustment_brightness" '[]
            (IO Float)
@@ -832,7 +839,7 @@ get_adjustment_color_correction cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Environment "get_adjustment_color_correction"
            '[]
@@ -862,7 +869,10 @@ get_adjustment_contrast cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_adjustment_contrast" '[]
            (IO Float)
@@ -891,7 +901,10 @@ get_adjustment_saturation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_adjustment_saturation" '[]
            (IO Float)
@@ -920,7 +933,10 @@ get_ambient_light_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ambient_light_color" '[]
            (IO Color)
@@ -949,7 +965,10 @@ get_ambient_light_energy cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ambient_light_energy" '[]
            (IO Float)
@@ -958,7 +977,8 @@ instance NodeMethod Environment "get_ambient_light_energy" '[]
 
 {-# NOINLINE bindEnvironment_get_ambient_light_sky_contribution #-}
 
--- | Defines the amount of light that the sky brings on the scene. A value of 0 means that the sky's light emission has no effect on the scene illumination, thus all ambient illumination is provided by the ambient light. On the contrary, a value of 1 means that all the light that affects the scene is provided by the sky, thus the ambient light parameter has no effect on the scene.
+-- | Defines the amount of light that the sky brings on the scene. A value of @0.0@ means that the sky's light emission has no effect on the scene illumination, thus all ambient illumination is provided by the ambient light. On the contrary, a value of @1.0@ means that @i@all@/i@ the light that affects the scene is provided by the sky, thus the ambient light parameter has no effect on the scene.
+--   			__Note:__ @ambient_light_sky_contribution@ is internally clamped between @0.0@ and @1.0@ (inclusive).
 bindEnvironment_get_ambient_light_sky_contribution :: MethodBind
 bindEnvironment_get_ambient_light_sky_contribution
   = unsafePerformIO $
@@ -968,7 +988,8 @@ bindEnvironment_get_ambient_light_sky_contribution
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Defines the amount of light that the sky brings on the scene. A value of 0 means that the sky's light emission has no effect on the scene illumination, thus all ambient illumination is provided by the ambient light. On the contrary, a value of 1 means that all the light that affects the scene is provided by the sky, thus the ambient light parameter has no effect on the scene.
+-- | Defines the amount of light that the sky brings on the scene. A value of @0.0@ means that the sky's light emission has no effect on the scene illumination, thus all ambient illumination is provided by the ambient light. On the contrary, a value of @1.0@ means that @i@all@/i@ the light that affects the scene is provided by the sky, thus the ambient light parameter has no effect on the scene.
+--   			__Note:__ @ambient_light_sky_contribution@ is internally clamped between @0.0@ and @1.0@ (inclusive).
 get_ambient_light_sky_contribution ::
                                      (Environment :< cls, Object :< cls) => cls -> IO Float
 get_ambient_light_sky_contribution cls
@@ -979,7 +1000,10 @@ get_ambient_light_sky_contribution cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment
            "get_ambient_light_sky_contribution"
@@ -1010,7 +1034,10 @@ get_background cls
          godot_method_bind_call bindEnvironment_get_background (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_background" '[] (IO Int) where
         nodeMethod = Godot.Core.Environment.get_background
@@ -1036,7 +1063,10 @@ get_bg_color cls
          godot_method_bind_call bindEnvironment_get_bg_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_bg_color" '[] (IO Color) where
         nodeMethod = Godot.Core.Environment.get_bg_color
@@ -1062,7 +1092,10 @@ get_bg_energy cls
          godot_method_bind_call bindEnvironment_get_bg_energy (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_bg_energy" '[] (IO Float)
          where
@@ -1090,7 +1123,10 @@ get_camera_feed_id cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_camera_feed_id" '[] (IO Int)
          where
@@ -1118,7 +1154,10 @@ get_canvas_max_layer cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_canvas_max_layer" '[] (IO Int)
          where
@@ -1146,7 +1185,10 @@ get_dof_blur_far_amount cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_dof_blur_far_amount" '[]
            (IO Float)
@@ -1175,7 +1217,10 @@ get_dof_blur_far_distance cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_dof_blur_far_distance" '[]
            (IO Float)
@@ -1204,7 +1249,10 @@ get_dof_blur_far_quality cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_dof_blur_far_quality" '[]
            (IO Int)
@@ -1233,7 +1281,10 @@ get_dof_blur_far_transition cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_dof_blur_far_transition" '[]
            (IO Float)
@@ -1262,7 +1313,10 @@ get_dof_blur_near_amount cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_dof_blur_near_amount" '[]
            (IO Float)
@@ -1291,7 +1345,10 @@ get_dof_blur_near_distance cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_dof_blur_near_distance" '[]
            (IO Float)
@@ -1320,7 +1377,10 @@ get_dof_blur_near_quality cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_dof_blur_near_quality" '[]
            (IO Int)
@@ -1349,7 +1409,10 @@ get_dof_blur_near_transition cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_dof_blur_near_transition" '[]
            (IO Float)
@@ -1377,7 +1440,10 @@ get_fog_color cls
          godot_method_bind_call bindEnvironment_get_fog_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_fog_color" '[] (IO Color)
          where
@@ -1405,7 +1471,10 @@ get_fog_depth_begin cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_fog_depth_begin" '[]
            (IO Float)
@@ -1434,7 +1503,10 @@ get_fog_depth_curve cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_fog_depth_curve" '[]
            (IO Float)
@@ -1463,7 +1535,10 @@ get_fog_depth_end cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_fog_depth_end" '[] (IO Float)
          where
@@ -1491,7 +1566,10 @@ get_fog_height_curve cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_fog_height_curve" '[]
            (IO Float)
@@ -1520,7 +1598,10 @@ get_fog_height_max cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_fog_height_max" '[] (IO Float)
          where
@@ -1548,7 +1629,10 @@ get_fog_height_min cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_fog_height_min" '[] (IO Float)
          where
@@ -1576,7 +1660,10 @@ get_fog_sun_amount cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_fog_sun_amount" '[] (IO Float)
          where
@@ -1604,7 +1691,10 @@ get_fog_sun_color cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_fog_sun_color" '[] (IO Color)
          where
@@ -1632,7 +1722,10 @@ get_fog_transmit_curve cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_fog_transmit_curve" '[]
            (IO Float)
@@ -1661,7 +1754,10 @@ get_glow_blend_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_glow_blend_mode" '[] (IO Int)
          where
@@ -1688,7 +1784,10 @@ get_glow_bloom cls
          godot_method_bind_call bindEnvironment_get_glow_bloom (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_glow_bloom" '[] (IO Float)
          where
@@ -1716,7 +1815,10 @@ get_glow_hdr_bleed_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_glow_hdr_bleed_scale" '[]
            (IO Float)
@@ -1745,7 +1847,10 @@ get_glow_hdr_bleed_threshold cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_glow_hdr_bleed_threshold" '[]
            (IO Float)
@@ -1774,7 +1879,10 @@ get_glow_hdr_luminance_cap cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_glow_hdr_luminance_cap" '[]
            (IO Float)
@@ -1803,7 +1911,10 @@ get_glow_intensity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_glow_intensity" '[] (IO Float)
          where
@@ -1831,7 +1942,10 @@ get_glow_strength cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_glow_strength" '[] (IO Float)
          where
@@ -1856,7 +1970,7 @@ get_sky cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindEnvironment_get_sky (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Environment "get_sky" '[] (IO Sky) where
         nodeMethod = Godot.Core.Environment.get_sky
@@ -1883,7 +1997,10 @@ get_sky_custom_fov cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_sky_custom_fov" '[] (IO Float)
          where
@@ -1911,7 +2028,10 @@ get_sky_orientation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_sky_orientation" '[]
            (IO Basis)
@@ -1940,7 +2060,10 @@ get_sky_rotation cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_sky_rotation" '[] (IO Vector3)
          where
@@ -1968,7 +2091,10 @@ get_sky_rotation_degrees cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_sky_rotation_degrees" '[]
            (IO Vector3)
@@ -1997,7 +2123,10 @@ get_ssao_ao_channel_affect cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_ao_channel_affect" '[]
            (IO Float)
@@ -2025,7 +2154,10 @@ get_ssao_bias cls
          godot_method_bind_call bindEnvironment_get_ssao_bias (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_bias" '[] (IO Float)
          where
@@ -2052,7 +2184,10 @@ get_ssao_blur cls
          godot_method_bind_call bindEnvironment_get_ssao_blur (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_blur" '[] (IO Int) where
         nodeMethod = Godot.Core.Environment.get_ssao_blur
@@ -2078,7 +2213,10 @@ get_ssao_color cls
          godot_method_bind_call bindEnvironment_get_ssao_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_color" '[] (IO Color)
          where
@@ -2106,7 +2244,10 @@ get_ssao_direct_light_affect cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_direct_light_affect" '[]
            (IO Float)
@@ -2135,7 +2276,10 @@ get_ssao_edge_sharpness cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_edge_sharpness" '[]
            (IO Float)
@@ -2164,7 +2308,10 @@ get_ssao_intensity cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_intensity" '[] (IO Float)
          where
@@ -2192,7 +2339,10 @@ get_ssao_intensity2 cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_intensity2" '[]
            (IO Float)
@@ -2221,7 +2371,10 @@ get_ssao_quality cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_quality" '[] (IO Int)
          where
@@ -2248,7 +2401,10 @@ get_ssao_radius cls
          godot_method_bind_call bindEnvironment_get_ssao_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_radius" '[] (IO Float)
          where
@@ -2276,7 +2432,10 @@ get_ssao_radius2 cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssao_radius2" '[] (IO Float)
          where
@@ -2304,7 +2463,10 @@ get_ssr_depth_tolerance cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssr_depth_tolerance" '[]
            (IO Float)
@@ -2332,7 +2494,10 @@ get_ssr_fade_in cls
          godot_method_bind_call bindEnvironment_get_ssr_fade_in (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssr_fade_in" '[] (IO Float)
          where
@@ -2360,7 +2525,10 @@ get_ssr_fade_out cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssr_fade_out" '[] (IO Float)
          where
@@ -2388,7 +2556,10 @@ get_ssr_max_steps cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_ssr_max_steps" '[] (IO Int)
          where
@@ -2416,7 +2587,10 @@ get_tonemap_auto_exposure cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_tonemap_auto_exposure" '[]
            (IO Bool)
@@ -2446,7 +2620,10 @@ get_tonemap_auto_exposure_grey cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_tonemap_auto_exposure_grey"
            '[]
@@ -2477,7 +2654,10 @@ get_tonemap_auto_exposure_max cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_tonemap_auto_exposure_max" '[]
            (IO Float)
@@ -2507,7 +2687,10 @@ get_tonemap_auto_exposure_min cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_tonemap_auto_exposure_min" '[]
            (IO Float)
@@ -2537,7 +2720,10 @@ get_tonemap_auto_exposure_speed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_tonemap_auto_exposure_speed"
            '[]
@@ -2567,7 +2753,10 @@ get_tonemap_exposure cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_tonemap_exposure" '[]
            (IO Float)
@@ -2596,7 +2785,10 @@ get_tonemap_white cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_tonemap_white" '[] (IO Float)
          where
@@ -2623,7 +2815,10 @@ get_tonemapper cls
          godot_method_bind_call bindEnvironment_get_tonemapper (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "get_tonemapper" '[] (IO Int) where
         nodeMethod = Godot.Core.Environment.get_tonemapper
@@ -2650,7 +2845,10 @@ is_adjustment_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_adjustment_enabled" '[]
            (IO Bool)
@@ -2679,7 +2877,10 @@ is_dof_blur_far_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_dof_blur_far_enabled" '[]
            (IO Bool)
@@ -2708,7 +2909,10 @@ is_dof_blur_near_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_dof_blur_near_enabled" '[]
            (IO Bool)
@@ -2737,7 +2941,10 @@ is_fog_depth_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_fog_depth_enabled" '[]
            (IO Bool)
@@ -2765,7 +2972,10 @@ is_fog_enabled cls
          godot_method_bind_call bindEnvironment_is_fog_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_fog_enabled" '[] (IO Bool)
          where
@@ -2793,7 +3003,10 @@ is_fog_height_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_fog_height_enabled" '[]
            (IO Bool)
@@ -2822,7 +3035,10 @@ is_fog_transmit_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_fog_transmit_enabled" '[]
            (IO Bool)
@@ -2854,7 +3070,10 @@ is_glow_bicubic_upscale_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_glow_bicubic_upscale_enabled"
            '[]
@@ -2865,6 +3084,8 @@ instance NodeMethod Environment "is_glow_bicubic_upscale_enabled"
 {-# NOINLINE bindEnvironment_is_glow_enabled #-}
 
 -- | If @true@, the glow effect is enabled.
+--   			__Note:__ Only effective if @ProjectSettings.rendering/quality/intended_usage/framebuffer_allocation@ is __3D__ (@i@not@/i@ __3D Without Effects__). On mobile, @ProjectSettings.rendering/quality/intended_usage/framebuffer_allocation@ defaults to __3D Without Effects__ by default, so its @.mobile@ override needs to be changed to __3D__.
+--   			__Note:__ When using GLES3 on mobile, HDR rendering is disabled by default for performance reasons. This means glow will only be visible if @glow_hdr_threshold@ is decreased below @1.0@ or if @glow_bloom@ is increased above @0.0@. Also consider increasing @glow_intensity@ to @1.5@. If you want glow to behave on mobile like it does on desktop (at a performance cost), enable @ProjectSettings.rendering/quality/depth/hdr@'s @.mobile@ override.
 bindEnvironment_is_glow_enabled :: MethodBind
 bindEnvironment_is_glow_enabled
   = unsafePerformIO $
@@ -2875,6 +3096,8 @@ bindEnvironment_is_glow_enabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the glow effect is enabled.
+--   			__Note:__ Only effective if @ProjectSettings.rendering/quality/intended_usage/framebuffer_allocation@ is __3D__ (@i@not@/i@ __3D Without Effects__). On mobile, @ProjectSettings.rendering/quality/intended_usage/framebuffer_allocation@ defaults to __3D Without Effects__ by default, so its @.mobile@ override needs to be changed to __3D__.
+--   			__Note:__ When using GLES3 on mobile, HDR rendering is disabled by default for performance reasons. This means glow will only be visible if @glow_hdr_threshold@ is decreased below @1.0@ or if @glow_bloom@ is increased above @0.0@. Also consider increasing @glow_intensity@ to @1.5@. If you want glow to behave on mobile like it does on desktop (at a performance cost), enable @ProjectSettings.rendering/quality/depth/hdr@'s @.mobile@ override.
 is_glow_enabled ::
                   (Environment :< cls, Object :< cls) => cls -> IO Bool
 is_glow_enabled cls
@@ -2883,7 +3106,10 @@ is_glow_enabled cls
          godot_method_bind_call bindEnvironment_is_glow_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_glow_enabled" '[] (IO Bool)
          where
@@ -2911,7 +3137,10 @@ is_glow_level_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_glow_level_enabled" '[Int]
            (IO Bool)
@@ -2939,7 +3168,10 @@ is_ssao_enabled cls
          godot_method_bind_call bindEnvironment_is_ssao_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_ssao_enabled" '[] (IO Bool)
          where
@@ -2966,7 +3198,10 @@ is_ssr_enabled cls
          godot_method_bind_call bindEnvironment_is_ssr_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_ssr_enabled" '[] (IO Bool)
          where
@@ -2993,7 +3228,10 @@ is_ssr_rough cls
          godot_method_bind_call bindEnvironment_is_ssr_rough (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "is_ssr_rough" '[] (IO Bool) where
         nodeMethod = Godot.Core.Environment.is_ssr_rough
@@ -3020,7 +3258,10 @@ set_adjustment_brightness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_adjustment_brightness"
            '[Float]
@@ -3051,7 +3292,10 @@ set_adjustment_color_correction cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_adjustment_color_correction"
            '[Texture]
@@ -3081,7 +3325,10 @@ set_adjustment_contrast cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_adjustment_contrast" '[Float]
            (IO ())
@@ -3110,7 +3357,10 @@ set_adjustment_enable cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_adjustment_enable" '[Bool]
            (IO ())
@@ -3139,7 +3389,10 @@ set_adjustment_saturation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_adjustment_saturation"
            '[Float]
@@ -3169,7 +3422,10 @@ set_ambient_light_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ambient_light_color" '[Color]
            (IO ())
@@ -3198,7 +3454,10 @@ set_ambient_light_energy cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ambient_light_energy" '[Float]
            (IO ())
@@ -3207,7 +3466,8 @@ instance NodeMethod Environment "set_ambient_light_energy" '[Float]
 
 {-# NOINLINE bindEnvironment_set_ambient_light_sky_contribution #-}
 
--- | Defines the amount of light that the sky brings on the scene. A value of 0 means that the sky's light emission has no effect on the scene illumination, thus all ambient illumination is provided by the ambient light. On the contrary, a value of 1 means that all the light that affects the scene is provided by the sky, thus the ambient light parameter has no effect on the scene.
+-- | Defines the amount of light that the sky brings on the scene. A value of @0.0@ means that the sky's light emission has no effect on the scene illumination, thus all ambient illumination is provided by the ambient light. On the contrary, a value of @1.0@ means that @i@all@/i@ the light that affects the scene is provided by the sky, thus the ambient light parameter has no effect on the scene.
+--   			__Note:__ @ambient_light_sky_contribution@ is internally clamped between @0.0@ and @1.0@ (inclusive).
 bindEnvironment_set_ambient_light_sky_contribution :: MethodBind
 bindEnvironment_set_ambient_light_sky_contribution
   = unsafePerformIO $
@@ -3217,7 +3477,8 @@ bindEnvironment_set_ambient_light_sky_contribution
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Defines the amount of light that the sky brings on the scene. A value of 0 means that the sky's light emission has no effect on the scene illumination, thus all ambient illumination is provided by the ambient light. On the contrary, a value of 1 means that all the light that affects the scene is provided by the sky, thus the ambient light parameter has no effect on the scene.
+-- | Defines the amount of light that the sky brings on the scene. A value of @0.0@ means that the sky's light emission has no effect on the scene illumination, thus all ambient illumination is provided by the ambient light. On the contrary, a value of @1.0@ means that @i@all@/i@ the light that affects the scene is provided by the sky, thus the ambient light parameter has no effect on the scene.
+--   			__Note:__ @ambient_light_sky_contribution@ is internally clamped between @0.0@ and @1.0@ (inclusive).
 set_ambient_light_sky_contribution ::
                                      (Environment :< cls, Object :< cls) => cls -> Float -> IO ()
 set_ambient_light_sky_contribution cls arg1
@@ -3228,7 +3489,10 @@ set_ambient_light_sky_contribution cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment
            "set_ambient_light_sky_contribution"
@@ -3259,7 +3523,10 @@ set_background cls arg1
          godot_method_bind_call bindEnvironment_set_background (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_background" '[Int] (IO ())
          where
@@ -3286,7 +3553,10 @@ set_bg_color cls arg1
          godot_method_bind_call bindEnvironment_set_bg_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_bg_color" '[Color] (IO ())
          where
@@ -3313,7 +3583,10 @@ set_bg_energy cls arg1
          godot_method_bind_call bindEnvironment_set_bg_energy (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_bg_energy" '[Float] (IO ())
          where
@@ -3341,7 +3614,10 @@ set_camera_feed_id cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_camera_feed_id" '[Int] (IO ())
          where
@@ -3369,7 +3645,10 @@ set_canvas_max_layer cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_canvas_max_layer" '[Int]
            (IO ())
@@ -3398,7 +3677,10 @@ set_dof_blur_far_amount cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_dof_blur_far_amount" '[Float]
            (IO ())
@@ -3427,7 +3709,10 @@ set_dof_blur_far_distance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_dof_blur_far_distance"
            '[Float]
@@ -3457,7 +3742,10 @@ set_dof_blur_far_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_dof_blur_far_enabled" '[Bool]
            (IO ())
@@ -3486,7 +3774,10 @@ set_dof_blur_far_quality cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_dof_blur_far_quality" '[Int]
            (IO ())
@@ -3515,7 +3806,10 @@ set_dof_blur_far_transition cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_dof_blur_far_transition"
            '[Float]
@@ -3545,7 +3839,10 @@ set_dof_blur_near_amount cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_dof_blur_near_amount" '[Float]
            (IO ())
@@ -3574,7 +3871,10 @@ set_dof_blur_near_distance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_dof_blur_near_distance"
            '[Float]
@@ -3604,7 +3904,10 @@ set_dof_blur_near_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_dof_blur_near_enabled" '[Bool]
            (IO ())
@@ -3633,7 +3936,10 @@ set_dof_blur_near_quality cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_dof_blur_near_quality" '[Int]
            (IO ())
@@ -3662,7 +3968,10 @@ set_dof_blur_near_transition cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_dof_blur_near_transition"
            '[Float]
@@ -3691,7 +4000,10 @@ set_fog_color cls arg1
          godot_method_bind_call bindEnvironment_set_fog_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_color" '[Color] (IO ())
          where
@@ -3719,7 +4031,10 @@ set_fog_depth_begin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_depth_begin" '[Float]
            (IO ())
@@ -3748,7 +4063,10 @@ set_fog_depth_curve cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_depth_curve" '[Float]
            (IO ())
@@ -3777,7 +4095,10 @@ set_fog_depth_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_depth_enabled" '[Bool]
            (IO ())
@@ -3806,7 +4127,10 @@ set_fog_depth_end cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_depth_end" '[Float]
            (IO ())
@@ -3834,7 +4158,10 @@ set_fog_enabled cls arg1
          godot_method_bind_call bindEnvironment_set_fog_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_enabled" '[Bool] (IO ())
          where
@@ -3862,7 +4189,10 @@ set_fog_height_curve cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_height_curve" '[Float]
            (IO ())
@@ -3891,7 +4221,10 @@ set_fog_height_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_height_enabled" '[Bool]
            (IO ())
@@ -3920,7 +4253,10 @@ set_fog_height_max cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_height_max" '[Float]
            (IO ())
@@ -3949,7 +4285,10 @@ set_fog_height_min cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_height_min" '[Float]
            (IO ())
@@ -3978,7 +4317,10 @@ set_fog_sun_amount cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_sun_amount" '[Float]
            (IO ())
@@ -4007,7 +4349,10 @@ set_fog_sun_color cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_sun_color" '[Color]
            (IO ())
@@ -4036,7 +4381,10 @@ set_fog_transmit_curve cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_transmit_curve" '[Float]
            (IO ())
@@ -4065,7 +4413,10 @@ set_fog_transmit_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_fog_transmit_enabled" '[Bool]
            (IO ())
@@ -4096,7 +4447,10 @@ set_glow_bicubic_upscale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_glow_bicubic_upscale" '[Bool]
            (IO ())
@@ -4125,7 +4479,10 @@ set_glow_blend_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_glow_blend_mode" '[Int]
            (IO ())
@@ -4153,7 +4510,10 @@ set_glow_bloom cls arg1
          godot_method_bind_call bindEnvironment_set_glow_bloom (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_glow_bloom" '[Float] (IO ())
          where
@@ -4162,6 +4522,8 @@ instance NodeMethod Environment "set_glow_bloom" '[Float] (IO ())
 {-# NOINLINE bindEnvironment_set_glow_enabled #-}
 
 -- | If @true@, the glow effect is enabled.
+--   			__Note:__ Only effective if @ProjectSettings.rendering/quality/intended_usage/framebuffer_allocation@ is __3D__ (@i@not@/i@ __3D Without Effects__). On mobile, @ProjectSettings.rendering/quality/intended_usage/framebuffer_allocation@ defaults to __3D Without Effects__ by default, so its @.mobile@ override needs to be changed to __3D__.
+--   			__Note:__ When using GLES3 on mobile, HDR rendering is disabled by default for performance reasons. This means glow will only be visible if @glow_hdr_threshold@ is decreased below @1.0@ or if @glow_bloom@ is increased above @0.0@. Also consider increasing @glow_intensity@ to @1.5@. If you want glow to behave on mobile like it does on desktop (at a performance cost), enable @ProjectSettings.rendering/quality/depth/hdr@'s @.mobile@ override.
 bindEnvironment_set_glow_enabled :: MethodBind
 bindEnvironment_set_glow_enabled
   = unsafePerformIO $
@@ -4172,6 +4534,8 @@ bindEnvironment_set_glow_enabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the glow effect is enabled.
+--   			__Note:__ Only effective if @ProjectSettings.rendering/quality/intended_usage/framebuffer_allocation@ is __3D__ (@i@not@/i@ __3D Without Effects__). On mobile, @ProjectSettings.rendering/quality/intended_usage/framebuffer_allocation@ defaults to __3D Without Effects__ by default, so its @.mobile@ override needs to be changed to __3D__.
+--   			__Note:__ When using GLES3 on mobile, HDR rendering is disabled by default for performance reasons. This means glow will only be visible if @glow_hdr_threshold@ is decreased below @1.0@ or if @glow_bloom@ is increased above @0.0@. Also consider increasing @glow_intensity@ to @1.5@. If you want glow to behave on mobile like it does on desktop (at a performance cost), enable @ProjectSettings.rendering/quality/depth/hdr@'s @.mobile@ override.
 set_glow_enabled ::
                    (Environment :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_glow_enabled cls arg1
@@ -4181,7 +4545,10 @@ set_glow_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_glow_enabled" '[Bool] (IO ())
          where
@@ -4209,7 +4576,10 @@ set_glow_hdr_bleed_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_glow_hdr_bleed_scale" '[Float]
            (IO ())
@@ -4238,7 +4608,10 @@ set_glow_hdr_bleed_threshold cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_glow_hdr_bleed_threshold"
            '[Float]
@@ -4268,7 +4641,10 @@ set_glow_hdr_luminance_cap cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_glow_hdr_luminance_cap"
            '[Float]
@@ -4298,7 +4674,10 @@ set_glow_intensity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_glow_intensity" '[Float]
            (IO ())
@@ -4326,7 +4705,10 @@ set_glow_level cls arg1 arg2
          godot_method_bind_call bindEnvironment_set_glow_level (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_glow_level" '[Int, Bool]
            (IO ())
@@ -4355,7 +4737,10 @@ set_glow_strength cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_glow_strength" '[Float]
            (IO ())
@@ -4382,7 +4767,10 @@ set_sky cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindEnvironment_set_sky (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_sky" '[Sky] (IO ()) where
         nodeMethod = Godot.Core.Environment.set_sky
@@ -4409,7 +4797,10 @@ set_sky_custom_fov cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_sky_custom_fov" '[Float]
            (IO ())
@@ -4438,7 +4829,10 @@ set_sky_orientation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_sky_orientation" '[Basis]
            (IO ())
@@ -4467,7 +4861,10 @@ set_sky_rotation cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_sky_rotation" '[Vector3]
            (IO ())
@@ -4496,7 +4893,10 @@ set_sky_rotation_degrees cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_sky_rotation_degrees"
            '[Vector3]
@@ -4526,7 +4926,10 @@ set_ssao_ao_channel_affect cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_ao_channel_affect"
            '[Float]
@@ -4555,7 +4958,10 @@ set_ssao_bias cls arg1
          godot_method_bind_call bindEnvironment_set_ssao_bias (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_bias" '[Float] (IO ())
          where
@@ -4582,7 +4988,10 @@ set_ssao_blur cls arg1
          godot_method_bind_call bindEnvironment_set_ssao_blur (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_blur" '[Int] (IO ())
          where
@@ -4609,7 +5018,10 @@ set_ssao_color cls arg1
          godot_method_bind_call bindEnvironment_set_ssao_color (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_color" '[Color] (IO ())
          where
@@ -4637,7 +5049,10 @@ set_ssao_direct_light_affect cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_direct_light_affect"
            '[Float]
@@ -4667,7 +5082,10 @@ set_ssao_edge_sharpness cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_edge_sharpness" '[Float]
            (IO ())
@@ -4696,7 +5114,10 @@ set_ssao_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_enabled" '[Bool] (IO ())
          where
@@ -4724,7 +5145,10 @@ set_ssao_intensity cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_intensity" '[Float]
            (IO ())
@@ -4753,7 +5177,10 @@ set_ssao_intensity2 cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_intensity2" '[Float]
            (IO ())
@@ -4782,7 +5209,10 @@ set_ssao_quality cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_quality" '[Int] (IO ())
          where
@@ -4809,7 +5239,10 @@ set_ssao_radius cls arg1
          godot_method_bind_call bindEnvironment_set_ssao_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_radius" '[Float] (IO ())
          where
@@ -4837,7 +5270,10 @@ set_ssao_radius2 cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssao_radius2" '[Float] (IO ())
          where
@@ -4865,7 +5301,10 @@ set_ssr_depth_tolerance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssr_depth_tolerance" '[Float]
            (IO ())
@@ -4893,7 +5332,10 @@ set_ssr_enabled cls arg1
          godot_method_bind_call bindEnvironment_set_ssr_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssr_enabled" '[Bool] (IO ())
          where
@@ -4920,7 +5362,10 @@ set_ssr_fade_in cls arg1
          godot_method_bind_call bindEnvironment_set_ssr_fade_in (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssr_fade_in" '[Float] (IO ())
          where
@@ -4948,7 +5393,10 @@ set_ssr_fade_out cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssr_fade_out" '[Float] (IO ())
          where
@@ -4976,7 +5424,10 @@ set_ssr_max_steps cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssr_max_steps" '[Int] (IO ())
          where
@@ -5003,7 +5454,10 @@ set_ssr_rough cls arg1
          godot_method_bind_call bindEnvironment_set_ssr_rough (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_ssr_rough" '[Bool] (IO ())
          where
@@ -5031,7 +5485,10 @@ set_tonemap_auto_exposure cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_tonemap_auto_exposure" '[Bool]
            (IO ())
@@ -5061,7 +5518,10 @@ set_tonemap_auto_exposure_grey cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_tonemap_auto_exposure_grey"
            '[Float]
@@ -5092,7 +5552,10 @@ set_tonemap_auto_exposure_max cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_tonemap_auto_exposure_max"
            '[Float]
@@ -5123,7 +5586,10 @@ set_tonemap_auto_exposure_min cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_tonemap_auto_exposure_min"
            '[Float]
@@ -5154,7 +5620,10 @@ set_tonemap_auto_exposure_speed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_tonemap_auto_exposure_speed"
            '[Float]
@@ -5184,7 +5653,10 @@ set_tonemap_exposure cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_tonemap_exposure" '[Float]
            (IO ())
@@ -5213,7 +5685,10 @@ set_tonemap_white cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_tonemap_white" '[Float]
            (IO ())
@@ -5241,7 +5716,10 @@ set_tonemapper cls arg1
          godot_method_bind_call bindEnvironment_set_tonemapper (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Environment "set_tonemapper" '[Int] (IO ())
          where

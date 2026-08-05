@@ -19,7 +19,7 @@ import Data.Colour.SRGB(sRGB)
 import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
-import Godot.Core.Reference()
+import Godot.Core.Object()
 
 {-# NOINLINE bindMarshalls_base64_to_raw #-}
 
@@ -43,7 +43,10 @@ base64_to_raw cls arg1
          godot_method_bind_call bindMarshalls_base64_to_raw (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Marshalls "base64_to_raw" '[GodotString]
            (IO PoolByteArray)
@@ -72,7 +75,10 @@ base64_to_utf8 cls arg1
          godot_method_bind_call bindMarshalls_base64_to_utf8 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Marshalls "base64_to_utf8" '[GodotString]
            (IO GodotString)
@@ -104,7 +110,7 @@ base64_to_variant cls arg1 arg2
          godot_method_bind_call bindMarshalls_base64_to_variant (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Marshalls "base64_to_variant"
            '[GodotString, Maybe Bool]
@@ -134,7 +140,10 @@ raw_to_base64 cls arg1
          godot_method_bind_call bindMarshalls_raw_to_base64 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Marshalls "raw_to_base64" '[PoolByteArray]
            (IO GodotString)
@@ -163,7 +172,10 @@ utf8_to_base64 cls arg1
          godot_method_bind_call bindMarshalls_utf8_to_base64 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Marshalls "utf8_to_base64" '[GodotString]
            (IO GodotString)
@@ -193,7 +205,10 @@ variant_to_base64 cls arg1 arg2
          godot_method_bind_call bindMarshalls_variant_to_base64 (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Marshalls "variant_to_base64"
            '[GodotVariant, Maybe Bool]

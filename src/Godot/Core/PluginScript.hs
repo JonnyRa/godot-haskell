@@ -32,7 +32,7 @@ new cls varargs
   = withVariantArray ([] ++ varargs)
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPluginScript_new (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod PluginScript "new" '[[Variant 'GodotTy]]
            (IO GodotVariant)

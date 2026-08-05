@@ -133,7 +133,10 @@ add_port_mapping cls arg1 arg2 arg3 arg4 arg5
          godot_method_bind_call bindUPNPDevice_add_port_mapping (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "add_port_mapping"
            '[Int, Maybe Int, Maybe GodotString, Maybe GodotString, Maybe Int]
@@ -163,7 +166,10 @@ delete_port_mapping cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "delete_port_mapping"
            '[Int, Maybe GodotString]
@@ -191,7 +197,10 @@ get_description_url cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "get_description_url" '[]
            (IO GodotString)
@@ -218,7 +227,10 @@ get_igd_control_url cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "get_igd_control_url" '[]
            (IO GodotString)
@@ -244,7 +256,10 @@ get_igd_our_addr cls
          godot_method_bind_call bindUPNPDevice_get_igd_our_addr (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "get_igd_our_addr" '[]
            (IO GodotString)
@@ -271,7 +286,10 @@ get_igd_service_type cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "get_igd_service_type" '[]
            (IO GodotString)
@@ -297,7 +315,10 @@ get_igd_status cls
          godot_method_bind_call bindUPNPDevice_get_igd_status (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "get_igd_status" '[] (IO Int) where
         nodeMethod = Godot.Core.UPNPDevice.get_igd_status
@@ -321,7 +342,10 @@ get_service_type cls
          godot_method_bind_call bindUPNPDevice_get_service_type (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "get_service_type" '[]
            (IO GodotString)
@@ -347,7 +371,10 @@ is_valid_gateway cls
          godot_method_bind_call bindUPNPDevice_is_valid_gateway (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "is_valid_gateway" '[] (IO Bool)
          where
@@ -373,7 +400,10 @@ query_external_address cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "query_external_address" '[]
            (IO GodotString)
@@ -400,7 +430,10 @@ set_description_url cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "set_description_url" '[GodotString]
            (IO ())
@@ -427,7 +460,10 @@ set_igd_control_url cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "set_igd_control_url" '[GodotString]
            (IO ())
@@ -453,7 +489,10 @@ set_igd_our_addr cls arg1
          godot_method_bind_call bindUPNPDevice_set_igd_our_addr (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "set_igd_our_addr" '[GodotString]
            (IO ())
@@ -480,7 +519,10 @@ set_igd_service_type cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "set_igd_service_type"
            '[GodotString]
@@ -507,7 +549,10 @@ set_igd_status cls arg1
          godot_method_bind_call bindUPNPDevice_set_igd_status (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "set_igd_status" '[Int] (IO ())
          where
@@ -532,7 +577,10 @@ set_service_type cls arg1
          godot_method_bind_call bindUPNPDevice_set_service_type (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod UPNPDevice "set_service_type" '[GodotString]
            (IO ())

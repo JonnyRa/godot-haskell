@@ -41,7 +41,10 @@ get_pan cls
          godot_method_bind_call bindAudioEffectPanner_get_pan (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioEffectPanner "get_pan" '[] (IO Float)
          where
@@ -68,7 +71,10 @@ set_pan cls arg1
          godot_method_bind_call bindAudioEffectPanner_set_pan (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioEffectPanner "set_pan" '[Float] (IO ())
          where

@@ -46,7 +46,10 @@ _get_data cls
          godot_method_bind_call bindLargeTexture__get_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LargeTexture "_get_data" '[] (IO Array) where
         nodeMethod = Godot.Core.LargeTexture._get_data
@@ -70,7 +73,10 @@ _set_data cls arg1
          godot_method_bind_call bindLargeTexture__set_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LargeTexture "_set_data" '[Array] (IO ()) where
         nodeMethod = Godot.Core.LargeTexture._set_data
@@ -97,7 +103,10 @@ add_piece cls arg1 arg2
          godot_method_bind_call bindLargeTexture_add_piece (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LargeTexture "add_piece" '[Vector2, Texture]
            (IO Int)
@@ -123,7 +132,10 @@ clear cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindLargeTexture_clear (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LargeTexture "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.LargeTexture.clear
@@ -150,7 +162,10 @@ get_piece_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LargeTexture "get_piece_count" '[] (IO Int)
          where
@@ -178,7 +193,10 @@ get_piece_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LargeTexture "get_piece_offset" '[Int]
            (IO Vector2)
@@ -207,7 +225,7 @@ get_piece_texture cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod LargeTexture "get_piece_texture" '[Int]
            (IO Texture)
@@ -237,7 +255,10 @@ set_piece_offset cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LargeTexture "set_piece_offset" '[Int, Vector2]
            (IO ())
@@ -267,7 +288,10 @@ set_piece_texture cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LargeTexture "set_piece_texture"
            '[Int, Texture]
@@ -296,7 +320,10 @@ set_size cls arg1
          godot_method_bind_call bindLargeTexture_set_size (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod LargeTexture "set_size" '[Vector2] (IO ())
          where

@@ -62,7 +62,10 @@ get_height cls
          godot_method_bind_call bindSphereMesh_get_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereMesh "get_height" '[] (IO Float) where
         nodeMethod = Godot.Core.SphereMesh.get_height
@@ -91,7 +94,10 @@ get_is_hemisphere cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereMesh "get_is_hemisphere" '[] (IO Bool)
          where
@@ -119,7 +125,10 @@ get_radial_segments cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereMesh "get_radial_segments" '[] (IO Int)
          where
@@ -145,7 +154,10 @@ get_radius cls
          godot_method_bind_call bindSphereMesh_get_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereMesh "get_radius" '[] (IO Float) where
         nodeMethod = Godot.Core.SphereMesh.get_radius
@@ -169,7 +181,10 @@ get_rings cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSphereMesh_get_rings (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereMesh "get_rings" '[] (IO Int) where
         nodeMethod = Godot.Core.SphereMesh.get_rings
@@ -195,7 +210,10 @@ set_height cls arg1
          godot_method_bind_call bindSphereMesh_set_height (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereMesh "set_height" '[Float] (IO ()) where
         nodeMethod = Godot.Core.SphereMesh.set_height
@@ -224,7 +242,10 @@ set_is_hemisphere cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereMesh "set_is_hemisphere" '[Bool] (IO ())
          where
@@ -252,7 +273,10 @@ set_radial_segments cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereMesh "set_radial_segments" '[Int] (IO ())
          where
@@ -279,7 +303,10 @@ set_radius cls arg1
          godot_method_bind_call bindSphereMesh_set_radius (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereMesh "set_radius" '[Float] (IO ()) where
         nodeMethod = Godot.Core.SphereMesh.set_radius
@@ -304,7 +331,10 @@ set_rings cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSphereMesh_set_rings (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SphereMesh "set_rings" '[Int] (IO ()) where
         nodeMethod = Godot.Core.SphereMesh.set_rings

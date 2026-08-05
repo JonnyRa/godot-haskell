@@ -25,6 +25,7 @@ module Godot.Core.Node
         Godot.Core.Node._NOTIFICATION_INTERNAL_PROCESS,
         Godot.Core.Node._PAUSE_MODE_STOP,
         Godot.Core.Node._PAUSE_MODE_INHERIT,
+        Godot.Core.Node._NOTIFICATION_POST_ENTER_TREE,
         Godot.Core.Node._NOTIFICATION_TRANSLATION_CHANGED,
         Godot.Core.Node._NOTIFICATION_INSTANCED,
         Godot.Core.Node._NOTIFICATION_UNPAUSED,
@@ -187,6 +188,9 @@ _PAUSE_MODE_STOP = 1
 _PAUSE_MODE_INHERIT :: Int
 _PAUSE_MODE_INHERIT = 0
 
+_NOTIFICATION_POST_ENTER_TREE :: Int
+_NOTIFICATION_POST_ENTER_TREE = 27
+
 _NOTIFICATION_TRANSLATION_CHANGED :: Int
 _NOTIFICATION_TRANSLATION_CHANGED = 1010
 
@@ -318,7 +322,10 @@ _enter_tree cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode__enter_tree (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_enter_tree" '[] (IO ()) where
         nodeMethod = Godot.Core.Node._enter_tree
@@ -343,7 +350,10 @@ _exit_tree cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode__exit_tree (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_exit_tree" '[] (IO ()) where
         nodeMethod = Godot.Core.Node._exit_tree
@@ -374,7 +384,10 @@ _get_configuration_warning cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_get_configuration_warning" '[]
            (IO GodotString)
@@ -401,7 +414,10 @@ _get_editor_description cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_get_editor_description" '[]
            (IO GodotString)
@@ -427,7 +443,10 @@ _get_import_path cls
          godot_method_bind_call bindNode__get_import_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_get_import_path" '[] (IO NodePath) where
         nodeMethod = Godot.Core.Node._get_import_path
@@ -459,14 +478,16 @@ _input cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode__input (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_input" '[InputEvent] (IO ()) where
         nodeMethod = Godot.Core.Node._input
 
 {-# NOINLINE bindNode__physics_process #-}
 
--- | Called during the physics processing step of the main loop. Physics processing means that the frame rate is synced to the physics, i.e. the @delta@ variable should be constant.
+-- | Called during the physics processing step of the main loop. Physics processing means that the frame rate is synced to the physics, i.e. the @delta@ variable should be constant. @delta@ is in seconds.
 --   				It is only called if physics processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_physics_process@.
 --   				Corresponds to the @NOTIFICATION_PHYSICS_PROCESS@ notification in @method Object._notification@.
 --   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
@@ -479,7 +500,7 @@ bindNode__physics_process
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Called during the physics processing step of the main loop. Physics processing means that the frame rate is synced to the physics, i.e. the @delta@ variable should be constant.
+-- | Called during the physics processing step of the main loop. Physics processing means that the frame rate is synced to the physics, i.e. the @delta@ variable should be constant. @delta@ is in seconds.
 --   				It is only called if physics processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_physics_process@.
 --   				Corresponds to the @NOTIFICATION_PHYSICS_PROCESS@ notification in @method Object._notification@.
 --   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
@@ -491,14 +512,17 @@ _physics_process cls arg1
          godot_method_bind_call bindNode__physics_process (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_physics_process" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Node._physics_process
 
 {-# NOINLINE bindNode__process #-}
 
--- | Called during the processing step of the main loop. Processing happens at every frame and as fast as possible, so the @delta@ time since the previous frame is not constant.
+-- | Called during the processing step of the main loop. Processing happens at every frame and as fast as possible, so the @delta@ time since the previous frame is not constant. @delta@ is in seconds.
 --   				It is only called if processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_process@.
 --   				Corresponds to the @NOTIFICATION_PROCESS@ notification in @method Object._notification@.
 --   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
@@ -511,7 +535,7 @@ bindNode__process
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Called during the processing step of the main loop. Processing happens at every frame and as fast as possible, so the @delta@ time since the previous frame is not constant.
+-- | Called during the processing step of the main loop. Processing happens at every frame and as fast as possible, so the @delta@ time since the previous frame is not constant. @delta@ is in seconds.
 --   				It is only called if processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_process@.
 --   				Corresponds to the @NOTIFICATION_PROCESS@ notification in @method Object._notification@.
 --   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
@@ -520,7 +544,10 @@ _process cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode__process (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_process" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Node._process
@@ -549,7 +576,9 @@ _ready cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode__ready (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_ready" '[] (IO ()) where
         nodeMethod = Godot.Core.Node._ready
@@ -574,7 +603,10 @@ _set_editor_description cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_set_editor_description" '[GodotString]
            (IO ())
@@ -600,7 +632,10 @@ _set_import_path cls arg1
          godot_method_bind_call bindNode__set_import_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_set_import_path" '[NodePath] (IO ())
          where
@@ -635,7 +670,10 @@ _unhandled_input cls arg1
          godot_method_bind_call bindNode__unhandled_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_unhandled_input" '[InputEvent] (IO ())
          where
@@ -670,7 +708,10 @@ _unhandled_key_input cls arg1
          godot_method_bind_call bindNode__unhandled_key_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "_unhandled_key_input" '[InputEventKey]
            (IO ())
@@ -680,7 +721,7 @@ instance NodeMethod Node "_unhandled_key_input" '[InputEventKey]
 {-# NOINLINE bindNode_add_child #-}
 
 -- | Adds a child node. Nodes can have any number of children, but every child must have a unique name. Child nodes are automatically deleted when the parent node is deleted, so an entire scene can be removed by deleting its topmost node.
---   				If @legible_unique_name@ is @true@, the child node will have an human-readable name based on the name of the node being instanced instead of its type.
+--   				If @legible_unique_name@ is @true@, the child node will have a human-readable name based on the name of the node being instanced instead of its type.
 --   				__Note:__ If the child node already has a parent, the function will fail. Use @method remove_child@ first to remove the node from its current parent. For example:
 --   				
 --   @
@@ -691,7 +732,7 @@ instance NodeMethod Node "_unhandled_key_input" '[InputEventKey]
 --   				
 --   @
 --   
---   				__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://godot.readthedocs.io/en/latest/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://godot.readthedocs.io/en/latest/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
+--   				__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 bindNode_add_child :: MethodBind
 bindNode_add_child
   = unsafePerformIO $
@@ -702,7 +743,7 @@ bindNode_add_child
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Adds a child node. Nodes can have any number of children, but every child must have a unique name. Child nodes are automatically deleted when the parent node is deleted, so an entire scene can be removed by deleting its topmost node.
---   				If @legible_unique_name@ is @true@, the child node will have an human-readable name based on the name of the node being instanced instead of its type.
+--   				If @legible_unique_name@ is @true@, the child node will have a human-readable name based on the name of the node being instanced instead of its type.
 --   				__Note:__ If the child node already has a parent, the function will fail. Use @method remove_child@ first to remove the node from its current parent. For example:
 --   				
 --   @
@@ -713,7 +754,7 @@ bindNode_add_child
 --   				
 --   @
 --   
---   				__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://godot.readthedocs.io/en/latest/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://godot.readthedocs.io/en/latest/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
+--   				__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 add_child ::
             (Node :< cls, Object :< cls) => cls -> Node -> Maybe Bool -> IO ()
 add_child cls arg1 arg2
@@ -721,7 +762,10 @@ add_child cls arg1 arg2
       [toVariant arg1, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_add_child (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "add_child" '[Node, Maybe Bool] (IO ())
          where
@@ -730,7 +774,7 @@ instance NodeMethod Node "add_child" '[Node, Maybe Bool] (IO ())
 {-# NOINLINE bindNode_add_child_below_node #-}
 
 -- | Adds @child_node@ as a child. The child is placed below the given @node@ in the list of children.
---   				If @legible_unique_name@ is @true@, the child node will have an human-readable name based on the name of the node being instanced instead of its type.
+--   				If @legible_unique_name@ is @true@, the child node will have a human-readable name based on the name of the node being instanced instead of its type.
 bindNode_add_child_below_node :: MethodBind
 bindNode_add_child_below_node
   = unsafePerformIO $
@@ -741,7 +785,7 @@ bindNode_add_child_below_node
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Adds @child_node@ as a child. The child is placed below the given @node@ in the list of children.
---   				If @legible_unique_name@ is @true@, the child node will have an human-readable name based on the name of the node being instanced instead of its type.
+--   				If @legible_unique_name@ is @true@, the child node will have a human-readable name based on the name of the node being instanced instead of its type.
 add_child_below_node ::
                        (Node :< cls, Object :< cls) =>
                        cls -> Node -> Node -> Maybe Bool -> IO ()
@@ -753,7 +797,10 @@ add_child_below_node cls arg1 arg2 arg3
          godot_method_bind_call bindNode_add_child_below_node (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "add_child_below_node"
            '[Node, Node, Maybe Bool]
@@ -765,6 +812,7 @@ instance NodeMethod Node "add_child_below_node"
 
 -- | Adds the node to a group. Groups are helpers to name and organize a subset of nodes, for example "enemies" or "collectables". A node can be in any number of groups. Nodes can be assigned a group at any time, but will not be added until they are inside the scene tree (see @method is_inside_tree@). See notes in the description, and the group methods in @SceneTree@.
 --   				The @persistent@ option is used when packing node to @PackedScene@ and saving to file. Non-persistent groups aren't stored.
+--   				__Note:__ For performance reasons, the order of node groups is @i@not@/i@ guaranteed. The order of node groups should not be relied upon as it can vary across project runs.
 bindNode_add_to_group :: MethodBind
 bindNode_add_to_group
   = unsafePerformIO $
@@ -776,6 +824,7 @@ bindNode_add_to_group
 
 -- | Adds the node to a group. Groups are helpers to name and organize a subset of nodes, for example "enemies" or "collectables". A node can be in any number of groups. Nodes can be assigned a group at any time, but will not be added until they are inside the scene tree (see @method is_inside_tree@). See notes in the description, and the group methods in @SceneTree@.
 --   				The @persistent@ option is used when packing node to @PackedScene@ and saving to file. Non-persistent groups aren't stored.
+--   				__Note:__ For performance reasons, the order of node groups is @i@not@/i@ guaranteed. The order of node groups should not be relied upon as it can vary across project runs.
 add_to_group ::
                (Node :< cls, Object :< cls) =>
                cls -> GodotString -> Maybe Bool -> IO ()
@@ -785,7 +834,10 @@ add_to_group cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_add_to_group (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "add_to_group" '[GodotString, Maybe Bool]
            (IO ())
@@ -810,7 +862,10 @@ can_process cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_can_process (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "can_process" '[] (IO Bool) where
         nodeMethod = Godot.Core.Node.can_process
@@ -838,14 +893,14 @@ duplicate cls arg1
   = withVariantArray [maybe (VariantInt (15)) toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_duplicate (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "duplicate" '[Maybe Int] (IO Node) where
         nodeMethod = Godot.Core.Node.duplicate
 
 {-# NOINLINE bindNode_find_node #-}
 
--- | Finds a descendant of this node whose name matches @mask@ as in @method String.match@ (i.e. case-sensitive, but @"*"@ matches zero or more characters and @"?"@ matches any single character except @"."@).
+-- | Finds a descendant of this node whose name matches @mask@ as in @method String.match@ (i.e. case-sensitive, but @"*"@ matches zero or more characters and @"?"@ matches any single character except @"."@). Returns @null@ if no matching @Node@ is found.
 --   				__Note:__ It does not match against the full path, just against individual node names.
 --   				If @owned@ is @true@, this method only finds nodes whose owner is this node. This is especially important for scenes instantiated through a script, because those scenes don't have an owner.
 --   				__Note:__ As this method walks through all the descendants of the node, it is the slowest way to get a reference to another node. Whenever possible, consider using @method get_node@ instead. To avoid using @method find_node@ too often, consider caching the node reference into a variable.
@@ -858,7 +913,7 @@ bindNode_find_node
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Finds a descendant of this node whose name matches @mask@ as in @method String.match@ (i.e. case-sensitive, but @"*"@ matches zero or more characters and @"?"@ matches any single character except @"."@).
+-- | Finds a descendant of this node whose name matches @mask@ as in @method String.match@ (i.e. case-sensitive, but @"*"@ matches zero or more characters and @"?"@ matches any single character except @"."@). Returns @null@ if no matching @Node@ is found.
 --   				__Note:__ It does not match against the full path, just against individual node names.
 --   				If @owned@ is @true@, this method only finds nodes whose owner is this node. This is especially important for scenes instantiated through a script, because those scenes don't have an owner.
 --   				__Note:__ As this method walks through all the descendants of the node, it is the slowest way to get a reference to another node. Whenever possible, consider using @method get_node@ instead. To avoid using @method find_node@ too often, consider caching the node reference into a variable.
@@ -871,7 +926,7 @@ find_node cls arg1 arg2 arg3
        maybe (VariantBool True) toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_find_node (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "find_node"
            '[GodotString, Maybe Bool, Maybe Bool]
@@ -902,7 +957,7 @@ find_parent cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_find_parent (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "find_parent" '[GodotString] (IO Node)
          where
@@ -928,7 +983,7 @@ get_child cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_child (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "get_child" '[Int] (IO Node) where
         nodeMethod = Godot.Core.Node.get_child
@@ -952,7 +1007,10 @@ get_child_count cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_child_count (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_child_count" '[] (IO Int) where
         nodeMethod = Godot.Core.Node.get_child_count
@@ -976,7 +1034,10 @@ get_children cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_children (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_children" '[] (IO Array) where
         nodeMethod = Godot.Core.Node.get_children
@@ -1002,7 +1063,7 @@ get_custom_multiplayer cls
          godot_method_bind_call bindNode_get_custom_multiplayer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "get_custom_multiplayer" '[]
            (IO MultiplayerAPI)
@@ -1011,7 +1072,7 @@ instance NodeMethod Node "get_custom_multiplayer" '[]
 
 {-# NOINLINE bindNode_get_filename #-}
 
--- | When a scene is instanced from a file, its topmost node contains the filename from which it was loaded.
+-- | If a scene is instantiated from a file, its topmost node contains the absolute file path from which it was loaded in @filename@ (e.g. @res://levels/1.tscn@). Otherwise, @filename@ is set to an empty string.
 bindNode_get_filename :: MethodBind
 bindNode_get_filename
   = unsafePerformIO $
@@ -1021,7 +1082,7 @@ bindNode_get_filename
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | When a scene is instanced from a file, its topmost node contains the filename from which it was loaded.
+-- | If a scene is instantiated from a file, its topmost node contains the absolute file path from which it was loaded in @filename@ (e.g. @res://levels/1.tscn@). Otherwise, @filename@ is set to an empty string.
 get_filename ::
                (Node :< cls, Object :< cls) => cls -> IO GodotString
 get_filename cls
@@ -1029,7 +1090,10 @@ get_filename cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_filename (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_filename" '[] (IO GodotString) where
         nodeMethod = Godot.Core.Node.get_filename
@@ -1037,6 +1101,18 @@ instance NodeMethod Node "get_filename" '[] (IO GodotString) where
 {-# NOINLINE bindNode_get_groups #-}
 
 -- | Returns an array listing the groups that the node is a member of.
+--   				__Note:__ For performance reasons, the order of node groups is @i@not@/i@ guaranteed. The order of node groups should not be relied upon as it can vary across project runs.
+--   				__Note:__ The engine uses some group names internally (all starting with an underscore). To avoid conflicts with internal groups, do not add custom groups whose name starts with an underscore. To exclude internal groups while looping over @method get_groups@, use the following snippet:
+--   				
+--   @
+--   
+--   				# Stores the node's non-internal groups only (as an array of Strings).
+--   				var non_internal_groups = @@
+--   				for group in get_groups():
+--   				    if not group.begins_with("_"):
+--   				        non_internal_groups.push_back(group)
+--   				
+--   @
 bindNode_get_groups :: MethodBind
 bindNode_get_groups
   = unsafePerformIO $
@@ -1047,12 +1123,27 @@ bindNode_get_groups
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns an array listing the groups that the node is a member of.
+--   				__Note:__ For performance reasons, the order of node groups is @i@not@/i@ guaranteed. The order of node groups should not be relied upon as it can vary across project runs.
+--   				__Note:__ The engine uses some group names internally (all starting with an underscore). To avoid conflicts with internal groups, do not add custom groups whose name starts with an underscore. To exclude internal groups while looping over @method get_groups@, use the following snippet:
+--   				
+--   @
+--   
+--   				# Stores the node's non-internal groups only (as an array of Strings).
+--   				var non_internal_groups = @@
+--   				for group in get_groups():
+--   				    if not group.begins_with("_"):
+--   				        non_internal_groups.push_back(group)
+--   				
+--   @
 get_groups :: (Node :< cls, Object :< cls) => cls -> IO Array
 get_groups cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_groups (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_groups" '[] (IO Array) where
         nodeMethod = Godot.Core.Node.get_groups
@@ -1075,7 +1166,10 @@ get_index cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_index (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_index" '[] (IO Int) where
         nodeMethod = Godot.Core.Node.get_index
@@ -1100,7 +1194,7 @@ get_multiplayer cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_multiplayer (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "get_multiplayer" '[] (IO MultiplayerAPI)
          where
@@ -1109,6 +1203,7 @@ instance NodeMethod Node "get_multiplayer" '[] (IO MultiplayerAPI)
 {-# NOINLINE bindNode_get_name #-}
 
 -- | The name of the node. This name is unique among the siblings (other child nodes from the same parent). When set to an existing name, the node will be automatically renamed.
+--   			__Note:__ Auto-generated names might include the @@@ character, which is reserved for unique names when using @method add_child@. When setting the name manually, any @@@ will be removed.
 bindNode_get_name :: MethodBind
 bindNode_get_name
   = unsafePerformIO $
@@ -1119,12 +1214,16 @@ bindNode_get_name
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The name of the node. This name is unique among the siblings (other child nodes from the same parent). When set to an existing name, the node will be automatically renamed.
+--   			__Note:__ Auto-generated names might include the @@@ character, which is reserved for unique names when using @method add_child@. When setting the name manually, any @@@ will be removed.
 get_name :: (Node :< cls, Object :< cls) => cls -> IO GodotString
 get_name cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_name (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_name" '[] (IO GodotString) where
         nodeMethod = Godot.Core.Node.get_name
@@ -1149,7 +1248,10 @@ get_network_master cls
          godot_method_bind_call bindNode_get_network_master (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_network_master" '[] (IO Int) where
         nodeMethod = Godot.Core.Node.get_network_master
@@ -1225,7 +1327,7 @@ get_node cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_node (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "get_node" '[NodePath] (IO Node) where
         nodeMethod = Godot.Core.Node.get_node
@@ -1271,7 +1373,10 @@ get_node_and_resource cls arg1
          godot_method_bind_call bindNode_get_node_and_resource (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_node_and_resource" '[NodePath]
            (IO Array)
@@ -1299,7 +1404,7 @@ get_node_or_null cls arg1
          godot_method_bind_call bindNode_get_node_or_null (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "get_node_or_null" '[NodePath] (IO Node)
          where
@@ -1308,6 +1413,7 @@ instance NodeMethod Node "get_node_or_null" '[NodePath] (IO Node)
 {-# NOINLINE bindNode_get_owner #-}
 
 -- | The node owner. A node can have any other node as owner (as long as it is a valid parent, grandparent, etc. ascending in the tree). When saving a node (using @PackedScene@), all the nodes it owns will be saved with it. This allows for the creation of complex @SceneTree@s, with instancing and subinstancing.
+--   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 bindNode_get_owner :: MethodBind
 bindNode_get_owner
   = unsafePerformIO $
@@ -1318,12 +1424,13 @@ bindNode_get_owner
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The node owner. A node can have any other node as owner (as long as it is a valid parent, grandparent, etc. ascending in the tree). When saving a node (using @PackedScene@), all the nodes it owns will be saved with it. This allows for the creation of complex @SceneTree@s, with instancing and subinstancing.
+--   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 get_owner :: (Node :< cls, Object :< cls) => cls -> IO Node
 get_owner cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_owner (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "get_owner" '[] (IO Node) where
         nodeMethod = Godot.Core.Node.get_owner
@@ -1346,7 +1453,7 @@ get_parent cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_parent (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "get_parent" '[] (IO Node) where
         nodeMethod = Godot.Core.Node.get_parent
@@ -1369,7 +1476,10 @@ get_path cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_path (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_path" '[] (IO NodePath) where
         nodeMethod = Godot.Core.Node.get_path
@@ -1393,7 +1503,10 @@ get_path_to cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_path_to (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_path_to" '[Node] (IO NodePath) where
         nodeMethod = Godot.Core.Node.get_path_to
@@ -1417,14 +1530,17 @@ get_pause_mode cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_pause_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_pause_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Node.get_pause_mode
 
 {-# NOINLINE bindNode_get_physics_process_delta_time #-}
 
--- | Returns the time elapsed since the last physics-bound frame (see @method _physics_process@). This is always a constant value in physics processing unless the frames per second is changed via @Engine.iterations_per_second@.
+-- | Returns the time elapsed (in seconds) since the last physics-bound frame (see @method _physics_process@). This is always a constant value in physics processing unless the frames per second is changed via @Engine.iterations_per_second@.
 bindNode_get_physics_process_delta_time :: MethodBind
 bindNode_get_physics_process_delta_time
   = unsafePerformIO $
@@ -1434,7 +1550,7 @@ bindNode_get_physics_process_delta_time
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the time elapsed since the last physics-bound frame (see @method _physics_process@). This is always a constant value in physics processing unless the frames per second is changed via @Engine.iterations_per_second@.
+-- | Returns the time elapsed (in seconds) since the last physics-bound frame (see @method _physics_process@). This is always a constant value in physics processing unless the frames per second is changed via @Engine.iterations_per_second@.
 get_physics_process_delta_time ::
                                  (Node :< cls, Object :< cls) => cls -> IO Float
 get_physics_process_delta_time cls
@@ -1444,7 +1560,10 @@ get_physics_process_delta_time cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_physics_process_delta_time" '[]
            (IO Float)
@@ -1472,7 +1591,10 @@ get_position_in_parent cls
          godot_method_bind_call bindNode_get_position_in_parent (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_position_in_parent" '[] (IO Int)
          where
@@ -1499,7 +1621,10 @@ get_process_delta_time cls
          godot_method_bind_call bindNode_get_process_delta_time (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_process_delta_time" '[] (IO Float)
          where
@@ -1526,7 +1651,10 @@ get_process_priority cls
          godot_method_bind_call bindNode_get_process_priority (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_process_priority" '[] (IO Int) where
         nodeMethod = Godot.Core.Node.get_process_priority
@@ -1553,7 +1681,10 @@ get_scene_instance_load_placeholder cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "get_scene_instance_load_placeholder" '[]
            (IO Bool)
@@ -1578,7 +1709,7 @@ get_tree cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_tree (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "get_tree" '[] (IO SceneTree) where
         nodeMethod = Godot.Core.Node.get_tree
@@ -1602,7 +1733,7 @@ get_viewport cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_get_viewport (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod Node "get_viewport" '[] (IO Viewport) where
         nodeMethod = Godot.Core.Node.get_viewport
@@ -1626,7 +1757,10 @@ has_node cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_has_node (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "has_node" '[NodePath] (IO Bool) where
         nodeMethod = Godot.Core.Node.has_node
@@ -1652,7 +1786,10 @@ has_node_and_resource cls arg1
          godot_method_bind_call bindNode_has_node_and_resource (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "has_node_and_resource" '[NodePath]
            (IO Bool)
@@ -1679,7 +1816,10 @@ is_a_parent_of cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_is_a_parent_of (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_a_parent_of" '[Node] (IO Bool) where
         nodeMethod = Godot.Core.Node.is_a_parent_of
@@ -1705,7 +1845,10 @@ is_displayed_folded cls
          godot_method_bind_call bindNode_is_displayed_folded (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_displayed_folded" '[] (IO Bool) where
         nodeMethod = Godot.Core.Node.is_displayed_folded
@@ -1730,7 +1873,10 @@ is_greater_than cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_is_greater_than (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_greater_than" '[Node] (IO Bool) where
         nodeMethod = Godot.Core.Node.is_greater_than
@@ -1754,7 +1900,10 @@ is_in_group cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_is_in_group (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_in_group" '[GodotString] (IO Bool)
          where
@@ -1779,7 +1928,10 @@ is_inside_tree cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_is_inside_tree (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_inside_tree" '[] (IO Bool) where
         nodeMethod = Godot.Core.Node.is_inside_tree
@@ -1804,7 +1956,10 @@ is_network_master cls
          godot_method_bind_call bindNode_is_network_master (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_network_master" '[] (IO Bool) where
         nodeMethod = Godot.Core.Node.is_network_master
@@ -1830,7 +1985,10 @@ is_physics_processing cls
          godot_method_bind_call bindNode_is_physics_processing (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_physics_processing" '[] (IO Bool)
          where
@@ -1858,7 +2016,10 @@ is_physics_processing_internal cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_physics_processing_internal" '[]
            (IO Bool)
@@ -1884,7 +2045,10 @@ is_processing cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_is_processing (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_processing" '[] (IO Bool) where
         nodeMethod = Godot.Core.Node.is_processing
@@ -1910,7 +2074,10 @@ is_processing_input cls
          godot_method_bind_call bindNode_is_processing_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_processing_input" '[] (IO Bool) where
         nodeMethod = Godot.Core.Node.is_processing_input
@@ -1936,7 +2103,10 @@ is_processing_internal cls
          godot_method_bind_call bindNode_is_processing_internal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_processing_internal" '[] (IO Bool)
          where
@@ -1964,7 +2134,10 @@ is_processing_unhandled_input cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_processing_unhandled_input" '[]
            (IO Bool)
@@ -1993,7 +2166,10 @@ is_processing_unhandled_key_input cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "is_processing_unhandled_key_input" '[]
            (IO Bool)
@@ -2019,7 +2195,10 @@ move_child cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_move_child (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "move_child" '[Node, Int] (IO ()) where
         nodeMethod = Godot.Core.Node.move_child
@@ -2044,7 +2223,10 @@ print_stray_nodes cls
          godot_method_bind_call bindNode_print_stray_nodes (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "print_stray_nodes" '[] (IO ()) where
         nodeMethod = Godot.Core.Node.print_stray_nodes
@@ -2091,7 +2273,10 @@ print_tree cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_print_tree (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "print_tree" '[] (IO ()) where
         nodeMethod = Godot.Core.Node.print_tree
@@ -2140,7 +2325,10 @@ print_tree_pretty cls
          godot_method_bind_call bindNode_print_tree_pretty (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "print_tree_pretty" '[] (IO ()) where
         nodeMethod = Godot.Core.Node.print_tree_pretty
@@ -2168,7 +2356,10 @@ propagate_call cls arg1 arg2 arg3
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_propagate_call (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "propagate_call"
            '[GodotString, Maybe Array, Maybe Bool]
@@ -2197,7 +2388,10 @@ propagate_notification cls arg1
          godot_method_bind_call bindNode_propagate_notification (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "propagate_notification" '[Int] (IO ())
          where
@@ -2206,6 +2400,7 @@ instance NodeMethod Node "propagate_notification" '[Int] (IO ())
 {-# NOINLINE bindNode_queue_free #-}
 
 -- | Queues a node for deletion at the end of the current frame. When deleted, all of its child nodes will be deleted as well. This method ensures it's safe to delete the node, contrary to @method Object.free@. Use @method Object.is_queued_for_deletion@ to check whether a node will be deleted at the end of the frame.
+--   				__Important:__ If you have a variable pointing to a node, it will @i@not@/i@ be assigned to @null@ once the node is freed. Instead, it will point to a @i@previously freed instance@/i@ and you should validate it with @method @GDScript.is_instance_valid@ before attempting to call its methods or access its properties.
 bindNode_queue_free :: MethodBind
 bindNode_queue_free
   = unsafePerformIO $
@@ -2216,19 +2411,23 @@ bindNode_queue_free
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Queues a node for deletion at the end of the current frame. When deleted, all of its child nodes will be deleted as well. This method ensures it's safe to delete the node, contrary to @method Object.free@. Use @method Object.is_queued_for_deletion@ to check whether a node will be deleted at the end of the frame.
+--   				__Important:__ If you have a variable pointing to a node, it will @i@not@/i@ be assigned to @null@ once the node is freed. Instead, it will point to a @i@previously freed instance@/i@ and you should validate it with @method @GDScript.is_instance_valid@ before attempting to call its methods or access its properties.
 queue_free :: (Node :< cls, Object :< cls) => cls -> IO ()
 queue_free cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_queue_free (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "queue_free" '[] (IO ()) where
         nodeMethod = Godot.Core.Node.queue_free
 
 {-# NOINLINE bindNode_raise #-}
 
--- | Moves this node to the bottom of parent node's children hierarchy. This is often useful in GUIs (@Control@ nodes), because their order of drawing depends on their order in the tree, i.e. the further they are on the node list, the higher they are drawn. After using @raise@, a Control will be drawn on top of their siblings.
+-- | Moves this node to the bottom of parent node's children hierarchy. This is often useful in GUIs (@Control@ nodes), because their order of drawing depends on their order in the tree. The top Node is drawn first, then any siblings below the top Node in the hierarchy are successively drawn on top of it. After using @raise@, a Control will be drawn on top of its siblings.
 bindNode_raise :: MethodBind
 bindNode_raise
   = unsafePerformIO $
@@ -2238,13 +2437,15 @@ bindNode_raise
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Moves this node to the bottom of parent node's children hierarchy. This is often useful in GUIs (@Control@ nodes), because their order of drawing depends on their order in the tree, i.e. the further they are on the node list, the higher they are drawn. After using @raise@, a Control will be drawn on top of their siblings.
+-- | Moves this node to the bottom of parent node's children hierarchy. This is often useful in GUIs (@Control@ nodes), because their order of drawing depends on their order in the tree. The top Node is drawn first, then any siblings below the top Node in the hierarchy are successively drawn on top of it. After using @raise@, a Control will be drawn on top of its siblings.
 raise :: (Node :< cls, Object :< cls) => cls -> IO ()
 raise cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_raise (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "raise" '[] (IO ()) where
         nodeMethod = Godot.Core.Node.raise
@@ -2268,7 +2469,10 @@ remove_and_skip cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_remove_and_skip (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "remove_and_skip" '[] (IO ()) where
         nodeMethod = Godot.Core.Node.remove_and_skip
@@ -2276,6 +2480,7 @@ instance NodeMethod Node "remove_and_skip" '[] (IO ()) where
 {-# NOINLINE bindNode_remove_child #-}
 
 -- | Removes a child node. The node is NOT deleted and must be deleted manually.
+--   				__Note:__ This function may set the @owner@ of the removed Node (or its descendants) to be @null@, if that @owner@ is no longer a parent or ancestor.
 bindNode_remove_child :: MethodBind
 bindNode_remove_child
   = unsafePerformIO $
@@ -2286,6 +2491,7 @@ bindNode_remove_child
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Removes a child node. The node is NOT deleted and must be deleted manually.
+--   				__Note:__ This function may set the @owner@ of the removed Node (or its descendants) to be @null@, if that @owner@ is no longer a parent or ancestor.
 remove_child ::
                (Node :< cls, Object :< cls) => cls -> Node -> IO ()
 remove_child cls arg1
@@ -2293,7 +2499,10 @@ remove_child cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_remove_child (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "remove_child" '[Node] (IO ()) where
         nodeMethod = Godot.Core.Node.remove_child
@@ -2319,7 +2528,10 @@ remove_from_group cls arg1
          godot_method_bind_call bindNode_remove_from_group (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "remove_from_group" '[GodotString] (IO ())
          where
@@ -2328,6 +2540,7 @@ instance NodeMethod Node "remove_from_group" '[GodotString] (IO ())
 {-# NOINLINE bindNode_replace_by #-}
 
 -- | Replaces a node in a scene by the given one. Subscriptions that pass through this node will be lost.
+--   				Note that the replaced node is not automatically freed, so you either need to keep it in a variable for later use or free it using @method Object.free@.
 bindNode_replace_by :: MethodBind
 bindNode_replace_by
   = unsafePerformIO $
@@ -2338,6 +2551,7 @@ bindNode_replace_by
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Replaces a node in a scene by the given one. Subscriptions that pass through this node will be lost.
+--   				Note that the replaced node is not automatically freed, so you either need to keep it in a variable for later use or free it using @method Object.free@.
 replace_by ::
              (Node :< cls, Object :< cls) => cls -> Node -> Maybe Bool -> IO ()
 replace_by cls arg1 arg2
@@ -2345,7 +2559,10 @@ replace_by cls arg1 arg2
       [toVariant arg1, maybe (VariantBool False) toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_replace_by (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "replace_by" '[Node, Maybe Bool] (IO ())
          where
@@ -2370,7 +2587,10 @@ request_ready cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_request_ready (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "request_ready" '[] (IO ()) where
         nodeMethod = Godot.Core.Node.request_ready
@@ -2397,7 +2617,7 @@ rpc cls arg1 varargs
   = withVariantArray ([toVariant arg1] ++ varargs)
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_rpc (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Node "rpc" '[GodotString, [Variant 'GodotTy]]
            (IO GodotVariant)
@@ -2423,7 +2643,10 @@ rpc_config cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_rpc_config (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "rpc_config" '[GodotString, Int] (IO ())
          where
@@ -2449,7 +2672,7 @@ rpc_id cls arg1 arg2 varargs
   = withVariantArray ([toVariant arg1, toVariant arg2] ++ varargs)
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_rpc_id (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Node "rpc_id"
            '[Int, GodotString, [Variant 'GodotTy]]
@@ -2478,7 +2701,7 @@ rpc_unreliable cls arg1 varargs
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_rpc_unreliable (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Node "rpc_unreliable"
            '[GodotString, [Variant 'GodotTy]]
@@ -2508,7 +2731,7 @@ rpc_unreliable_id cls arg1 arg2 varargs
          godot_method_bind_call bindNode_rpc_unreliable_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod Node "rpc_unreliable_id"
            '[Int, GodotString, [Variant 'GodotTy]]
@@ -2536,7 +2759,9 @@ rset cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_rset (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "rset" '[GodotString, GodotVariant]
            (IO ())
@@ -2562,7 +2787,10 @@ rset_config cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_rset_config (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "rset_config" '[GodotString, Int] (IO ())
          where
@@ -2588,7 +2816,9 @@ rset_id cls arg1 arg2 arg3
   = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_rset_id (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "rset_id"
            '[Int, GodotString, GodotVariant]
@@ -2617,7 +2847,10 @@ rset_unreliable cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_rset_unreliable (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "rset_unreliable"
            '[GodotString, GodotVariant]
@@ -2647,7 +2880,10 @@ rset_unreliable_id cls arg1 arg2 arg3
          godot_method_bind_call bindNode_rset_unreliable_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "rset_unreliable_id"
            '[Int, GodotString, GodotVariant]
@@ -2676,7 +2912,10 @@ set_custom_multiplayer cls arg1
          godot_method_bind_call bindNode_set_custom_multiplayer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_custom_multiplayer" '[MultiplayerAPI]
            (IO ())
@@ -2704,14 +2943,17 @@ set_display_folded cls arg1
          godot_method_bind_call bindNode_set_display_folded (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_display_folded" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Node.set_display_folded
 
 {-# NOINLINE bindNode_set_filename #-}
 
--- | When a scene is instanced from a file, its topmost node contains the filename from which it was loaded.
+-- | If a scene is instantiated from a file, its topmost node contains the absolute file path from which it was loaded in @filename@ (e.g. @res://levels/1.tscn@). Otherwise, @filename@ is set to an empty string.
 bindNode_set_filename :: MethodBind
 bindNode_set_filename
   = unsafePerformIO $
@@ -2721,7 +2963,7 @@ bindNode_set_filename
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | When a scene is instanced from a file, its topmost node contains the filename from which it was loaded.
+-- | If a scene is instantiated from a file, its topmost node contains the absolute file path from which it was loaded in @filename@ (e.g. @res://levels/1.tscn@). Otherwise, @filename@ is set to an empty string.
 set_filename ::
                (Node :< cls, Object :< cls) => cls -> GodotString -> IO ()
 set_filename cls arg1
@@ -2729,7 +2971,10 @@ set_filename cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_set_filename (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_filename" '[GodotString] (IO ())
          where
@@ -2738,6 +2983,7 @@ instance NodeMethod Node "set_filename" '[GodotString] (IO ())
 {-# NOINLINE bindNode_set_name #-}
 
 -- | The name of the node. This name is unique among the siblings (other child nodes from the same parent). When set to an existing name, the node will be automatically renamed.
+--   			__Note:__ Auto-generated names might include the @@@ character, which is reserved for unique names when using @method add_child@. When setting the name manually, any @@@ will be removed.
 bindNode_set_name :: MethodBind
 bindNode_set_name
   = unsafePerformIO $
@@ -2748,13 +2994,17 @@ bindNode_set_name
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The name of the node. This name is unique among the siblings (other child nodes from the same parent). When set to an existing name, the node will be automatically renamed.
+--   			__Note:__ Auto-generated names might include the @@@ character, which is reserved for unique names when using @method add_child@. When setting the name manually, any @@@ will be removed.
 set_name ::
            (Node :< cls, Object :< cls) => cls -> GodotString -> IO ()
 set_name cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_set_name (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_name" '[GodotString] (IO ()) where
         nodeMethod = Godot.Core.Node.set_name
@@ -2781,7 +3031,10 @@ set_network_master cls arg1 arg2
          godot_method_bind_call bindNode_set_network_master (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_network_master" '[Int, Maybe Bool]
            (IO ())
@@ -2791,6 +3044,7 @@ instance NodeMethod Node "set_network_master" '[Int, Maybe Bool]
 {-# NOINLINE bindNode_set_owner #-}
 
 -- | The node owner. A node can have any other node as owner (as long as it is a valid parent, grandparent, etc. ascending in the tree). When saving a node (using @PackedScene@), all the nodes it owns will be saved with it. This allows for the creation of complex @SceneTree@s, with instancing and subinstancing.
+--   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 bindNode_set_owner :: MethodBind
 bindNode_set_owner
   = unsafePerformIO $
@@ -2801,12 +3055,16 @@ bindNode_set_owner
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The node owner. A node can have any other node as owner (as long as it is a valid parent, grandparent, etc. ascending in the tree). When saving a node (using @PackedScene@), all the nodes it owns will be saved with it. This allows for the creation of complex @SceneTree@s, with instancing and subinstancing.
+--   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 set_owner :: (Node :< cls, Object :< cls) => cls -> Node -> IO ()
 set_owner cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_set_owner (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_owner" '[Node] (IO ()) where
         nodeMethod = Godot.Core.Node.set_owner
@@ -2831,7 +3089,10 @@ set_pause_mode cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_set_pause_mode (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_pause_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Node.set_pause_mode
@@ -2857,7 +3118,10 @@ set_physics_process cls arg1
          godot_method_bind_call bindNode_set_physics_process (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_physics_process" '[Bool] (IO ())
          where
@@ -2865,7 +3129,8 @@ instance NodeMethod Node "set_physics_process" '[Bool] (IO ())
 
 {-# NOINLINE bindNode_set_physics_process_internal #-}
 
--- | Enables or disables internal physics for this node. Internal physics processing happens in isolation from the normal @method _physics_process@ calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or physics processing is disabled for scripting (@method set_physics_process@). Only useful for advanced uses to manipulate built-in nodes' behaviour.
+-- | Enables or disables internal physics for this node. Internal physics processing happens in isolation from the normal @method _physics_process@ calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or physics processing is disabled for scripting (@method set_physics_process@). Only useful for advanced uses to manipulate built-in nodes' behavior.
+--   				__Warning:__ Built-in Nodes rely on the internal processing for their own logic, so changing this value from your code may lead to unexpected behavior. Script access to this internal logic is provided for specific advanced uses, but is unsafe and not supported.
 bindNode_set_physics_process_internal :: MethodBind
 bindNode_set_physics_process_internal
   = unsafePerformIO $
@@ -2875,7 +3140,8 @@ bindNode_set_physics_process_internal
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Enables or disables internal physics for this node. Internal physics processing happens in isolation from the normal @method _physics_process@ calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or physics processing is disabled for scripting (@method set_physics_process@). Only useful for advanced uses to manipulate built-in nodes' behaviour.
+-- | Enables or disables internal physics for this node. Internal physics processing happens in isolation from the normal @method _physics_process@ calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or physics processing is disabled for scripting (@method set_physics_process@). Only useful for advanced uses to manipulate built-in nodes' behavior.
+--   				__Warning:__ Built-in Nodes rely on the internal processing for their own logic, so changing this value from your code may lead to unexpected behavior. Script access to this internal logic is provided for specific advanced uses, but is unsafe and not supported.
 set_physics_process_internal ::
                                (Node :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_physics_process_internal cls arg1
@@ -2885,7 +3151,10 @@ set_physics_process_internal cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_physics_process_internal" '[Bool]
            (IO ())
@@ -2910,7 +3179,10 @@ set_process cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindNode_set_process (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_process" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Node.set_process
@@ -2936,14 +3208,18 @@ set_process_input cls arg1
          godot_method_bind_call bindNode_set_process_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_process_input" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Node.set_process_input
 
 {-# NOINLINE bindNode_set_process_internal #-}
 
--- | Enables or disabled internal processing for this node. Internal processing happens in isolation from the normal @method _process@ calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or processing is disabled for scripting (@method set_process@). Only useful for advanced uses to manipulate built-in nodes' behaviour.
+-- | Enables or disabled internal processing for this node. Internal processing happens in isolation from the normal @method _process@ calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or processing is disabled for scripting (@method set_process@). Only useful for advanced uses to manipulate built-in nodes' behavior.
+--   				__Warning:__ Built-in Nodes rely on the internal processing for their own logic, so changing this value from your code may lead to unexpected behavior. Script access to this internal logic is provided for specific advanced uses, but is unsafe and not supported.
 bindNode_set_process_internal :: MethodBind
 bindNode_set_process_internal
   = unsafePerformIO $
@@ -2953,7 +3229,8 @@ bindNode_set_process_internal
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Enables or disabled internal processing for this node. Internal processing happens in isolation from the normal @method _process@ calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or processing is disabled for scripting (@method set_process@). Only useful for advanced uses to manipulate built-in nodes' behaviour.
+-- | Enables or disabled internal processing for this node. Internal processing happens in isolation from the normal @method _process@ calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or processing is disabled for scripting (@method set_process@). Only useful for advanced uses to manipulate built-in nodes' behavior.
+--   				__Warning:__ Built-in Nodes rely on the internal processing for their own logic, so changing this value from your code may lead to unexpected behavior. Script access to this internal logic is provided for specific advanced uses, but is unsafe and not supported.
 set_process_internal ::
                        (Node :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_process_internal cls arg1
@@ -2962,7 +3239,10 @@ set_process_internal cls arg1
          godot_method_bind_call bindNode_set_process_internal (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_process_internal" '[Bool] (IO ())
          where
@@ -2989,7 +3269,10 @@ set_process_priority cls arg1
          godot_method_bind_call bindNode_set_process_priority (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_process_priority" '[Int] (IO ())
          where
@@ -3017,7 +3300,10 @@ set_process_unhandled_input cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_process_unhandled_input" '[Bool]
            (IO ())
@@ -3046,7 +3332,10 @@ set_process_unhandled_key_input cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_process_unhandled_key_input" '[Bool]
            (IO ())
@@ -3075,7 +3364,10 @@ set_scene_instance_load_placeholder cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "set_scene_instance_load_placeholder"
            '[Bool]
@@ -3107,7 +3399,10 @@ update_configuration_warning cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Node "update_configuration_warning" '[] (IO ())
          where

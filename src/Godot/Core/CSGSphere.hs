@@ -61,7 +61,7 @@ get_material cls
          godot_method_bind_call bindCSGSphere_get_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CSGSphere "get_material" '[] (IO Material)
          where
@@ -87,7 +87,10 @@ get_radial_segments cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGSphere "get_radial_segments" '[] (IO Int)
          where
@@ -110,7 +113,10 @@ get_radius cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGSphere_get_radius (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGSphere "get_radius" '[] (IO Float) where
         nodeMethod = Godot.Core.CSGSphere.get_radius
@@ -132,7 +138,10 @@ get_rings cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGSphere_get_rings (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGSphere "get_rings" '[] (IO Int) where
         nodeMethod = Godot.Core.CSGSphere.get_rings
@@ -156,7 +165,10 @@ get_smooth_faces cls
          godot_method_bind_call bindCSGSphere_get_smooth_faces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGSphere "get_smooth_faces" '[] (IO Bool)
          where
@@ -181,7 +193,10 @@ set_material cls arg1
          godot_method_bind_call bindCSGSphere_set_material (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGSphere "set_material" '[Material] (IO ())
          where
@@ -207,7 +222,10 @@ set_radial_segments cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGSphere "set_radial_segments" '[Int] (IO ())
          where
@@ -231,7 +249,10 @@ set_radius cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGSphere_set_radius (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGSphere "set_radius" '[Float] (IO ()) where
         nodeMethod = Godot.Core.CSGSphere.set_radius
@@ -254,7 +275,10 @@ set_rings cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCSGSphere_set_rings (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGSphere "set_rings" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CSGSphere.set_rings
@@ -278,7 +302,10 @@ set_smooth_faces cls arg1
          godot_method_bind_call bindCSGSphere_set_smooth_faces (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CSGSphere "set_smooth_faces" '[Bool] (IO ())
          where

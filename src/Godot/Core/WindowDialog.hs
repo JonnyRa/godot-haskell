@@ -48,7 +48,10 @@ _closed cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindWindowDialog__closed (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WindowDialog "_closed" '[] (IO ()) where
         nodeMethod = Godot.Core.WindowDialog._closed
@@ -72,7 +75,10 @@ _gui_input cls arg1
          godot_method_bind_call bindWindowDialog__gui_input (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WindowDialog "_gui_input" '[InputEvent] (IO ())
          where
@@ -81,6 +87,7 @@ instance NodeMethod WindowDialog "_gui_input" '[InputEvent] (IO ())
 {-# NOINLINE bindWindowDialog_get_close_button #-}
 
 -- | Returns the close @TextureButton@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 bindWindowDialog_get_close_button :: MethodBind
 bindWindowDialog_get_close_button
   = unsafePerformIO $
@@ -91,6 +98,7 @@ bindWindowDialog_get_close_button
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the close @TextureButton@.
+--   				__Warning:__ This is a required internal node, removing and freeing it may cause a crash. If you wish to hide it or any of its children, use their @CanvasItem.visible@ property.
 get_close_button ::
                    (WindowDialog :< cls, Object :< cls) => cls -> IO TextureButton
 get_close_button cls
@@ -100,7 +108,7 @@ get_close_button cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod WindowDialog "get_close_button" '[]
            (IO TextureButton)
@@ -128,7 +136,10 @@ get_resizable cls
          godot_method_bind_call bindWindowDialog_get_resizable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WindowDialog "get_resizable" '[] (IO Bool)
          where
@@ -155,7 +166,10 @@ get_title cls
          godot_method_bind_call bindWindowDialog_get_title (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WindowDialog "get_title" '[] (IO GodotString)
          where
@@ -182,7 +196,10 @@ set_resizable cls arg1
          godot_method_bind_call bindWindowDialog_set_resizable (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WindowDialog "set_resizable" '[Bool] (IO ())
          where
@@ -209,7 +226,10 @@ set_title cls arg1
          godot_method_bind_call bindWindowDialog_set_title (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod WindowDialog "set_title" '[GodotString] (IO ())
          where

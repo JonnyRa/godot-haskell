@@ -37,7 +37,10 @@ load cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindX509Certificate_load (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod X509Certificate "load" '[GodotString] (IO Int)
          where
@@ -64,7 +67,10 @@ save cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindX509Certificate_save (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod X509Certificate "save" '[GodotString] (IO Int)
          where

@@ -100,7 +100,10 @@ get_flags cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCubeMap_get_flags (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMap "get_flags" '[] (IO Int) where
         nodeMethod = Godot.Core.CubeMap.get_flags
@@ -124,7 +127,10 @@ get_height cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCubeMap_get_height (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMap "get_height" '[] (IO Int) where
         nodeMethod = Godot.Core.CubeMap.get_height
@@ -151,7 +157,10 @@ get_lossy_storage_quality cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMap "get_lossy_storage_quality" '[]
            (IO Float)
@@ -177,7 +186,7 @@ get_side cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCubeMap_get_side (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod CubeMap "get_side" '[Int] (IO Image) where
         nodeMethod = Godot.Core.CubeMap.get_side
@@ -201,7 +210,10 @@ get_storage cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCubeMap_get_storage (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMap "get_storage" '[] (IO Int) where
         nodeMethod = Godot.Core.CubeMap.get_storage
@@ -225,7 +237,10 @@ get_width cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCubeMap_get_width (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMap "get_width" '[] (IO Int) where
         nodeMethod = Godot.Core.CubeMap.get_width
@@ -249,7 +264,10 @@ set_flags cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCubeMap_set_flags (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMap "set_flags" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CubeMap.set_flags
@@ -276,7 +294,10 @@ set_lossy_storage_quality cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMap "set_lossy_storage_quality" '[Float]
            (IO ())
@@ -302,7 +323,10 @@ set_side cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCubeMap_set_side (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMap "set_side" '[Int, Image] (IO ()) where
         nodeMethod = Godot.Core.CubeMap.set_side
@@ -327,7 +351,10 @@ set_storage cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindCubeMap_set_storage (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod CubeMap "set_storage" '[Int] (IO ()) where
         nodeMethod = Godot.Core.CubeMap.set_storage

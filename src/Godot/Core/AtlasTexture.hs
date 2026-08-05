@@ -57,7 +57,7 @@ get_atlas cls
          godot_method_bind_call bindAtlasTexture_get_atlas (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AtlasTexture "get_atlas" '[] (IO Texture) where
         nodeMethod = Godot.Core.AtlasTexture.get_atlas
@@ -83,7 +83,10 @@ get_margin cls
          godot_method_bind_call bindAtlasTexture_get_margin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AtlasTexture "get_margin" '[] (IO Rect2) where
         nodeMethod = Godot.Core.AtlasTexture.get_margin
@@ -109,7 +112,10 @@ get_region cls
          godot_method_bind_call bindAtlasTexture_get_region (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AtlasTexture "get_region" '[] (IO Rect2) where
         nodeMethod = Godot.Core.AtlasTexture.get_region
@@ -136,7 +142,10 @@ has_filter_clip cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AtlasTexture "has_filter_clip" '[] (IO Bool)
          where
@@ -163,7 +172,10 @@ set_atlas cls arg1
          godot_method_bind_call bindAtlasTexture_set_atlas (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AtlasTexture "set_atlas" '[Texture] (IO ())
          where
@@ -191,7 +203,10 @@ set_filter_clip cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AtlasTexture "set_filter_clip" '[Bool] (IO ())
          where
@@ -218,7 +233,10 @@ set_margin cls arg1
          godot_method_bind_call bindAtlasTexture_set_margin (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AtlasTexture "set_margin" '[Rect2] (IO ())
          where
@@ -245,7 +263,10 @@ set_region cls arg1
          godot_method_bind_call bindAtlasTexture_set_region (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AtlasTexture "set_region" '[Rect2] (IO ())
          where

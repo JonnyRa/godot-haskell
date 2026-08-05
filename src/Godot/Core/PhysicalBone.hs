@@ -115,7 +115,10 @@ _direct_state_changed cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "_direct_state_changed" '[Object]
            (IO ())
@@ -142,7 +145,10 @@ apply_central_impulse cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "apply_central_impulse" '[Vector3]
            (IO ())
@@ -169,7 +175,10 @@ apply_impulse cls arg1 arg2
          godot_method_bind_call bindPhysicalBone_apply_impulse (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "apply_impulse"
            '[Vector3, Vector3]
@@ -197,7 +206,10 @@ get_body_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "get_body_offset" '[]
            (IO Transform)
@@ -223,7 +235,10 @@ get_bone_id cls
          godot_method_bind_call bindPhysicalBone_get_bone_id (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "get_bone_id" '[] (IO Int) where
         nodeMethod = Godot.Core.PhysicalBone.get_bone_id
@@ -247,7 +262,10 @@ get_bounce cls
          godot_method_bind_call bindPhysicalBone_get_bounce (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "get_bounce" '[] (IO Float) where
         nodeMethod = Godot.Core.PhysicalBone.get_bounce
@@ -271,7 +289,10 @@ get_friction cls
          godot_method_bind_call bindPhysicalBone_get_friction (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "get_friction" '[] (IO Float)
          where
@@ -297,7 +318,10 @@ get_gravity_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "get_gravity_scale" '[] (IO Float)
          where
@@ -323,7 +347,10 @@ get_joint_offset cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "get_joint_offset" '[]
            (IO Transform)
@@ -349,7 +376,10 @@ get_joint_type cls
          godot_method_bind_call bindPhysicalBone_get_joint_type (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "get_joint_type" '[] (IO Int)
          where
@@ -373,7 +403,10 @@ get_mass cls
          godot_method_bind_call bindPhysicalBone_get_mass (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "get_mass" '[] (IO Float) where
         nodeMethod = Godot.Core.PhysicalBone.get_mass
@@ -398,7 +431,10 @@ get_simulate_physics cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "get_simulate_physics" '[]
            (IO Bool)
@@ -424,7 +460,10 @@ get_weight cls
          godot_method_bind_call bindPhysicalBone_get_weight (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "get_weight" '[] (IO Float) where
         nodeMethod = Godot.Core.PhysicalBone.get_weight
@@ -449,7 +488,10 @@ is_simulating_physics cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "is_simulating_physics" '[]
            (IO Bool)
@@ -475,7 +517,10 @@ is_static_body cls
          godot_method_bind_call bindPhysicalBone_is_static_body (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "is_static_body" '[] (IO Bool)
          where
@@ -501,7 +546,10 @@ set_body_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "set_body_offset" '[Transform]
            (IO ())
@@ -527,7 +575,10 @@ set_bounce cls arg1
          godot_method_bind_call bindPhysicalBone_set_bounce (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "set_bounce" '[Float] (IO ())
          where
@@ -552,7 +603,10 @@ set_friction cls arg1
          godot_method_bind_call bindPhysicalBone_set_friction (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "set_friction" '[Float] (IO ())
          where
@@ -578,7 +632,10 @@ set_gravity_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "set_gravity_scale" '[Float]
            (IO ())
@@ -605,7 +662,10 @@ set_joint_offset cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "set_joint_offset" '[Transform]
            (IO ())
@@ -631,7 +691,10 @@ set_joint_type cls arg1
          godot_method_bind_call bindPhysicalBone_set_joint_type (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "set_joint_type" '[Int] (IO ())
          where
@@ -656,7 +719,10 @@ set_mass cls arg1
          godot_method_bind_call bindPhysicalBone_set_mass (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "set_mass" '[Float] (IO ()) where
         nodeMethod = Godot.Core.PhysicalBone.set_mass
@@ -680,7 +746,10 @@ set_weight cls arg1
          godot_method_bind_call bindPhysicalBone_set_weight (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PhysicalBone "set_weight" '[Float] (IO ())
          where

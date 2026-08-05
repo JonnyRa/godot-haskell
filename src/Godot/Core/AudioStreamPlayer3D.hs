@@ -244,7 +244,10 @@ _bus_layout_changed cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "_bus_layout_changed" '[]
            (IO ())
@@ -271,7 +274,10 @@ _is_active cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "_is_active" '[] (IO Bool)
          where
@@ -299,7 +305,10 @@ _set_playing cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "_set_playing" '[Bool]
            (IO ())
@@ -308,7 +317,7 @@ instance NodeMethod AudioStreamPlayer3D "_set_playing" '[Bool]
 
 {-# NOINLINE bindAudioStreamPlayer3D_get_area_mask #-}
 
--- | Areas in which this sound plays.
+-- | Determines which @Area@ layers affect the sound for reverb and audio bus effects. Areas can be used to redirect @AudioStream@s so that they play in a certain audio bus. An example of how you might use this is making a "water" area so that sounds played in the water are redirected through an audio bus to make them sound like they are being played underwater.
 bindAudioStreamPlayer3D_get_area_mask :: MethodBind
 bindAudioStreamPlayer3D_get_area_mask
   = unsafePerformIO $
@@ -318,7 +327,7 @@ bindAudioStreamPlayer3D_get_area_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Areas in which this sound plays.
+-- | Determines which @Area@ layers affect the sound for reverb and audio bus effects. Areas can be used to redirect @AudioStream@s so that they play in a certain audio bus. An example of how you might use this is making a "water" area so that sounds played in the water are redirected through an audio bus to make them sound like they are being played underwater.
 get_area_mask ::
                 (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> IO Int
 get_area_mask cls
@@ -328,7 +337,10 @@ get_area_mask cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_area_mask" '[]
            (IO Int)
@@ -338,7 +350,7 @@ instance NodeMethod AudioStreamPlayer3D "get_area_mask" '[]
 {-# NOINLINE bindAudioStreamPlayer3D_get_attenuation_filter_cutoff_hz
              #-}
 
--- | Dampens audio above this frequency, in Hz.
+-- | Dampens audio using a low-pass filter above this frequency, in Hz. To disable the dampening effect entirely, set this to @20500@ as this frequency is above the human hearing limit.
 bindAudioStreamPlayer3D_get_attenuation_filter_cutoff_hz ::
                                                          MethodBind
 bindAudioStreamPlayer3D_get_attenuation_filter_cutoff_hz
@@ -349,7 +361,7 @@ bindAudioStreamPlayer3D_get_attenuation_filter_cutoff_hz
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Dampens audio above this frequency, in Hz.
+-- | Dampens audio using a low-pass filter above this frequency, in Hz. To disable the dampening effect entirely, set this to @20500@ as this frequency is above the human hearing limit.
 get_attenuation_filter_cutoff_hz ::
                                    (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> IO Float
 get_attenuation_filter_cutoff_hz cls
@@ -360,7 +372,10 @@ get_attenuation_filter_cutoff_hz cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D
            "get_attenuation_filter_cutoff_hz"
@@ -372,7 +387,7 @@ instance NodeMethod AudioStreamPlayer3D
 
 {-# NOINLINE bindAudioStreamPlayer3D_get_attenuation_filter_db #-}
 
--- | Amount how much the filter affects the loudness, in dB.
+-- | Amount how much the filter affects the loudness, in decibels.
 bindAudioStreamPlayer3D_get_attenuation_filter_db :: MethodBind
 bindAudioStreamPlayer3D_get_attenuation_filter_db
   = unsafePerformIO $
@@ -382,7 +397,7 @@ bindAudioStreamPlayer3D_get_attenuation_filter_db
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount how much the filter affects the loudness, in dB.
+-- | Amount how much the filter affects the loudness, in decibels.
 get_attenuation_filter_db ::
                             (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> IO Float
 get_attenuation_filter_db cls
@@ -393,7 +408,10 @@ get_attenuation_filter_db cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_attenuation_filter_db"
            '[]
@@ -425,7 +443,10 @@ get_attenuation_model cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_attenuation_model" '[]
            (IO Int)
@@ -434,7 +455,7 @@ instance NodeMethod AudioStreamPlayer3D "get_attenuation_model" '[]
 
 {-# NOINLINE bindAudioStreamPlayer3D_get_bus #-}
 
--- | Bus on which this audio is playing.
+-- | The bus on which this audio is playing.
 bindAudioStreamPlayer3D_get_bus :: MethodBind
 bindAudioStreamPlayer3D_get_bus
   = unsafePerformIO $
@@ -444,7 +465,7 @@ bindAudioStreamPlayer3D_get_bus
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Bus on which this audio is playing.
+-- | The bus on which this audio is playing.
 get_bus ::
           (AudioStreamPlayer3D :< cls, Object :< cls) =>
           cls -> IO GodotString
@@ -454,7 +475,10 @@ get_bus cls
          godot_method_bind_call bindAudioStreamPlayer3D_get_bus (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_bus" '[]
            (IO GodotString)
@@ -463,7 +487,8 @@ instance NodeMethod AudioStreamPlayer3D "get_bus" '[]
 
 {-# NOINLINE bindAudioStreamPlayer3D_get_doppler_tracking #-}
 
--- | Decides in which step the Doppler effect should be calculated.
+-- | Decides in which step the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ should be calculated.
+--   			__Note:__ Only effective if the current @Camera@'s @Camera.doppler_tracking@ property is set to a value other than @Camera.DOPPLER_TRACKING_DISABLED@.
 bindAudioStreamPlayer3D_get_doppler_tracking :: MethodBind
 bindAudioStreamPlayer3D_get_doppler_tracking
   = unsafePerformIO $
@@ -473,7 +498,8 @@ bindAudioStreamPlayer3D_get_doppler_tracking
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Decides in which step the Doppler effect should be calculated.
+-- | Decides in which step the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ should be calculated.
+--   			__Note:__ Only effective if the current @Camera@'s @Camera.doppler_tracking@ property is set to a value other than @Camera.DOPPLER_TRACKING_DISABLED@.
 get_doppler_tracking ::
                        (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> IO Int
 get_doppler_tracking cls
@@ -483,7 +509,10 @@ get_doppler_tracking cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_doppler_tracking" '[]
            (IO Int)
@@ -512,7 +541,10 @@ get_emission_angle cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_emission_angle" '[]
            (IO Float)
@@ -522,7 +554,7 @@ instance NodeMethod AudioStreamPlayer3D "get_emission_angle" '[]
 {-# NOINLINE bindAudioStreamPlayer3D_get_emission_angle_filter_attenuation_db
              #-}
 
--- | Dampens audio if camera is outside of @emission_angle_degrees@ and @emission_angle_enabled@ is set by this factor, in dB.
+-- | Dampens audio if camera is outside of @emission_angle_degrees@ and @emission_angle_enabled@ is set by this factor, in decibels.
 bindAudioStreamPlayer3D_get_emission_angle_filter_attenuation_db ::
                                                                  MethodBind
 bindAudioStreamPlayer3D_get_emission_angle_filter_attenuation_db
@@ -533,7 +565,7 @@ bindAudioStreamPlayer3D_get_emission_angle_filter_attenuation_db
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Dampens audio if camera is outside of @emission_angle_degrees@ and @emission_angle_enabled@ is set by this factor, in dB.
+-- | Dampens audio if camera is outside of @emission_angle_degrees@ and @emission_angle_enabled@ is set by this factor, in decibels.
 get_emission_angle_filter_attenuation_db ::
                                            (AudioStreamPlayer3D :< cls, Object :< cls) =>
                                            cls -> IO Float
@@ -545,7 +577,10 @@ get_emission_angle_filter_attenuation_db cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D
            "get_emission_angle_filter_attenuation_db"
@@ -557,7 +592,7 @@ instance NodeMethod AudioStreamPlayer3D
 
 {-# NOINLINE bindAudioStreamPlayer3D_get_max_db #-}
 
--- | Sets the absolute maximum of the soundlevel, in dB.
+-- | Sets the absolute maximum of the soundlevel, in decibels.
 bindAudioStreamPlayer3D_get_max_db :: MethodBind
 bindAudioStreamPlayer3D_get_max_db
   = unsafePerformIO $
@@ -567,7 +602,7 @@ bindAudioStreamPlayer3D_get_max_db
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the absolute maximum of the soundlevel, in dB.
+-- | Sets the absolute maximum of the soundlevel, in decibels.
 get_max_db ::
              (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> IO Float
 get_max_db cls
@@ -577,7 +612,10 @@ get_max_db cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_max_db" '[] (IO Float)
          where
@@ -605,7 +643,10 @@ get_max_distance cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_max_distance" '[]
            (IO Float)
@@ -635,7 +676,10 @@ get_out_of_range_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_out_of_range_mode" '[]
            (IO Int)
@@ -664,7 +708,10 @@ get_pitch_scale cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_pitch_scale" '[]
            (IO Float)
@@ -694,7 +741,10 @@ get_playback_position cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_playback_position" '[]
            (IO Float)
@@ -703,7 +753,7 @@ instance NodeMethod AudioStreamPlayer3D "get_playback_position" '[]
 
 {-# NOINLINE bindAudioStreamPlayer3D_get_stream #-}
 
--- | The @AudioStream@ object to be played.
+-- | The @AudioStream@ resource to be played.
 bindAudioStreamPlayer3D_get_stream :: MethodBind
 bindAudioStreamPlayer3D_get_stream
   = unsafePerformIO $
@@ -713,7 +763,7 @@ bindAudioStreamPlayer3D_get_stream
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The @AudioStream@ object to be played.
+-- | The @AudioStream@ resource to be played.
 get_stream ::
              (AudioStreamPlayer3D :< cls, Object :< cls) =>
              cls -> IO AudioStream
@@ -724,7 +774,7 @@ get_stream cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AudioStreamPlayer3D "get_stream" '[]
            (IO AudioStream)
@@ -753,7 +803,10 @@ get_stream_paused cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_stream_paused" '[]
            (IO Bool)
@@ -783,7 +836,7 @@ get_stream_playback cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod AudioStreamPlayer3D "get_stream_playback" '[]
            (IO AudioStreamPlayback)
@@ -792,7 +845,7 @@ instance NodeMethod AudioStreamPlayer3D "get_stream_playback" '[]
 
 {-# NOINLINE bindAudioStreamPlayer3D_get_unit_db #-}
 
--- | Base sound level unaffected by dampening, in dB.
+-- | The base sound level unaffected by dampening, in decibels.
 bindAudioStreamPlayer3D_get_unit_db :: MethodBind
 bindAudioStreamPlayer3D_get_unit_db
   = unsafePerformIO $
@@ -802,7 +855,7 @@ bindAudioStreamPlayer3D_get_unit_db
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Base sound level unaffected by dampening, in dB.
+-- | The base sound level unaffected by dampening, in decibels.
 get_unit_db ::
               (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> IO Float
 get_unit_db cls
@@ -812,7 +865,10 @@ get_unit_db cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_unit_db" '[]
            (IO Float)
@@ -821,7 +877,7 @@ instance NodeMethod AudioStreamPlayer3D "get_unit_db" '[]
 
 {-# NOINLINE bindAudioStreamPlayer3D_get_unit_size #-}
 
--- | Factor for the attenuation effect.
+-- | The factor for the attenuation effect. Higher values make the sound audible over a larger distance.
 bindAudioStreamPlayer3D_get_unit_size :: MethodBind
 bindAudioStreamPlayer3D_get_unit_size
   = unsafePerformIO $
@@ -831,7 +887,7 @@ bindAudioStreamPlayer3D_get_unit_size
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Factor for the attenuation effect.
+-- | The factor for the attenuation effect. Higher values make the sound audible over a larger distance.
 get_unit_size ::
                 (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> IO Float
 get_unit_size cls
@@ -841,7 +897,10 @@ get_unit_size cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "get_unit_size" '[]
            (IO Float)
@@ -850,7 +909,7 @@ instance NodeMethod AudioStreamPlayer3D "get_unit_size" '[]
 
 {-# NOINLINE bindAudioStreamPlayer3D_is_autoplay_enabled #-}
 
--- | If @true@, audio plays when added to scene tree.
+-- | If @true@, audio plays when the AudioStreamPlayer3D node is added to scene tree.
 bindAudioStreamPlayer3D_is_autoplay_enabled :: MethodBind
 bindAudioStreamPlayer3D_is_autoplay_enabled
   = unsafePerformIO $
@@ -860,7 +919,7 @@ bindAudioStreamPlayer3D_is_autoplay_enabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, audio plays when added to scene tree.
+-- | If @true@, audio plays when the AudioStreamPlayer3D node is added to scene tree.
 is_autoplay_enabled ::
                       (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> IO Bool
 is_autoplay_enabled cls
@@ -870,7 +929,10 @@ is_autoplay_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "is_autoplay_enabled" '[]
            (IO Bool)
@@ -900,7 +962,10 @@ is_emission_angle_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "is_emission_angle_enabled"
            '[]
@@ -931,7 +996,10 @@ is_playing cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "is_playing" '[] (IO Bool)
          where
@@ -959,7 +1027,10 @@ play cls arg1
          godot_method_bind_call bindAudioStreamPlayer3D_play (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "play" '[Maybe Float]
            (IO ())
@@ -988,7 +1059,10 @@ seek cls arg1
          godot_method_bind_call bindAudioStreamPlayer3D_seek (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "seek" '[Float] (IO ())
          where
@@ -996,7 +1070,7 @@ instance NodeMethod AudioStreamPlayer3D "seek" '[Float] (IO ())
 
 {-# NOINLINE bindAudioStreamPlayer3D_set_area_mask #-}
 
--- | Areas in which this sound plays.
+-- | Determines which @Area@ layers affect the sound for reverb and audio bus effects. Areas can be used to redirect @AudioStream@s so that they play in a certain audio bus. An example of how you might use this is making a "water" area so that sounds played in the water are redirected through an audio bus to make them sound like they are being played underwater.
 bindAudioStreamPlayer3D_set_area_mask :: MethodBind
 bindAudioStreamPlayer3D_set_area_mask
   = unsafePerformIO $
@@ -1006,7 +1080,7 @@ bindAudioStreamPlayer3D_set_area_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Areas in which this sound plays.
+-- | Determines which @Area@ layers affect the sound for reverb and audio bus effects. Areas can be used to redirect @AudioStream@s so that they play in a certain audio bus. An example of how you might use this is making a "water" area so that sounds played in the water are redirected through an audio bus to make them sound like they are being played underwater.
 set_area_mask ::
                 (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> Int -> IO ()
 set_area_mask cls arg1
@@ -1016,7 +1090,10 @@ set_area_mask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_area_mask" '[Int]
            (IO ())
@@ -1026,7 +1103,7 @@ instance NodeMethod AudioStreamPlayer3D "set_area_mask" '[Int]
 {-# NOINLINE bindAudioStreamPlayer3D_set_attenuation_filter_cutoff_hz
              #-}
 
--- | Dampens audio above this frequency, in Hz.
+-- | Dampens audio using a low-pass filter above this frequency, in Hz. To disable the dampening effect entirely, set this to @20500@ as this frequency is above the human hearing limit.
 bindAudioStreamPlayer3D_set_attenuation_filter_cutoff_hz ::
                                                          MethodBind
 bindAudioStreamPlayer3D_set_attenuation_filter_cutoff_hz
@@ -1037,7 +1114,7 @@ bindAudioStreamPlayer3D_set_attenuation_filter_cutoff_hz
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Dampens audio above this frequency, in Hz.
+-- | Dampens audio using a low-pass filter above this frequency, in Hz. To disable the dampening effect entirely, set this to @20500@ as this frequency is above the human hearing limit.
 set_attenuation_filter_cutoff_hz ::
                                    (AudioStreamPlayer3D :< cls, Object :< cls) =>
                                    cls -> Float -> IO ()
@@ -1049,7 +1126,10 @@ set_attenuation_filter_cutoff_hz cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D
            "set_attenuation_filter_cutoff_hz"
@@ -1061,7 +1141,7 @@ instance NodeMethod AudioStreamPlayer3D
 
 {-# NOINLINE bindAudioStreamPlayer3D_set_attenuation_filter_db #-}
 
--- | Amount how much the filter affects the loudness, in dB.
+-- | Amount how much the filter affects the loudness, in decibels.
 bindAudioStreamPlayer3D_set_attenuation_filter_db :: MethodBind
 bindAudioStreamPlayer3D_set_attenuation_filter_db
   = unsafePerformIO $
@@ -1071,7 +1151,7 @@ bindAudioStreamPlayer3D_set_attenuation_filter_db
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount how much the filter affects the loudness, in dB.
+-- | Amount how much the filter affects the loudness, in decibels.
 set_attenuation_filter_db ::
                             (AudioStreamPlayer3D :< cls, Object :< cls) =>
                             cls -> Float -> IO ()
@@ -1083,7 +1163,10 @@ set_attenuation_filter_db cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_attenuation_filter_db"
            '[Float]
@@ -1115,7 +1198,10 @@ set_attenuation_model cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_attenuation_model"
            '[Int]
@@ -1125,7 +1211,7 @@ instance NodeMethod AudioStreamPlayer3D "set_attenuation_model"
 
 {-# NOINLINE bindAudioStreamPlayer3D_set_autoplay #-}
 
--- | If @true@, audio plays when added to scene tree.
+-- | If @true@, audio plays when the AudioStreamPlayer3D node is added to scene tree.
 bindAudioStreamPlayer3D_set_autoplay :: MethodBind
 bindAudioStreamPlayer3D_set_autoplay
   = unsafePerformIO $
@@ -1135,7 +1221,7 @@ bindAudioStreamPlayer3D_set_autoplay
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, audio plays when added to scene tree.
+-- | If @true@, audio plays when the AudioStreamPlayer3D node is added to scene tree.
 set_autoplay ::
                (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_autoplay cls arg1
@@ -1145,7 +1231,10 @@ set_autoplay cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_autoplay" '[Bool]
            (IO ())
@@ -1154,7 +1243,7 @@ instance NodeMethod AudioStreamPlayer3D "set_autoplay" '[Bool]
 
 {-# NOINLINE bindAudioStreamPlayer3D_set_bus #-}
 
--- | Bus on which this audio is playing.
+-- | The bus on which this audio is playing.
 bindAudioStreamPlayer3D_set_bus :: MethodBind
 bindAudioStreamPlayer3D_set_bus
   = unsafePerformIO $
@@ -1164,7 +1253,7 @@ bindAudioStreamPlayer3D_set_bus
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Bus on which this audio is playing.
+-- | The bus on which this audio is playing.
 set_bus ::
           (AudioStreamPlayer3D :< cls, Object :< cls) =>
           cls -> GodotString -> IO ()
@@ -1174,7 +1263,10 @@ set_bus cls arg1
          godot_method_bind_call bindAudioStreamPlayer3D_set_bus (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_bus" '[GodotString]
            (IO ())
@@ -1183,7 +1275,8 @@ instance NodeMethod AudioStreamPlayer3D "set_bus" '[GodotString]
 
 {-# NOINLINE bindAudioStreamPlayer3D_set_doppler_tracking #-}
 
--- | Decides in which step the Doppler effect should be calculated.
+-- | Decides in which step the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ should be calculated.
+--   			__Note:__ Only effective if the current @Camera@'s @Camera.doppler_tracking@ property is set to a value other than @Camera.DOPPLER_TRACKING_DISABLED@.
 bindAudioStreamPlayer3D_set_doppler_tracking :: MethodBind
 bindAudioStreamPlayer3D_set_doppler_tracking
   = unsafePerformIO $
@@ -1193,7 +1286,8 @@ bindAudioStreamPlayer3D_set_doppler_tracking
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Decides in which step the Doppler effect should be calculated.
+-- | Decides in which step the @url=https://en.wikipedia.org/wiki/Doppler_effect@Doppler effect@/url@ should be calculated.
+--   			__Note:__ Only effective if the current @Camera@'s @Camera.doppler_tracking@ property is set to a value other than @Camera.DOPPLER_TRACKING_DISABLED@.
 set_doppler_tracking ::
                        (AudioStreamPlayer3D :< cls, Object :< cls) => cls -> Int -> IO ()
 set_doppler_tracking cls arg1
@@ -1203,7 +1297,10 @@ set_doppler_tracking cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_doppler_tracking"
            '[Int]
@@ -1234,7 +1331,10 @@ set_emission_angle cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_emission_angle"
            '[Float]
@@ -1265,7 +1365,10 @@ set_emission_angle_enabled cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D
            "set_emission_angle_enabled"
@@ -1278,7 +1381,7 @@ instance NodeMethod AudioStreamPlayer3D
 {-# NOINLINE bindAudioStreamPlayer3D_set_emission_angle_filter_attenuation_db
              #-}
 
--- | Dampens audio if camera is outside of @emission_angle_degrees@ and @emission_angle_enabled@ is set by this factor, in dB.
+-- | Dampens audio if camera is outside of @emission_angle_degrees@ and @emission_angle_enabled@ is set by this factor, in decibels.
 bindAudioStreamPlayer3D_set_emission_angle_filter_attenuation_db ::
                                                                  MethodBind
 bindAudioStreamPlayer3D_set_emission_angle_filter_attenuation_db
@@ -1289,7 +1392,7 @@ bindAudioStreamPlayer3D_set_emission_angle_filter_attenuation_db
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Dampens audio if camera is outside of @emission_angle_degrees@ and @emission_angle_enabled@ is set by this factor, in dB.
+-- | Dampens audio if camera is outside of @emission_angle_degrees@ and @emission_angle_enabled@ is set by this factor, in decibels.
 set_emission_angle_filter_attenuation_db ::
                                            (AudioStreamPlayer3D :< cls, Object :< cls) =>
                                            cls -> Float -> IO ()
@@ -1301,7 +1404,10 @@ set_emission_angle_filter_attenuation_db cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D
            "set_emission_angle_filter_attenuation_db"
@@ -1313,7 +1419,7 @@ instance NodeMethod AudioStreamPlayer3D
 
 {-# NOINLINE bindAudioStreamPlayer3D_set_max_db #-}
 
--- | Sets the absolute maximum of the soundlevel, in dB.
+-- | Sets the absolute maximum of the soundlevel, in decibels.
 bindAudioStreamPlayer3D_set_max_db :: MethodBind
 bindAudioStreamPlayer3D_set_max_db
   = unsafePerformIO $
@@ -1323,7 +1429,7 @@ bindAudioStreamPlayer3D_set_max_db
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the absolute maximum of the soundlevel, in dB.
+-- | Sets the absolute maximum of the soundlevel, in decibels.
 set_max_db ::
              (AudioStreamPlayer3D :< cls, Object :< cls) =>
              cls -> Float -> IO ()
@@ -1334,7 +1440,10 @@ set_max_db cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_max_db" '[Float]
            (IO ())
@@ -1364,7 +1473,10 @@ set_max_distance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_max_distance" '[Float]
            (IO ())
@@ -1394,7 +1506,10 @@ set_out_of_range_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_out_of_range_mode"
            '[Int]
@@ -1425,7 +1540,10 @@ set_pitch_scale cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_pitch_scale" '[Float]
            (IO ())
@@ -1434,7 +1552,7 @@ instance NodeMethod AudioStreamPlayer3D "set_pitch_scale" '[Float]
 
 {-# NOINLINE bindAudioStreamPlayer3D_set_stream #-}
 
--- | The @AudioStream@ object to be played.
+-- | The @AudioStream@ resource to be played.
 bindAudioStreamPlayer3D_set_stream :: MethodBind
 bindAudioStreamPlayer3D_set_stream
   = unsafePerformIO $
@@ -1444,7 +1562,7 @@ bindAudioStreamPlayer3D_set_stream
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The @AudioStream@ object to be played.
+-- | The @AudioStream@ resource to be played.
 set_stream ::
              (AudioStreamPlayer3D :< cls, Object :< cls) =>
              cls -> AudioStream -> IO ()
@@ -1455,7 +1573,10 @@ set_stream cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_stream" '[AudioStream]
            (IO ())
@@ -1484,7 +1605,10 @@ set_stream_paused cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_stream_paused" '[Bool]
            (IO ())
@@ -1493,7 +1617,7 @@ instance NodeMethod AudioStreamPlayer3D "set_stream_paused" '[Bool]
 
 {-# NOINLINE bindAudioStreamPlayer3D_set_unit_db #-}
 
--- | Base sound level unaffected by dampening, in dB.
+-- | The base sound level unaffected by dampening, in decibels.
 bindAudioStreamPlayer3D_set_unit_db :: MethodBind
 bindAudioStreamPlayer3D_set_unit_db
   = unsafePerformIO $
@@ -1503,7 +1627,7 @@ bindAudioStreamPlayer3D_set_unit_db
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Base sound level unaffected by dampening, in dB.
+-- | The base sound level unaffected by dampening, in decibels.
 set_unit_db ::
               (AudioStreamPlayer3D :< cls, Object :< cls) =>
               cls -> Float -> IO ()
@@ -1514,7 +1638,10 @@ set_unit_db cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_unit_db" '[Float]
            (IO ())
@@ -1523,7 +1650,7 @@ instance NodeMethod AudioStreamPlayer3D "set_unit_db" '[Float]
 
 {-# NOINLINE bindAudioStreamPlayer3D_set_unit_size #-}
 
--- | Factor for the attenuation effect.
+-- | The factor for the attenuation effect. Higher values make the sound audible over a larger distance.
 bindAudioStreamPlayer3D_set_unit_size :: MethodBind
 bindAudioStreamPlayer3D_set_unit_size
   = unsafePerformIO $
@@ -1533,7 +1660,7 @@ bindAudioStreamPlayer3D_set_unit_size
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Factor for the attenuation effect.
+-- | The factor for the attenuation effect. Higher values make the sound audible over a larger distance.
 set_unit_size ::
                 (AudioStreamPlayer3D :< cls, Object :< cls) =>
                 cls -> Float -> IO ()
@@ -1544,7 +1671,10 @@ set_unit_size cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "set_unit_size" '[Float]
            (IO ())
@@ -1571,7 +1701,10 @@ stop cls
          godot_method_bind_call bindAudioStreamPlayer3D_stop (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamPlayer3D "stop" '[] (IO ()) where
         nodeMethod = Godot.Core.AudioStreamPlayer3D.stop

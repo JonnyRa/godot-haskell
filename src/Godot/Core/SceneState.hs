@@ -69,7 +69,10 @@ get_connection_binds cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_connection_binds" '[Int]
            (IO Array)
@@ -100,7 +103,10 @@ get_connection_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_connection_count" '[] (IO Int)
          where
@@ -128,7 +134,10 @@ get_connection_flags cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_connection_flags" '[Int]
            (IO Int)
@@ -157,7 +166,10 @@ get_connection_method cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_connection_method" '[Int]
            (IO GodotString)
@@ -186,7 +198,10 @@ get_connection_signal cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_connection_signal" '[Int]
            (IO GodotString)
@@ -215,7 +230,10 @@ get_connection_source cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_connection_source" '[Int]
            (IO NodePath)
@@ -244,7 +262,10 @@ get_connection_target cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_connection_target" '[Int]
            (IO NodePath)
@@ -274,7 +295,10 @@ get_node_count cls
          godot_method_bind_call bindSceneState_get_node_count (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_node_count" '[] (IO Int) where
         nodeMethod = Godot.Core.SceneState.get_node_count
@@ -301,7 +325,10 @@ get_node_groups cls arg1
          godot_method_bind_call bindSceneState_get_node_groups (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_node_groups" '[Int]
            (IO PoolStringArray)
@@ -329,7 +356,10 @@ get_node_index cls arg1
          godot_method_bind_call bindSceneState_get_node_index (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_node_index" '[Int] (IO Int)
          where
@@ -357,7 +387,7 @@ get_node_instance cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod SceneState "get_node_instance" '[Int]
            (IO PackedScene)
@@ -386,7 +416,10 @@ get_node_instance_placeholder cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_node_instance_placeholder"
            '[Int]
@@ -415,7 +448,10 @@ get_node_name cls arg1
          godot_method_bind_call bindSceneState_get_node_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_node_name" '[Int]
            (IO GodotString)
@@ -444,7 +480,10 @@ get_node_owner_path cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_node_owner_path" '[Int]
            (IO NodePath)
@@ -476,7 +515,10 @@ get_node_path cls arg1 arg2
          godot_method_bind_call bindSceneState_get_node_path (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_node_path" '[Int, Maybe Bool]
            (IO NodePath)
@@ -507,7 +549,10 @@ get_node_property_count cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_node_property_count" '[Int]
            (IO Int)
@@ -537,7 +582,10 @@ get_node_property_name cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_node_property_name" '[Int, Int]
            (IO GodotString)
@@ -567,7 +615,7 @@ get_node_property_value cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod SceneState "get_node_property_value"
            '[Int, Int]
@@ -596,7 +644,10 @@ get_node_type cls arg1
          godot_method_bind_call bindSceneState_get_node_type (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "get_node_type" '[Int]
            (IO GodotString)
@@ -625,7 +676,10 @@ is_node_instance_placeholder cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod SceneState "is_node_instance_placeholder"
            '[Int]

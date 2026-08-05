@@ -78,7 +78,10 @@ get_attribute_count cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "get_attribute_count" '[] (IO Int)
          where
@@ -106,7 +109,10 @@ get_attribute_name cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "get_attribute_name" '[Int]
            (IO GodotString)
@@ -135,7 +141,10 @@ get_attribute_value cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "get_attribute_value" '[Int]
            (IO GodotString)
@@ -163,7 +172,10 @@ get_current_line cls
          godot_method_bind_call bindXMLParser_get_current_line (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "get_current_line" '[] (IO Int) where
         nodeMethod = Godot.Core.XMLParser.get_current_line
@@ -191,7 +203,10 @@ get_named_attribute_value cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "get_named_attribute_value"
            '[GodotString]
@@ -222,7 +237,10 @@ get_named_attribute_value_safe cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "get_named_attribute_value_safe"
            '[GodotString]
@@ -251,7 +269,10 @@ get_node_data cls
          godot_method_bind_call bindXMLParser_get_node_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "get_node_data" '[] (IO GodotString)
          where
@@ -278,7 +299,10 @@ get_node_name cls
          godot_method_bind_call bindXMLParser_get_node_name (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "get_node_name" '[] (IO GodotString)
          where
@@ -305,7 +329,10 @@ get_node_offset cls
          godot_method_bind_call bindXMLParser_get_node_offset (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "get_node_offset" '[] (IO Int) where
         nodeMethod = Godot.Core.XMLParser.get_node_offset
@@ -330,7 +357,10 @@ get_node_type cls
          godot_method_bind_call bindXMLParser_get_node_type (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "get_node_type" '[] (IO Int) where
         nodeMethod = Godot.Core.XMLParser.get_node_type
@@ -356,7 +386,10 @@ has_attribute cls arg1
          godot_method_bind_call bindXMLParser_has_attribute (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "has_attribute" '[GodotString]
            (IO Bool)
@@ -382,7 +415,10 @@ is_empty cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindXMLParser_is_empty (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "is_empty" '[] (IO Bool) where
         nodeMethod = Godot.Core.XMLParser.is_empty
@@ -406,7 +442,10 @@ open cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindXMLParser_open (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "open" '[GodotString] (IO Int) where
         nodeMethod = Godot.Core.XMLParser.open
@@ -432,7 +471,10 @@ open_buffer cls arg1
          godot_method_bind_call bindXMLParser_open_buffer (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "open_buffer" '[PoolByteArray]
            (IO Int)
@@ -457,7 +499,10 @@ read cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindXMLParser_read (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "read" '[] (IO Int) where
         nodeMethod = Godot.Core.XMLParser.read
@@ -480,7 +525,10 @@ seek cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindXMLParser_seek (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "seek" '[Int] (IO Int) where
         nodeMethod = Godot.Core.XMLParser.seek
@@ -505,7 +553,10 @@ skip_section cls
          godot_method_bind_call bindXMLParser_skip_section (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod XMLParser "skip_section" '[] (IO ()) where
         nodeMethod = Godot.Core.XMLParser.skip_section

@@ -90,7 +90,10 @@ add_exception cls arg1
          godot_method_bind_call bindRayCast2D_add_exception (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "add_exception" '[Object] (IO ())
          where
@@ -117,7 +120,10 @@ add_exception_rid cls arg1
          godot_method_bind_call bindRayCast2D_add_exception_rid (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "add_exception_rid" '[Rid] (IO ())
          where
@@ -144,7 +150,10 @@ clear_exceptions cls
          godot_method_bind_call bindRayCast2D_clear_exceptions (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "clear_exceptions" '[] (IO ()) where
         nodeMethod = Godot.Core.RayCast2D.clear_exceptions
@@ -173,7 +182,10 @@ force_raycast_update cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "force_raycast_update" '[] (IO ())
          where
@@ -200,7 +212,10 @@ get_cast_to cls
          godot_method_bind_call bindRayCast2D_get_cast_to (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "get_cast_to" '[] (IO Vector2) where
         nodeMethod = Godot.Core.RayCast2D.get_cast_to
@@ -226,7 +241,7 @@ get_collider cls
          godot_method_bind_call bindRayCast2D_get_collider (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod RayCast2D "get_collider" '[] (IO Object) where
         nodeMethod = Godot.Core.RayCast2D.get_collider
@@ -253,7 +268,10 @@ get_collider_shape cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "get_collider_shape" '[] (IO Int)
          where
@@ -261,7 +279,7 @@ instance NodeMethod RayCast2D "get_collider_shape" '[] (IO Int)
 
 {-# NOINLINE bindRayCast2D_get_collision_mask #-}
 
--- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindRayCast2D_get_collision_mask :: MethodBind
 bindRayCast2D_get_collision_mask
   = unsafePerformIO $
@@ -271,7 +289,7 @@ bindRayCast2D_get_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_mask ::
                      (RayCast2D :< cls, Object :< cls) => cls -> IO Int
 get_collision_mask cls
@@ -281,7 +299,10 @@ get_collision_mask cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "get_collision_mask" '[] (IO Int)
          where
@@ -309,7 +330,10 @@ get_collision_mask_bit cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "get_collision_mask_bit" '[Int]
            (IO Bool)
@@ -338,7 +362,10 @@ get_collision_normal cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "get_collision_normal" '[]
            (IO Vector2)
@@ -348,7 +375,7 @@ instance NodeMethod RayCast2D "get_collision_normal" '[]
 {-# NOINLINE bindRayCast2D_get_collision_point #-}
 
 -- | Returns the collision point at which the ray intersects the closest object.
---   				__Note:__ this point is in the __global__ coordinate system.
+--   				__Note:__ This point is in the __global__ coordinate system.
 bindRayCast2D_get_collision_point :: MethodBind
 bindRayCast2D_get_collision_point
   = unsafePerformIO $
@@ -359,7 +386,7 @@ bindRayCast2D_get_collision_point
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the collision point at which the ray intersects the closest object.
---   				__Note:__ this point is in the __global__ coordinate system.
+--   				__Note:__ This point is in the __global__ coordinate system.
 get_collision_point ::
                       (RayCast2D :< cls, Object :< cls) => cls -> IO Vector2
 get_collision_point cls
@@ -369,7 +396,10 @@ get_collision_point cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "get_collision_point" '[]
            (IO Vector2)
@@ -398,7 +428,10 @@ get_exclude_parent_body cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "get_exclude_parent_body" '[]
            (IO Bool)
@@ -427,7 +460,10 @@ is_collide_with_areas_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "is_collide_with_areas_enabled" '[]
            (IO Bool)
@@ -456,7 +492,10 @@ is_collide_with_bodies_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "is_collide_with_bodies_enabled" '[]
            (IO Bool)
@@ -483,7 +522,10 @@ is_colliding cls
          godot_method_bind_call bindRayCast2D_is_colliding (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "is_colliding" '[] (IO Bool) where
         nodeMethod = Godot.Core.RayCast2D.is_colliding
@@ -507,7 +549,10 @@ is_enabled cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRayCast2D_is_enabled (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "is_enabled" '[] (IO Bool) where
         nodeMethod = Godot.Core.RayCast2D.is_enabled
@@ -533,7 +578,10 @@ remove_exception cls arg1
          godot_method_bind_call bindRayCast2D_remove_exception (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "remove_exception" '[Object] (IO ())
          where
@@ -561,7 +609,10 @@ remove_exception_rid cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "remove_exception_rid" '[Rid] (IO ())
          where
@@ -588,7 +639,10 @@ set_cast_to cls arg1
          godot_method_bind_call bindRayCast2D_set_cast_to (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "set_cast_to" '[Vector2] (IO ())
          where
@@ -616,7 +670,10 @@ set_collide_with_areas cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "set_collide_with_areas" '[Bool]
            (IO ())
@@ -645,7 +702,10 @@ set_collide_with_bodies cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "set_collide_with_bodies" '[Bool]
            (IO ())
@@ -654,7 +714,7 @@ instance NodeMethod RayCast2D "set_collide_with_bodies" '[Bool]
 
 {-# NOINLINE bindRayCast2D_set_collision_mask #-}
 
--- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindRayCast2D_set_collision_mask :: MethodBind
 bindRayCast2D_set_collision_mask
   = unsafePerformIO $
@@ -664,7 +724,7 @@ bindRayCast2D_set_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The ray's collision mask. Only objects in at least one collision layer enabled in the mask will be detected. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_mask ::
                      (RayCast2D :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_mask cls arg1
@@ -674,7 +734,10 @@ set_collision_mask cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "set_collision_mask" '[Int] (IO ())
          where
@@ -702,7 +765,10 @@ set_collision_mask_bit cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "set_collision_mask_bit" '[Int, Bool]
            (IO ())
@@ -730,7 +796,10 @@ set_enabled cls arg1
          godot_method_bind_call bindRayCast2D_set_enabled (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "set_enabled" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.RayCast2D.set_enabled
@@ -757,7 +826,10 @@ set_exclude_parent_body cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RayCast2D "set_exclude_parent_body" '[Bool]
            (IO ())

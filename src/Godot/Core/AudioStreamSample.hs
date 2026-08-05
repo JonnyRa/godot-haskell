@@ -110,7 +110,10 @@ get_data cls
          godot_method_bind_call bindAudioStreamSample_get_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "get_data" '[]
            (IO PoolByteArray)
@@ -139,7 +142,10 @@ get_format cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "get_format" '[] (IO Int)
          where
@@ -167,7 +173,10 @@ get_loop_begin cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "get_loop_begin" '[] (IO Int)
          where
@@ -195,7 +204,10 @@ get_loop_end cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "get_loop_end" '[] (IO Int)
          where
@@ -223,7 +235,10 @@ get_loop_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "get_loop_mode" '[] (IO Int)
          where
@@ -231,7 +246,9 @@ instance NodeMethod AudioStreamSample "get_loop_mode" '[] (IO Int)
 
 {-# NOINLINE bindAudioStreamSample_get_mix_rate #-}
 
--- | The sample rate for mixing this audio.
+-- | The sample rate for mixing this audio. Higher values require more storage space, but result in better quality.
+--   			In games, common sample rates in use are @11025@, @16000@, @22050@, @32000@, @44100@, and @48000@.
+--   			According to the @url=https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem@Nyquist-Shannon sampling theorem@/url@, there is no quality difference to human hearing when going past 40,000 Hz (since most humans can only hear up to ~20,000 Hz, often less). If you are using lower-pitched sounds such as voices, lower sample rates such as @32000@ or @22050@ may be usable with no loss in quality.
 bindAudioStreamSample_get_mix_rate :: MethodBind
 bindAudioStreamSample_get_mix_rate
   = unsafePerformIO $
@@ -241,7 +258,9 @@ bindAudioStreamSample_get_mix_rate
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The sample rate for mixing this audio.
+-- | The sample rate for mixing this audio. Higher values require more storage space, but result in better quality.
+--   			In games, common sample rates in use are @11025@, @16000@, @22050@, @32000@, @44100@, and @48000@.
+--   			According to the @url=https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem@Nyquist-Shannon sampling theorem@/url@, there is no quality difference to human hearing when going past 40,000 Hz (since most humans can only hear up to ~20,000 Hz, often less). If you are using lower-pitched sounds such as voices, lower sample rates such as @32000@ or @22050@ may be usable with no loss in quality.
 get_mix_rate ::
                (AudioStreamSample :< cls, Object :< cls) => cls -> IO Int
 get_mix_rate cls
@@ -251,7 +270,10 @@ get_mix_rate cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "get_mix_rate" '[] (IO Int)
          where
@@ -278,7 +300,10 @@ is_stereo cls
          godot_method_bind_call bindAudioStreamSample_is_stereo (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "is_stereo" '[] (IO Bool)
          where
@@ -309,7 +334,10 @@ save_to_wav cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "save_to_wav" '[GodotString]
            (IO Int)
@@ -340,7 +368,10 @@ set_data cls arg1
          godot_method_bind_call bindAudioStreamSample_set_data (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "set_data" '[PoolByteArray]
            (IO ())
@@ -369,7 +400,10 @@ set_format cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "set_format" '[Int] (IO ())
          where
@@ -397,7 +431,10 @@ set_loop_begin cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "set_loop_begin" '[Int]
            (IO ())
@@ -426,7 +463,10 @@ set_loop_end cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "set_loop_end" '[Int] (IO ())
          where
@@ -454,7 +494,10 @@ set_loop_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "set_loop_mode" '[Int]
            (IO ())
@@ -463,7 +506,9 @@ instance NodeMethod AudioStreamSample "set_loop_mode" '[Int]
 
 {-# NOINLINE bindAudioStreamSample_set_mix_rate #-}
 
--- | The sample rate for mixing this audio.
+-- | The sample rate for mixing this audio. Higher values require more storage space, but result in better quality.
+--   			In games, common sample rates in use are @11025@, @16000@, @22050@, @32000@, @44100@, and @48000@.
+--   			According to the @url=https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem@Nyquist-Shannon sampling theorem@/url@, there is no quality difference to human hearing when going past 40,000 Hz (since most humans can only hear up to ~20,000 Hz, often less). If you are using lower-pitched sounds such as voices, lower sample rates such as @32000@ or @22050@ may be usable with no loss in quality.
 bindAudioStreamSample_set_mix_rate :: MethodBind
 bindAudioStreamSample_set_mix_rate
   = unsafePerformIO $
@@ -473,7 +518,9 @@ bindAudioStreamSample_set_mix_rate
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The sample rate for mixing this audio.
+-- | The sample rate for mixing this audio. Higher values require more storage space, but result in better quality.
+--   			In games, common sample rates in use are @11025@, @16000@, @22050@, @32000@, @44100@, and @48000@.
+--   			According to the @url=https://en.wikipedia.org/wiki/Nyquist%E2%80%93Shannon_sampling_theorem@Nyquist-Shannon sampling theorem@/url@, there is no quality difference to human hearing when going past 40,000 Hz (since most humans can only hear up to ~20,000 Hz, often less). If you are using lower-pitched sounds such as voices, lower sample rates such as @32000@ or @22050@ may be usable with no loss in quality.
 set_mix_rate ::
                (AudioStreamSample :< cls, Object :< cls) => cls -> Int -> IO ()
 set_mix_rate cls arg1
@@ -483,7 +530,10 @@ set_mix_rate cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "set_mix_rate" '[Int] (IO ())
          where
@@ -511,7 +561,10 @@ set_stereo cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod AudioStreamSample "set_stereo" '[Bool] (IO ())
          where

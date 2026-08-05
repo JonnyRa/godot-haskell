@@ -64,7 +64,10 @@ get_param cls arg1
          godot_method_bind_call bindDirectionalLight_get_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DirectionalLight "get_param" '[Int] (IO Float)
          where
@@ -92,7 +95,10 @@ set_param cls arg1 arg2
          godot_method_bind_call bindDirectionalLight_set_param (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DirectionalLight "set_param" '[Int, Float]
            (IO ())
@@ -105,7 +111,7 @@ instance NodeProperty DirectionalLight
            'False
          where
         nodeProperty
-          = (wrapIndexedGetter 14 get_param, wrapIndexedSetter 14 set_param,
+          = (wrapIndexedGetter 15 get_param, wrapIndexedSetter 15 set_param,
              Nothing)
 
 instance NodeProperty DirectionalLight
@@ -132,7 +138,7 @@ instance NodeProperty DirectionalLight
            'False
          where
         nodeProperty
-          = (wrapIndexedGetter 8 get_param, wrapIndexedSetter 8 set_param,
+          = (wrapIndexedGetter 9 get_param, wrapIndexedSetter 9 set_param,
              Nothing)
 
 instance NodeProperty DirectionalLight "directional_shadow_mode"
@@ -148,7 +154,7 @@ instance NodeProperty DirectionalLight
            'False
          where
         nodeProperty
-          = (wrapIndexedGetter 12 get_param, wrapIndexedSetter 12 set_param,
+          = (wrapIndexedGetter 13 get_param, wrapIndexedSetter 13 set_param,
              Nothing)
 
 instance NodeProperty DirectionalLight "directional_shadow_split_1"
@@ -156,7 +162,7 @@ instance NodeProperty DirectionalLight "directional_shadow_split_1"
            'False
          where
         nodeProperty
-          = (wrapIndexedGetter 9 get_param, wrapIndexedSetter 9 set_param,
+          = (wrapIndexedGetter 10 get_param, wrapIndexedSetter 10 set_param,
              Nothing)
 
 instance NodeProperty DirectionalLight "directional_shadow_split_2"
@@ -164,7 +170,7 @@ instance NodeProperty DirectionalLight "directional_shadow_split_2"
            'False
          where
         nodeProperty
-          = (wrapIndexedGetter 10 get_param, wrapIndexedSetter 10 set_param,
+          = (wrapIndexedGetter 11 get_param, wrapIndexedSetter 11 set_param,
              Nothing)
 
 instance NodeProperty DirectionalLight "directional_shadow_split_3"
@@ -172,7 +178,7 @@ instance NodeProperty DirectionalLight "directional_shadow_split_3"
            'False
          where
         nodeProperty
-          = (wrapIndexedGetter 11 get_param, wrapIndexedSetter 11 set_param,
+          = (wrapIndexedGetter 12 get_param, wrapIndexedSetter 12 set_param,
              Nothing)
 
 {-# NOINLINE bindDirectionalLight_get_shadow_depth_range #-}
@@ -197,7 +203,10 @@ get_shadow_depth_range cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DirectionalLight "get_shadow_depth_range" '[]
            (IO Int)
@@ -226,7 +235,10 @@ get_shadow_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DirectionalLight "get_shadow_mode" '[] (IO Int)
          where
@@ -254,7 +266,10 @@ is_blend_splits_enabled cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DirectionalLight "is_blend_splits_enabled" '[]
            (IO Bool)
@@ -283,7 +298,10 @@ set_blend_splits cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DirectionalLight "set_blend_splits" '[Bool]
            (IO ())
@@ -312,7 +330,10 @@ set_shadow_depth_range cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DirectionalLight "set_shadow_depth_range"
            '[Int]
@@ -342,7 +363,10 @@ set_shadow_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod DirectionalLight "set_shadow_mode" '[Int]
            (IO ())

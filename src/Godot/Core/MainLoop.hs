@@ -109,7 +109,10 @@ _drop_files cls arg1 arg2
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop__drop_files (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "_drop_files" '[PoolStringArray, Int]
            (IO ())
@@ -135,7 +138,10 @@ _finalize cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop__finalize (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "_finalize" '[] (IO ()) where
         nodeMethod = Godot.Core.MainLoop._finalize
@@ -163,7 +169,10 @@ _global_menu_action cls arg1 arg2
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "_global_menu_action"
            '[GodotVariant, GodotVariant]
@@ -192,7 +201,10 @@ _idle cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop__idle (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "_idle" '[Float] (IO Bool) where
         nodeMethod = Godot.Core.MainLoop._idle
@@ -216,7 +228,10 @@ _initialize cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop__initialize (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "_initialize" '[] (IO ()) where
         nodeMethod = Godot.Core.MainLoop._initialize
@@ -242,7 +257,10 @@ _input_event cls arg1
          godot_method_bind_call bindMainLoop__input_event (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "_input_event" '[InputEvent] (IO ())
          where
@@ -268,7 +286,10 @@ _input_text cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop__input_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "_input_text" '[GodotString] (IO ())
          where
@@ -276,7 +297,7 @@ instance NodeMethod MainLoop "_input_text" '[GodotString] (IO ())
 
 {-# NOINLINE bindMainLoop__iteration #-}
 
--- | Called each physics frame with the time since the last physics frame as argument (in seconds). Equivalent to @method Node._physics_process@.
+-- | Called each physics frame with the time since the last physics frame as argument (@delta@, in seconds). Equivalent to @method Node._physics_process@.
 --   				If implemented, the method must return a boolean value. @true@ ends the main loop, while @false@ lets it proceed to the next frame.
 bindMainLoop__iteration :: MethodBind
 bindMainLoop__iteration
@@ -287,7 +308,7 @@ bindMainLoop__iteration
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Called each physics frame with the time since the last physics frame as argument (in seconds). Equivalent to @method Node._physics_process@.
+-- | Called each physics frame with the time since the last physics frame as argument (@delta@, in seconds). Equivalent to @method Node._physics_process@.
 --   				If implemented, the method must return a boolean value. @true@ ends the main loop, while @false@ lets it proceed to the next frame.
 _iteration ::
              (MainLoop :< cls, Object :< cls) => cls -> Float -> IO Bool
@@ -296,7 +317,10 @@ _iteration cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop__iteration (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "_iteration" '[Float] (IO Bool) where
         nodeMethod = Godot.Core.MainLoop._iteration
@@ -319,7 +343,10 @@ finish cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop_finish (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "finish" '[] (IO ()) where
         nodeMethod = Godot.Core.MainLoop.finish
@@ -342,7 +369,10 @@ idle cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop_idle (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "idle" '[Float] (IO Bool) where
         nodeMethod = Godot.Core.MainLoop.idle
@@ -365,7 +395,10 @@ init cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop_init (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "init" '[] (IO ()) where
         nodeMethod = Godot.Core.MainLoop.init
@@ -390,7 +423,10 @@ input_event cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop_input_event (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "input_event" '[InputEvent] (IO ())
          where
@@ -416,7 +452,10 @@ input_text cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop_input_text (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "input_text" '[GodotString] (IO ())
          where
@@ -442,7 +481,10 @@ iteration cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindMainLoop_iteration (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod MainLoop "iteration" '[Float] (IO Bool) where
         nodeMethod = Godot.Core.MainLoop.iteration

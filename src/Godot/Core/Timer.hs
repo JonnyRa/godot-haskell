@@ -82,7 +82,10 @@ get_time_left cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_get_time_left (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "get_time_left" '[] (IO Float) where
         nodeMethod = Godot.Core.Timer.get_time_left
@@ -109,7 +112,10 @@ get_timer_process_mode cls
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "get_timer_process_mode" '[] (IO Int)
          where
@@ -117,7 +123,8 @@ instance NodeMethod Timer "get_timer_process_mode" '[] (IO Int)
 
 {-# NOINLINE bindTimer_get_wait_time #-}
 
--- | Wait time in seconds.
+-- | The wait time in seconds.
+--   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node.
 bindTimer_get_wait_time :: MethodBind
 bindTimer_get_wait_time
   = unsafePerformIO $
@@ -127,14 +134,18 @@ bindTimer_get_wait_time
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Wait time in seconds.
+-- | The wait time in seconds.
+--   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node.
 get_wait_time :: (Timer :< cls, Object :< cls) => cls -> IO Float
 get_wait_time cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_get_wait_time (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "get_wait_time" '[] (IO Float) where
         nodeMethod = Godot.Core.Timer.get_wait_time
@@ -160,7 +171,10 @@ has_autostart cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_has_autostart (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "has_autostart" '[] (IO Bool) where
         nodeMethod = Godot.Core.Timer.has_autostart
@@ -184,7 +198,10 @@ is_one_shot cls
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_is_one_shot (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "is_one_shot" '[] (IO Bool) where
         nodeMethod = Godot.Core.Timer.is_one_shot
@@ -207,7 +224,10 @@ is_paused cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_is_paused (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "is_paused" '[] (IO Bool) where
         nodeMethod = Godot.Core.Timer.is_paused
@@ -230,7 +250,10 @@ is_stopped cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_is_stopped (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "is_stopped" '[] (IO Bool) where
         nodeMethod = Godot.Core.Timer.is_stopped
@@ -257,7 +280,10 @@ set_autostart cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_set_autostart (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "set_autostart" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Timer.set_autostart
@@ -282,7 +308,10 @@ set_one_shot cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_set_one_shot (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "set_one_shot" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Timer.set_one_shot
@@ -305,7 +334,10 @@ set_paused cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_set_paused (upcast cls) arrPtr len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "set_paused" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Timer.set_paused
@@ -332,7 +364,10 @@ set_timer_process_mode cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "set_timer_process_mode" '[Int] (IO ())
          where
@@ -340,7 +375,8 @@ instance NodeMethod Timer "set_timer_process_mode" '[Int] (IO ())
 
 {-# NOINLINE bindTimer_set_wait_time #-}
 
--- | Wait time in seconds.
+-- | The wait time in seconds.
+--   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node.
 bindTimer_set_wait_time :: MethodBind
 bindTimer_set_wait_time
   = unsafePerformIO $
@@ -350,7 +386,8 @@ bindTimer_set_wait_time
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Wait time in seconds.
+-- | The wait time in seconds.
+--   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node.
 set_wait_time ::
                 (Timer :< cls, Object :< cls) => cls -> Float -> IO ()
 set_wait_time cls arg1
@@ -358,7 +395,10 @@ set_wait_time cls arg1
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_set_wait_time (upcast cls) arrPtr
            len
-           >>= \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "set_wait_time" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Timer.set_wait_time
@@ -366,7 +406,7 @@ instance NodeMethod Timer "set_wait_time" '[Float] (IO ()) where
 {-# NOINLINE bindTimer_start #-}
 
 -- | Starts the timer. Sets @wait_time@ to @time_sec@ if @time_sec > 0@. This also resets the remaining time to @wait_time@.
---   				__Note:__ this method will not resume a paused timer. See @paused@.
+--   				__Note:__ This method will not resume a paused timer. See @paused@.
 bindTimer_start :: MethodBind
 bindTimer_start
   = unsafePerformIO $
@@ -377,14 +417,16 @@ bindTimer_start
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Starts the timer. Sets @wait_time@ to @time_sec@ if @time_sec > 0@. This also resets the remaining time to @wait_time@.
---   				__Note:__ this method will not resume a paused timer. See @paused@.
+--   				__Note:__ This method will not resume a paused timer. See @paused@.
 start ::
         (Timer :< cls, Object :< cls) => cls -> Maybe Float -> IO ()
 start cls arg1
   = withVariantArray [maybe (VariantReal (-1)) toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_start (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "start" '[Maybe Float] (IO ()) where
         nodeMethod = Godot.Core.Timer.start
@@ -407,7 +449,9 @@ stop cls
   = withVariantArray []
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTimer_stop (upcast cls) arrPtr len >>=
-           \ (err, res) -> throwIfErr err >> fromGodotVariant res)
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Timer "stop" '[] (IO ()) where
         nodeMethod = Godot.Core.Timer.stop
