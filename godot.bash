@@ -8,7 +8,7 @@ sourceProfile(){
 
 installHaskellGenerator(){
   #--copy-bins is effectively `stack install`
-  stackBuildWatch godot-haskell:exe:godot-haskell-project-generator --copy-bins
+  stackBuildWatch godot-haskell:exe:godot-haskell-project-generator --copy-bins --ghc-options "-j12"
 }
 
 #run this after changing version
