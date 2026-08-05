@@ -31,7 +31,7 @@ instance NodeProperty GLTFSpecGloss "diffuse_factor" Color 'False
           = (get_diffuse_factor, wrapDroppingSetter set_diffuse_factor,
              Nothing)
 
-instance NodeProperty GLTFSpecGloss "diffuse_img" Object 'False
+instance NodeProperty GLTFSpecGloss "diffuse_img" Image 'False
          where
         nodeProperty
           = (get_diffuse_img, wrapDroppingSetter set_diffuse_img, Nothing)
@@ -41,7 +41,7 @@ instance NodeProperty GLTFSpecGloss "gloss_factor" Float 'False
         nodeProperty
           = (get_gloss_factor, wrapDroppingSetter set_gloss_factor, Nothing)
 
-instance NodeProperty GLTFSpecGloss "spec_gloss_img" Object 'False
+instance NodeProperty GLTFSpecGloss "spec_gloss_img" Image 'False
          where
         nodeProperty
           = (get_spec_gloss_img, wrapDroppingSetter set_spec_gloss_img,
