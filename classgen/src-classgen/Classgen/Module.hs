@@ -374,7 +374,7 @@ mkMethod cls method doc = do
     mkDefault (CoreType "Vector3") "(0, 1, 0)" v = [hs|defaultedVariant VariantVector3 (V3 0 1 0) $v |]
     mkDefault (CoreType "Transform2D") "((1, 0), (0, 1), (0, 0))" v = [hs|defaultedVariant VariantTransform2d (TF2d (V2 1 0) (V2 0 1) (V2 0 0)) $v |]
     mkDefault (CoreType "Transform") "1, 0, 0, 0, 1, 0, 0, 0, 1 - 0, 0, 0" v = [hs|defaultedVariant VariantTransform (TF (V3 (V3 1 0 0) (V3 0 1 0) (V3 0 0 1)) (V3 0 0 0)) $v |]
-    mkDefault (CoreType "NodePath") "" v = [hs|defaultedVariant VariantNodePath (NodePath "") $v |]
+    mkDefault (CoreType "NodePath") "" v = [hs|defaultedVariant VariantNodePath "" $v |]
     -- TODO Is this right?
     mkDefault (CoreType "RID") "[RID]" v = [hs|maybe VariantNil toVariant $v |]
     mkDefault (CoreType "String") d v = [hs|defaultedVariant VariantString __dt__ $v  |]

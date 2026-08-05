@@ -1138,7 +1138,7 @@ set_point_pinned ::
 set_point_pinned cls arg1 arg2 arg3
   = withVariantArray
       [toVariant arg1, toVariant arg2,
-       defaultedVariant VariantNodePath NodePath "" arg3]
+       defaultedVariant VariantNodePath "" arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindSoftBody_set_point_pinned (upcast cls)
            arrPtr
