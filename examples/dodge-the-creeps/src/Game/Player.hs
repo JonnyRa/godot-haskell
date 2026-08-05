@@ -61,7 +61,7 @@ player_process self delta = do
   screenSize              <- get_viewport_rect self >>= fromLowLevel <&> (^. _y)
   [left, right, up, down] <- do
     Just inp <- getSingleton @Input
-    let isActionPressed = is_action_pressed inp <=< toLowLevel
+    let isActionPressed = (\actionName -> is_action_pressed inp actionName Nothing) <=< toLowLevel
     mapM isActionPressed ["ui_left", "ui_right", "ui_up", "ui_down"]
   let velocity =
         let bVal b v = if b then v else 0
