@@ -76,7 +76,7 @@ instance NodeProperty WebSocketServer "ca_chain" X509Certificate
         nodeProperty
           = (get_ca_chain, wrapDroppingSetter set_ca_chain, Nothing)
 
-instance NodeProperty WebSocketServer "handshake_timeout" Bool
+instance NodeProperty WebSocketServer "handshake_timeout" Float
            'False
          where
         nodeProperty
