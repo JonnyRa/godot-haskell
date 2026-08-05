@@ -25,7 +25,7 @@ instance NodeProperty GLTFMesh "blend_weights" PoolRealArray 'False
           = (get_blend_weights, wrapDroppingSetter set_blend_weights,
              Nothing)
 
-instance NodeProperty GLTFMesh "mesh" Object 'False where
+instance NodeProperty GLTFMesh "mesh" ArrayMesh 'False where
         nodeProperty = (get_mesh, wrapDroppingSetter set_mesh, Nothing)
 
 {-# NOINLINE bindGLTFMesh_get_blend_weights #-}
