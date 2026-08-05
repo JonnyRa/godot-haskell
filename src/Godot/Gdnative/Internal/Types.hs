@@ -184,6 +184,17 @@ instance GodotFFI G.Color (AlphaColour Double) where
                           (realToFrac b)
                           (realToFrac $ alphaChannel rgba)
 
+type instance TypeOf 'HaskellTy G.PoolByteArray = V.Vector Word8
+instance GodotFFI G.PoolByteArray (V.Vector Word8) where
+  fromLowLevel a = do
+    sz <- godot_pool_byte_array_size a
+    V.generateM (fromIntegral sz) (\x -> godot_pool_byte_array_get a (fromIntegral x))
+  toLowLevel v = do
+    p <- godot_pool_byte_array_new
+    V.mapM_ (\e -> do
+               godot_pool_byte_array_append p e) v
+    pure p
+
 type instance TypeOf 'HaskellTy G.PoolStringArray = V.Vector Text
 instance GodotFFI G.PoolStringArray (V.Vector Text) where
   fromLowLevel a = do
