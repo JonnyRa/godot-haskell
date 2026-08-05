@@ -596,7 +596,7 @@ bindGLTFState_get_root_nodes
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 get_root_nodes ::
-                 (GLTFState :< cls, Object :< cls) => cls -> IO Array
+                 (GLTFState :< cls, Object :< cls) => cls -> IO PoolIntArray
 get_root_nodes cls
   = withVariantArray []
       (\ (arrPtr, len) ->
@@ -608,7 +608,7 @@ get_root_nodes cls
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod GLTFState "get_root_nodes" '[] (IO Array) where
+instance NodeMethod GLTFState "get_root_nodes" '[] (IO PoolIntArray) where
         nodeMethod = Godot.Core.GLTFState.get_root_nodes
 
 {-# NOINLINE bindGLTFState_get_scene_name #-}
@@ -1255,7 +1255,7 @@ bindGLTFState_set_root_nodes
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 set_root_nodes ::
-                 (GLTFState :< cls, Object :< cls) => cls -> Array -> IO ()
+                 (GLTFState :< cls, Object :< cls) => cls -> PoolIntArray -> IO ()
 set_root_nodes cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
@@ -1267,7 +1267,7 @@ set_root_nodes cls arg1
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod GLTFState "set_root_nodes" '[Array] (IO ())
+instance NodeMethod GLTFState "set_root_nodes" '[PoolIntArray] (IO ())
          where
         nodeMethod = Godot.Core.GLTFState.set_root_nodes
 
