@@ -15,8 +15,11 @@ import System.FilePath
 import Control.Applicative
 import qualified Classgen.Docs as D
 import qualified Data.HashMap.Strict as H
+import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Foldable
+import Data.HashSet (HashSet)
+import qualified Data.HashSet as HashSet
 
 main :: IO ()
 main = do
@@ -55,7 +58,7 @@ main = do
                                                   ,Ident Nothing "TypeFamilies"
                                                   ,Ident Nothing "TemplateHaskell"]]
                           classImports
-                          (decls ++ map fromNewtypeDerivingBase (toList classes))
+                          (decls ++ snd (foldr fromNewtypeDerivingBase (HashSet.empty, []) (toList classes)))
     where
     classExports decls   = ExportSpecList Nothing $ tcHasBaseClass : mapMaybe fromNewtypeOnly decls
       where
@@ -65,8 +68,12 @@ main = do
           Just $ EThingWith Nothing (EWildcard Nothing 0) (UnQual Nothing (Ident Nothing ntName)) []
         _ ->
           Nothing
-    fromNewtypeDerivingBase :: GodotClass -> Decl (Maybe CodeComment)
-    fromNewtypeDerivingBase godotClass =
+    fromNewtypeDerivingBase :: GodotClass -> (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
+    fromNewtypeDerivingBase godotClass (classesAlreadyOutput, output) =
+      undefined
+      where
+      deriveBaseCall :: Decl (Maybe CodeComment)
+      deriveBaseCall = 
         SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
                                                 (TypQuote Nothing (UnQual Nothing (Ident Nothing $ T.unpack $ _gcName godotClass))))
     classImports = map (\n -> ImportDecl Nothing (ModuleName Nothing n) False False False Nothing Nothing Nothing)
