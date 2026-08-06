@@ -199,7 +199,9 @@ mkDataType cls mdoc =
                                                                        in case T.stripPrefix x desc of
                                                                             Nothing -> T.strip desc
                                                                             Just r -> r)
-                              _ -> Nothing) (HS.NewType Nothing) Nothing 
+                              _ -> Nothing) 
+    (HS.NewType Nothing) 
+    Nothing 
     (noComments $ HS.DHead () $ clsAsName cls)
     [noComments $ HS.QualConDecl () Nothing Nothing $ HS.ConDecl () (clsAsName cls) [godotObjectTy]]
     [noComments $ HS.Deriving () (Just $ HS.DerivNewtype ()) [asVariantRule]]
