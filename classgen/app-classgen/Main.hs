@@ -83,7 +83,10 @@ main = do
       fromNewtypeDerivingBase godotClass currentState@(classesAlreadyOutput, _output) =
         if baseClassName == "" || HashSet.member baseClassName classesAlreadyOutput
         then outputCurrent currentState
-        else undefined
+        else 
+          case Map.lookup baseClassName namedClasses of
+            Nothing -> error $ "couldn't find class " <> T.unpack baseClassName
+            Just baseClass -> outputCurrent $ fromNewtypeDerivingBase baseClass currentState
         where
         baseClassName :: Text
         baseClassName = _gcBaseClass godotClass
