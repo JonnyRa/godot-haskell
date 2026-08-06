@@ -16,6 +16,7 @@ import Control.Applicative
 import qualified Classgen.Docs as D
 import qualified Data.HashMap.Strict as H
 import qualified Data.Text as T
+import Data.Foldable
 
 main :: IO ()
 main = do
@@ -41,12 +42,12 @@ main = do
                                                      <|> (H.lookup  ("_" <> (_gcName cls)) docTable)
                                                     ) classes) classes)
                         (ClassgenState mempty mempty mempty)
-  writeModule godotHaskellRootDir $ godotApiTypes (state ^. tyDecls)
+  writeModule godotHaskellRootDir $ godotApiTypes (state ^. tyDecls) classes
   mapM_ (writeModule godotHaskellRootDir) (HM.elems (state ^. modules))
   where
   --this is the Godot/Api/Types.hs generator.  The file name comes from the module name
-  godotApiTypes :: [Decl (Maybe CodeComment)] -> Module (Maybe CodeComment)
-  godotApiTypes decls   = Module Nothing (Just
+  godotApiTypes :: [Decl (Maybe CodeComment)] -> GodotClasses -> Module (Maybe CodeComment)
+  godotApiTypes decls classes = Module Nothing (Just
                                           $ ModuleHead Nothing (ModuleName Nothing "Godot.Api.Types") Nothing
                                           $ Just (classExports decls))
                           [LanguagePragma Nothing [Ident Nothing "DerivingStrategies"
@@ -54,7 +55,7 @@ main = do
                                                   ,Ident Nothing "TypeFamilies"
                                                   ,Ident Nothing "TemplateHaskell"]]
                           classImports
-                          (decls ++ mapMaybe fromNewtypeDerivingBase decls)
+                          (decls ++ map fromNewtypeDerivingBase (toList classes))
     where
     classExports decls   = ExportSpecList Nothing $ tcHasBaseClass : mapMaybe fromNewtypeOnly decls
       where
@@ -64,13 +65,10 @@ main = do
           Just $ EThingWith Nothing (EWildcard Nothing 0) (UnQual Nothing (Ident Nothing ntName)) []
         _ ->
           Nothing
-    fromNewtypeDerivingBase :: Decl (Maybe CodeComment) -> Maybe (Decl (Maybe CodeComment))
-    fromNewtypeDerivingBase decl = case decl of
-      DataDecl _ (NewType _) _ (DHead _ (Ident Nothing ntName)) _ _ ->
-        Just $ SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
-                                                (TypQuote Nothing (UnQual Nothing (Ident Nothing ntName))))
-      _ ->
-        Nothing
+    fromNewtypeDerivingBase :: GodotClass -> Decl (Maybe CodeComment)
+    fromNewtypeDerivingBase godotClass =
+        SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
+                                                (TypQuote Nothing (UnQual Nothing (Ident Nothing $ T.unpack $ _gcName godotClass))))
     classImports = map (\n -> ImportDecl Nothing (ModuleName Nothing n) False False False Nothing Nothing Nothing)
       [ "Data.Coerce", "Foreign.C", "Godot.Internal.Dispatch", "Godot.Gdnative.Internal"]
 
