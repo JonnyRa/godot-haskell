@@ -44,6 +44,7 @@ main = do
   writeModule godotHaskellRootDir $ godotApiTypes (state ^. tyDecls)
   mapM_ (writeModule godotHaskellRootDir) (HM.elems (state ^. modules))
   where
+  --this is the Godot/Api/Types.hs generator.  The file name comes from the module name
   godotApiTypes :: [Decl (Maybe CodeComment)] -> Module (Maybe CodeComment)
   godotApiTypes decls   = Module Nothing (Just
                                           $ ModuleHead Nothing (ModuleName Nothing "Godot.Api.Types") Nothing
