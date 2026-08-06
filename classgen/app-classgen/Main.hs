@@ -20,6 +20,8 @@ import qualified Data.Text as T
 import Data.Foldable
 import Data.HashSet (HashSet)
 import qualified Data.HashSet as HashSet
+import Data.Map.Strict (Map)
+import qualified Data.Map.Strict as Map
 
 main :: IO ()
 main = do
@@ -58,7 +60,7 @@ main = do
                                                   ,Ident Nothing "TypeFamilies"
                                                   ,Ident Nothing "TemplateHaskell"]]
                           classImports
-                          (decls ++ snd (foldr fromNewtypeDerivingBase (HashSet.empty, []) (toList classes)))
+                          (decls ++ snd derivingCalls)
     where
     classExports decls   = ExportSpecList Nothing $ tcHasBaseClass : mapMaybe fromNewtypeOnly decls
       where
@@ -68,8 +70,15 @@ main = do
           Just $ EThingWith Nothing (EWildcard Nothing 0) (UnQual Nothing (Ident Nothing ntName)) []
         _ ->
           Nothing
-    fromNewtypeDerivingBase :: GodotClass -> (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
-    fromNewtypeDerivingBase godotClass (classesAlreadyOutput, output) =
+    derivingCalls :: (HashSet Text, [Decl (Maybe CodeComment)])
+    derivingCalls = foldr (fromNewtypeDerivingBase namedClasses) (HashSet.empty, []) classList
+      where
+      namedClasses :: Map Text GodotClass
+      namedClasses = Map.fromList $ map (\aClass -> (_gcName aClass, aClass)) classList
+      classList :: [GodotClass]
+      classList = toList classes
+    fromNewtypeDerivingBase :: Map Text GodotClass -> GodotClass -> (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
+    fromNewtypeDerivingBase namedClasses godotClass (classesAlreadyOutput, output) =
       if baseClass == "" || HashSet.member baseClass classesAlreadyOutput
       then outputCurrent
       else undefined
