@@ -61,7 +61,7 @@ main = do
                                                   ,Ident Nothing "TypeFamilies"
                                                   ,Ident Nothing "TemplateHaskell"]]
                           classImports
-                          (decls ++ snd derivingCalls)
+                          (decls ++ reverse (snd derivingCalls))
     where
     classExports decls   = ExportSpecList Nothing $ tcHasBaseClass : mapMaybe fromNewtypeOnly decls
       where
