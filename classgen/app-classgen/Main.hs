@@ -75,7 +75,7 @@ main = do
       deriveBaseCall :: Decl (Maybe CodeComment)
       deriveBaseCall = 
         SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
-                                                (TypQuote Nothing (UnQual Nothing (Ident Nothing $ T.unpack $ _gcName godotClass))))
+                                (TypQuote Nothing (UnQual Nothing (Ident Nothing $ T.unpack $ _gcName godotClass))))
     classImports = map (\n -> ImportDecl Nothing (ModuleName Nothing n) False False False Nothing Nothing Nothing)
       [ "Data.Coerce", "Foreign.C", "Godot.Internal.Dispatch", "Godot.Gdnative.Internal"]
 
