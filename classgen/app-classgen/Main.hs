@@ -71,28 +71,29 @@ main = do
         _ ->
           Nothing
     derivingCalls :: (HashSet Text, [Decl (Maybe CodeComment)])
-    derivingCalls = foldr (fromNewtypeDerivingBase namedClasses) (HashSet.empty, []) classList
+    derivingCalls = foldr fromNewtypeDerivingBase (HashSet.empty, []) classList
       where
       namedClasses :: Map Text GodotClass
       namedClasses = Map.fromList $ map (\aClass -> (_gcName aClass, aClass)) classList
       classList :: [GodotClass]
       classList = toList classes
-    fromNewtypeDerivingBase :: Map Text GodotClass -> GodotClass -> (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
-    fromNewtypeDerivingBase namedClasses godotClass (classesAlreadyOutput, output) =
-      if baseClass == "" || HashSet.member baseClass classesAlreadyOutput
-      then outputCurrent
-      else undefined
-      where
-      baseClass :: Text
-      baseClass = _gcBaseClass godotClass
-      className :: Text
-      className = _gcName godotClass
-      outputCurrent :: (HashSet Text, [Decl (Maybe CodeComment)])
-      outputCurrent = (HashSet.insert className classesAlreadyOutput, deriveBaseCall:output)
-      deriveBaseCall :: Decl (Maybe CodeComment)
-      deriveBaseCall = 
-        SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
-                                (TypQuote Nothing (UnQual Nothing (Ident Nothing $ T.unpack $ className))))
+      fromNewtypeDerivingBase :: GodotClass -> (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
+      fromNewtypeDerivingBase godotClass (classesAlreadyOutput, output) =
+        if baseClass == "" || HashSet.member baseClass classesAlreadyOutput
+        then outputCurrent
+        else undefined
+        where
+        baseClass :: Text
+        baseClass = _gcBaseClass godotClass
+        className :: Text
+        className = _gcName godotClass
+        outputCurrent :: (HashSet Text, [Decl (Maybe CodeComment)])
+        outputCurrent = (HashSet.insert className classesAlreadyOutput, deriveBaseCall:output)
+        deriveBaseCall :: Decl (Maybe CodeComment)
+        deriveBaseCall = 
+          SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
+                                  (TypQuote Nothing (UnQual Nothing (Ident Nothing $ T.unpack $ className))))
+
     classImports = map (\n -> ImportDecl Nothing (ModuleName Nothing n) False False False Nothing Nothing Nothing)
       [ "Data.Coerce", "Foreign.C", "Godot.Internal.Dispatch", "Godot.Gdnative.Internal"]
 
