@@ -60,6 +60,7 @@ main = do
          Just $ EThingWith Nothing (EWildcard Nothing 0) (UnQual Nothing (Ident Nothing ntName)) []
        _ ->
          Nothing
+    fromNewtypeDerivingBase :: Decl (Maybe CodeComment) -> Maybe (Decl (Maybe CodeComment))
     fromNewtypeDerivingBase decl = case decl of
        DataDecl _ (NewType _) _ (DHead _ (Ident Nothing ntName)) _ _ ->
          Just $ SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
