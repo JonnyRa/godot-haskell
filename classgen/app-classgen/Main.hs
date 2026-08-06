@@ -22,6 +22,7 @@ import Data.HashSet (HashSet)
 import qualified Data.HashSet as HashSet
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
+import Control.Arrow
 
 main :: IO ()
 main = do
@@ -79,17 +80,17 @@ main = do
       classList = toList classes
 
       fromNewtypeDerivingBase :: GodotClass -> (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
-      fromNewtypeDerivingBase godotClass (classesAlreadyOutput, output) =
+      fromNewtypeDerivingBase godotClass currentState@(classesAlreadyOutput, _output) =
         if baseClassName == "" || HashSet.member baseClassName classesAlreadyOutput
-        then outputCurrent
+        then outputCurrent currentState
         else undefined
         where
         baseClassName :: Text
         baseClassName = _gcBaseClass godotClass
         className :: Text
         className = _gcName godotClass
-        outputCurrent :: (HashSet Text, [Decl (Maybe CodeComment)])
-        outputCurrent = (HashSet.insert className classesAlreadyOutput, deriveBaseCall:output)
+        outputCurrent :: (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
+        outputCurrent = HashSet.insert className *** (deriveBaseCall:)
         deriveBaseCall :: Decl (Maybe CodeComment)
         deriveBaseCall = 
           SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
