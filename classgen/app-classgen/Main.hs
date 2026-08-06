@@ -91,7 +91,7 @@ main = do
         baseClassName :: Text
         baseClassName = _gcBaseClass godotClass
         className :: Text
-        className = _gcName godotClass
+        className = mangleClass $ _gcName godotClass
         outputCurrent :: (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
         outputCurrent = HashSet.insert className *** (deriveBaseCall:)
         deriveBaseCall :: Decl (Maybe CodeComment)
