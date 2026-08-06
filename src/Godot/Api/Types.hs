@@ -7421,13 +7421,15 @@ instance HasBaseClass VisualScriptEditor where
 
 deriveBase ''GlobalConstants
 
+deriveBase ''Object
+
 deriveBase ''Reference
+
+deriveBase ''AESContext
 
 deriveBase ''Node
 
 deriveBase ''Spatial
-
-deriveBase ''AESContext
 
 deriveBase ''ARVRAnchor
 
@@ -7937,9 +7939,15 @@ deriveBase ''ScrollBar
 
 deriveBase ''HScrollBar
 
+deriveBase ''Separator
+
 deriveBase ''HSeparator
 
+deriveBase ''Slider
+
 deriveBase ''HSlider
+
+deriveBase ''SplitContainer
 
 deriveBase ''HSplitContainer
 
@@ -7971,6 +7979,8 @@ deriveBase ''InputEvent
 
 deriveBase ''InputEventAction
 
+deriveBase ''InputEventWithModifiers
+
 deriveBase ''InputEventGesture
 
 deriveBase ''InputEventJoypadButton
@@ -7995,8 +8005,6 @@ deriveBase ''InputEventScreenDrag
 
 deriveBase ''InputEventScreenTouch
 
-deriveBase ''InputEventWithModifiers
-
 deriveBase ''InputMap
 
 deriveBase ''InstancePlaceholder
@@ -8019,7 +8027,11 @@ deriveBase ''JavaScript
 
 deriveBase ''JavaScriptObject
 
+deriveBase ''PhysicsBody
+
 deriveBase ''KinematicBody
+
+deriveBase ''PhysicsBody2D
 
 deriveBase ''KinematicBody2D
 
@@ -8071,6 +8083,10 @@ deriveBase ''MultiMeshInstance2D
 
 deriveBase ''MultiplayerAPI
 
+deriveBase ''PacketPeer
+
+deriveBase ''NetworkedMultiplayerPeer
+
 deriveBase ''MultiplayerPeerGDNative
 
 deriveBase ''NativeScript
@@ -8088,8 +8104,6 @@ deriveBase ''NavigationPolygon
 deriveBase ''NavigationPolygonInstance
 
 deriveBase ''NetworkedMultiplayerENet
-
-deriveBase ''NetworkedMultiplayerPeer
 
 deriveBase ''NinePatchRect
 
@@ -8111,6 +8125,8 @@ deriveBase ''OptionButton
 
 deriveBase ''PCKPacker
 
+deriveBase ''Translation
+
 deriveBase ''PHashTranslation
 
 deriveBase ''PackedDataContainer
@@ -8120,8 +8136,6 @@ deriveBase ''PackedDataContainerRef
 deriveBase ''PackedScene
 
 deriveBase ''PackedSceneGLTF
-
-deriveBase ''PacketPeer
 
 deriveBase ''PacketPeerDTLS
 
@@ -8134,6 +8148,8 @@ deriveBase ''PacketPeerUDP
 deriveBase ''Panel
 
 deriveBase ''PanelContainer
+
+deriveBase ''Sky
 
 deriveBase ''PanoramaSky
 
@@ -8172,10 +8188,6 @@ deriveBase ''Physics2DServerSW
 deriveBase ''Physics2DShapeQueryParameters
 
 deriveBase ''Physics2DTestMotionResult
-
-deriveBase ''PhysicsBody
-
-deriveBase ''PhysicsBody2D
 
 deriveBase ''PhysicsDirectSpaceState
 
@@ -8287,8 +8299,6 @@ deriveBase ''ScriptEditor
 
 deriveBase ''SegmentShape2D
 
-deriveBase ''Separator
-
 deriveBase ''Shader
 
 deriveBase ''ShaderMaterial
@@ -8305,10 +8315,6 @@ deriveBase ''Skin
 
 deriveBase ''SkinReference
 
-deriveBase ''Sky
-
-deriveBase ''Slider
-
 deriveBase ''SliderJoint
 
 deriveBase ''SoftBody
@@ -8322,8 +8328,6 @@ deriveBase ''SphereMesh
 deriveBase ''SphereShape
 
 deriveBase ''SpinBox
-
-deriveBase ''SplitContainer
 
 deriveBase ''SpotLight
 
@@ -8373,13 +8377,13 @@ deriveBase ''TextEdit
 
 deriveBase ''TextFile
 
+deriveBase ''TextureLayered
+
 deriveBase ''Texture3D
 
 deriveBase ''TextureArray
 
 deriveBase ''TextureButton
-
-deriveBase ''TextureLayered
 
 deriveBase ''TextureProgress
 
@@ -8396,8 +8400,6 @@ deriveBase ''Timer
 deriveBase ''ToolButton
 
 deriveBase ''TouchScreenButton
-
-deriveBase ''Translation
 
 deriveBase ''TranslationServer
 
@@ -8445,15 +8447,17 @@ deriveBase ''ViewportContainer
 
 deriveBase ''ViewportTexture
 
-deriveBase ''VisibilityEnabler
-
-deriveBase ''VisibilityEnabler2D
-
 deriveBase ''VisibilityNotifier
+
+deriveBase ''VisibilityEnabler
 
 deriveBase ''VisibilityNotifier2D
 
+deriveBase ''VisibilityEnabler2D
+
 deriveBase ''VisualScript
+
+deriveBase ''VisualScriptNode
 
 deriveBase ''VisualScriptBasicTypeConstant
 
@@ -8462,6 +8466,8 @@ deriveBase ''VisualScriptBuiltinFunc
 deriveBase ''VisualScriptClassConstant
 
 deriveBase ''VisualScriptComment
+
+deriveBase ''VisualScriptLists
 
 deriveBase ''VisualScriptComposeArray
 
@@ -8497,15 +8503,11 @@ deriveBase ''VisualScriptInputAction
 
 deriveBase ''VisualScriptIterator
 
-deriveBase ''VisualScriptLists
-
 deriveBase ''VisualScriptLocalVar
 
 deriveBase ''VisualScriptLocalVarSet
 
 deriveBase ''VisualScriptMathConstant
-
-deriveBase ''VisualScriptNode
 
 deriveBase ''VisualScriptOperator
 
@@ -8553,6 +8555,8 @@ deriveBase ''VisualShaderNode
 
 deriveBase ''VisualShaderNodeBooleanConstant
 
+deriveBase ''VisualShaderNodeUniform
+
 deriveBase ''VisualShaderNodeBooleanUniform
 
 deriveBase ''VisualShaderNodeColorConstant
@@ -8567,6 +8571,8 @@ deriveBase ''VisualShaderNodeCompare
 
 deriveBase ''VisualShaderNodeCubeMap
 
+deriveBase ''VisualShaderNodeTextureUniform
+
 deriveBase ''VisualShaderNodeCubeMapUniform
 
 deriveBase ''VisualShaderNodeCustom
@@ -8575,6 +8581,8 @@ deriveBase ''VisualShaderNodeDeterminant
 
 deriveBase ''VisualShaderNodeDotProduct
 
+deriveBase ''VisualShaderNodeGroupBase
+
 deriveBase ''VisualShaderNodeExpression
 
 deriveBase ''VisualShaderNodeFaceForward
@@ -8582,8 +8590,6 @@ deriveBase ''VisualShaderNodeFaceForward
 deriveBase ''VisualShaderNodeFresnel
 
 deriveBase ''VisualShaderNodeGlobalExpression
-
-deriveBase ''VisualShaderNodeGroupBase
 
 deriveBase ''VisualShaderNodeIf
 
@@ -8609,15 +8615,13 @@ deriveBase ''VisualShaderNodeScalarOp
 
 deriveBase ''VisualShaderNodeScalarSmoothStep
 
+deriveBase ''VisualShaderNodeSwitch
+
 deriveBase ''VisualShaderNodeScalarSwitch
 
 deriveBase ''VisualShaderNodeScalarUniform
 
-deriveBase ''VisualShaderNodeSwitch
-
 deriveBase ''VisualShaderNodeTexture
-
-deriveBase ''VisualShaderNodeTextureUniform
 
 deriveBase ''VisualShaderNodeTextureUniformTriplanar
 
@@ -8634,8 +8638,6 @@ deriveBase ''VisualShaderNodeTransformMult
 deriveBase ''VisualShaderNodeTransformUniform
 
 deriveBase ''VisualShaderNodeTransformVecMult
-
-deriveBase ''VisualShaderNodeUniform
 
 deriveBase ''VisualShaderNodeUniformRef
 
@@ -8683,9 +8685,9 @@ deriveBase ''WebRTCPeerConnection
 
 deriveBase ''WebRTCPeerConnectionGDNative
 
-deriveBase ''WebSocketClient
-
 deriveBase ''WebSocketMultiplayerPeer
+
+deriveBase ''WebSocketClient
 
 deriveBase ''WebSocketPeer
 
