@@ -80,12 +80,12 @@ main = do
 
       fromNewtypeDerivingBase :: GodotClass -> (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
       fromNewtypeDerivingBase godotClass (classesAlreadyOutput, output) =
-        if baseClass == "" || HashSet.member baseClass classesAlreadyOutput
+        if baseClassName == "" || HashSet.member baseClassName classesAlreadyOutput
         then outputCurrent
         else undefined
         where
-        baseClass :: Text
-        baseClass = _gcBaseClass godotClass
+        baseClassName :: Text
+        baseClassName = _gcBaseClass godotClass
         className :: Text
         className = _gcName godotClass
         outputCurrent :: (HashSet Text, [Decl (Maybe CodeComment)])
