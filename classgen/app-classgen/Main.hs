@@ -72,7 +72,7 @@ main = do
         _ ->
           Nothing
     derivingCalls :: (HashSet Text, [Decl (Maybe CodeComment)])
-    derivingCalls = foldr fromNewtypeDerivingBase (HashSet.empty, []) classList
+    derivingCalls = foldl' (flip fromNewtypeDerivingBase) (HashSet.empty, []) classList
       where
       namedClasses :: Map Text GodotClass
       namedClasses = Map.fromList $ map (\aClass -> (_gcName aClass, aClass)) classList
