@@ -190,7 +190,7 @@ promotedList l = HS.TyPromoted () (HS.PromotedList () True l)
 
 mkDataType :: GodotClass -> Maybe D.GodotDocClass -> [HS.Decl (Maybe CodeComment)]
 mkDataType cls mdoc =
-  [ HS.DataDecl (case mdoc of
+  [ HS.DataDecl (case mdoc of --comment
                    Nothing -> Nothing
                    Just d -> case d ^. D.brief_description of
                               D.FirstJSON x -> preComment (T.unpack $
@@ -200,9 +200,9 @@ mkDataType cls mdoc =
                                                                             Nothing -> T.strip desc
                                                                             Just r -> r)
                               _ -> Nothing) 
-    (HS.NewType Nothing) 
-    Nothing 
-    (noComments $ HS.DHead () $ clsAsName cls)
+    (HS.NewType Nothing) --data or new
+    Nothing  --context
+    (noComments $ HS.DHead () $ clsAsName cls) --head
     [noComments $ HS.QualConDecl () Nothing Nothing $ HS.ConDecl () (clsAsName cls) [godotObjectTy]]
     [noComments $ HS.Deriving () (Just $ HS.DerivNewtype ()) [asVariantRule]]
   ] ++ if T.null (_gcBaseClass cls) then [] else
