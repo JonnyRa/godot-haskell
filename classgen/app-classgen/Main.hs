@@ -53,22 +53,24 @@ main = do
                                                   ,Ident Nothing "TemplateHaskell"]]
                           classImports
                           (decls ++ mapMaybe fromNewtypeDerivingBase decls)
-  classExports decls   = ExportSpecList Nothing $ tcHasBaseClass : mapMaybe fromNewtypeOnly decls
-  tcHasBaseClass       = fmap (\_ -> Nothing) $ EThingWith () (EWildcard () 0) (UnQual () (Ident () "HasBaseClass")) []
-  fromNewtypeOnly decl = case decl of
-     DataDecl _ (NewType _) _ (DHead _ (Ident Nothing ntName)) _ _ ->
-       Just $ EThingWith Nothing (EWildcard Nothing 0) (UnQual Nothing (Ident Nothing ntName)) []
-     _ ->
-       Nothing
-  fromNewtypeDerivingBase :: Decl (Maybe CodeComment) -> Maybe (Decl (Maybe CodeComment))
-  fromNewtypeDerivingBase decl = case decl of
-     DataDecl _ (NewType _) _ (DHead _ (Ident Nothing ntName)) _ _ ->
-       Just $ SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
-                                               (TypQuote Nothing (UnQual Nothing (Ident Nothing ntName))))
-     _ ->
-       Nothing
-  classImports = map (\n -> ImportDecl Nothing (ModuleName Nothing n) False False False Nothing Nothing Nothing)
-    [ "Data.Coerce", "Foreign.C", "Godot.Internal.Dispatch", "Godot.Gdnative.Internal"]
+    where
+    classExports decls   = ExportSpecList Nothing $ tcHasBaseClass : mapMaybe fromNewtypeOnly decls
+      where
+      tcHasBaseClass       = fmap (\_ -> Nothing) $ EThingWith () (EWildcard () 0) (UnQual () (Ident () "HasBaseClass")) []
+      fromNewtypeOnly decl = case decl of
+        DataDecl _ (NewType _) _ (DHead _ (Ident Nothing ntName)) _ _ ->
+          Just $ EThingWith Nothing (EWildcard Nothing 0) (UnQual Nothing (Ident Nothing ntName)) []
+        _ ->
+          Nothing
+    fromNewtypeDerivingBase :: Decl (Maybe CodeComment) -> Maybe (Decl (Maybe CodeComment))
+    fromNewtypeDerivingBase decl = case decl of
+      DataDecl _ (NewType _) _ (DHead _ (Ident Nothing ntName)) _ _ ->
+        Just $ SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
+                                                (TypQuote Nothing (UnQual Nothing (Ident Nothing ntName))))
+      _ ->
+        Nothing
+    classImports = map (\n -> ImportDecl Nothing (ModuleName Nothing n) False False False Nothing Nothing Nothing)
+      [ "Data.Coerce", "Foreign.C", "Godot.Internal.Dispatch", "Godot.Gdnative.Internal"]
 
 writeModule :: FilePath -> Module (Maybe CodeComment) -> IO ()
 writeModule godotHaskellRootDir mdl@(Module _ (Just (ModuleHead _ (ModuleName Nothing name) _ _)) _ _ _) = do
