@@ -140,7 +140,6 @@ data GodotEnum = GodotEnum
   , _geValues :: !(HashMap Text Int)
   } deriving (Show, Eq)
 
-makeLensesWith fixedTypeFields ''GodotClass
 makeLensesWith fixedTypeFields ''GodotProperty
 makeLensesWith fixedTypeFields ''GodotSignal
 makeLensesWith fixedTypeFields ''GodotArgument

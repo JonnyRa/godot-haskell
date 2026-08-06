@@ -31,14 +31,14 @@ main = do
   let (Just docs) = decodeErr doc :: Maybe D.GodotDocs
   let godotHaskellRootDir = args !! 2
   let docTable = D.toTable docs
-  let state = execState (mapM_ (\cls -> addClass cls (H.lookup (cls ^. Classgen.Spec.name) docTable
-                                                     <|> (T.stripPrefix "Godot_" (cls ^. Classgen.Spec.name)
+  let state = execState (mapM_ (\cls -> addClass cls (H.lookup (_gcName cls) docTable
+                                                     <|> (T.stripPrefix "Godot_" (_gcName cls)
                                                           >>= \r -> H.lookup r docTable)
-                                                     <|> (T.stripPrefix "Godot" (cls ^. Classgen.Spec.name)
+                                                     <|> (T.stripPrefix "Godot" (_gcName cls)
                                                           >>= \r -> H.lookup r docTable)
-                                                     <|> (T.stripPrefix "_"  (cls ^. Classgen.Spec.name)
+                                                     <|> (T.stripPrefix "_"  (_gcName cls)
                                                           >>= \r -> H.lookup r docTable)
-                                                     <|> (H.lookup  ("_" <> (cls ^. Classgen.Spec.name)) docTable)
+                                                     <|> (H.lookup  ("_" <> (_gcName cls)) docTable)
                                                     ) classes) classes)
                         (ClassgenState mempty mempty mempty)
   writeModule godotHaskellRootDir $ godotApiTypes (state ^. tyDecls)

@@ -37,11 +37,11 @@ addClass cls mdoc allClasses = do
   methods <- mkMethods cls mdoc
   properties <- mkProperties cls mdoc
   signals <- mkSignals cls mdoc
-  let dataType = if isCoreType (cls ^. name) then [] else mkDataType cls mdoc
+  let dataType = if isCoreType (_gcName cls) then [] else mkDataType cls mdoc
   tyDecls <>= dataType
   let classDecls = nub $ (noComments <$> (mkConstants cls ++ mkEnums cls))
                  ++ signals ++ properties ++ methods
-  modules %= HM.insert (mangleClass $ cls ^. name) (HS.Module Nothing
+  modules %= HM.insert (mangleClass $ _gcName cls) (HS.Module Nothing
                                       (Just $ classModuleHead classDecls)
                                       [HS.LanguagePragma Nothing [HS.Ident Nothing "DerivingStrategies"
                                                                  ,HS.Ident Nothing "GeneralizedNewtypeDeriving"
@@ -60,13 +60,13 @@ addClass cls mdoc allClasses = do
        , "System.IO.Unsafe", "Godot.Gdnative.Internal", "Godot.Api.Types"
        ] <> maybe [] (:[]) parentModuleImport)
     classModuleHead decls = HS.ModuleHead Nothing classModuleName Nothing $ Just (classExports decls)
-    classModuleName = noComments $ HS.ModuleName () $ "Godot." ++ (pascal $ T.unpack (cls ^. apiType))
-      ++ "." ++ (T.unpack $ mangleClass $ cls ^. name)
-    parentModuleImport = case (cls ^. baseClass, V.find (\x -> cls ^. baseClass == x ^. name) allClasses) of
+    classModuleName = noComments $ HS.ModuleName () $ "Godot." ++ (pascal $ T.unpack (_gcApiType cls))
+      ++ "." ++ (T.unpack $ mangleClass $ _gcName cls)
+    parentModuleImport = case (_gcBaseClass cls, V.find (\x -> _gcBaseClass cls == _gcName x) allClasses) of
                          ("", Nothing) -> Nothing
                          (_, Nothing) -> error "Can't find base class"
-                         (_, Just baseCls) -> Just $ "Godot." ++ (pascal $ T.unpack (baseCls ^. apiType))
-                                                  ++ "." ++ (T.unpack $ mangleClass $ baseCls ^. name)
+                         (_, Just baseCls) -> Just $ "Godot." ++ (pascal $ T.unpack (_gcApiType baseCls))
+                                                  ++ "." ++ (T.unpack $ mangleClass $ _gcName baseCls)
                                                   ++ "()"
     classExports decls = HS.ExportSpecList Nothing $
       mapMaybe (\decl -> case decl of
@@ -80,7 +80,7 @@ addClass cls mdoc allClasses = do
       decls
 
 mkProperties :: MonadState ClassgenState m => GodotClass -> Maybe D.GodotDocClass -> m [HS.Decl (Maybe CodeComment)]
-mkProperties cls mdoc = concat <$> mapM mkProperty (V.toList $ cls ^. properties)
+mkProperties cls mdoc = concat <$> mapM mkProperty (V.toList $ _gcProperties cls)
   where
     mkProperty prop = do
       get <- mkGetter prop
@@ -99,7 +99,7 @@ mkProperties cls mdoc = concat <$> mapM mkProperty (V.toList $ cls ^. properties
                                               (PrimitiveType VoidType) False False False False False False False
                                               (indexArg prop <> V.singleton (GodotArgument (prop ^. name) (gty prop) Nothing)))
                                              (methodDoc (prop ^. setter) mdoc)
-    gty prop = case (cls ^. name,prop ^. name) of
+    gty prop = case (_gcName cls,prop ^. name) of
                               -- NB These are bugs in api.json
                               ("VisualScriptPropertySet","type_cache") -> CoreType "Dictionary" -- has int
                               ("PhysicsDirectBodyState","transform") -> CoreType "Transform" -- has transform2d
@@ -172,7 +172,7 @@ sigTy :: HS.Type ()
 sigTy = HS.TyCon () $ HS.Qual () (HS.ModuleName () $ "Godot.Internal.Dispatch") $ HS.Ident () "Signal"
 
 clsAsName :: GodotClass -> HS.Name ()
-clsAsName cls = HS.Ident () (T.unpack $ mangleClass $ cls ^. name)
+clsAsName cls = HS.Ident () (T.unpack $ mangleClass $ _gcName cls)
 
 clsTy :: GodotClass -> HS.Type ()
 clsTy = HS.TyCon () . HS.UnQual ()  . clsAsName
@@ -180,7 +180,7 @@ clsTy = HS.TyCon () . HS.UnQual ()  . clsAsName
 nameToTyCon = HS.TyCon () . HS.UnQual () . HS.Ident () . T.unpack
 
 baseClsTy :: GodotClass -> HS.Type ()
-baseClsTy cls = nameToTyCon (cls ^. baseClass)
+baseClsTy cls = nameToTyCon (_gcBaseClass cls)
 
 intTy = HS.TyCon () . HS.UnQual () $ HS.name "Int"
 
@@ -202,7 +202,7 @@ mkDataType cls mdoc =
     (noComments $ HS.DHead () $ clsAsName cls)
     [noComments $ HS.QualConDecl () Nothing Nothing $ HS.ConDecl () (clsAsName cls) [godotObjectTy]]
     [noComments $ HS.Deriving () (Just $ HS.DerivNewtype ()) [asVariantRule]]
-  ] ++ if T.null (cls ^. baseClass) then [] else
+  ] ++ if T.null (_gcBaseClass cls) then [] else
   [ noComments
     $ [dec| instance HasBaseClass ((cty)) where
         type BaseClass ((cty)) = ((bty))
@@ -213,7 +213,7 @@ mkDataType cls mdoc =
     bty = baseClsTy cls
 
 mkSignals :: MonadState ClassgenState m => GodotClass -> Maybe D.GodotDocClass -> m [HS.Decl (Maybe CodeComment)]
-mkSignals cls mdoc = return $ concatMap mkSignal (V.toList $ cls ^. signals)
+mkSignals cls mdoc = return $ concatMap mkSignal (V.toList $ _gcSignals cls)
   where
     signalDoc :: Text -> Maybe D.GodotDocClass -> Maybe CodeComment
     signalDoc name mdoc = do
@@ -238,7 +238,7 @@ mkSignals cls mdoc = return $ concatMap mkSignal (V.toList $ cls ^. signals)
            ]
 
 mkConstants :: GodotClass -> [HS.Decl ()]
-mkConstants cls = concatMap mkConstant (HM.toList $ cls ^. constants)
+mkConstants cls = concatMap mkConstant (HM.toList $ _gcConstants cls)
   where
     mkConstant (cname, cval)
       = let constName = HS.Ident () $ T.unpack ("_" <> cname)
@@ -269,15 +269,15 @@ methodDoc name mdoc = do
 mkMethods :: MonadState ClassgenState m => GodotClass -> Maybe D.GodotDocClass -> m [HS.Decl (Maybe CodeComment)]
 mkMethods cls mdoc =
   concat <$> mapM (\m -> mkMethod cls m (methodDoc (m ^. name) mdoc))
-             (V.toList $ cls ^. methods)
+             (V.toList $ _gcMethods cls)
 
 mkMethod :: MonadState ClassgenState m => GodotClass -> GodotMethod -> Maybe CodeComment -> m [HS.Decl (Maybe CodeComment)]
 mkMethod cls method doc = do
   mtds <- use methods
-  if (method ^. name) `S.member` (HM.lookupDefault mempty (cls ^. name) mtds)
+  if (method ^. name) `S.member` (HM.lookupDefault mempty (_gcName cls) mtds)
     then return []
     else do
-    methods %= HM.insertWith S.union (mangleClass $ cls ^. name) (S.singleton $ method ^. name)
+    methods %= HM.insertWith S.union (mangleClass $ _gcName cls) (S.singleton $ method ^. name)
     when (T.null $ method ^. name) $ error (show cls ++ "\n" ++ show method)
     return $ 
         [ noComments $ HS.InlineSig () False Nothing (HS.UnQual () clsMethodBindName)
@@ -302,13 +302,13 @@ mkMethod cls method doc = do
         ]
   where
     clsName = HS.TyCon () (HS.UnQual () (clsAsName cls))
-    clsMethodBindName = HS.Ident () $ "bind" ++ (T.unpack $ mangleClass (cls ^. name)) ++ "_" ++ methodName
+    clsMethodBindName = HS.Ident () $ "bind" ++ (T.unpack $ mangleClass (_gcName cls)) ++ "_" ++ methodName
     clsMethodBindVar = HS.Var () $ HS.UnQual () clsMethodBindName
     clsMethodBindRhs = HS.UnGuardedRhs ()
-      [hs| unsafePerformIO $ withCString $(HS.strE (T.unpack $ cls ^. name)) $
+      [hs| unsafePerformIO $ withCString $(HS.strE (T.unpack $ _gcName cls)) $
          \clsNamePtr -> withCString $(HS.strE rawMethodName) $
          \methodNamePtr -> godot_method_bind_get_method clsNamePtr methodNamePtr |]
-    classModuleName = "Godot." ++ (pascal $ T.unpack (cls ^. apiType)) ++ "." ++ (T.unpack $ mangleClass $ cls ^. name)
+    classModuleName = "Godot." ++ (pascal $ T.unpack (_gcApiType cls)) ++ "." ++ (T.unpack $ mangleClass $ _gcName cls)
 
     -- this one is a bit redudant now, but code is a tad cleaner
     returnsVariant = method ^. returnType == CoreType "Variant"
