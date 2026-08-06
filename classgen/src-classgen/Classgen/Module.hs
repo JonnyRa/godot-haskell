@@ -188,6 +188,7 @@ promotedString s = HS.TyPromoted () (HS.PromotedString () s s)
 
 promotedList l = HS.TyPromoted () (HS.PromotedList () True l)
 
+mkDataType :: GodotClass -> Maybe D.GodotDocClass -> [HS.Decl (Maybe CodeComment)]
 mkDataType cls mdoc =
   [ HS.DataDecl (case mdoc of
                    Nothing -> Nothing
