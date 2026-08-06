@@ -70,12 +70,20 @@ main = do
           Nothing
     fromNewtypeDerivingBase :: GodotClass -> (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
     fromNewtypeDerivingBase godotClass (classesAlreadyOutput, output) =
-      undefined
+      if baseClass == "" || HashSet.member baseClass classesAlreadyOutput
+      then outputCurrent
+      else undefined
       where
+      baseClass :: Text
+      baseClass = _gcBaseClass godotClass
+      className :: Text
+      className = _gcName godotClass
+      outputCurrent :: (HashSet Text, [Decl (Maybe CodeComment)])
+      outputCurrent = (HashSet.insert className classesAlreadyOutput, deriveBaseCall:output)
       deriveBaseCall :: Decl (Maybe CodeComment)
       deriveBaseCall = 
         SpliceDecl Nothing (App Nothing (Var Nothing (UnQual Nothing (Ident Nothing "deriveBase")))
-                                (TypQuote Nothing (UnQual Nothing (Ident Nothing $ T.unpack $ _gcName godotClass))))
+                                (TypQuote Nothing (UnQual Nothing (Ident Nothing $ T.unpack $ className))))
     classImports = map (\n -> ImportDecl Nothing (ModuleName Nothing n) False False False Nothing Nothing Nothing)
       [ "Data.Coerce", "Foreign.C", "Godot.Internal.Dispatch", "Godot.Gdnative.Internal"]
 
