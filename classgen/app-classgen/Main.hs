@@ -77,6 +77,7 @@ main = do
       namedClasses = Map.fromList $ map (\aClass -> (_gcName aClass, aClass)) classList
       classList :: [GodotClass]
       classList = toList classes
+
       fromNewtypeDerivingBase :: GodotClass -> (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
       fromNewtypeDerivingBase godotClass (classesAlreadyOutput, output) =
         if baseClass == "" || HashSet.member baseClass classesAlreadyOutput
