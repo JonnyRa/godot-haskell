@@ -10,7 +10,7 @@ extra-source-files:
   - ChangeLog.md
   - README.md
 dependencies:
-  - base >=4.12 && <5
+  - base
   - godot-haskell
   - linear
   - random
@@ -50,7 +50,7 @@ verbatim: |
     hs-source-dirs: ffi/flib
     c-sources: ffi/cbits/flib.c
     build-depends:
-        base >= 4.12 && <5
+        base
       , godot-haskell
       , myproject
       , text
