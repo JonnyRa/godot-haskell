@@ -13,6 +13,7 @@ import qualified Data.Text as T
 import Data.Typeable
 import Data.Vector (Vector)
 import           Foreign                           hiding (void,new)
+import           Control.Exception
 
 type GdnativeHandle = Ptr ()
 
@@ -66,6 +67,7 @@ data GodotError = GFailed -- ^ Generic error.
                 | GPrinterOnFire -- ^ Printer on fire error. (This is an easter egg, no engine methods return this error code.)
                 deriving (Show, Eq, Typeable)
 
+instance Exception GodotError
 
 data SignalArgument = SignalArgument
   { signalArgumentName :: !Text
@@ -127,6 +129,7 @@ nameOf = T.pack
     $ typeRep
     $ Proxy @a
 
+convertClassName :: String -> String
 convertClassName name =
   case name of
     -- TODO Derive these automatically. Don't think we store if a
@@ -142,6 +145,7 @@ convertClassName name =
     "ResourceSaver" -> "_ResourceSaver"
     x -> x
 
+unConvertClassName :: Text -> Text
 unConvertClassName name =
   case name of
     -- TODO Derive these automatically. Don't think we store if a

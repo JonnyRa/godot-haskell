@@ -12,7 +12,7 @@ module Godot.Nativescript
   , NativeScript(..)
   , ClassMethod(..)
   , ClassProperty(..)
-  , ClassSignal(..)
+  , ClassSignal
   , RPC(..)
   , Registerer(..)
   , PropertyAttributes(..)
@@ -61,16 +61,14 @@ import           Control.Monad
 import           Data.Typeable
 import           Data.Text                                ( Text )
 import qualified Data.Text                     as T
-import           Data.Vector                              ( Vector )
 import qualified Data.Vector                   as Vec
 import qualified Data.Vector                   as V
 import           Data.Function                            ( (&) )
 
-import qualified Data.Set                      as S
 import           Control.Concurrent.MVar
 
 import           Foreign                           hiding (void,new)
-import           Foreign.C                         hiding (new)
+import           Foreign.C
 
 import           System.Environment
 import           System.IO.Unsafe
@@ -78,9 +76,7 @@ import           System.IO.Unsafe
 import qualified Godot.Gdnative.Internal as GNI
 import           Godot.Gdnative
 import           Godot.Internal.Dispatch
-import           Data.Maybe                               ( fromMaybe )
 import qualified Foreign.Marshal as F
-import qualified Foreign.Marshal.Utils as F
 import qualified Foreign.C                     as Foreign
 
 import qualified Godot.Api                     as Api
@@ -88,19 +84,15 @@ import qualified Data.Map.Strict as M
 import           Data.Coerce
 import qualified Godot.Core.NativeScript as NativeScript
 import           Godot.Core.GlobalConstants
-import           Godot.Core.ClassDB
 import           Godot.Core.Engine
 import           Godot.Core.Node
 import           Godot.Core.Object as Object
 import           Godot.Core.Reference
 import           Data.IORef
-import           Foreign.StablePtr
 import           Control.Monad.Extra
 import           Control.Exception
 import           Data.Maybe
 import Godot.Nativescript.Types
-
-instance Exception GodotError
 
 getError :: Int -> Maybe GodotError
 getError e | e == _OK                             = Nothing
@@ -200,7 +192,7 @@ deriveBase ''Myclass1
 -- Used like: @registerClass $ RegClass desc $ classInit \\@MyClass@
 registerClass
   :: forall a
-   . (NativeScript a, Typeable (BaseClass a), AsVariant (BaseClass a))
+   . (NativeScript a, AsVariant (BaseClass a))
   => Registerer 'GClass a
   -> IO ()
 registerClass (RegClass desc constr) = do
@@ -265,10 +257,10 @@ registerClass (RegClass desc constr) = do
                                           (castPtr tyPtr)
 
 tryCast
-  :: forall b a. (Object :< a, a :< b, Typeable b, AsVariant b) => a -> IO (Maybe b)
+  :: forall b a. (Object :< a, Typeable b, AsVariant b) => a -> IO (Maybe b)
 tryCast = tryObjectCast . upcast
 
-tryCast' :: forall out x. (Typeable out, AsVariant out, Object :< x, x :< out) => x -> IO out
+tryCast' :: forall out x. (Typeable out, AsVariant out, Object :< x) => x -> IO out
 tryCast' o = fromJust <$> tryCast o
 singletonTable :: MVar (M.Map Text Object)
 singletonTable = unsafePerformIO $ newMVar M.empty
@@ -276,7 +268,7 @@ singletonTable = unsafePerformIO $ newMVar M.empty
 -- | Godot exposes some functionality through singletons. You'll often need to
 -- talk to the GodotInput singeton for example. Use this as 'getSingleton @GodotInput'.
 getSingleton
-  :: forall a . (Typeable a, AsVariant a, Object :< a) => IO (Maybe a)
+  :: forall a . (Typeable a, AsVariant a) => IO (Maybe a)
 getSingleton = do
   let name = unConvertClassName $ nameOf @a
   table <- readMVar singletonTable
@@ -343,77 +335,100 @@ func NoRPC "_unhandled_input" $ \self [evObj] ->
 @
 -}
 func
-  :: (NativeScript cls, AsVariant a)
+  :: AsVariant a
   => RPC
   -> Text
   -> (cls -> [GodotVariant] -> IO a)
   -> ClassMethod cls
-func rpc mthdName fn = ClassMethod rpc mthdName
+func rpcOption mthdName fn = ClassMethod rpcOption mthdName
   $ \self args -> toLowLevel . toVariant =<< fn self (Vec.toList args)
 
 -- | Quick shortcut to make a new local method with arguments passed as
 -- 'Variant's in a list.
-method :: (NativeScript cls, AsVariant a)
+method :: (AsVariant a)
        => Text -> (cls -> [GodotVariant] -> IO a) -> ClassMethod cls
 method = func NoRPC
 
 -- | Quick shortcut to make a new local method with no argumnets.
-method0 :: (NativeScript cls, AsVariant a)
+method0 :: (AsVariant a)
        => Text -> (cls -> IO a) -> ClassMethod cls
-method0 name fn = func NoRPC name (\s [] -> fn s)
+method0 name fn = func NoRPC name (\s args ->
+                                    case args of 
+                                      [] -> fn s
+                                      _ -> error "wrong number of arguments"
+                                  )
 
 -- | Quick shortcut to make a new local method that takes 1 argument, 'Variant's
 -- are unwrapped into their types before being passed in.
-method1 :: (NativeScript cls, AsVariant a, AsVariant o1, Typeable o1)
+method1 :: (AsVariant a, AsVariant o1, Typeable o1)
         => Text -> (cls -> o1 -> IO a) -> ClassMethod cls
-method1 name fn = func NoRPC name (\s [o1] -> do
-                                      a1 <- fromGodotVariant o1
-                                      fn s a1)
+method1 name fn = func NoRPC name (\s args -> 
+                                    case args of 
+                                      [o1] -> do
+                                        a1 <- fromGodotVariant o1
+                                        fn s a1
+                                      _ -> error "wrong number of arguments"
+                                  )
 
 -- | Quick shortcut to make a new local method that takes 2 arguments, 'Variant's
 -- are unwrapped into their types before being passed in.
-method2 :: (NativeScript cls, AsVariant a, AsVariant o1, Typeable o1, AsVariant o2, Typeable o2)
+method2 :: (AsVariant a, AsVariant o1, Typeable o1, AsVariant o2, Typeable o2)
         => Text -> (cls -> o1 -> o2 -> IO a) -> ClassMethod cls
-method2 name fn = func NoRPC name (\s [o1,o2] -> do
-                                      a1 <- fromGodotVariant o1
-                                      a2 <- fromGodotVariant o2
-                                      fn s a1 a2)
+method2 name fn = func NoRPC name (\s args ->
+                                    case args of 
+                                      [o1, o2] -> do
+                                        a1 <- fromGodotVariant o1
+                                        a2 <- fromGodotVariant o2
+                                        fn s a1 a2
+                                      _ -> error "wrong number of arguments"
+                                  )
 
 -- | Quick shortcut to make a new local method that takes 3 arguments, 'Variant's
 -- are unwrapped into their types before being passed in.
-method3 :: (NativeScript cls, AsVariant a, AsVariant o1, Typeable o1, AsVariant o2, Typeable o2, AsVariant o3, Typeable o3)
+method3 :: (AsVariant a, AsVariant o1, Typeable o1, AsVariant o2, Typeable o2, AsVariant o3, Typeable o3)
         => Text -> (cls -> o1 -> o2 -> o3 -> IO a) -> ClassMethod cls
-method3 name fn = func NoRPC name (\s [o1,o2,o3] -> do
-                                      a1 <- fromGodotVariant o1
-                                      a2 <- fromGodotVariant o2
-                                      a3 <- fromGodotVariant o3
-                                      fn s a1 a2 a3)
+method3 name fn = func NoRPC name (\s args ->
+                                    case args of 
+                                      [o1, o2, o3] -> do
+                                        a1 <- fromGodotVariant o1
+                                        a2 <- fromGodotVariant o2
+                                        a3 <- fromGodotVariant o3
+                                        fn s a1 a2 a3
+                                      _ -> error "wrong number of arguments"
+                                  )
 
 -- | Quick shortcut to make a new local method that takes 4 arguments, 'Variant's
 -- are unwrapped into their types before being passed in.
-method4 :: (NativeScript cls, AsVariant a, AsVariant o1, Typeable o1, AsVariant o2, Typeable o2
+method4 :: (AsVariant a, AsVariant o1, Typeable o1, AsVariant o2, Typeable o2
           , AsVariant o3, Typeable o3, AsVariant o4, Typeable o4)
         => Text -> (cls -> o1 -> o2 -> o3 -> o4 -> IO a) -> ClassMethod cls
-method4 name fn = func NoRPC name (\s [o1,o2,o3,o4] -> do
-                                      a1 <- fromGodotVariant o1
-                                      a2 <- fromGodotVariant o2
-                                      a3 <- fromGodotVariant o3
-                                      a4 <- fromGodotVariant o4
-                                      fn s a1 a2 a3 a4)
+method4 name fn = func NoRPC name (\s args ->
+                                    case args of 
+                                      [o1, o2, o3, o4] -> do
+                                        a1 <- fromGodotVariant o1
+                                        a2 <- fromGodotVariant o2
+                                        a3 <- fromGodotVariant o3
+                                        a4 <- fromGodotVariant o4
+                                        fn s a1 a2 a3 a4
+                                      _ -> error "wrong number of arguments"
+                                  )
 
 -- | Quick shortcut to make a new local method that takes 5 arguments, 'Variant's
 -- are unwrapped into their types before being passed in.
-method5 :: (NativeScript cls, AsVariant a, AsVariant o1, Typeable o1, AsVariant o2, Typeable o2
+method5 :: (AsVariant a, AsVariant o1, Typeable o1, AsVariant o2, Typeable o2
           , AsVariant o3, Typeable o3, AsVariant o4, Typeable o4, AsVariant o5, Typeable o5)
         => Text -> (cls -> o1 -> o2 -> o3 -> o4 -> o5 -> IO a) -> ClassMethod cls
-method5 name fn = func NoRPC name (\s [o1,o2,o3,o4,o5] -> do
-                                      a1 <- fromGodotVariant o1
-                                      a2 <- fromGodotVariant o2
-                                      a3 <- fromGodotVariant o3
-                                      a4 <- fromGodotVariant o4
-                                      a5 <- fromGodotVariant o5
-                                      fn s a1 a2 a3 a4 a5)
-
+method5 name fn = func NoRPC name (\s args ->
+                                      case args of 
+                                        [o1,o2,o3,o4,o5] -> do
+                                          a1 <- fromGodotVariant o1
+                                          a2 <- fromGodotVariant o2
+                                          a3 <- fromGodotVariant o3
+                                          a4 <- fromGodotVariant o4
+                                          a5 <- fromGodotVariant o5
+                                          fn s a1 a2 a3 a4 a5
+                                        _ -> error "wrong number of arguments"
+                                  )
 
 registerMethod :: forall a . NativeScript a => Registerer 'GMethod a -> IO ()
 registerMethod (RegMethod desc ClassMethod {..}) = do
@@ -511,7 +526,7 @@ createMVarProperty name fieldName tyOrVal = ClassProperty
         -- This solution works, but only for most Godot Objects. We could add
         -- more cases here, but a much better way would be to implement a Ref
         -- type to hold such objects. Coming soon to stores near you.
-        case variant of
+        _ <- case variant of
           VariantObject o -> onRefObj reference o
           _ -> pure False
         obj <- fromGodotVariant var
@@ -583,7 +598,7 @@ registerSignal (RegSignal desc (signalName, signalArgs)) = do
           gdSigName
           (fromIntegral gdArgsLen)
           gdArgsPtr
-          (fromIntegral defArgsLen)
+          defArgsLen
           defArgsPtr
  where
   withVariantArray'
@@ -603,7 +618,7 @@ foreign import ccall "dynamic"
   call_godot_class_constructor_ :: FunPtr (IO (Object)) -> IO (Object)
 
 -- | Instantiate an object
-new :: forall o. (Object :< o, Typeable o, AsVariant o) => IO (Maybe o)
+new :: forall o. (Typeable o, AsVariant o) => IO (Maybe o)
 new = do
   con <- Foreign.withCString (T.unpack $ nameOf @o) godot_get_class_constructor
   if con == nullFunPtr then
@@ -621,7 +636,7 @@ newNativeScript = do
   asNativeScript no
 
 getNode :: forall b cls. (Object :< cls, Api.Node :< cls,
-                    Api.Node :< b, Typeable b, AsVariant b)
+                    Typeable b, AsVariant b)
         => cls -> Text -> IO b
 getNode self name = do
   n :: Api.Node <- get_node_or_null self =<< toLowLevel name
@@ -657,9 +672,9 @@ defaultExports desc = do
 -- | Ask an object to wait for a signal on a target. When the signal is trigged call the given function
 -- For example, to get a callback when a timer fires you could do something like
 -- @ await self timer "timeout" (\self -> print "Timer fired!") @
-await :: forall cls source target a. (NativeScript cls, Object :< cls, Object :< target, AsVariant a)
+await :: forall cls target a. (NativeScript cls, Object :< target)
       => cls -> target -> Text -> (cls -> IO a) -> IO ()
-await self target signal fn = do
+await self target aSignal fn = do
   desc <- readMVar scriptDesc
   (Just w) <- newNativeScript @WrapperStablePtr
   unlessM (has_method self =<< toLowLevel "__script_callback") $ do
@@ -668,17 +683,17 @@ await self target signal fn = do
        registerMethod
         (RegMethod (coerce rawDesc)
          (method1 "__script_callback"
-          (\self o -> do
-              (Just w) <- asNativeScript @WrapperStablePtr o
-              sptr <- takeMVar $ _wrapperStablePtr w
-              fn :: (cls -> IO a) <- deRefStablePtr (castPtrToStablePtr (castStablePtrToPtr sptr))
-              fn self
+          (\this o -> do
+              (Just wrapper) <- asNativeScript @WrapperStablePtr o
+              sptr <- takeMVar $ _wrapperStablePtr wrapper
+              anotherFunc :: (cls -> IO a) <- deRefStablePtr (castPtrToStablePtr (castStablePtrToPtr sptr))
+              _ <- anotherFunc this
               freeStablePtr sptr))))
   fnptr <- newStablePtr fn
   putMVar (_wrapperStablePtr w) (castPtrToStablePtr (castStablePtrToPtr fnptr))
   fnBind <- toGodotVariant (upcast @Object w)
   guardError <$> (join $ connect target
-    <$> toLowLevel signal
+    <$> toLowLevel aSignal
     <*> pure (upcast self)
     <*> toLowLevel "__script_callback"
     <*> (Just <$> toLowLevel (V.singleton fnBind))
