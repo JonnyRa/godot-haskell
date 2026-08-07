@@ -7,13 +7,11 @@ import           Godot.Api                     as M hiding (NativeScript) -- Has
 import           Godot.Nativescript            as M
 import           Godot.Internal.Dispatch       as M
                                                           ( (:<) -- For generic functions
-                                                          -- Required for creating Godot classes
-                                                          , HasBaseClass(..)
                                                           -- Needed for up-casting objects
                                                           , upcast
                                                           -- 
                                                           , NodeMethod(..)
-                                                          , NodeSignal(..)
+                                                          , NodeSignal
                                                           , NodeProperty(..)
                                                           )
 
