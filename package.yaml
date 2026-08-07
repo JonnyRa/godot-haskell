@@ -92,7 +92,7 @@ ghc-options:
 - -Wmissing-home-modules
 - -Wpartial-fields
 - -Wredundant-constraints
-#- -Werror=missing-fields
+- -Werror=missing-fields
 #- -Werror=incomplete-patterns
-#- -Werror=missing-methods
+- -Werror=missing-methods
 - -Wno-compat-unqualified-imports
