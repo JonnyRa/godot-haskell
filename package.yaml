@@ -83,4 +83,16 @@ internal-libraries:
     - prettyprinter
 
 ghc-options:
-  - -O0
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wno-missing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
+#- -Werror=missing-fields
+#- -Werror=incomplete-patterns
+#- -Werror=missing-methods
+- -Wno-compat-unqualified-imports
