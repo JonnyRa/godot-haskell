@@ -79,6 +79,7 @@ main = do
       classList :: [GodotClass]
       classList = toList classes
 
+      --at some point with ghc 9 these need to be output so that the parent types are before any subclasses
       fromNewtypeDerivingBase :: GodotClass -> (HashSet Text, [Decl (Maybe CodeComment)]) -> (HashSet Text, [Decl (Maybe CodeComment)])
       fromNewtypeDerivingBase godotClass currentState@(classesAlreadyOutput, _output) =
         if alreadyOutput className 
