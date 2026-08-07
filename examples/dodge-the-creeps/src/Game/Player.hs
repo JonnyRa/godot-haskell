@@ -21,6 +21,9 @@ data Player = Player
   , _pScreenSize :: MVar (V2 Float)
   }
 
+deriveHasBase ''Player
+setupNode ''Player "Player" "Player"
+
 instance NodeInit Player where
   init base = Player base <$> newMVar 400 <*> newMVar zero
 
@@ -95,6 +98,3 @@ player_process self delta = do
   where
   clamp :: Float -> Float -> Float -> Float
   clamp value low high = max low (min high value)
-
-deriveHasBase ''Player
-setupNode ''Player "Player" "Player"

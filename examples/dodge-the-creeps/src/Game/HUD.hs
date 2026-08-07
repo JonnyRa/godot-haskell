@@ -11,6 +11,9 @@ import Project.Scenes.HUD()
 
 data HUD = HUD { _hBase :: CanvasLayer }
 
+deriveHasBase ''HUD
+setupNode ''HUD "HUD" "HUD"
+
 instance NodeInit HUD where
   init = pure . HUD
 instance NodeMethod HUD "_on_MessageTimer_timeout" '[] (IO ()) where
@@ -50,6 +53,3 @@ update_score self score = do
     <$> getNode' @"ScoreLabel" self 
     <*> toLowLevel (T.pack $ Prelude.show score)
     &   join
-
-deriveHasBase ''HUD
-setupNode ''HUD "HUD" "HUD"
