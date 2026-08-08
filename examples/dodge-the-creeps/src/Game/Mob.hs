@@ -14,6 +14,7 @@ data Mob = Mob
   }
 
 deriveHasBase ''Mob
+deriveBase ''Mob
 setupNode ''Mob "Mob" "Mob"
 
 instance NodeInit Mob where

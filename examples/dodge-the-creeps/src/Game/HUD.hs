@@ -11,7 +11,8 @@ import Project.Scenes.HUD()
 
 data HUD = HUD { _hBase :: CanvasLayer }
 
-derivePrerequisites ''HUD
+deriveHasBase ''HUD
+deriveBase ''HUD
 setupNode ''HUD "HUD" "HUD"
 
 instance NodeInit HUD where

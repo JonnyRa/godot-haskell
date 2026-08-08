@@ -27,6 +27,7 @@ data Main = Main
 makeFieldsNoPrefix ''Main
 
 deriveHasBase ''Main
+deriveBase ''Main
 setupNode ''Main "Main" "Main"
 
 instance NodeInit Main where

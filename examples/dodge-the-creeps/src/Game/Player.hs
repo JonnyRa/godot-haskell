@@ -22,6 +22,7 @@ data Player = Player
   }
 
 deriveHasBase ''Player
+deriveBase ''Player
 setupNode ''Player "Player" "Player"
 
 instance NodeInit Player where
