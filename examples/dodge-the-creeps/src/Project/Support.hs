@@ -280,6 +280,12 @@ mkProperty' :: forall node (name :: Symbol) ty.
 mkProperty' = ClassProperty (T.pack $ symbolVal (Proxy @name)) a s g
   where (_,_,Just (g,s,a)) = nodeProperty @node @name @ty @'False
 
+derivePrerequisites :: Name -> Q [Dec]
+derivePrerequisites typ = do
+  hasBaseClass <- deriveHasBase typ
+  classRelations <- deriveBase typ
+  return (hasBaseClass <> classRelations)
+
 deriveHasBase :: Name -> Q [Dec]
 deriveHasBase ty = do
   rdt <- reifyDatatype ty
@@ -372,7 +378,6 @@ setupNode ty scene sceneNode = do
     mapM_ print haskellNodes
 
   -- Generate code
-  inh <- deriveBase ty
   nis <- [d|instance NodeInScene $(pure $ LitT $ StrTyLit scene) $(pure $ LitT $ StrTyLit sceneNode) $(pure $ PromotedT ty)|]
   ns <- [d|instance NativeScript $(pure $ PromotedT ty) where
              classInit       = Project.Support.init
@@ -413,7 +418,7 @@ setupNode ty scene sceneNode = do
                         @($(pure $ LitT $ StrTyLit method))
                         @($(pure $ PromotedT $ resolveSignalActualClass scene from signal))
                     |]) connections)|]
-  pure $ inh <> nis <> ns <> ws
+  pure $ nis <> ns <> ws
   where
     unTree (InstanceD Nothing [] (AppT (AppT _ parent) child) []) = (unName child, unName parent)
     unTree p = error $ "I don't understand this parent " ++ show p
