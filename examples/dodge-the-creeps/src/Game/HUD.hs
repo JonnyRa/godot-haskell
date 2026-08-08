@@ -11,9 +11,9 @@ import Project.Scenes.HUD()
 
 data HUD = HUD { _hBase :: CanvasLayer }
 
-deriveHasBase ''HUD
+derivePrerequisites ''HUD "HUD" "HUD" 
 deriveBase ''HUD
-setupNode ''HUD "HUD" "HUD"
+deriveNativeScript ''HUD
 
 instance NodeInit HUD where
   init = pure . HUD
@@ -54,3 +54,5 @@ update_score self score = do
     <$> getNode' @"ScoreLabel" self 
     <*> toLowLevel (T.pack $ Prelude.show score)
     &   join
+
+setupNode ''HUD "HUD" "HUD"

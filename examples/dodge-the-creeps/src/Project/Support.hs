@@ -280,11 +280,14 @@ mkProperty' :: forall node (name :: Symbol) ty.
 mkProperty' = ClassProperty (T.pack $ symbolVal (Proxy @name)) a s g
   where (_,_,Just (g,s,a)) = nodeProperty @node @name @ty @'False
 
-derivePrerequisites :: Name -> Q [Dec]
-derivePrerequisites typ = do
+derivePrerequisites :: Name -> String -> String -> Q [Dec]
+derivePrerequisites typ scene sceneNode = do
   hasBaseClass <- deriveHasBase typ
   classRelations <- deriveBase typ
-  return (hasBaseClass <> classRelations)
+
+  nis <- [d|instance NodeInScene $(pure $ LitT $ StrTyLit scene) $(pure $ LitT $ StrTyLit sceneNode) $(pure $ PromotedT typ)|]
+  --note classRelations doesn't work as expected here because hasBaseClass must not exist yet
+  return (hasBaseClass <> classRelations <> nis)
 
 deriveHasBase :: Name -> Q [Dec]
 deriveHasBase ty = do
@@ -301,6 +304,79 @@ deriveHasBase ty = do
           super = $(pure $ VarE baseFn)|]
     _ -> error "setupNode can only handle records whose first field is the Godot base class. You can still interface with Godot, but you will need to set things up manually."
 
+deriveNativeScript :: Name -> Q [Dec]
+deriveNativeScript ty = do
+
+  methods <- filter (\i -> i ^. _1 == ty) . mapMaybe unNodeMethod . classInstances
+    <$> reify ''NodeMethod
+  properties <- filter (\i -> i ^. _1 == ty) . mapMaybe unNodeProperty . classInstances
+    <$> reify ''NodeProperty
+  allSignals <- map unNodeSignal . classInstances <$> reify ''NodeSignal
+  let signals = filter (\i -> i ^. _1 == ty) allSignals
+
+  -- Debug
+  when False $ runIO $ do
+    putStrLn "Regenerating .."
+    putStrLn "\nMethods:"
+    mapM_ print methods
+    putStrLn "\nProperties:"
+    mapM_ print properties
+    putStrLn "\nSignals:"
+    mapM_ print signals
+
+  [d|instance NativeScript $(pure $ PromotedT ty) where
+             classInit       = Project.Support.init
+
+             classMethods    =
+               $(ListE
+               <$> mapM
+               (\(t, n, argTy, _)
+                -> let m = case nrArguments argTy of
+                         0 -> [e|method0|]
+                         1 -> [e|method1|]
+                         2 -> [e|method2|]
+                         3 -> [e|method3|]
+                         4 -> [e|method4|]
+                         5 -> [e|method5|]
+                         n -> error
+                           $ "More arguments than we currently impelement, look for 'method5' for more info "
+                           ++ show n
+                   in [e|$m $(pure $ LitE $ StringL n)
+                      (nodeMethod @($(pure $ PromotedT t)) @($(pure $ LitT $ StrTyLit n)))|])
+               methods)
+
+             classProperties =
+               $(ListE
+               <$> mapM (\(name, prop, _, _) -> [e|mkProperty' @($(pure $ PromotedT name))
+                                                @($(pure $ LitT $ StrTyLit prop))|]) properties)
+
+             classSignals    =
+               $(ListE <$> mapM (\(ty, name, _) -> [e|signal' @($(pure $ PromotedT ty))
+                                                   @($(pure $ LitT $ StrTyLit name))|]) signals)|]
+  where
+  nrArguments :: Type -> Int
+  nrArguments (AppT _ r) = 1 + nrArguments r
+  nrArguments (SigT PromotedNilT (AppT ListT StarT)) = 0
+  nrArguments _ = error "Can't compute # of arguments"
+
+  classInstances :: Info -> [InstanceDec]
+  classInstances (ClassI _ is) = is
+  classInstances _ = error "Bad class"
+
+  unNodeSignal (InstanceD Nothing [] (AppT (AppT (AppT (ConT _) (ConT cls)) (LitT (StrTyLit name))) arg) []) =
+    (cls, name, arg)
+  unNodeSignal _ = error "Bad signal"
+
+  unNodeProperty (InstanceD Nothing []
+                  (AppT (AppT (AppT (AppT (ConT _) (ConT cls)) (LitT (StrTyLit name))) arg) ret)
+                  []) = Just (cls, name, arg, ret)
+  unNodeProperty x = error $ show x
+
+  unNodeMethod (InstanceD Nothing []
+                (AppT (AppT (AppT (AppT (ConT _) (ConT cls)) (LitT (StrTyLit name))) arg) ret) []) =
+    Just (cls, name, arg, ret)
+  unNodeMethod _ = Nothing
+
 -- | You should use this as:
 --   deriveHasBase ''Ty
 --   setupNode ''Ty "sceneName" "nodePath"
@@ -316,11 +392,6 @@ setupNode ty scene sceneNode = do
   -- Collect information about our node
   rdt <- reifyDatatype ty
   --
-  methods <- filter (\i -> i ^. _1 == ty) . mapMaybe unNodeMethod . classInstances
-    <$> reify ''NodeMethod
-  properties <- filter (\i -> i ^. _1 == ty) . mapMaybe unNodeProperty . classInstances
-    <$> reify ''NodeProperty
-  let signals = filter (\i -> i ^. _1 == ty) allSignals
   connections
     <- filter (\i -> i ^. _1 == scene && i ^. _4 == sceneNode) . map unConnect . classInstances
     <$> reify ''SceneConnection
@@ -365,51 +436,15 @@ setupNode ty scene sceneNode = do
     print sceneRoots
     putStrLn "\nScene nodes types:"
     mapM_ print sceneNodes
-    putStrLn "\nMethods:"
-    mapM_ print methods
-    putStrLn "\nProperties:"
-    mapM_ print properties
-    putStrLn "\nSignals:"
     mapM_ print allSignals
-    mapM_ print signals
     putStrLn "\nConnections:"
     mapM_ print connections
     putStrLn "\nHaskell nodes:"
     mapM_ print haskellNodes
 
   -- Generate code
-  nis <- [d|instance NodeInScene $(pure $ LitT $ StrTyLit scene) $(pure $ LitT $ StrTyLit sceneNode) $(pure $ PromotedT ty)|]
-  ns <- [d|instance NativeScript $(pure $ PromotedT ty) where
-             classInit       = Project.Support.init
-
-             classMethods    =
-               $(ListE
-               <$> mapM
-               (\(t, n, argTy, _)
-                -> let m = case nrArguments argTy of
-                         0 -> [e|method0|]
-                         1 -> [e|method1|]
-                         2 -> [e|method2|]
-                         3 -> [e|method3|]
-                         4 -> [e|method4|]
-                         5 -> [e|method5|]
-                         n -> error
-                           $ "More arguments than we currently impelement, look for 'method5' for more info "
-                           ++ show n
-                   in [e|$m $(pure $ LitE $ StringL n)
-                      (nodeMethod @($(pure $ PromotedT t)) @($(pure $ LitT $ StrTyLit n)))|])
-               methods)
-
-             classProperties =
-               $(ListE
-               <$> mapM (\(name, prop, _, _) -> [e|mkProperty' @($(pure $ PromotedT name))
-                                                @($(pure $ LitT $ StrTyLit prop))|]) properties)
-
-             classSignals    =
-               $(ListE <$> mapM (\(ty, name, _) -> [e|signal' @($(pure $ PromotedT ty))
-                                                   @($(pure $ LitT $ StrTyLit name))|]) signals)|]
   let cn = mkName $ "witness_connections_" ++ nameBase ty
-  ws <- (:) <$> (cn `sigD` [t| [()] |]) <*>
+  (:) <$> (cn `sigD` [t| [()] |]) <*>
        [d|$(varP cn) =
              $(ListE <$> mapM (\(scene,from,signal,to,method) ->
                     [e|witnessConnection
@@ -418,7 +453,6 @@ setupNode ty scene sceneNode = do
                         @($(pure $ LitT $ StrTyLit method))
                         @($(pure $ PromotedT $ resolveSignalActualClass scene from signal))
                     |]) connections)|]
-  pure $ nis <> ns <> ws
   where
     unTree (InstanceD Nothing [] (AppT (AppT _ parent) child) []) = (unName child, unName parent)
     unTree p = error $ "I don't understand this parent " ++ show p
@@ -440,16 +474,6 @@ setupNode ty scene sceneNode = do
     unpackScene (AppT (ConT _) (LitT (StrTyLit scene))) = Just scene
     unpackScene x = error $ "Don't know how unpack this Scene: " ++ show x
 
-    unNodeMethod (InstanceD Nothing []
-                  (AppT (AppT (AppT (AppT (ConT _) (ConT cls)) (LitT (StrTyLit name))) arg) ret) []) =
-      Just (cls, name, arg, ret)
-    unNodeMethod _ = Nothing
-
-    unNodeProperty (InstanceD Nothing []
-                    (AppT (AppT (AppT (AppT (ConT _) (ConT cls)) (LitT (StrTyLit name))) arg) ret)
-                    []) = Just (cls, name, arg, ret)
-    unNodeProperty x = error $ show x
-
     unNodeInScene (InstanceD Nothing [] (AppT (AppT (AppT (ConT _) (LitT (StrTyLit scene)))
                                                (LitT (StrTyLit node))) (ConT hty)) []) =
       (scene, node, hty)
@@ -466,11 +490,6 @@ setupNode ty scene sceneNode = do
                     (LitT (StrTyLit signal))) (LitT (StrTyLit to))) (LitT (StrTyLit method))) []) =
       (scene, from, signal, to, method)
     unConnect x = error $ "Bad signal" ++ show x
-
-    nrArguments :: Type -> Int
-    nrArguments (AppT _ r) = 1 + nrArguments r
-    nrArguments (SigT PromotedNilT (AppT ListT StarT)) = 0
-    nrArguments _ = error "Can't compute # of arguments"
 
     classInstances :: Info -> [InstanceDec]
     classInstances (ClassI _ is) = is

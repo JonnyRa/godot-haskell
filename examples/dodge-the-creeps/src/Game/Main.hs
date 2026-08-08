@@ -26,9 +26,9 @@ data Main = Main
   }
 makeFieldsNoPrefix ''Main
 
-deriveHasBase ''Main
+derivePrerequisites ''Main "Main" "Main"
 deriveBase ''Main
-setupNode ''Main "Main" "Main"
+deriveNativeScript ''Main
 
 instance NodeInit Main where
   init b = Main b <$> newMVar 0 <*> newEmptyMVar
@@ -119,3 +119,5 @@ on_MobTimer_timeout self = do
     >>= (\x -> toLowLevel (V2 x 0))
     >>= (`godot_vector2_rotated` CFloat direction')
     >>= set_linear_velocity mob
+
+setupNode ''Main "Main" "Main"
