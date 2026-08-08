@@ -21,5 +21,5 @@ rebuildGodotTypes () {
 buildDodgeTheCreeps(){
   STACKLIBFILE=$(stack path --local-install-root)/lib/libmyproject.so
   GODOTPROJECT=$(stack path --project-root)/examples/dodge-the-creeps/game
-  stackBuildWatch myproject --exec "cp $STACKLIBFILE $GODOTPROJECT/lib"
+  stackBuildWatch myproject --exec "cp $STACKLIBFILE $GODOTPROJECT/lib" "$@"
 }
