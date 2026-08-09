@@ -166,7 +166,7 @@ data instance Registerer 'GClass cls = NativeScript cls =>
     GdnativeHandle
     (BaseClass cls -> IO cls)
 
-data instance Registerer 'GMethod cls = NativeScript cls =>
+data instance Registerer 'GMethod cls = 
   RegMethod
     GdnativeHandle
     (ClassMethod cls)

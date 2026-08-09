@@ -430,7 +430,7 @@ method5 name fn = func NoRPC name (\s args ->
                                         _ -> error "wrong number of arguments"
                                   )
 
-registerMethod :: forall a . NativeScript a => Registerer 'GMethod a -> IO ()
+registerMethod :: forall a . Typeable a => Registerer 'GMethod a -> IO ()
 registerMethod (RegMethod desc ClassMethod {..}) = do
   methodFun <-
     mkInstanceMethodFunPtr $ \outPtr _ins _ objPtr numArgs argsPtr -> do
@@ -672,7 +672,7 @@ defaultExports desc = do
 -- | Ask an object to wait for a signal on a target. When the signal is trigged call the given function
 -- For example, to get a callback when a timer fires you could do something like
 -- @ await self timer "timeout" (\self -> print "Timer fired!") @
-await :: forall cls target a. (NativeScript cls, Object :< target)
+await :: forall cls target a. (Object :< target) => Typeable cls => (Object :< cls)
       => cls -> target -> Text -> (cls -> IO a) -> IO ()
 await self target aSignal fn = do
   desc <- readMVar scriptDesc
