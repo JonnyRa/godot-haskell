@@ -98,10 +98,11 @@ emit_signal' cls args = do
 -- await' @"MessageTimer" @"timeout" self $ \self' -> pure ()
 await' :: forall (label :: Symbol) (signal :: Symbol) a b cls scene name.
        ( NodeInScene scene name cls
-       , NativeScript cls
        , KnownSymbol label
        , KnownSymbol signal
        , SceneNode scene label
+       , Typeable cls
+       , Object :< cls
        , Node :< cls
        , AsVariant a
        , Node :< SceneNodeType scene label
