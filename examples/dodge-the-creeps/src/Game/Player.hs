@@ -23,7 +23,6 @@ data Player = Player
 
 derivePrerequisites ''Player "Player" "Player"
 deriveBase ''Player
-deriveNativeScript ''Player
 
 instance NodeInit Player where
   init base = Player base <$> newMVar 400 <*> newMVar zero

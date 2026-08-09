@@ -13,7 +13,6 @@ data HUD = HUD { _hBase :: CanvasLayer }
 
 derivePrerequisites ''HUD "HUD" "HUD" 
 deriveBase ''HUD
-deriveNativeScript ''HUD
 
 instance NodeInit HUD where
   init = pure . HUD
@@ -55,4 +54,5 @@ update_score self score = do
     <*> toLowLevel (T.pack $ Prelude.show score)
     &   join
 
+deriveNativeScript ''HUD
 setupNode ''HUD "HUD" "HUD"

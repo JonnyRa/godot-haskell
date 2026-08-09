@@ -28,7 +28,6 @@ makeFieldsNoPrefix ''Main
 
 derivePrerequisites ''Main "Main" "Main"
 deriveBase ''Main
-deriveNativeScript ''Main
 
 instance NodeInit Main where
   init b = Main b <$> newMVar 0 <*> newEmptyMVar
@@ -120,4 +119,5 @@ on_MobTimer_timeout self = do
     >>= (`godot_vector2_rotated` CFloat direction')
     >>= set_linear_velocity mob
 
+deriveNativeScript ''Main
 setupNode ''Main "Main" "Main"
