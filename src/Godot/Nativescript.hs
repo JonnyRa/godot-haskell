@@ -96,7 +96,7 @@ import           Control.Exception
 import           Data.Maybe
 import Godot.Nativescript.Types
 
-import           Control.Lens
+import           Control.Lens hiding (to, from)
 import           Control.Monad
 
 import           Data.Coerce
@@ -218,8 +218,8 @@ sceneInstance e = tryCast' =<< instance' e Nothing
 
 -- | Combines nodeMethod with getNode' to call functions in a type-safe way
 -- Provides no additional safety compared to using the two separately, but does clean up code a bit.
--- For example: fn @"MyNode" @"hide" self
-fn :: forall (node :: Symbol) (func :: Symbol) scene name cls args ret b.
+-- For example: callMethod @"MyNode" @"hide" self
+callMethod :: forall (node :: Symbol) (func :: Symbol) scene name cls args ret b.
    ( Object :< cls
    , Node :< cls
    , Node :< SceneNodeType scene node
@@ -230,7 +230,7 @@ fn :: forall (node :: Symbol) (func :: Symbol) scene name cls args ret b.
    , KnownSymbol node)
    => cls
    -> IO b
-fn self = nodeMethod' @_ @func =<< getNode' @node self
+callMethod self = nodeMethod' @_ @func =<< getNode' @node self
 
 -- | Get the file path to the scene
 class SceneResourcePath (scene :: Symbol) where
@@ -415,34 +415,34 @@ setupNode ty scene sceneNode = do
   -- Helpers
   let parentsOf cls = map snd $ filter (\(c, _) -> cls == c) tree
   let nodeToType :: String -> String -> Name
-      nodeToType scene node = case (hty, ty ^. _4) of
+      nodeToType sceneName node = case (hty, typ ^. _4) of
         (Just t, _)      -> t
-        (_, Nothing)     -> ty ^. _3
+        (_, Nothing)     -> typ ^. _3
         (_, Just scene') -> case M.lookup scene' sceneRoots of
           Nothing    -> error
             $ "Looking up the root of a scene that is lacking one. This is a bug. "
-            ++ show (scene', scene, node)
+            ++ show (scene', sceneName, node)
           Just node' -> nodeToType scene' node'
         where
-          ty  = fromJust $ find (\n -> n ^. _1 == scene && n ^. _2 == node) sceneNodes
+          typ  = fromJust $ find (\n -> n ^. _1 == sceneName && n ^. _2 == node) sceneNodes
 
-          hty = (^. _3) <$> find (\n -> n ^. _1 == scene && n ^. _2 == node) haskellNodes
-  let resolveSignalActualClass scene from signal =
-        case mapMaybe (\p -> (p, ) <$> find (\s -> s ^. _2 == signal && s ^. _1 == p) allSignals)
-        $ parentsOf (nodeToType scene from) of
+          hty = (^. _3) <$> find (\n -> n ^. _1 == sceneName && n ^. _2 == node) haskellNodes
+  let resolveSignalActualClass sceneName from signalName =
+        case mapMaybe (\p -> (p, ) <$> find (\s -> s ^. _2 == signalName && s ^. _1 == p) allSignals)
+        $ parentsOf (nodeToType sceneName from) of
           -- The root issue is that the signal might not yet exist.
           -- If witnessConnection was not unsound, this would not be needed as the error would happen later.
           []    -> error
             $ "Class "
             ++ show from
             ++ " used in scene "
-            ++ show scene
+            ++ show sceneName
             ++ " is lacking a signal named "
-            ++ show signal
+            ++ show signalName
             ++ "\n"
-            ++ show (nodeToType scene from)
+            ++ show (nodeToType sceneName from)
             ++ "\n"
-            ++ show (parentsOf (nodeToType scene from))
+            ++ show (parentsOf (nodeToType sceneName from))
           (h:_) -> h ^. _1
 
   -- Debug
@@ -467,7 +467,7 @@ setupNode ty scene sceneNode = do
 
   -- Generate code
   ns <- [d|instance NativeScript $(pure $ PromotedT ty) where
-             classInit       = Godot.Nativescript.init
+             classInit       = Godot.Nativescript.init 
 
              classMethods    =
                $(ListE
@@ -480,9 +480,9 @@ setupNode ty scene sceneNode = do
                          3 -> [e|method3|]
                          4 -> [e|method4|]
                          5 -> [e|method5|]
-                         n -> error
+                         moreThan5 -> error
                            $ "More arguments than we currently impelement, look for 'method5' for more info "
-                           ++ show n
+                           ++ show moreThan5
                    in [e|$m $(pure $ LitE $ StringL n)
                       (nodeMethod @($(pure $ PromotedT t)) @($(pure $ LitT $ StrTyLit n)))|])
                methods)
@@ -493,17 +493,17 @@ setupNode ty scene sceneNode = do
                                                 @($(pure $ LitT $ StrTyLit prop))|]) properties)
 
              classSignals    =
-               $(ListE <$> mapM (\(ty, name, _) -> [e|signal' @($(pure $ PromotedT ty))
+               $(ListE <$> mapM (\(typ, name, _) -> [e|signal' @($(pure $ PromotedT typ))
                                                    @($(pure $ LitT $ StrTyLit name))|]) signals)|]
   let cn = mkName $ "witness_connections_" ++ nameBase ty
   ws <- (:) <$> (cn `sigD` [t| [()] |]) <*>
        [d|$(varP cn) =
-             $(ListE <$> mapM (\(scene,from,signal,to,method) ->
+             $(ListE <$> mapM (\(sceneName,from,signalName,to,methodName) ->
                     [e|witnessConnection
-                        @($(pure $ LitT $ StrTyLit scene))  @($(pure $ LitT $ StrTyLit from))
-                        @($(pure $ LitT $ StrTyLit signal)) @($(pure $ LitT $ StrTyLit to))
-                        @($(pure $ LitT $ StrTyLit method))
-                        @($(pure $ PromotedT $ resolveSignalActualClass scene from signal))
+                        @($(pure $ LitT $ StrTyLit sceneName))  @($(pure $ LitT $ StrTyLit from))
+                        @($(pure $ LitT $ StrTyLit signalName)) @($(pure $ LitT $ StrTyLit to))
+                        @($(pure $ LitT $ StrTyLit methodName))
+                        @($(pure $ PromotedT $ resolveSignalActualClass sceneName from signalName))
                     |]) connections)|]
   pure $ ns <> ws
   where
@@ -514,17 +514,17 @@ setupNode ty scene sceneNode = do
     unName (AppT (ConT x) _) = x
     unName x = error $ "I don't know how to extract the name of this type: " ++ show x
 
-    unSceneRootNode (TySynInstD (TySynEqn Nothing (AppT _ (LitT (StrTyLit scene)))
-                                 (LitT (StrTyLit node)))) = (scene, node)
+    unSceneRootNode (TySynInstD (TySynEqn Nothing (AppT _ (LitT (StrTyLit sceneName)))
+                                 (LitT (StrTyLit node)))) = (sceneName, node)
     unSceneRootNode x = error $ "Don't know how unpack this SceneRootNode: " ++ show x
 
-    unSceneNodeType (TySynInstD (TySynEqn Nothing (AppT (AppT _ (LitT (StrTyLit scene)))
-                                                   (LitT (StrTyLit node))) ty)) =
-      (scene, node, unName ty, unpackScene ty)
+    unSceneNodeType (TySynInstD (TySynEqn Nothing (AppT (AppT _ (LitT (StrTyLit sceneName)))
+                                                   (LitT (StrTyLit node))) typ)) =
+      (sceneName, node, unName typ, unpackScene typ)
     unSceneNodeType x = error $ "Don't know how unpack this SceneNodeType: " ++ show x
 
     unpackScene (ConT _) = Nothing
-    unpackScene (AppT (ConT _) (LitT (StrTyLit scene))) = Just scene
+    unpackScene (AppT (ConT _) (LitT (StrTyLit sceneName))) = Just sceneName
     unpackScene x = error $ "Don't know how unpack this Scene: " ++ show x
 
     unNodeMethod (InstanceD Nothing []
@@ -537,9 +537,9 @@ setupNode ty scene sceneNode = do
                     []) = Just (cls, name, arg, ret)
     unNodeProperty x = error $ show x
 
-    unNodeInScene (InstanceD Nothing [] (AppT (AppT (AppT (ConT _) (LitT (StrTyLit scene)))
+    unNodeInScene (InstanceD Nothing [] (AppT (AppT (AppT (ConT _) (LitT (StrTyLit sceneName)))
                                                (LitT (StrTyLit node))) (ConT hty)) []) =
-      (scene, node, hty)
+      (sceneName, node, hty)
     unNodeInScene x = error $ show x
 
     unNodeSignal
@@ -549,9 +549,9 @@ setupNode ty scene sceneNode = do
 
     unConnect
       (InstanceD Nothing []
-       (AppT (AppT (AppT (AppT (AppT _ (LitT (StrTyLit scene))) (LitT (StrTyLit from)))
-                    (LitT (StrTyLit signal))) (LitT (StrTyLit to))) (LitT (StrTyLit method))) []) =
-      (scene, from, signal, to, method)
+       (AppT (AppT (AppT (AppT (AppT _ (LitT (StrTyLit sceneName))) (LitT (StrTyLit from)))
+                    (LitT (StrTyLit signalName))) (LitT (StrTyLit to))) (LitT (StrTyLit methodName))) []) =
+      (sceneName, from, signalName, to, methodName)
     unConnect x = error $ "Bad signal" ++ show x
 
     nrArguments :: Type -> Int
@@ -676,7 +676,10 @@ registerClass (RegClass desc constr) = do
   forM_ (classProperties @a) regProperty
  where
   clsInit :: Object -> IO a
-  clsInit obj = tryObjectCast obj >>= \(Just a) -> constr (a :: BaseClass a)
+  clsInit obj = tryObjectCast obj >>= 
+    \case 
+      (Just a) -> constr (a :: BaseClass a)
+      _ -> error "can't call init couldn't cast"
   clsName = className @a
 
   regMtd mtd@ClassMethod {..} = do
