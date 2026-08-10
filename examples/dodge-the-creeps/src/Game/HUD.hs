@@ -6,7 +6,6 @@ import Godot
 import Godot.Core.CanvasItem as CanvasItem
 import Godot.Core.Label as Label
 import Godot.Core.Timer as Timer
-import Project.Support
 import Project.Scenes.HUD()
 
 data HUD = HUD { _hBase :: CanvasLayer }

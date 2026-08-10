@@ -3,6 +3,6 @@
 {-# LANGUAGE DataKinds #-}
 
 module Project.Requirements where
-import Project.Support
+import Godot.Nativescript
 
 type Nodes = '[OneResourceNode "HUD" "HUD", OneResourceNode "Main" "Main", OneResourceNode "Mob" "Mob", OneResourceNode "Player" "Player"]

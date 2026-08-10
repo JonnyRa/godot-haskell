@@ -13,7 +13,6 @@ import Godot.Core.Timer as Timer
 import Godot.Gdnative
 import Linear.V2
 import System.Random
-import Project.Support
 import Project.Scenes.Main()
 import Game.HUD
 import Game.Mob

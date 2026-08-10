@@ -3,7 +3,6 @@ import Godot
 import Godot.Core.AnimatedSprite as AnimatedSprite
 import Godot.Core.Node as Node
 import System.Random
-import Project.Support
 import Project.Scenes.Mob()
 
 data Mob = Mob

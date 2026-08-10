@@ -54,6 +54,22 @@ module Godot.Nativescript
   , guardError
   , getError
   , GodotError(..)
+  , SceneConnection(..)
+  , SceneNode(..)
+  , SceneRoot(..)
+  , SceneResourcePath(..)
+  , derivePrerequisites
+  , NodeInit(..)
+  , setupNode
+  , getNode'
+  , createMVarProperty'
+  , emit_signal'
+  , PackedScene' (..)
+  , await'
+  , getNodeNativeScript'
+  , OneResourceNode(..)
+  , registerAll'
+
   )
 where
 

@@ -12,7 +12,6 @@ import Godot.Gdnative
 import Linear.Metric (normalize)
 import Linear.V2
 import Linear.Vector
-import Project.Support
 import Project.Scenes.Player()
 
 data Player = Player
