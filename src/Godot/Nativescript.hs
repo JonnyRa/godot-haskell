@@ -54,7 +54,7 @@ module Godot.Nativescript
   , guardError
   , getError
   , GodotError(..)
-  , SceneConnection(..)
+  , SceneConnection
   , SceneNode(..)
   , SceneRoot(..)
   , SceneResourcePath(..)
@@ -67,7 +67,7 @@ module Godot.Nativescript
   , PackedScene' (..)
   , await'
   , getNodeNativeScript'
-  , OneResourceNode(..)
+  , OneResourceNode
   , registerAll'
 
   )
@@ -80,7 +80,6 @@ import           Data.Text                                ( Text )
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as Vec
 import qualified Data.Vector                   as V
-import           Data.Function                            ( (&) )
 
 import           Control.Concurrent.MVar
 
@@ -113,25 +112,17 @@ import           Data.Maybe
 import Godot.Nativescript.Types
 
 import           Control.Lens hiding (to, from)
-import           Control.Monad
 
-import           Data.Coerce
 import           Data.List
-import           Data.Maybe
-import qualified Data.Text                     as T
-import           Data.Typeable
 
 import           GHC.TypeLits
 
-import           Godot.Core.Object
 import           Godot.Core.PackedScene
 import           Godot.Core.ResourceLoader
-import           Godot.Gdnative
-import           Godot.Gdnative.Internal.Types
-import           Godot.Internal.Dispatch       as D
 
 import           Language.Haskell.TH
 import           Language.Haskell.TH.Datatype
+import qualified Data.Kind as Kind
 
 -- * Helper to keep Haskell types in sync with the Godot project.
 newtype PackedScene' (scene :: Symbol) = PackedScene' PackedScene
@@ -150,7 +141,7 @@ deriveBase ''PackedScene'
 -- exports :: GdnativeHandle -> IO ()
 -- exports desc = registerAll' @Nodes @'[HUD, Main, Mob, Player] desc
 registerAll'
-  :: forall (res :: [*]) (ns :: [*]). ImplementedInHaskell res ns => GdnativeHandle -> IO ()
+  :: forall (res :: [Kind.Type]) (ns :: [Kind.Type]). ImplementedInHaskell res ns => GdnativeHandle -> IO ()
 registerAll' = fill @res @ns
 
 -- | A safe version of getNode; gives you back the Godot object
@@ -262,7 +253,7 @@ class SceneRoot (scene :: Symbol) where
 class ( Typeable (SceneNodeType scene s)
       , AsVariant (SceneNodeType scene s)
       , Object :< SceneNodeType scene s) => SceneNode (scene :: Symbol) (s :: Symbol) where
-  type SceneNodeType scene s :: *
+  type SceneNodeType scene s :: Kind.Type
 
   type SceneNodeName scene s :: Symbol
 
@@ -285,7 +276,7 @@ data OneResourceNode (resource :: Symbol) (name :: Symbol)
 -- | Internal. Don't touch this and don't make instances of it. It's the
 -- workhorse for making sure that you are implementing all of the classes that
 -- Godot needs, nothing more and nothing less.
-class ImplementedInHaskell (a :: [*]) (b :: [*]) where
+class ImplementedInHaskell (a :: [Kind.Type]) (b :: [Kind.Type]) where
   fill :: GdnativeHandle -> IO ()
 
 instance ImplementedInHaskell '[] '[] where
@@ -337,10 +328,6 @@ createMVarProperty' name fieldName tyOrVal = (readMVar . fieldName, \c t -> prop
   where
     p = createMVarProperty name fieldName tyOrVal
 
-appsT :: Type -> [Type] -> Type
-appsT t []     = t
-appsT t (x:xs) = appsT (AppT t x) xs
-
 -- | Verify that the signal connects to an endpoint that exists and has the right type.
 witnessConnection
   :: forall (scene
@@ -364,7 +351,7 @@ class NodeInit n where
 -- | You never implement this. It's a helper so that we can have a more
 -- polymorphic call to nodeMethod which will work when the method is implemneted
 -- for any parent of the current node.
-class NodeMethodSuper node (name :: Symbol) (args :: [*]) (ret :: *)
+class NodeMethodSuper node (name :: Symbol) (args :: [Kind.Type]) (ret :: Kind.Type)
   | node name -> args, node name -> ret where
   nodeMethod' :: node -> ListToFun args ret
 

@@ -107,10 +107,10 @@ on_MobTimer_timeout self = do
   -- Set the velocity' (speed & direction).
   testNode <- getNode' @"Test" self
   functionName <- toLowLevel "doSomething"
-  call testNode functionName $ map toVariant [direction, mobSpawnPoint]
+  _ <- call testNode functionName $ map toVariant [direction, mobSpawnPoint]
 
   otherStyleFunc <- toLowLevel "callBackToHaskell"
-  call testNode otherStyleFunc [toVariant $ (upcast self :: Object)]
+  _ <- call testNode otherStyleFunc [toVariant $ (upcast self :: Object)]
 
   liftM2 (,) (readMVar $ _mMinSpeed mob) (readMVar $ _mMaxSpeed mob)
     >>= randomRIO
