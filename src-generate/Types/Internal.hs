@@ -6,6 +6,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE InstanceSigs #-}
 
 -- | A parser for C99 declarations. Currently, the parser has the following limitations:
 --
@@ -92,12 +93,12 @@ import           Text.Parser.Combinators
 import           Text.Parser.LookAhead
 import           Text.Parser.Token
 import qualified Text.Parser.Token.Highlight   as Highlight
-import           Text.PrettyPrint.ANSI.Leijen             ( Pretty(..)
-                                                          , (<+>)
-                                                          , Doc
-                                                          , hsep
+import           Prettyprinter ( Pretty(..)
+                               , (<+>)
+                               , Doc
+                               , hsep
                                                           )
-import qualified Text.PrettyPrint.ANSI.Leijen  as PP
+import qualified Prettyprinter  as PP
 
 ------------------------------------------------------------------------
 -- Parser
@@ -452,7 +453,7 @@ identifier_no_lex =
 -- Pretty printing
 
 instance Pretty Identifier where
-  pretty = PP.text . unIdentifier
+  pretty = pretty . unIdentifier
 
 instance Pretty DeclarationSpecifier where
   pretty dspec = case dspec of
@@ -499,7 +500,7 @@ instance Pretty Declarator where
     []    -> pretty ddecltor
     _ : _ -> prettyPointers ptrs <+> pretty ddecltor
 
-prettyPointers :: [Pointer] -> Doc
+prettyPointers :: [Pointer] -> Doc ann
 prettyPointers []       = ""
 prettyPointers (x : xs) = pretty x <> prettyPointers xs
 
@@ -517,7 +518,7 @@ instance Pretty ArrayOrProto where
     Array x -> "[" <> pretty x <> "]"
     Proto x -> "(" <> prettyParams x <> ")"
 
-prettyParams :: (Pretty a) => [a] -> Doc
+prettyParams :: (Pretty a) => [a] -> Doc ann
 prettyParams xs = case xs of
   []              -> ""
   [ x ]           -> pretty x

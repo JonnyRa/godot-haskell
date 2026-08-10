@@ -3,24 +3,10 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/topics/lock_files
 
-packages:
-- completed:
-    hackage: c2hs-0.28.8@sha256:7afc88133bd244e4a8fc483363a849bdb91e1b8587508e3524baae84e4ec32b8,9397
-    pantry-tree:
-      sha256: 2384bcc4fae1e954394bf420b08a2352e55b8dbe55ef45d30637ba51ac5794ec
-      size: 17398
-  original:
-    hackage: c2hs-0.28.8
-- completed:
-    hackage: language-c-0.10.2@sha256:4446d4a82ecfa5c2565e7683d48f72f93cb13cb2a09d0eef8fbc749c65537ae3,3652
-    pantry-tree:
-      sha256: d7fbce6d75c0ef6c36ecfaba118b65c63c14f304a9365b680951f5cc0394e51d
-      size: 3296
-  original:
-    hackage: language-c-0.10.2
+packages: []
 snapshots:
 - completed:
-    sha256: 7108f8cb8c928699c6c3c6574d3f6fc132db8bbba6a3987f9446fb35fd67dbf6
-    size: 565469
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2021/2/6.yaml
-  original: nightly-2021-02-06
+    sha256: 0a3fe947012a776b310e33c66e78f43d1aa3160bd9e178c0fdb32fa7a9984db3
+    size: 732687
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/24/53.yaml
+  original: lts-24.53

@@ -12,6 +12,7 @@ import Language.Haskell.TH.Datatype
 import Control.Monad
 import Data.List
 import Data.Typeable
+import qualified Data.Kind as Kind
 
 -- | Establishes 'child` as a child of BaseClass child`
 class HasBaseClass child where
@@ -21,9 +22,9 @@ class HasBaseClass child where
 -- | This is here to make signals accessible to the type system
 -- You will have to define this for your own objects as well, eg:
 --    instance NodeSignal Player "on_start" []
-class NodeSignal node (name :: Symbol) (args :: [*]) | node name -> args
+class NodeSignal node (name :: Symbol) (args :: [Kind.Type]) | node name -> args
 
-type family ListToFun (l :: [*]) ret where
+type family ListToFun (l :: [Kind.Type]) ret where
   ListToFun (h:t) ret = h -> ListToFun t ret
   ListToFun '[] ret = ret
 
@@ -31,7 +32,7 @@ type family ListToFun (l :: [*]) ret where
 -- You will have to define this for your own objects as well, eg:
 --    instance NodeMethod Player "on_start" [] Int where
 --          nodeMethod = on_start
-class NodeMethod node (name :: Symbol) (args :: [*]) (ret :: *) | node name -> args, node name -> ret where
+class NodeMethod node (name :: Symbol) (args :: [Kind.Type]) (ret :: Kind.Type) | node name -> args, node name -> ret where
   nodeMethod :: node -> ListToFun args ret
 
 type family OptionalSetter (ro :: Bool) ty where
@@ -82,8 +83,8 @@ deriveBase ty = do
   rdt <- reifyDatatype ty
   let appliedTy = appsT (ConT ty)
         [ case typeBinder of
-            PlainTV n -> VarT n
-            KindedTV n _ -> VarT n
+            PlainTV n _ -> VarT n
+            KindedTV n _ _ -> VarT n
         | typeBinder <- datatypeVars rdt
         ]
   r <- reify ''BaseClass

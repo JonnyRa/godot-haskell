@@ -7421,9 +7421,19 @@ instance HasBaseClass VisualScriptEditor where
 
 deriveBase ''GlobalConstants
 
+deriveBase ''Object
+
+deriveBase ''Reference
+
 deriveBase ''AESContext
 
+deriveBase ''Node
+
+deriveBase ''Spatial
+
 deriveBase ''ARVRAnchor
+
+deriveBase ''Camera
 
 deriveBase ''ARVRCamera
 
@@ -7443,11 +7453,33 @@ deriveBase ''AStar
 
 deriveBase ''AStar2D
 
+deriveBase ''CanvasItem
+
+deriveBase ''Control
+
+deriveBase ''Popup
+
+deriveBase ''WindowDialog
+
 deriveBase ''AcceptDialog
+
+deriveBase ''Node2D
 
 deriveBase ''AnimatedSprite
 
+deriveBase ''CullInstance
+
+deriveBase ''VisualInstance
+
+deriveBase ''GeometryInstance
+
+deriveBase ''SpriteBase3D
+
 deriveBase ''AnimatedSprite3D
+
+deriveBase ''Resource
+
+deriveBase ''Texture
 
 deriveBase ''AnimatedTexture
 
@@ -7458,6 +7490,8 @@ deriveBase ''AnimationNode
 deriveBase ''AnimationNodeAdd2
 
 deriveBase ''AnimationNodeAdd3
+
+deriveBase ''AnimationRootNode
 
 deriveBase ''AnimationNodeAnimation
 
@@ -7489,19 +7523,25 @@ deriveBase ''AnimationNodeTransition
 
 deriveBase ''AnimationPlayer
 
-deriveBase ''AnimationRootNode
-
 deriveBase ''AnimationTrackEditPlugin
 
 deriveBase ''AnimationTree
 
 deriveBase ''AnimationTreePlayer
 
+deriveBase ''CollisionObject
+
 deriveBase ''Area
+
+deriveBase ''CollisionObject2D
 
 deriveBase ''Area2D
 
+deriveBase ''Mesh
+
 deriveBase ''ArrayMesh
+
+deriveBase ''Container
 
 deriveBase ''AspectRatioContainer
 
@@ -7512,6 +7552,8 @@ deriveBase ''AudioBusLayout
 deriveBase ''AudioEffect
 
 deriveBase ''AudioEffectAmplify
+
+deriveBase ''AudioEffectFilter
 
 deriveBase ''AudioEffectBandLimitFilter
 
@@ -7534,8 +7576,6 @@ deriveBase ''AudioEffectEQ10
 deriveBase ''AudioEffectEQ21
 
 deriveBase ''AudioEffectEQ6
-
-deriveBase ''AudioEffectFilter
 
 deriveBase ''AudioEffectHighPassFilter
 
@@ -7573,6 +7613,10 @@ deriveBase ''AudioStream
 
 deriveBase ''AudioStreamGenerator
 
+deriveBase ''AudioStreamPlayback
+
+deriveBase ''AudioStreamPlaybackResampled
+
 deriveBase ''AudioStreamGeneratorPlayback
 
 deriveBase ''AudioStreamMP3
@@ -7580,10 +7624,6 @@ deriveBase ''AudioStreamMP3
 deriveBase ''AudioStreamMicrophone
 
 deriveBase ''AudioStreamOGGVorbis
-
-deriveBase ''AudioStreamPlayback
-
-deriveBase ''AudioStreamPlaybackResampled
 
 deriveBase ''AudioStreamPlayer
 
@@ -7605,6 +7645,8 @@ deriveBase ''BaseButton
 
 deriveBase ''BitMap
 
+deriveBase ''Font
+
 deriveBase ''BitmapFont
 
 deriveBase ''Bone2D
@@ -7613,9 +7655,15 @@ deriveBase ''BoneAttachment
 
 deriveBase ''BoxContainer
 
+deriveBase ''Shape
+
 deriveBase ''BoxShape
 
+deriveBase ''PhysicsDirectBodyState
+
 deriveBase ''BulletPhysicsDirectBodyState
+
+deriveBase ''PhysicsServer
 
 deriveBase ''BulletPhysicsServer
 
@@ -7627,6 +7675,10 @@ deriveBase ''CPUParticles
 
 deriveBase ''CPUParticles2D
 
+deriveBase ''CSGShape
+
+deriveBase ''CSGPrimitive
+
 deriveBase ''CSGBox
 
 deriveBase ''CSGCombiner
@@ -7637,15 +7689,9 @@ deriveBase ''CSGMesh
 
 deriveBase ''CSGPolygon
 
-deriveBase ''CSGPrimitive
-
-deriveBase ''CSGShape
-
 deriveBase ''CSGSphere
 
 deriveBase ''CSGTorus
-
-deriveBase ''Camera
 
 deriveBase ''Camera2D
 
@@ -7655,7 +7701,7 @@ deriveBase ''CameraServer
 
 deriveBase ''CameraTexture
 
-deriveBase ''CanvasItem
+deriveBase ''Material
 
 deriveBase ''CanvasItemMaterial
 
@@ -7663,9 +7709,13 @@ deriveBase ''CanvasLayer
 
 deriveBase ''CanvasModulate
 
+deriveBase ''PrimitiveMesh
+
 deriveBase ''CapsuleMesh
 
 deriveBase ''CapsuleShape
+
+deriveBase ''Shape2D
 
 deriveBase ''CapsuleShape2D
 
@@ -7680,10 +7730,6 @@ deriveBase ''CheckButton
 deriveBase ''CircleShape2D
 
 deriveBase ''ClippedCamera
-
-deriveBase ''CollisionObject
-
-deriveBase ''CollisionObject2D
 
 deriveBase ''CollisionPolygon
 
@@ -7703,15 +7749,13 @@ deriveBase ''ConcavePolygonShape
 
 deriveBase ''ConcavePolygonShape2D
 
+deriveBase ''Joint
+
 deriveBase ''ConeTwistJoint
 
 deriveBase ''ConfigFile
 
 deriveBase ''ConfirmationDialog
-
-deriveBase ''Container
-
-deriveBase ''Control
 
 deriveBase ''ConvexPolygonShape
 
@@ -7724,8 +7768,6 @@ deriveBase ''CryptoKey
 deriveBase ''CubeMap
 
 deriveBase ''CubeMesh
-
-deriveBase ''CullInstance
 
 deriveBase ''Curve
 
@@ -7741,7 +7783,11 @@ deriveBase ''CylinderShape
 
 deriveBase ''DTLSServer
 
+deriveBase ''Joint2D
+
 deriveBase ''DampedSpringJoint2D
+
+deriveBase ''Light
 
 deriveBase ''DirectionalLight
 
@@ -7759,7 +7805,11 @@ deriveBase ''EditorFileSystem
 
 deriveBase ''EditorFileSystemDirectory
 
+deriveBase ''ResourceImporter
+
 deriveBase ''EditorImportPlugin
+
+deriveBase ''ScrollContainer
 
 deriveBase ''EditorInspector
 
@@ -7774,6 +7824,8 @@ deriveBase ''EditorPlugin
 deriveBase ''EditorProperty
 
 deriveBase ''EditorResourceConversionPlugin
+
+deriveBase ''HBoxContainer
 
 deriveBase ''EditorResourcePicker
 
@@ -7797,9 +7849,13 @@ deriveBase ''EditorSelection
 
 deriveBase ''EditorSettings
 
+deriveBase ''SpatialGizmo
+
 deriveBase ''EditorSpatialGizmo
 
 deriveBase ''EditorSpatialGizmoPlugin
+
+deriveBase ''Range
 
 deriveBase ''EditorSpinSlider
 
@@ -7815,15 +7871,17 @@ deriveBase ''ExternalTexture
 
 deriveBase ''FileDialog
 
-deriveBase ''FileSystemDock
+deriveBase ''VBoxContainer
 
-deriveBase ''Font
+deriveBase ''FileSystemDock
 
 deriveBase ''FuncRef
 
 deriveBase ''GDNative
 
 deriveBase ''GDNativeLibrary
+
+deriveBase ''Script
 
 deriveBase ''GDScript
 
@@ -7861,8 +7919,6 @@ deriveBase ''GLTFTexture
 
 deriveBase ''Generic6DOFJoint
 
-deriveBase ''GeometryInstance
-
 deriveBase ''Gradient
 
 deriveBase ''GradientTexture
@@ -7877,15 +7933,21 @@ deriveBase ''GridMap
 
 deriveBase ''GrooveJoint2D
 
-deriveBase ''HBoxContainer
-
 deriveBase ''HMACContext
+
+deriveBase ''ScrollBar
 
 deriveBase ''HScrollBar
 
+deriveBase ''Separator
+
 deriveBase ''HSeparator
 
+deriveBase ''Slider
+
 deriveBase ''HSlider
+
+deriveBase ''SplitContainer
 
 deriveBase ''HSplitContainer
 
@@ -7917,6 +7979,8 @@ deriveBase ''InputEvent
 
 deriveBase ''InputEventAction
 
+deriveBase ''InputEventWithModifiers
+
 deriveBase ''InputEventGesture
 
 deriveBase ''InputEventJoypadButton
@@ -7941,8 +8005,6 @@ deriveBase ''InputEventScreenDrag
 
 deriveBase ''InputEventScreenTouch
 
-deriveBase ''InputEventWithModifiers
-
 deriveBase ''InputMap
 
 deriveBase ''InstancePlaceholder
@@ -7965,11 +8027,11 @@ deriveBase ''JavaScript
 
 deriveBase ''JavaScriptObject
 
-deriveBase ''Joint
-
-deriveBase ''Joint2D
+deriveBase ''PhysicsBody
 
 deriveBase ''KinematicBody
+
+deriveBase ''PhysicsBody2D
 
 deriveBase ''KinematicBody2D
 
@@ -7980,8 +8042,6 @@ deriveBase ''KinematicCollision2D
 deriveBase ''Label
 
 deriveBase ''LargeTexture
-
-deriveBase ''Light
 
 deriveBase ''Light2D
 
@@ -8001,11 +8061,7 @@ deriveBase ''MainLoop
 
 deriveBase ''MarginContainer
 
-deriveBase ''Material
-
 deriveBase ''MenuButton
-
-deriveBase ''Mesh
 
 deriveBase ''MeshDataTool
 
@@ -8027,6 +8083,10 @@ deriveBase ''MultiMeshInstance2D
 
 deriveBase ''MultiplayerAPI
 
+deriveBase ''PacketPeer
+
+deriveBase ''NetworkedMultiplayerPeer
+
 deriveBase ''MultiplayerPeerGDNative
 
 deriveBase ''NativeScript
@@ -8045,13 +8105,7 @@ deriveBase ''NavigationPolygonInstance
 
 deriveBase ''NetworkedMultiplayerENet
 
-deriveBase ''NetworkedMultiplayerPeer
-
 deriveBase ''NinePatchRect
-
-deriveBase ''Node
-
-deriveBase ''Node2D
 
 deriveBase ''NoiseTexture
 
@@ -8071,6 +8125,8 @@ deriveBase ''OptionButton
 
 deriveBase ''PCKPacker
 
+deriveBase ''Translation
+
 deriveBase ''PHashTranslation
 
 deriveBase ''PackedDataContainer
@@ -8080,8 +8136,6 @@ deriveBase ''PackedDataContainerRef
 deriveBase ''PackedScene
 
 deriveBase ''PackedSceneGLTF
-
-deriveBase ''PacketPeer
 
 deriveBase ''PacketPeerDTLS
 
@@ -8094,6 +8148,8 @@ deriveBase ''PacketPeerUDP
 deriveBase ''Panel
 
 deriveBase ''PanelContainer
+
+deriveBase ''Sky
 
 deriveBase ''PanoramaSky
 
@@ -8133,17 +8189,9 @@ deriveBase ''Physics2DShapeQueryParameters
 
 deriveBase ''Physics2DTestMotionResult
 
-deriveBase ''PhysicsBody
-
-deriveBase ''PhysicsBody2D
-
-deriveBase ''PhysicsDirectBodyState
-
 deriveBase ''PhysicsDirectSpaceState
 
 deriveBase ''PhysicsMaterial
-
-deriveBase ''PhysicsServer
 
 deriveBase ''PhysicsShapeQueryParameters
 
@@ -8165,8 +8213,6 @@ deriveBase ''Polygon2D
 
 deriveBase ''PolygonPathFinder
 
-deriveBase ''Popup
-
 deriveBase ''PopupDialog
 
 deriveBase ''PopupMenu
@@ -8178,8 +8224,6 @@ deriveBase ''Portal
 deriveBase ''Position2D
 
 deriveBase ''Position3D
-
-deriveBase ''PrimitiveMesh
 
 deriveBase ''PrismMesh
 
@@ -8197,8 +8241,6 @@ deriveBase ''QuadMesh
 
 deriveBase ''RandomNumberGenerator
 
-deriveBase ''Range
-
 deriveBase ''RayCast
 
 deriveBase ''RayCast2D
@@ -8208,8 +8250,6 @@ deriveBase ''RayShape
 deriveBase ''RayShape2D
 
 deriveBase ''RectangleShape2D
-
-deriveBase ''Reference
 
 deriveBase ''ReferenceRect
 
@@ -8223,13 +8263,9 @@ deriveBase ''RemoteTransform
 
 deriveBase ''RemoteTransform2D
 
-deriveBase ''Resource
-
 deriveBase ''ResourceFormatLoader
 
 deriveBase ''ResourceFormatSaver
-
-deriveBase ''ResourceImporter
 
 deriveBase ''ResourceInteractiveLoader
 
@@ -8257,27 +8293,15 @@ deriveBase ''SceneTree
 
 deriveBase ''SceneTreeTimer
 
-deriveBase ''Script
-
 deriveBase ''ScriptCreateDialog
 
 deriveBase ''ScriptEditor
 
-deriveBase ''ScrollBar
-
-deriveBase ''ScrollContainer
-
 deriveBase ''SegmentShape2D
-
-deriveBase ''Separator
 
 deriveBase ''Shader
 
 deriveBase ''ShaderMaterial
-
-deriveBase ''Shape
-
-deriveBase ''Shape2D
 
 deriveBase ''ShortCut
 
@@ -8291,17 +8315,9 @@ deriveBase ''Skin
 
 deriveBase ''SkinReference
 
-deriveBase ''Sky
-
-deriveBase ''Slider
-
 deriveBase ''SliderJoint
 
 deriveBase ''SoftBody
-
-deriveBase ''Spatial
-
-deriveBase ''SpatialGizmo
 
 deriveBase ''SpatialMaterial
 
@@ -8313,8 +8329,6 @@ deriveBase ''SphereShape
 
 deriveBase ''SpinBox
 
-deriveBase ''SplitContainer
-
 deriveBase ''SpotLight
 
 deriveBase ''SpringArm
@@ -8322,8 +8336,6 @@ deriveBase ''SpringArm
 deriveBase ''Sprite
 
 deriveBase ''Sprite3D
-
-deriveBase ''SpriteBase3D
 
 deriveBase ''SpriteFrames
 
@@ -8365,15 +8377,13 @@ deriveBase ''TextEdit
 
 deriveBase ''TextFile
 
-deriveBase ''Texture
+deriveBase ''TextureLayered
 
 deriveBase ''Texture3D
 
 deriveBase ''TextureArray
 
 deriveBase ''TextureButton
-
-deriveBase ''TextureLayered
 
 deriveBase ''TextureProgress
 
@@ -8390,8 +8400,6 @@ deriveBase ''Timer
 deriveBase ''ToolButton
 
 deriveBase ''TouchScreenButton
-
-deriveBase ''Translation
 
 deriveBase ''TranslationServer
 
@@ -8410,8 +8418,6 @@ deriveBase ''UPNP
 deriveBase ''UPNPDevice
 
 deriveBase ''UndoRedo
-
-deriveBase ''VBoxContainer
 
 deriveBase ''VScrollBar
 
@@ -8441,17 +8447,17 @@ deriveBase ''ViewportContainer
 
 deriveBase ''ViewportTexture
 
-deriveBase ''VisibilityEnabler
-
-deriveBase ''VisibilityEnabler2D
-
 deriveBase ''VisibilityNotifier
+
+deriveBase ''VisibilityEnabler
 
 deriveBase ''VisibilityNotifier2D
 
-deriveBase ''VisualInstance
+deriveBase ''VisibilityEnabler2D
 
 deriveBase ''VisualScript
+
+deriveBase ''VisualScriptNode
 
 deriveBase ''VisualScriptBasicTypeConstant
 
@@ -8460,6 +8466,8 @@ deriveBase ''VisualScriptBuiltinFunc
 deriveBase ''VisualScriptClassConstant
 
 deriveBase ''VisualScriptComment
+
+deriveBase ''VisualScriptLists
 
 deriveBase ''VisualScriptComposeArray
 
@@ -8495,15 +8503,11 @@ deriveBase ''VisualScriptInputAction
 
 deriveBase ''VisualScriptIterator
 
-deriveBase ''VisualScriptLists
-
 deriveBase ''VisualScriptLocalVar
 
 deriveBase ''VisualScriptLocalVarSet
 
 deriveBase ''VisualScriptMathConstant
-
-deriveBase ''VisualScriptNode
 
 deriveBase ''VisualScriptOperator
 
@@ -8551,6 +8555,8 @@ deriveBase ''VisualShaderNode
 
 deriveBase ''VisualShaderNodeBooleanConstant
 
+deriveBase ''VisualShaderNodeUniform
+
 deriveBase ''VisualShaderNodeBooleanUniform
 
 deriveBase ''VisualShaderNodeColorConstant
@@ -8565,6 +8571,8 @@ deriveBase ''VisualShaderNodeCompare
 
 deriveBase ''VisualShaderNodeCubeMap
 
+deriveBase ''VisualShaderNodeTextureUniform
+
 deriveBase ''VisualShaderNodeCubeMapUniform
 
 deriveBase ''VisualShaderNodeCustom
@@ -8573,6 +8581,8 @@ deriveBase ''VisualShaderNodeDeterminant
 
 deriveBase ''VisualShaderNodeDotProduct
 
+deriveBase ''VisualShaderNodeGroupBase
+
 deriveBase ''VisualShaderNodeExpression
 
 deriveBase ''VisualShaderNodeFaceForward
@@ -8580,8 +8590,6 @@ deriveBase ''VisualShaderNodeFaceForward
 deriveBase ''VisualShaderNodeFresnel
 
 deriveBase ''VisualShaderNodeGlobalExpression
-
-deriveBase ''VisualShaderNodeGroupBase
 
 deriveBase ''VisualShaderNodeIf
 
@@ -8607,15 +8615,13 @@ deriveBase ''VisualShaderNodeScalarOp
 
 deriveBase ''VisualShaderNodeScalarSmoothStep
 
+deriveBase ''VisualShaderNodeSwitch
+
 deriveBase ''VisualShaderNodeScalarSwitch
 
 deriveBase ''VisualShaderNodeScalarUniform
 
-deriveBase ''VisualShaderNodeSwitch
-
 deriveBase ''VisualShaderNodeTexture
-
-deriveBase ''VisualShaderNodeTextureUniform
 
 deriveBase ''VisualShaderNodeTextureUniformTriplanar
 
@@ -8632,8 +8638,6 @@ deriveBase ''VisualShaderNodeTransformMult
 deriveBase ''VisualShaderNodeTransformUniform
 
 deriveBase ''VisualShaderNodeTransformVecMult
-
-deriveBase ''VisualShaderNodeUniform
 
 deriveBase ''VisualShaderNodeUniformRef
 
@@ -8681,17 +8685,15 @@ deriveBase ''WebRTCPeerConnection
 
 deriveBase ''WebRTCPeerConnectionGDNative
 
-deriveBase ''WebSocketClient
-
 deriveBase ''WebSocketMultiplayerPeer
+
+deriveBase ''WebSocketClient
 
 deriveBase ''WebSocketPeer
 
 deriveBase ''WebSocketServer
 
 deriveBase ''WebXRInterface
-
-deriveBase ''WindowDialog
 
 deriveBase ''World
 

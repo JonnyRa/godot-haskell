@@ -12,7 +12,6 @@ import Godot.Gdnative
 import Linear.Metric (normalize)
 import Linear.V2
 import Linear.Vector
-import Project.Support
 import Project.Scenes.Player()
 
 data Player = Player
@@ -20,6 +19,9 @@ data Player = Player
   , _pSpeed :: MVar Float
   , _pScreenSize :: MVar (V2 Float)
   }
+
+derivePrerequisites ''Player "Player" "Player"
+deriveBase ''Player
 
 instance NodeInit Player where
   init base = Player base <$> newMVar 400 <*> newMVar zero
@@ -95,6 +97,4 @@ player_process self delta = do
   where
   clamp :: Float -> Float -> Float -> Float
   clamp value low high = max low (min high value)
-
-deriveHasBase ''Player
 setupNode ''Player "Player" "Player"

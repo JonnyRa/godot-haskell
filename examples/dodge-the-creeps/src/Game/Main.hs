@@ -13,7 +13,6 @@ import Godot.Core.Timer as Timer
 import Godot.Gdnative
 import Linear.V2
 import System.Random
-import Project.Support
 import Project.Scenes.Main()
 import Game.HUD
 import Game.Mob
@@ -25,6 +24,9 @@ data Main = Main
   , _mobScene :: MVar PackedScene
   }
 makeFieldsNoPrefix ''Main
+
+derivePrerequisites ''Main "Main" "Main"
+deriveBase ''Main
 
 instance NodeInit Main where
   init b = Main b <$> newMVar 0 <*> newEmptyMVar
@@ -105,10 +107,10 @@ on_MobTimer_timeout self = do
   -- Set the velocity' (speed & direction).
   testNode <- getNode' @"Test" self
   functionName <- toLowLevel "doSomething"
-  call testNode functionName $ map toVariant [direction, mobSpawnPoint]
+  _ <- call testNode functionName $ map toVariant [direction, mobSpawnPoint]
 
   otherStyleFunc <- toLowLevel "callBackToHaskell"
-  call testNode otherStyleFunc [toVariant $ (upcast self :: Object)]
+  _ <- call testNode otherStyleFunc [toVariant $ (upcast self :: Object)]
 
   liftM2 (,) (readMVar $ _mMinSpeed mob) (readMVar $ _mMaxSpeed mob)
     >>= randomRIO
@@ -116,5 +118,4 @@ on_MobTimer_timeout self = do
     >>= (`godot_vector2_rotated` CFloat direction')
     >>= set_linear_velocity mob
 
-deriveHasBase ''Main
 setupNode ''Main "Main" "Main"

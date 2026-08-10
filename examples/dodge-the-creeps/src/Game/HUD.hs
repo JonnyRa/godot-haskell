@@ -6,10 +6,12 @@ import Godot
 import Godot.Core.CanvasItem as CanvasItem
 import Godot.Core.Label as Label
 import Godot.Core.Timer as Timer
-import Project.Support
 import Project.Scenes.HUD()
 
 data HUD = HUD { _hBase :: CanvasLayer }
+
+derivePrerequisites ''HUD "HUD" "HUD" 
+deriveBase ''HUD
 
 instance NodeInit HUD where
   init = pure . HUD
@@ -51,5 +53,4 @@ update_score self score = do
     <*> toLowLevel (T.pack $ Prelude.show score)
     &   join
 
-deriveHasBase ''HUD
 setupNode ''HUD "HUD" "HUD"

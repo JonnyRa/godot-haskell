@@ -8,9 +8,7 @@
 
 module Project.Scenes.HUD where
 import Prelude
-import Project.Support
 import Godot
-import GHC.TypeLits
 
 import Godot.Core.CanvasLayer()
 import Godot.Core.Label()

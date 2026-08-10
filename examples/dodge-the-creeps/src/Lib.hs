@@ -4,7 +4,6 @@ import Game.Mob
 import Game.Main
 import Game.Player
 import Game.HUD
-import Project.Support
 import Project.Requirements
 
 exports :: GdnativeHandle -> IO ()

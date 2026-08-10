@@ -3,7 +3,6 @@ import Godot
 import Godot.Core.AnimatedSprite as AnimatedSprite
 import Godot.Core.Node as Node
 import System.Random
-import Project.Support
 import Project.Scenes.Mob()
 
 data Mob = Mob
@@ -12,6 +11,9 @@ data Mob = Mob
   , _mMaxSpeed :: MVar Float
   , _mMobTypes :: MVar [Text]
   }
+
+derivePrerequisites ''Mob "Mob" "Mob"
+deriveBase ''Mob
 
 instance NodeInit Mob where
   init base = Mob base <$> newMVar 150 <*> newMVar 250 <*> newMVar ["walk", "swim", "fly"]
@@ -23,5 +25,4 @@ instance NodeMethod Mob "_ready" '[] (IO ()) where
 instance NodeMethod Mob "_on_VisibilityNotifier2D_screen_exited" '[] (IO ()) where
   nodeMethod = queue_free
 
-deriveHasBase ''Mob
 setupNode ''Mob "Mob" "Mob"

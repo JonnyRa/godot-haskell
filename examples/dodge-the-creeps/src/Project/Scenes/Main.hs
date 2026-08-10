@@ -8,9 +8,7 @@
 
 module Project.Scenes.Main where
 import Prelude
-import Project.Support
 import Godot
-import GHC.TypeLits
 
 import Godot.Core.ColorRect()
 import Godot.Core.PackedScene()

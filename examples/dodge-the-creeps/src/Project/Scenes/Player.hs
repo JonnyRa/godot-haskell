@@ -8,9 +8,7 @@
 
 module Project.Scenes.Player where
 import Prelude
-import Project.Support
 import Godot
-import GHC.TypeLits
 
 import Godot.Core.AnimatedSprite()
 import Godot.Core.CollisionShape2D()
