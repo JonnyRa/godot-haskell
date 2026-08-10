@@ -15,7 +15,6 @@ data Mob = Mob
 
 derivePrerequisites ''Mob "Mob" "Mob"
 deriveBase ''Mob
-setupNode ''Mob "Mob" "Mob"
 
 instance NodeInit Mob where
   init base = Mob base <$> newMVar 150 <*> newMVar 250 <*> newMVar ["walk", "swim", "fly"]
@@ -26,3 +25,5 @@ instance NodeMethod Mob "_ready" '[] (IO ()) where
         getNode' @"AnimatedSprite" self >>= (`set_animation` randAnim)
 instance NodeMethod Mob "_on_VisibilityNotifier2D_screen_exited" '[] (IO ()) where
   nodeMethod = queue_free
+
+setupNode ''Mob "Mob" "Mob"

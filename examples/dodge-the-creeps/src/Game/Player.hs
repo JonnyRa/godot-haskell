@@ -23,7 +23,6 @@ data Player = Player
 
 derivePrerequisites ''Player "Player" "Player"
 deriveBase ''Player
-setupNode ''Player "Player" "Player"
 
 instance NodeInit Player where
   init base = Player base <$> newMVar 400 <*> newMVar zero
@@ -99,3 +98,4 @@ player_process self delta = do
   where
   clamp :: Float -> Float -> Float -> Float
   clamp value low high = max low (min high value)
+setupNode ''Player "Player" "Player"
