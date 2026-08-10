@@ -13,7 +13,7 @@ data Mob = Mob
   , _mMobTypes :: MVar [Text]
   }
 
-deriveHasBase ''Mob
+derivePrerequisites ''Mob "Mob" "Mob"
 deriveBase ''Mob
 setupNode ''Mob "Mob" "Mob"
 

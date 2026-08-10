@@ -26,7 +26,7 @@ data Main = Main
   }
 makeFieldsNoPrefix ''Main
 
-deriveHasBase ''Main
+derivePrerequisites ''Main "Main" "Main"
 deriveBase ''Main
 setupNode ''Main "Main" "Main"
 

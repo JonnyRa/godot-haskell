@@ -21,7 +21,7 @@ data Player = Player
   , _pScreenSize :: MVar (V2 Float)
   }
 
-deriveHasBase ''Player
+derivePrerequisites ''Player "Player" "Player"
 deriveBase ''Player
 setupNode ''Player "Player" "Player"
 
