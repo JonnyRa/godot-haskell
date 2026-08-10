@@ -393,9 +393,14 @@ deriveHasBase ty = do
     _ -> error "setupNode can only handle records whose first field is the Godot base class. You can still interface with Godot, but you will need to set things up manually."
 
 -- | You should use this as:
---   deriveHasBase ''Ty
---   setupNode ''Ty "sceneName" "nodePath"
--- This will instantiate everything that your Object needs
+--  derivePrerequisites ''Ty "sceneName" "nodePath"
+--  deriveBase ''Ty
+--  your nativescript instances and the rest of the file
+--  then at the end:
+--  setupNode ''Ty "sceneName" "nodePath"
+--  This will instantiate everything that your Object needs
+--  with the instances required for making NativeScript at the start
+--  and then generating the right code to export them after they have all been declared
 setupNode :: Name -> String -> String -> Q [Dec]
 setupNode ty scene sceneNode = do
   -- Collect information about all scenes
