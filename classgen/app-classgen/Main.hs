@@ -112,8 +112,8 @@ writeModule :: HasCallStack => FilePath -> Module (Maybe CodeComment) -> IO ()
 writeModule godotHaskellRootDir mdl@(Module _ (Just (ModuleHead _ (ModuleName Nothing name) _ _)) _ _ _) = do
   let filepath = (godotHaskellRootDir </> "src/" ++ map replaceDot name ++ ".hs" :: FilePath)
   putStrLn ("outputting " <> filepath)
-  putStrLn ("module " <> show mdl)
   -- let out = prettyPrint mdl
+  --if things error here then look at (and correct) the api.json file - often they will be types with multiple options separated by , rather than a baseclass
   let out = uncurry exactPrint (ppWithComments mdl)
   createDirectoryIfMissing True (takeDirectory filepath)
   writeFile filepath out
