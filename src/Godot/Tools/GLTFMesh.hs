@@ -33,7 +33,7 @@ instance NodeProperty GLTFMesh "instance_materials" Array 'False
           = (get_instance_materials,
              wrapDroppingSetter set_instance_materials, Nothing)
 
-instance NodeProperty GLTFMesh "mesh" Object 'False where
+instance NodeProperty GLTFMesh "mesh" ArrayMesh 'False where
         nodeProperty = (get_mesh, wrapDroppingSetter set_mesh, Nothing)
 
 {-# NOINLINE bindGLTFMesh_get_blend_weights #-}

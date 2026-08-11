@@ -123,8 +123,7 @@ instance NodeProperty GLTFState "minor_version" Int 'False where
 instance NodeProperty GLTFState "nodes" Array 'False where
         nodeProperty = (get_nodes, wrapDroppingSetter set_nodes, Nothing)
 
-instance NodeProperty GLTFState "root_nodes" PoolIntArray 'False
-         where
+instance NodeProperty GLTFState "root_nodes" Array 'False where
         nodeProperty
           = (get_root_nodes, wrapDroppingSetter set_root_nodes, Nothing)
 

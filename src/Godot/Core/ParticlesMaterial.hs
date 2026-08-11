@@ -248,7 +248,7 @@ instance NodeProperty ParticlesMaterial "color" Color 'False where
         nodeProperty = (get_color, wrapDroppingSetter set_color, Nothing)
 
 instance NodeProperty ParticlesMaterial "color_initial_ramp"
-           GradientTexture
+           Texture
            'False
          where
         nodeProperty
