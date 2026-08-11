@@ -31,6 +31,7 @@ instance NodeProperty StreamPeerBuffer "data_array" PoolByteArray
 
 {-# NOINLINE bindStreamPeerBuffer_clear #-}
 
+-- | Clears the @data_array@ and resets the cursor.
 bindStreamPeerBuffer_clear :: MethodBind
 bindStreamPeerBuffer_clear
   = unsafePerformIO $
@@ -40,6 +41,7 @@ bindStreamPeerBuffer_clear
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Clears the @data_array@ and resets the cursor.
 clear :: (StreamPeerBuffer :< cls, Object :< cls) => cls -> IO ()
 clear cls
   = withVariantArray []
@@ -57,6 +59,7 @@ instance NodeMethod StreamPeerBuffer "clear" '[] (IO ()) where
 
 {-# NOINLINE bindStreamPeerBuffer_duplicate #-}
 
+-- | Returns a new @StreamPeerBuffer@ with the same @data_array@ content.
 bindStreamPeerBuffer_duplicate :: MethodBind
 bindStreamPeerBuffer_duplicate
   = unsafePerformIO $
@@ -66,6 +69,7 @@ bindStreamPeerBuffer_duplicate
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Returns a new @StreamPeerBuffer@ with the same @data_array@ content.
 duplicate ::
             (StreamPeerBuffer :< cls, Object :< cls) =>
             cls -> IO StreamPeerBuffer
@@ -84,6 +88,7 @@ instance NodeMethod StreamPeerBuffer "duplicate" '[]
 
 {-# NOINLINE bindStreamPeerBuffer_get_data_array #-}
 
+-- | The underlying data buffer. Setting this value resets the cursor.
 bindStreamPeerBuffer_get_data_array :: MethodBind
 bindStreamPeerBuffer_get_data_array
   = unsafePerformIO $
@@ -93,6 +98,7 @@ bindStreamPeerBuffer_get_data_array
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | The underlying data buffer. Setting this value resets the cursor.
 get_data_array ::
                  (StreamPeerBuffer :< cls, Object :< cls) => cls -> IO PoolByteArray
 get_data_array cls
@@ -114,6 +120,7 @@ instance NodeMethod StreamPeerBuffer "get_data_array" '[]
 
 {-# NOINLINE bindStreamPeerBuffer_get_position #-}
 
+-- | Returns the current cursor position.
 bindStreamPeerBuffer_get_position :: MethodBind
 bindStreamPeerBuffer_get_position
   = unsafePerformIO $
@@ -123,6 +130,7 @@ bindStreamPeerBuffer_get_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Returns the current cursor position.
 get_position ::
                (StreamPeerBuffer :< cls, Object :< cls) => cls -> IO Int
 get_position cls
@@ -143,6 +151,7 @@ instance NodeMethod StreamPeerBuffer "get_position" '[] (IO Int)
 
 {-# NOINLINE bindStreamPeerBuffer_get_size #-}
 
+-- | Returns the size of @data_array@.
 bindStreamPeerBuffer_get_size :: MethodBind
 bindStreamPeerBuffer_get_size
   = unsafePerformIO $
@@ -152,6 +161,7 @@ bindStreamPeerBuffer_get_size
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Returns the size of @data_array@.
 get_size ::
            (StreamPeerBuffer :< cls, Object :< cls) => cls -> IO Int
 get_size cls
@@ -170,6 +180,7 @@ instance NodeMethod StreamPeerBuffer "get_size" '[] (IO Int) where
 
 {-# NOINLINE bindStreamPeerBuffer_resize #-}
 
+-- | Resizes the @data_array@. This @i@doesn't@/i@ update the cursor.
 bindStreamPeerBuffer_resize :: MethodBind
 bindStreamPeerBuffer_resize
   = unsafePerformIO $
@@ -179,6 +190,7 @@ bindStreamPeerBuffer_resize
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Resizes the @data_array@. This @i@doesn't@/i@ update the cursor.
 resize ::
          (StreamPeerBuffer :< cls, Object :< cls) => cls -> Int -> IO ()
 resize cls arg1
@@ -197,6 +209,7 @@ instance NodeMethod StreamPeerBuffer "resize" '[Int] (IO ()) where
 
 {-# NOINLINE bindStreamPeerBuffer_seek #-}
 
+-- | Moves the cursor to the specified position. @position@ must be a valid index of @data_array@.
 bindStreamPeerBuffer_seek :: MethodBind
 bindStreamPeerBuffer_seek
   = unsafePerformIO $
@@ -206,6 +219,7 @@ bindStreamPeerBuffer_seek
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Moves the cursor to the specified position. @position@ must be a valid index of @data_array@.
 seek ::
        (StreamPeerBuffer :< cls, Object :< cls) => cls -> Int -> IO ()
 seek cls arg1
@@ -224,6 +238,7 @@ instance NodeMethod StreamPeerBuffer "seek" '[Int] (IO ()) where
 
 {-# NOINLINE bindStreamPeerBuffer_set_data_array #-}
 
+-- | The underlying data buffer. Setting this value resets the cursor.
 bindStreamPeerBuffer_set_data_array :: MethodBind
 bindStreamPeerBuffer_set_data_array
   = unsafePerformIO $
@@ -233,6 +248,7 @@ bindStreamPeerBuffer_set_data_array
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | The underlying data buffer. Setting this value resets the cursor.
 set_data_array ::
                  (StreamPeerBuffer :< cls, Object :< cls) =>
                  cls -> PoolByteArray -> IO ()

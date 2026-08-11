@@ -33,7 +33,7 @@ import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Resource()
 
-instance NodeProperty GLTFSkin "godot_skin" Skin 'False where
+instance NodeProperty GLTFSkin "godot_skin" Object 'False where
         nodeProperty
           = (get_godot_skin, wrapDroppingSetter set_godot_skin, Nothing)
 

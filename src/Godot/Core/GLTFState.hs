@@ -2,12 +2,15 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.GLTFState
-       (Godot.Core.GLTFState.get_accessors,
+       (Godot.Core.GLTFState.add_used_extension,
+        Godot.Core.GLTFState.get_accessors,
+        Godot.Core.GLTFState.get_additional_data,
         Godot.Core.GLTFState.get_animation_player,
         Godot.Core.GLTFState.get_animation_players_count,
         Godot.Core.GLTFState.get_animations,
         Godot.Core.GLTFState.get_buffer_views,
         Godot.Core.GLTFState.get_buffers, Godot.Core.GLTFState.get_cameras,
+        Godot.Core.GLTFState.get_create_animations,
         Godot.Core.GLTFState.get_glb_data, Godot.Core.GLTFState.get_images,
         Godot.Core.GLTFState.get_json, Godot.Core.GLTFState.get_lights,
         Godot.Core.GLTFState.get_major_version,
@@ -20,14 +23,17 @@ module Godot.Core.GLTFState
         Godot.Core.GLTFState.get_scene_node,
         Godot.Core.GLTFState.get_skeleton_to_node,
         Godot.Core.GLTFState.get_skeletons, Godot.Core.GLTFState.get_skins,
+        Godot.Core.GLTFState.get_texture_samplers,
         Godot.Core.GLTFState.get_textures,
         Godot.Core.GLTFState.get_unique_animation_names,
         Godot.Core.GLTFState.get_unique_names,
         Godot.Core.GLTFState.get_use_named_skin_binds,
         Godot.Core.GLTFState.set_accessors,
+        Godot.Core.GLTFState.set_additional_data,
         Godot.Core.GLTFState.set_animations,
         Godot.Core.GLTFState.set_buffer_views,
         Godot.Core.GLTFState.set_buffers, Godot.Core.GLTFState.set_cameras,
+        Godot.Core.GLTFState.set_create_animations,
         Godot.Core.GLTFState.set_glb_data, Godot.Core.GLTFState.set_images,
         Godot.Core.GLTFState.set_json, Godot.Core.GLTFState.set_lights,
         Godot.Core.GLTFState.set_major_version,
@@ -39,6 +45,7 @@ module Godot.Core.GLTFState
         Godot.Core.GLTFState.set_scene_name,
         Godot.Core.GLTFState.set_skeleton_to_node,
         Godot.Core.GLTFState.set_skeletons, Godot.Core.GLTFState.set_skins,
+        Godot.Core.GLTFState.set_texture_samplers,
         Godot.Core.GLTFState.set_textures,
         Godot.Core.GLTFState.set_unique_animation_names,
         Godot.Core.GLTFState.set_unique_names,
@@ -75,6 +82,12 @@ instance NodeProperty GLTFState "buffers" Array 'False where
 instance NodeProperty GLTFState "cameras" Array 'False where
         nodeProperty
           = (get_cameras, wrapDroppingSetter set_cameras, Nothing)
+
+instance NodeProperty GLTFState "create_animations" Bool 'False
+         where
+        nodeProperty
+          = (get_create_animations, wrapDroppingSetter set_create_animations,
+             Nothing)
 
 instance NodeProperty GLTFState "glb_data" PoolByteArray 'False
          where
@@ -134,6 +147,12 @@ instance NodeProperty GLTFState "skeletons" Array 'False where
 instance NodeProperty GLTFState "skins" Array 'False where
         nodeProperty = (get_skins, wrapDroppingSetter set_skins, Nothing)
 
+instance NodeProperty GLTFState "texture_samplers" Array 'False
+         where
+        nodeProperty
+          = (get_texture_samplers, wrapDroppingSetter set_texture_samplers,
+             Nothing)
+
 instance NodeProperty GLTFState "textures" Array 'False where
         nodeProperty
           = (get_textures, wrapDroppingSetter set_textures, Nothing)
@@ -154,6 +173,38 @@ instance NodeProperty GLTFState "use_named_skin_binds" Bool 'False
         nodeProperty
           = (get_use_named_skin_binds,
              wrapDroppingSetter set_use_named_skin_binds, Nothing)
+
+{-# NOINLINE bindGLTFState_add_used_extension #-}
+
+bindGLTFState_add_used_extension :: MethodBind
+bindGLTFState_add_used_extension
+  = unsafePerformIO $
+      withCString "GLTFState" $
+        \ clsNamePtr ->
+          withCString "add_used_extension" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+add_used_extension ::
+                     (GLTFState :< cls, Object :< cls) =>
+                     cls -> GodotString -> Bool -> IO ()
+add_used_extension cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFState_add_used_extension
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFState "add_used_extension"
+           '[GodotString, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GLTFState.add_used_extension
 
 {-# NOINLINE bindGLTFState_get_accessors #-}
 
@@ -181,6 +232,34 @@ get_accessors cls
 
 instance NodeMethod GLTFState "get_accessors" '[] (IO Array) where
         nodeMethod = Godot.Core.GLTFState.get_accessors
+
+{-# NOINLINE bindGLTFState_get_additional_data #-}
+
+bindGLTFState_get_additional_data :: MethodBind
+bindGLTFState_get_additional_data
+  = unsafePerformIO $
+      withCString "GLTFState" $
+        \ clsNamePtr ->
+          withCString "get_additional_data" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_additional_data ::
+                      (GLTFState :< cls, Object :< cls) =>
+                      cls -> GodotString -> IO GodotVariant
+get_additional_data cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFState_get_additional_data
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> return var)
+
+instance NodeMethod GLTFState "get_additional_data" '[GodotString]
+           (IO GodotVariant)
+         where
+        nodeMethod = Godot.Core.GLTFState.get_additional_data
 
 {-# NOINLINE bindGLTFState_get_animation_player #-}
 
@@ -346,6 +425,35 @@ get_cameras cls
 
 instance NodeMethod GLTFState "get_cameras" '[] (IO Array) where
         nodeMethod = Godot.Core.GLTFState.get_cameras
+
+{-# NOINLINE bindGLTFState_get_create_animations #-}
+
+bindGLTFState_get_create_animations :: MethodBind
+bindGLTFState_get_create_animations
+  = unsafePerformIO $
+      withCString "GLTFState" $
+        \ clsNamePtr ->
+          withCString "get_create_animations" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_create_animations ::
+                        (GLTFState :< cls, Object :< cls) => cls -> IO Bool
+get_create_animations cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFState_get_create_animations
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFState "get_create_animations" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.GLTFState.get_create_animations
 
 {-# NOINLINE bindGLTFState_get_glb_data #-}
 
@@ -596,7 +704,7 @@ bindGLTFState_get_root_nodes
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 get_root_nodes ::
-                 (GLTFState :< cls, Object :< cls) => cls -> IO PoolIntArray
+                 (GLTFState :< cls, Object :< cls) => cls -> IO Array
 get_root_nodes cls
   = withVariantArray []
       (\ (arrPtr, len) ->
@@ -608,7 +716,7 @@ get_root_nodes cls
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod GLTFState "get_root_nodes" '[] (IO PoolIntArray) where
+instance NodeMethod GLTFState "get_root_nodes" '[] (IO Array) where
         nodeMethod = Godot.Core.GLTFState.get_root_nodes
 
 {-# NOINLINE bindGLTFState_get_scene_name #-}
@@ -745,6 +853,35 @@ get_skins cls
 
 instance NodeMethod GLTFState "get_skins" '[] (IO Array) where
         nodeMethod = Godot.Core.GLTFState.get_skins
+
+{-# NOINLINE bindGLTFState_get_texture_samplers #-}
+
+bindGLTFState_get_texture_samplers :: MethodBind
+bindGLTFState_get_texture_samplers
+  = unsafePerformIO $
+      withCString "GLTFState" $
+        \ clsNamePtr ->
+          withCString "get_texture_samplers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_texture_samplers ::
+                       (GLTFState :< cls, Object :< cls) => cls -> IO Array
+get_texture_samplers cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFState_get_texture_samplers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFState "get_texture_samplers" '[] (IO Array)
+         where
+        nodeMethod = Godot.Core.GLTFState.get_texture_samplers
 
 {-# NOINLINE bindGLTFState_get_textures #-}
 
@@ -889,6 +1026,38 @@ instance NodeMethod GLTFState "set_accessors" '[Array] (IO ())
          where
         nodeMethod = Godot.Core.GLTFState.set_accessors
 
+{-# NOINLINE bindGLTFState_set_additional_data #-}
+
+bindGLTFState_set_additional_data :: MethodBind
+bindGLTFState_set_additional_data
+  = unsafePerformIO $
+      withCString "GLTFState" $
+        \ clsNamePtr ->
+          withCString "set_additional_data" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_additional_data ::
+                      (GLTFState :< cls, Object :< cls) =>
+                      cls -> GodotString -> GodotVariant -> IO ()
+set_additional_data cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFState_set_additional_data
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFState "set_additional_data"
+           '[GodotString, GodotVariant]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GLTFState.set_additional_data
+
 {-# NOINLINE bindGLTFState_set_animations #-}
 
 bindGLTFState_set_animations :: MethodBind
@@ -998,6 +1167,36 @@ set_cameras cls arg1
 
 instance NodeMethod GLTFState "set_cameras" '[Array] (IO ()) where
         nodeMethod = Godot.Core.GLTFState.set_cameras
+
+{-# NOINLINE bindGLTFState_set_create_animations #-}
+
+bindGLTFState_set_create_animations :: MethodBind
+bindGLTFState_set_create_animations
+  = unsafePerformIO $
+      withCString "GLTFState" $
+        \ clsNamePtr ->
+          withCString "set_create_animations" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_create_animations ::
+                        (GLTFState :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_create_animations cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFState_set_create_animations
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFState "set_create_animations" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GLTFState.set_create_animations
 
 {-# NOINLINE bindGLTFState_set_glb_data #-}
 
@@ -1255,7 +1454,7 @@ bindGLTFState_set_root_nodes
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 set_root_nodes ::
-                 (GLTFState :< cls, Object :< cls) => cls -> PoolIntArray -> IO ()
+                 (GLTFState :< cls, Object :< cls) => cls -> Array -> IO ()
 set_root_nodes cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
@@ -1267,7 +1466,7 @@ set_root_nodes cls arg1
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod GLTFState "set_root_nodes" '[PoolIntArray] (IO ())
+instance NodeMethod GLTFState "set_root_nodes" '[Array] (IO ())
          where
         nodeMethod = Godot.Core.GLTFState.set_root_nodes
 
@@ -1383,6 +1582,36 @@ set_skins cls arg1
 
 instance NodeMethod GLTFState "set_skins" '[Array] (IO ()) where
         nodeMethod = Godot.Core.GLTFState.set_skins
+
+{-# NOINLINE bindGLTFState_set_texture_samplers #-}
+
+bindGLTFState_set_texture_samplers :: MethodBind
+bindGLTFState_set_texture_samplers
+  = unsafePerformIO $
+      withCString "GLTFState" $
+        \ clsNamePtr ->
+          withCString "set_texture_samplers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_texture_samplers ::
+                       (GLTFState :< cls, Object :< cls) => cls -> Array -> IO ()
+set_texture_samplers cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFState_set_texture_samplers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFState "set_texture_samplers" '[Array]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GLTFState.set_texture_samplers
 
 {-# NOINLINE bindGLTFState_set_textures #-}
 

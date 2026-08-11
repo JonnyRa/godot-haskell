@@ -16,7 +16,9 @@ module Godot.Core.Light
         Godot.Core.Light._PARAM_ATTENUATION,
         Godot.Core.Light._PARAM_ENERGY,
         Godot.Core.Light._PARAM_SHADOW_SPLIT_3_OFFSET,
-        Godot.Core.Light._PARAM_SIZE, Godot.Core.Light._BAKE_INDIRECT,
+        Godot.Core.Light._PARAM_SIZE,
+        Godot.Core.Light._PARAM_SHADOW_FADE_START,
+        Godot.Core.Light._BAKE_INDIRECT,
         Godot.Core.Light._PARAM_SHADOW_BIAS, Godot.Core.Light._BAKE_ALL,
         Godot.Core.Light._PARAM_CONTACT_SHADOW_SIZE,
         Godot.Core.Light._PARAM_SPOT_ANGLE, Godot.Core.Light.get_bake_mode,
@@ -68,7 +70,7 @@ _PARAM_SHADOW_MAX_DISTANCE :: Int
 _PARAM_SHADOW_MAX_DISTANCE = 9
 
 _PARAM_MAX :: Int
-_PARAM_MAX = 16
+_PARAM_MAX = 17
 
 _PARAM_SHADOW_BIAS_SPLIT_SCALE :: Int
 _PARAM_SHADOW_BIAS_SPLIT_SCALE = 15
@@ -87,6 +89,9 @@ _PARAM_SHADOW_SPLIT_3_OFFSET = 12
 
 _PARAM_SIZE :: Int
 _PARAM_SIZE = 2
+
+_PARAM_SHADOW_FADE_START :: Int
+_PARAM_SHADOW_FADE_START = 16
 
 _BAKE_INDIRECT :: Int
 _BAKE_INDIRECT = 1

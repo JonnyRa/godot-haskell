@@ -142,7 +142,7 @@ instance NodeMethod InputEventKey "get_physical_scancode" '[]
 {-# NOINLINE bindInputEventKey_get_physical_scancode_with_modifiers
              #-}
 
--- | Returns the physical scancode combined with modifier keys such as @Shift@ or @Alt@. See also @InputEventWithModifiers@.
+-- | Returns the physical scancode combined with modifier keys such as @kbd@Shift@/kbd@ or @kbd@Alt@/kbd@. See also @InputEventWithModifiers@.
 --   				To get a human-readable representation of the @InputEventKey@ with modifiers, use @OS.get_scancode_string(event.get_physical_scancode_with_modifiers())@ where @event@ is the @InputEventKey@.
 bindInputEventKey_get_physical_scancode_with_modifiers ::
                                                        MethodBind
@@ -154,7 +154,7 @@ bindInputEventKey_get_physical_scancode_with_modifiers
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the physical scancode combined with modifier keys such as @Shift@ or @Alt@. See also @InputEventWithModifiers@.
+-- | Returns the physical scancode combined with modifier keys such as @kbd@Shift@/kbd@ or @kbd@Alt@/kbd@. See also @InputEventWithModifiers@.
 --   				To get a human-readable representation of the @InputEventKey@ with modifiers, use @OS.get_scancode_string(event.get_physical_scancode_with_modifiers())@ where @event@ is the @InputEventKey@.
 get_physical_scancode_with_modifiers ::
                                        (InputEventKey :< cls, Object :< cls) => cls -> IO Int
@@ -212,7 +212,7 @@ instance NodeMethod InputEventKey "get_scancode" '[] (IO Int) where
 
 {-# NOINLINE bindInputEventKey_get_scancode_with_modifiers #-}
 
--- | Returns the scancode combined with modifier keys such as @Shift@ or @Alt@. See also @InputEventWithModifiers@.
+-- | Returns the scancode combined with modifier keys such as @kbd@Shift@/kbd@ or @kbd@Alt@/kbd@. See also @InputEventWithModifiers@.
 --   				To get a human-readable representation of the @InputEventKey@ with modifiers, use @OS.get_scancode_string(event.get_scancode_with_modifiers())@ where @event@ is the @InputEventKey@.
 bindInputEventKey_get_scancode_with_modifiers :: MethodBind
 bindInputEventKey_get_scancode_with_modifiers
@@ -223,7 +223,7 @@ bindInputEventKey_get_scancode_with_modifiers
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the scancode combined with modifier keys such as @Shift@ or @Alt@. See also @InputEventWithModifiers@.
+-- | Returns the scancode combined with modifier keys such as @kbd@Shift@/kbd@ or @kbd@Alt@/kbd@. See also @InputEventWithModifiers@.
 --   				To get a human-readable representation of the @InputEventKey@ with modifiers, use @OS.get_scancode_string(event.get_scancode_with_modifiers())@ where @event@ is the @InputEventKey@.
 get_scancode_with_modifiers ::
                               (InputEventKey :< cls, Object :< cls) => cls -> IO Int

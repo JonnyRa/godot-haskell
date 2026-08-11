@@ -21,18 +21,21 @@ module Godot.Core.Tabs
         Godot.Core.Tabs.get_previous_tab,
         Godot.Core.Tabs.get_scrolling_enabled,
         Godot.Core.Tabs.get_select_with_rmb, Godot.Core.Tabs.get_tab_align,
+        Godot.Core.Tabs.get_tab_button_icon,
         Godot.Core.Tabs.get_tab_close_display_policy,
         Godot.Core.Tabs.get_tab_count, Godot.Core.Tabs.get_tab_disabled,
-        Godot.Core.Tabs.get_tab_icon, Godot.Core.Tabs.get_tab_offset,
-        Godot.Core.Tabs.get_tab_rect, Godot.Core.Tabs.get_tab_title,
+        Godot.Core.Tabs.get_tab_icon, Godot.Core.Tabs.get_tab_metadata,
+        Godot.Core.Tabs.get_tab_offset, Godot.Core.Tabs.get_tab_rect,
+        Godot.Core.Tabs.get_tab_title,
         Godot.Core.Tabs.get_tabs_rearrange_group, Godot.Core.Tabs.move_tab,
         Godot.Core.Tabs.remove_tab, Godot.Core.Tabs.set_current_tab,
         Godot.Core.Tabs.set_drag_to_rearrange_enabled,
         Godot.Core.Tabs.set_scrolling_enabled,
         Godot.Core.Tabs.set_select_with_rmb, Godot.Core.Tabs.set_tab_align,
+        Godot.Core.Tabs.set_tab_button_icon,
         Godot.Core.Tabs.set_tab_close_display_policy,
         Godot.Core.Tabs.set_tab_disabled, Godot.Core.Tabs.set_tab_icon,
-        Godot.Core.Tabs.set_tab_title,
+        Godot.Core.Tabs.set_tab_metadata, Godot.Core.Tabs.set_tab_title,
         Godot.Core.Tabs.set_tabs_rearrange_group)
        where
 import Data.Coerce
@@ -79,7 +82,7 @@ sig_reposition_active_tab_request
 
 instance NodeSignal Tabs "reposition_active_tab_request" '[Int]
 
--- | Emitted when a tab is right-clicked.
+-- | Emitted when a tab's right button is pressed. See @method set_tab_button_icon@.
 sig_right_button_pressed :: Godot.Internal.Dispatch.Signal Tabs
 sig_right_button_pressed
   = Godot.Internal.Dispatch.Signal "right_button_pressed"
@@ -476,6 +479,33 @@ get_tab_align cls
 instance NodeMethod Tabs "get_tab_align" '[] (IO Int) where
         nodeMethod = Godot.Core.Tabs.get_tab_align
 
+{-# NOINLINE bindTabs_get_tab_button_icon #-}
+
+-- | Returns the button icon from the tab at index @tab_idx@.
+bindTabs_get_tab_button_icon :: MethodBind
+bindTabs_get_tab_button_icon
+  = unsafePerformIO $
+      withCString "Tabs" $
+        \ clsNamePtr ->
+          withCString "get_tab_button_icon" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the button icon from the tab at index @tab_idx@.
+get_tab_button_icon ::
+                      (Tabs :< cls, Object :< cls) => cls -> Int -> IO Texture
+get_tab_button_icon cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabs_get_tab_button_icon (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod Tabs "get_tab_button_icon" '[Int] (IO Texture)
+         where
+        nodeMethod = Godot.Core.Tabs.get_tab_button_icon
+
 {-# NOINLINE bindTabs_get_tab_close_display_policy #-}
 
 -- | Sets when the close button will appear on the tabs. See @enum CloseButtonDisplayPolicy@ for details.
@@ -588,6 +618,34 @@ get_tab_icon cls arg1
 
 instance NodeMethod Tabs "get_tab_icon" '[Int] (IO Texture) where
         nodeMethod = Godot.Core.Tabs.get_tab_icon
+
+{-# NOINLINE bindTabs_get_tab_metadata #-}
+
+-- | Returns the metadata value set to the tab at index @tab_idx@. If no metadata was previously set, returns @null@ by default.
+bindTabs_get_tab_metadata :: MethodBind
+bindTabs_get_tab_metadata
+  = unsafePerformIO $
+      withCString "Tabs" $
+        \ clsNamePtr ->
+          withCString "get_tab_metadata" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the metadata value set to the tab at index @tab_idx@. If no metadata was previously set, returns @null@ by default.
+get_tab_metadata ::
+                   (Tabs :< cls, Object :< cls) => cls -> Int -> IO GodotVariant
+get_tab_metadata cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabs_get_tab_metadata (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> return var)
+
+instance NodeMethod Tabs "get_tab_metadata" '[Int]
+           (IO GodotVariant)
+         where
+        nodeMethod = Godot.Core.Tabs.get_tab_metadata
 
 {-# NOINLINE bindTabs_get_tab_offset #-}
 
@@ -905,6 +963,37 @@ set_tab_align cls arg1
 instance NodeMethod Tabs "set_tab_align" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tabs.set_tab_align
 
+{-# NOINLINE bindTabs_set_tab_button_icon #-}
+
+-- | Sets the button icon from the tab at index @tab_idx@.
+bindTabs_set_tab_button_icon :: MethodBind
+bindTabs_set_tab_button_icon
+  = unsafePerformIO $
+      withCString "Tabs" $
+        \ clsNamePtr ->
+          withCString "set_tab_button_icon" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the button icon from the tab at index @tab_idx@.
+set_tab_button_icon ::
+                      (Tabs :< cls, Object :< cls) => cls -> Int -> Texture -> IO ()
+set_tab_button_icon cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabs_set_tab_button_icon (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Tabs "set_tab_button_icon" '[Int, Texture]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Tabs.set_tab_button_icon
+
 {-# NOINLINE bindTabs_set_tab_close_display_policy #-}
 
 -- | Sets when the close button will appear on the tabs. See @enum CloseButtonDisplayPolicy@ for details.
@@ -995,6 +1084,37 @@ set_tab_icon cls arg1 arg2
 instance NodeMethod Tabs "set_tab_icon" '[Int, Texture] (IO ())
          where
         nodeMethod = Godot.Core.Tabs.set_tab_icon
+
+{-# NOINLINE bindTabs_set_tab_metadata #-}
+
+-- | Sets the metadata value for the tab at index @tab_idx@.
+bindTabs_set_tab_metadata :: MethodBind
+bindTabs_set_tab_metadata
+  = unsafePerformIO $
+      withCString "Tabs" $
+        \ clsNamePtr ->
+          withCString "set_tab_metadata" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the metadata value for the tab at index @tab_idx@.
+set_tab_metadata ::
+                   (Tabs :< cls, Object :< cls) => cls -> Int -> GodotVariant -> IO ()
+set_tab_metadata cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabs_set_tab_metadata (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Tabs "set_tab_metadata" '[Int, GodotVariant]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Tabs.set_tab_metadata
 
 {-# NOINLINE bindTabs_set_tab_title #-}
 

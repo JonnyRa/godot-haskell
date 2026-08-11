@@ -124,7 +124,7 @@ instance NodeMethod Timer "get_timer_process_mode" '[] (IO Int)
 {-# NOINLINE bindTimer_get_wait_time #-}
 
 -- | The wait time in seconds.
---   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node.
+--   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node. Timers are affected by @Engine.time_scale@, a higher scale means quicker timeouts, and vice versa.
 bindTimer_get_wait_time :: MethodBind
 bindTimer_get_wait_time
   = unsafePerformIO $
@@ -135,7 +135,7 @@ bindTimer_get_wait_time
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The wait time in seconds.
---   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node.
+--   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node. Timers are affected by @Engine.time_scale@, a higher scale means quicker timeouts, and vice versa.
 get_wait_time :: (Timer :< cls, Object :< cls) => cls -> IO Float
 get_wait_time cls
   = withVariantArray []
@@ -154,6 +154,7 @@ instance NodeMethod Timer "get_wait_time" '[] (IO Float) where
 
 -- | If @true@, the timer will automatically start when entering the scene tree.
 --   			__Note:__ This property is automatically set to @false@ after the timer enters the scene tree and starts.
+--   			__Note:__ This property does nothing when the timer is running in the editor.
 bindTimer_has_autostart :: MethodBind
 bindTimer_has_autostart
   = unsafePerformIO $
@@ -165,6 +166,7 @@ bindTimer_has_autostart
 
 -- | If @true@, the timer will automatically start when entering the scene tree.
 --   			__Note:__ This property is automatically set to @false@ after the timer enters the scene tree and starts.
+--   			__Note:__ This property does nothing when the timer is running in the editor.
 has_autostart :: (Timer :< cls, Object :< cls) => cls -> IO Bool
 has_autostart cls
   = withVariantArray []
@@ -262,6 +264,7 @@ instance NodeMethod Timer "is_stopped" '[] (IO Bool) where
 
 -- | If @true@, the timer will automatically start when entering the scene tree.
 --   			__Note:__ This property is automatically set to @false@ after the timer enters the scene tree and starts.
+--   			__Note:__ This property does nothing when the timer is running in the editor.
 bindTimer_set_autostart :: MethodBind
 bindTimer_set_autostart
   = unsafePerformIO $
@@ -273,6 +276,7 @@ bindTimer_set_autostart
 
 -- | If @true@, the timer will automatically start when entering the scene tree.
 --   			__Note:__ This property is automatically set to @false@ after the timer enters the scene tree and starts.
+--   			__Note:__ This property does nothing when the timer is running in the editor.
 set_autostart ::
                 (Timer :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_autostart cls arg1
@@ -376,7 +380,7 @@ instance NodeMethod Timer "set_timer_process_mode" '[Int] (IO ())
 {-# NOINLINE bindTimer_set_wait_time #-}
 
 -- | The wait time in seconds.
---   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node.
+--   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node. Timers are affected by @Engine.time_scale@, a higher scale means quicker timeouts, and vice versa.
 bindTimer_set_wait_time :: MethodBind
 bindTimer_set_wait_time
   = unsafePerformIO $
@@ -387,7 +391,7 @@ bindTimer_set_wait_time
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The wait time in seconds.
---   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node.
+--   			__Note:__ Timers can only emit once per rendered frame at most (or once per physics frame if @process_mode@ is @TIMER_PROCESS_PHYSICS@). This means very low wait times (lower than 0.05 seconds) will behave in significantly different ways depending on the rendered framerate. For very low wait times, it is recommended to use a process loop in a script instead of using a Timer node. Timers are affected by @Engine.time_scale@, a higher scale means quicker timeouts, and vice versa.
 set_wait_time ::
                 (Timer :< cls, Object :< cls) => cls -> Float -> IO ()
 set_wait_time cls arg1

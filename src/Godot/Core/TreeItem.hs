@@ -14,7 +14,9 @@ module Godot.Core.TreeItem
         Godot.Core.TreeItem.clear_custom_color,
         Godot.Core.TreeItem.deselect, Godot.Core.TreeItem.erase_button,
         Godot.Core.TreeItem.get_button,
+        Godot.Core.TreeItem.get_button_by_id,
         Godot.Core.TreeItem.get_button_count,
+        Godot.Core.TreeItem.get_button_id,
         Godot.Core.TreeItem.get_button_tooltip,
         Godot.Core.TreeItem.get_cell_mode,
         Godot.Core.TreeItem.get_children,
@@ -116,7 +118,7 @@ instance NodeProperty TreeItem "disable_folding" Bool 'False where
 
 {-# NOINLINE bindTreeItem_add_button #-}
 
--- | Adds a button with @Texture@ @button@ at column @column@. The @button_idx@ is used to identify the button. If not specified, the next available index is used, which may be retrieved by calling @method get_button_count@ immediately after this method. Optionally, the button can be @disabled@ and have a @tooltip@.
+-- | Adds a button with @Texture@ @button@ at column @column@. The @id@ is used to identify the button. If not specified, the next available index is used, which may be retrieved by calling @method get_button_count@ immediately before this method. Optionally, the button can be @disabled@ and have a @tooltip@.
 bindTreeItem_add_button :: MethodBind
 bindTreeItem_add_button
   = unsafePerformIO $
@@ -126,7 +128,7 @@ bindTreeItem_add_button
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a button with @Texture@ @button@ at column @column@. The @button_idx@ is used to identify the button. If not specified, the next available index is used, which may be retrieved by calling @method get_button_count@ immediately after this method. Optionally, the button can be @disabled@ and have a @tooltip@.
+-- | Adds a button with @Texture@ @button@ at column @column@. The @id@ is used to identify the button. If not specified, the next available index is used, which may be retrieved by calling @method get_button_count@ immediately before this method. Optionally, the button can be @disabled@ and have a @tooltip@.
 add_button ::
              (TreeItem :< cls, Object :< cls) =>
              cls ->
@@ -326,6 +328,37 @@ instance NodeMethod TreeItem "get_button" '[Int, Int] (IO Texture)
          where
         nodeMethod = Godot.Core.TreeItem.get_button
 
+{-# NOINLINE bindTreeItem_get_button_by_id #-}
+
+-- | Returns the button index if there is a button with id @id@ in column @column@, otherwise returns -1.
+bindTreeItem_get_button_by_id :: MethodBind
+bindTreeItem_get_button_by_id
+  = unsafePerformIO $
+      withCString "TreeItem" $
+        \ clsNamePtr ->
+          withCString "get_button_by_id" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the button index if there is a button with id @id@ in column @column@, otherwise returns -1.
+get_button_by_id ::
+                   (TreeItem :< cls, Object :< cls) => cls -> Int -> Int -> IO Int
+get_button_by_id cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTreeItem_get_button_by_id (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TreeItem "get_button_by_id" '[Int, Int]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.TreeItem.get_button_by_id
+
 {-# NOINLINE bindTreeItem_get_button_count #-}
 
 -- | Returns the number of buttons in column @column@.
@@ -355,6 +388,36 @@ get_button_count cls arg1
 instance NodeMethod TreeItem "get_button_count" '[Int] (IO Int)
          where
         nodeMethod = Godot.Core.TreeItem.get_button_count
+
+{-# NOINLINE bindTreeItem_get_button_id #-}
+
+-- | Returns the id for the button at index @button_idx@ in column @column@.
+bindTreeItem_get_button_id :: MethodBind
+bindTreeItem_get_button_id
+  = unsafePerformIO $
+      withCString "TreeItem" $
+        \ clsNamePtr ->
+          withCString "get_button_id" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the id for the button at index @button_idx@ in column @column@.
+get_button_id ::
+                (TreeItem :< cls, Object :< cls) => cls -> Int -> Int -> IO Int
+get_button_id cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTreeItem_get_button_id (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TreeItem "get_button_id" '[Int, Int] (IO Int)
+         where
+        nodeMethod = Godot.Core.TreeItem.get_button_id
 
 {-# NOINLINE bindTreeItem_get_button_tooltip #-}
 
@@ -712,7 +775,7 @@ instance NodeMethod TreeItem "get_metadata" '[Int]
 
 {-# NOINLINE bindTreeItem_get_next #-}
 
--- | Returns the next TreeItem in the tree or a null object if there is none.
+-- | Returns the next sibling TreeItem in the tree or a null object if there is none.
 bindTreeItem_get_next :: MethodBind
 bindTreeItem_get_next
   = unsafePerformIO $
@@ -722,7 +785,7 @@ bindTreeItem_get_next
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the next TreeItem in the tree or a null object if there is none.
+-- | Returns the next sibling TreeItem in the tree or a null object if there is none.
 get_next :: (TreeItem :< cls, Object :< cls) => cls -> IO TreeItem
 get_next cls
   = withVariantArray []
@@ -736,7 +799,7 @@ instance NodeMethod TreeItem "get_next" '[] (IO TreeItem) where
 
 {-# NOINLINE bindTreeItem_get_next_visible #-}
 
--- | Returns the next visible TreeItem in the tree or a null object if there is none.
+-- | Returns the next visible sibling TreeItem in the tree or a null object if there is none.
 --   				If @wrap@ is enabled, the method will wrap around to the first visible element in the tree when called on the last visible element, otherwise it returns @null@.
 bindTreeItem_get_next_visible :: MethodBind
 bindTreeItem_get_next_visible
@@ -747,7 +810,7 @@ bindTreeItem_get_next_visible
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the next visible TreeItem in the tree or a null object if there is none.
+-- | Returns the next visible sibling TreeItem in the tree or a null object if there is none.
 --   				If @wrap@ is enabled, the method will wrap around to the first visible element in the tree when called on the last visible element, otherwise it returns @null@.
 get_next_visible ::
                    (TreeItem :< cls, Object :< cls) =>
@@ -792,7 +855,7 @@ instance NodeMethod TreeItem "get_parent" '[] (IO TreeItem) where
 
 {-# NOINLINE bindTreeItem_get_prev #-}
 
--- | Returns the previous TreeItem in the tree or a null object if there is none.
+-- | Returns the previous sibling TreeItem in the tree or a null object if there is none.
 bindTreeItem_get_prev :: MethodBind
 bindTreeItem_get_prev
   = unsafePerformIO $
@@ -802,7 +865,7 @@ bindTreeItem_get_prev
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the previous TreeItem in the tree or a null object if there is none.
+-- | Returns the previous sibling TreeItem in the tree or a null object if there is none.
 get_prev :: (TreeItem :< cls, Object :< cls) => cls -> IO TreeItem
 get_prev cls
   = withVariantArray []
@@ -816,7 +879,7 @@ instance NodeMethod TreeItem "get_prev" '[] (IO TreeItem) where
 
 {-# NOINLINE bindTreeItem_get_prev_visible #-}
 
--- | Returns the previous visible TreeItem in the tree or a null object if there is none.
+-- | Returns the previous visible sibling TreeItem in the tree or a null object if there is none.
 --   				If @wrap@ is enabled, the method will wrap around to the last visible element in the tree when called on the first visible element, otherwise it returns @null@.
 bindTreeItem_get_prev_visible :: MethodBind
 bindTreeItem_get_prev_visible
@@ -827,7 +890,7 @@ bindTreeItem_get_prev_visible
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the previous visible TreeItem in the tree or a null object if there is none.
+-- | Returns the previous visible sibling TreeItem in the tree or a null object if there is none.
 --   				If @wrap@ is enabled, the method will wrap around to the last visible element in the tree when called on the first visible element, otherwise it returns @null@.
 get_prev_visible ::
                    (TreeItem :< cls, Object :< cls) =>

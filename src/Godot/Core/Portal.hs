@@ -2,13 +2,15 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.Portal
-       (Godot.Core.Portal.get_linked_room, Godot.Core.Portal.get_points,
+       (Godot.Core.Portal.get_include_in_bound,
+        Godot.Core.Portal.get_linked_room, Godot.Core.Portal.get_points,
         Godot.Core.Portal.get_portal_active,
         Godot.Core.Portal.get_portal_margin,
         Godot.Core.Portal.get_use_default_margin,
-        Godot.Core.Portal.is_two_way, Godot.Core.Portal.set_linked_room,
-        Godot.Core.Portal.set_point, Godot.Core.Portal.set_points,
-        Godot.Core.Portal.set_portal_active,
+        Godot.Core.Portal.is_two_way,
+        Godot.Core.Portal.set_include_in_bound,
+        Godot.Core.Portal.set_linked_room, Godot.Core.Portal.set_point,
+        Godot.Core.Portal.set_points, Godot.Core.Portal.set_portal_active,
         Godot.Core.Portal.set_portal_margin, Godot.Core.Portal.set_two_way,
         Godot.Core.Portal.set_use_default_margin)
        where
@@ -23,6 +25,11 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Spatial()
+
+instance NodeProperty Portal "include_in_bound" Bool 'False where
+        nodeProperty
+          = (get_include_in_bound, wrapDroppingSetter set_include_in_bound,
+             Nothing)
 
 instance NodeProperty Portal "linked_room" NodePath 'False where
         nodeProperty
@@ -49,6 +56,36 @@ instance NodeProperty Portal "use_default_margin" Bool 'False where
         nodeProperty
           = (get_use_default_margin,
              wrapDroppingSetter set_use_default_margin, Nothing)
+
+{-# NOINLINE bindPortal_get_include_in_bound #-}
+
+-- | When a manual bound has not been explicitly specified for a @Room@, the convex hull bound will be estimated from the geometry of the objects within the room. This setting determines whether the portal geometry is included in this estimate of the room bound.
+bindPortal_get_include_in_bound :: MethodBind
+bindPortal_get_include_in_bound
+  = unsafePerformIO $
+      withCString "Portal" $
+        \ clsNamePtr ->
+          withCString "get_include_in_bound" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | When a manual bound has not been explicitly specified for a @Room@, the convex hull bound will be estimated from the geometry of the objects within the room. This setting determines whether the portal geometry is included in this estimate of the room bound.
+get_include_in_bound ::
+                       (Portal :< cls, Object :< cls) => cls -> IO Bool
+get_include_in_bound cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPortal_get_include_in_bound (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Portal "get_include_in_bound" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.Portal.get_include_in_bound
 
 {-# NOINLINE bindPortal_get_linked_room #-}
 
@@ -231,6 +268,36 @@ is_two_way cls
 instance NodeMethod Portal "is_two_way" '[] (IO Bool) where
         nodeMethod = Godot.Core.Portal.is_two_way
 
+{-# NOINLINE bindPortal_set_include_in_bound #-}
+
+-- | When a manual bound has not been explicitly specified for a @Room@, the convex hull bound will be estimated from the geometry of the objects within the room. This setting determines whether the portal geometry is included in this estimate of the room bound.
+bindPortal_set_include_in_bound :: MethodBind
+bindPortal_set_include_in_bound
+  = unsafePerformIO $
+      withCString "Portal" $
+        \ clsNamePtr ->
+          withCString "set_include_in_bound" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | When a manual bound has not been explicitly specified for a @Room@, the convex hull bound will be estimated from the geometry of the objects within the room. This setting determines whether the portal geometry is included in this estimate of the room bound.
+set_include_in_bound ::
+                       (Portal :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_include_in_bound cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPortal_set_include_in_bound (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Portal "set_include_in_bound" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.Portal.set_include_in_bound
+
 {-# NOINLINE bindPortal_set_linked_room #-}
 
 -- | This is a shortcut for setting the linked @Room@ in the name of the @Portal@ (the name is used during conversion).
@@ -264,6 +331,7 @@ instance NodeMethod Portal "set_linked_room" '[NodePath] (IO ())
 {-# NOINLINE bindPortal_set_point #-}
 
 -- | Sets individual points. Primarily for use by the editor.
+--   				__Note:__ This function will not resize the point array. Set @points@ to set the number of points.
 bindPortal_set_point :: MethodBind
 bindPortal_set_point
   = unsafePerformIO $
@@ -274,6 +342,7 @@ bindPortal_set_point
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets individual points. Primarily for use by the editor.
+--   				__Note:__ This function will not resize the point array. Set @points@ to set the number of points.
 set_point ::
             (Portal :< cls, Object :< cls) => cls -> Int -> Vector2 -> IO ()
 set_point cls arg1 arg2

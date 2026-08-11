@@ -14,6 +14,7 @@ module Godot.Core.StyleBoxFlat
         Godot.Core.StyleBoxFlat.get_shadow_color,
         Godot.Core.StyleBoxFlat.get_shadow_offset,
         Godot.Core.StyleBoxFlat.get_shadow_size,
+        Godot.Core.StyleBoxFlat.get_skew,
         Godot.Core.StyleBoxFlat.is_anti_aliased,
         Godot.Core.StyleBoxFlat.is_draw_center_enabled,
         Godot.Core.StyleBoxFlat.set_aa_size,
@@ -33,7 +34,8 @@ module Godot.Core.StyleBoxFlat
         Godot.Core.StyleBoxFlat.set_expand_margin_individual,
         Godot.Core.StyleBoxFlat.set_shadow_color,
         Godot.Core.StyleBoxFlat.set_shadow_offset,
-        Godot.Core.StyleBoxFlat.set_shadow_size)
+        Godot.Core.StyleBoxFlat.set_shadow_size,
+        Godot.Core.StyleBoxFlat.set_skew)
        where
 import Data.Coerce
 import Foreign.C
@@ -174,6 +176,9 @@ instance NodeProperty StyleBoxFlat "shadow_offset" Vector2 'False
 instance NodeProperty StyleBoxFlat "shadow_size" Int 'False where
         nodeProperty
           = (get_shadow_size, wrapDroppingSetter set_shadow_size, Nothing)
+
+instance NodeProperty StyleBoxFlat "skew" Vector2 'False where
+        nodeProperty = (get_skew, wrapDroppingSetter set_skew, Nothing)
 
 {-# NOINLINE bindStyleBoxFlat_get_aa_size #-}
 
@@ -552,9 +557,40 @@ instance NodeMethod StyleBoxFlat "get_shadow_size" '[] (IO Int)
          where
         nodeMethod = Godot.Core.StyleBoxFlat.get_shadow_size
 
+{-# NOINLINE bindStyleBoxFlat_get_skew #-}
+
+-- | If set to a non-zero value on either axis, @skew@ distorts the StyleBox horizontally and/or vertically. This can be used for "futuristic"-style UIs. Positive values skew the StyleBox towards the right (X axis) and upwards (Y axis), while negative values skew the StyleBox towards the left (X axis) and downwards (Y axis).
+--   			__Note:__ To ensure text does not touch the StyleBox's edges, consider increasing the @StyleBox@'s content margin (see @StyleBox.content_margin_bottom@). It is preferable to increase the content margin instead of the expand margin (see @expand_margin_bottom@), as increasing the expand margin does not increase the size of the clickable area for @Control@s.
+bindStyleBoxFlat_get_skew :: MethodBind
+bindStyleBoxFlat_get_skew
+  = unsafePerformIO $
+      withCString "StyleBoxFlat" $
+        \ clsNamePtr ->
+          withCString "get_skew" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If set to a non-zero value on either axis, @skew@ distorts the StyleBox horizontally and/or vertically. This can be used for "futuristic"-style UIs. Positive values skew the StyleBox towards the right (X axis) and upwards (Y axis), while negative values skew the StyleBox towards the left (X axis) and downwards (Y axis).
+--   			__Note:__ To ensure text does not touch the StyleBox's edges, consider increasing the @StyleBox@'s content margin (see @StyleBox.content_margin_bottom@). It is preferable to increase the content margin instead of the expand margin (see @expand_margin_bottom@), as increasing the expand margin does not increase the size of the clickable area for @Control@s.
+get_skew ::
+           (StyleBoxFlat :< cls, Object :< cls) => cls -> IO Vector2
+get_skew cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindStyleBoxFlat_get_skew (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod StyleBoxFlat "get_skew" '[] (IO Vector2) where
+        nodeMethod = Godot.Core.StyleBoxFlat.get_skew
+
 {-# NOINLINE bindStyleBoxFlat_is_anti_aliased #-}
 
--- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners.
+-- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners or @skew@.
 --   			__Note:__ When using beveled corners with 45-degree angles (@corner_detail@ = 1), it is recommended to set @anti_aliasing@ to @false@ to ensure crisp visuals and avoid possible visual glitches.
 bindStyleBoxFlat_is_anti_aliased :: MethodBind
 bindStyleBoxFlat_is_anti_aliased
@@ -565,7 +601,7 @@ bindStyleBoxFlat_is_anti_aliased
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners.
+-- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners or @skew@.
 --   			__Note:__ When using beveled corners with 45-degree angles (@corner_detail@ = 1), it is recommended to set @anti_aliasing@ to @false@ to ensure crisp visuals and avoid possible visual glitches.
 is_anti_aliased ::
                   (StyleBoxFlat :< cls, Object :< cls) => cls -> IO Bool
@@ -649,7 +685,7 @@ instance NodeMethod StyleBoxFlat "set_aa_size" '[Float] (IO ())
 
 {-# NOINLINE bindStyleBoxFlat_set_anti_aliased #-}
 
--- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners.
+-- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners or @skew@.
 --   			__Note:__ When using beveled corners with 45-degree angles (@corner_detail@ = 1), it is recommended to set @anti_aliasing@ to @false@ to ensure crisp visuals and avoid possible visual glitches.
 bindStyleBoxFlat_set_anti_aliased :: MethodBind
 bindStyleBoxFlat_set_anti_aliased
@@ -660,7 +696,7 @@ bindStyleBoxFlat_set_anti_aliased
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners.
+-- | Antialiasing draws a small ring around the edges, which fades to transparency. As a result, edges look much smoother. This is only noticeable when using rounded corners or @skew@.
 --   			__Note:__ When using beveled corners with 45-degree angles (@corner_detail@ = 1), it is recommended to set @anti_aliasing@ to @false@ to ensure crisp visuals and avoid possible visual glitches.
 set_anti_aliased ::
                    (StyleBoxFlat :< cls, Object :< cls) => cls -> Bool -> IO ()
@@ -1198,3 +1234,35 @@ set_shadow_size cls arg1
 instance NodeMethod StyleBoxFlat "set_shadow_size" '[Int] (IO ())
          where
         nodeMethod = Godot.Core.StyleBoxFlat.set_shadow_size
+
+{-# NOINLINE bindStyleBoxFlat_set_skew #-}
+
+-- | If set to a non-zero value on either axis, @skew@ distorts the StyleBox horizontally and/or vertically. This can be used for "futuristic"-style UIs. Positive values skew the StyleBox towards the right (X axis) and upwards (Y axis), while negative values skew the StyleBox towards the left (X axis) and downwards (Y axis).
+--   			__Note:__ To ensure text does not touch the StyleBox's edges, consider increasing the @StyleBox@'s content margin (see @StyleBox.content_margin_bottom@). It is preferable to increase the content margin instead of the expand margin (see @expand_margin_bottom@), as increasing the expand margin does not increase the size of the clickable area for @Control@s.
+bindStyleBoxFlat_set_skew :: MethodBind
+bindStyleBoxFlat_set_skew
+  = unsafePerformIO $
+      withCString "StyleBoxFlat" $
+        \ clsNamePtr ->
+          withCString "set_skew" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If set to a non-zero value on either axis, @skew@ distorts the StyleBox horizontally and/or vertically. This can be used for "futuristic"-style UIs. Positive values skew the StyleBox towards the right (X axis) and upwards (Y axis), while negative values skew the StyleBox towards the left (X axis) and downwards (Y axis).
+--   			__Note:__ To ensure text does not touch the StyleBox's edges, consider increasing the @StyleBox@'s content margin (see @StyleBox.content_margin_bottom@). It is preferable to increase the content margin instead of the expand margin (see @expand_margin_bottom@), as increasing the expand margin does not increase the size of the clickable area for @Control@s.
+set_skew ::
+           (StyleBoxFlat :< cls, Object :< cls) => cls -> Vector2 -> IO ()
+set_skew cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindStyleBoxFlat_set_skew (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod StyleBoxFlat "set_skew" '[Vector2] (IO ())
+         where
+        nodeMethod = Godot.Core.StyleBoxFlat.set_skew

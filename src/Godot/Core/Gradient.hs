@@ -2,12 +2,17 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.Gradient
-       (Godot.Core.Gradient.add_point, Godot.Core.Gradient.get_color,
-        Godot.Core.Gradient.get_colors, Godot.Core.Gradient.get_offset,
-        Godot.Core.Gradient.get_offsets,
+       (Godot.Core.Gradient._GRADIENT_INTERPOLATE_LINEAR,
+        Godot.Core.Gradient._GRADIENT_INTERPOLATE_CONSTANT,
+        Godot.Core.Gradient._GRADIENT_INTERPOLATE_CUBIC,
+        Godot.Core.Gradient.add_point, Godot.Core.Gradient.get_color,
+        Godot.Core.Gradient.get_colors,
+        Godot.Core.Gradient.get_interpolation_mode,
+        Godot.Core.Gradient.get_offset, Godot.Core.Gradient.get_offsets,
         Godot.Core.Gradient.get_point_count,
         Godot.Core.Gradient.interpolate, Godot.Core.Gradient.remove_point,
         Godot.Core.Gradient.set_color, Godot.Core.Gradient.set_colors,
+        Godot.Core.Gradient.set_interpolation_mode,
         Godot.Core.Gradient.set_offset, Godot.Core.Gradient.set_offsets)
        where
 import Data.Coerce
@@ -22,8 +27,23 @@ import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Resource()
 
+_GRADIENT_INTERPOLATE_LINEAR :: Int
+_GRADIENT_INTERPOLATE_LINEAR = 0
+
+_GRADIENT_INTERPOLATE_CONSTANT :: Int
+_GRADIENT_INTERPOLATE_CONSTANT = 1
+
+_GRADIENT_INTERPOLATE_CUBIC :: Int
+_GRADIENT_INTERPOLATE_CUBIC = 2
+
 instance NodeProperty Gradient "colors" PoolColorArray 'False where
         nodeProperty = (get_colors, wrapDroppingSetter set_colors, Nothing)
+
+instance NodeProperty Gradient "interpolation_mode" Int 'False
+         where
+        nodeProperty
+          = (get_interpolation_mode,
+             wrapDroppingSetter set_interpolation_mode, Nothing)
 
 instance NodeProperty Gradient "offsets" PoolRealArray 'False where
         nodeProperty
@@ -114,6 +134,37 @@ get_colors cls
 instance NodeMethod Gradient "get_colors" '[] (IO PoolColorArray)
          where
         nodeMethod = Godot.Core.Gradient.get_colors
+
+{-# NOINLINE bindGradient_get_interpolation_mode #-}
+
+-- | Defines how the colors between points of the gradient are interpolated. See @enum InterpolationMode@ for available modes.
+bindGradient_get_interpolation_mode :: MethodBind
+bindGradient_get_interpolation_mode
+  = unsafePerformIO $
+      withCString "Gradient" $
+        \ clsNamePtr ->
+          withCString "get_interpolation_mode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Defines how the colors between points of the gradient are interpolated. See @enum InterpolationMode@ for available modes.
+get_interpolation_mode ::
+                         (Gradient :< cls, Object :< cls) => cls -> IO Int
+get_interpolation_mode cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGradient_get_interpolation_mode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Gradient "get_interpolation_mode" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.Gradient.get_interpolation_mode
 
 {-# NOINLINE bindGradient_get_offset #-}
 
@@ -316,6 +367,38 @@ set_colors cls arg1
 instance NodeMethod Gradient "set_colors" '[PoolColorArray] (IO ())
          where
         nodeMethod = Godot.Core.Gradient.set_colors
+
+{-# NOINLINE bindGradient_set_interpolation_mode #-}
+
+-- | Defines how the colors between points of the gradient are interpolated. See @enum InterpolationMode@ for available modes.
+bindGradient_set_interpolation_mode :: MethodBind
+bindGradient_set_interpolation_mode
+  = unsafePerformIO $
+      withCString "Gradient" $
+        \ clsNamePtr ->
+          withCString "set_interpolation_mode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Defines how the colors between points of the gradient are interpolated. See @enum InterpolationMode@ for available modes.
+set_interpolation_mode ::
+                         (Gradient :< cls, Object :< cls) => cls -> Int -> IO ()
+set_interpolation_mode cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGradient_set_interpolation_mode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Gradient "set_interpolation_mode" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Gradient.set_interpolation_mode
 
 {-# NOINLINE bindGradient_set_offset #-}
 

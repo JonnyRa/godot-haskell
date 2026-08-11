@@ -5,8 +5,9 @@ module Godot.Core.PopupMenu
        (Godot.Core.PopupMenu.sig_id_focused,
         Godot.Core.PopupMenu.sig_id_pressed,
         Godot.Core.PopupMenu.sig_index_pressed,
-        Godot.Core.PopupMenu._get_items, Godot.Core.PopupMenu._gui_input,
-        Godot.Core.PopupMenu._set_items,
+        Godot.Core.PopupMenu._draw_background,
+        Godot.Core.PopupMenu._draw_items, Godot.Core.PopupMenu._get_items,
+        Godot.Core.PopupMenu._gui_input, Godot.Core.PopupMenu._set_items,
         Godot.Core.PopupMenu._submenu_timeout,
         Godot.Core.PopupMenu.add_check_item,
         Godot.Core.PopupMenu.add_check_shortcut,
@@ -35,6 +36,7 @@ module Godot.Core.PopupMenu
         Godot.Core.PopupMenu.get_item_submenu,
         Godot.Core.PopupMenu.get_item_text,
         Godot.Core.PopupMenu.get_item_tooltip,
+        Godot.Core.PopupMenu.get_max_height,
         Godot.Core.PopupMenu.get_submenu_popup_delay,
         Godot.Core.PopupMenu.is_hide_on_checkable_item_selection,
         Godot.Core.PopupMenu.is_hide_on_item_selection,
@@ -48,6 +50,7 @@ module Godot.Core.PopupMenu
         Godot.Core.PopupMenu.is_item_shortcut_disabled,
         Godot.Core.PopupMenu.remove_item,
         Godot.Core.PopupMenu.set_allow_search,
+        Godot.Core.PopupMenu.set_current_index,
         Godot.Core.PopupMenu.set_hide_on_checkable_item_selection,
         Godot.Core.PopupMenu.set_hide_on_item_selection,
         Godot.Core.PopupMenu.set_hide_on_state_item_selection,
@@ -67,6 +70,7 @@ module Godot.Core.PopupMenu
         Godot.Core.PopupMenu.set_item_submenu,
         Godot.Core.PopupMenu.set_item_text,
         Godot.Core.PopupMenu.set_item_tooltip,
+        Godot.Core.PopupMenu.set_max_height,
         Godot.Core.PopupMenu.set_submenu_popup_delay,
         Godot.Core.PopupMenu.toggle_item_checked,
         Godot.Core.PopupMenu.toggle_item_multistate)
@@ -90,6 +94,7 @@ sig_id_focused = Godot.Internal.Dispatch.Signal "id_focused"
 instance NodeSignal PopupMenu "id_focused" '[Int]
 
 -- | Emitted when an item of some @id@ is pressed or its accelerator is activated.
+--   				__Note:__ If @id@ is negative (either explicitly or due to overflow), this will return the corresponding index instead.
 sig_id_pressed :: Godot.Internal.Dispatch.Signal PopupMenu
 sig_id_pressed = Godot.Internal.Dispatch.Signal "id_pressed"
 
@@ -130,11 +135,68 @@ instance NodeProperty PopupMenu "hide_on_state_item_selection" Bool
 instance NodeProperty PopupMenu "items" Array 'False where
         nodeProperty = (_get_items, wrapDroppingSetter _set_items, Nothing)
 
+instance NodeProperty PopupMenu "max_height" Float 'False where
+        nodeProperty
+          = (get_max_height, wrapDroppingSetter set_max_height, Nothing)
+
 instance NodeProperty PopupMenu "submenu_popup_delay" Float 'False
          where
         nodeProperty
           = (get_submenu_popup_delay,
              wrapDroppingSetter set_submenu_popup_delay, Nothing)
+
+{-# NOINLINE bindPopupMenu__draw_background #-}
+
+bindPopupMenu__draw_background :: MethodBind
+bindPopupMenu__draw_background
+  = unsafePerformIO $
+      withCString "PopupMenu" $
+        \ clsNamePtr ->
+          withCString "_draw_background" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_draw_background ::
+                   (PopupMenu :< cls, Object :< cls) => cls -> IO ()
+_draw_background cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPopupMenu__draw_background (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod PopupMenu "_draw_background" '[] (IO ()) where
+        nodeMethod = Godot.Core.PopupMenu._draw_background
+
+{-# NOINLINE bindPopupMenu__draw_items #-}
+
+bindPopupMenu__draw_items :: MethodBind
+bindPopupMenu__draw_items
+  = unsafePerformIO $
+      withCString "PopupMenu" $
+        \ clsNamePtr ->
+          withCString "_draw_items" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_draw_items :: (PopupMenu :< cls, Object :< cls) => cls -> IO ()
+_draw_items cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPopupMenu__draw_items (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod PopupMenu "_draw_items" '[] (IO ()) where
+        nodeMethod = Godot.Core.PopupMenu._draw_items
 
 {-# NOINLINE bindPopupMenu__get_items #-}
 
@@ -1175,7 +1237,7 @@ instance NodeMethod PopupMenu "get_item_text" '[Int]
 
 {-# NOINLINE bindPopupMenu_get_item_tooltip #-}
 
--- | Returns the tooltip associated with the specified index index @idx@.
+-- | Returns the tooltip associated with the specified index @idx@.
 bindPopupMenu_get_item_tooltip :: MethodBind
 bindPopupMenu_get_item_tooltip
   = unsafePerformIO $
@@ -1185,7 +1247,7 @@ bindPopupMenu_get_item_tooltip
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the tooltip associated with the specified index index @idx@.
+-- | Returns the tooltip associated with the specified index @idx@.
 get_item_tooltip ::
                    (PopupMenu :< cls, Object :< cls) => cls -> Int -> IO GodotString
 get_item_tooltip cls arg1
@@ -1203,6 +1265,35 @@ instance NodeMethod PopupMenu "get_item_tooltip" '[Int]
            (IO GodotString)
          where
         nodeMethod = Godot.Core.PopupMenu.get_item_tooltip
+
+{-# NOINLINE bindPopupMenu_get_max_height #-}
+
+-- | If non-zero, the @PopupMenu@ will be resized vertically to that maximum value, showing a scrollbar if the content doesn't fit.
+bindPopupMenu_get_max_height :: MethodBind
+bindPopupMenu_get_max_height
+  = unsafePerformIO $
+      withCString "PopupMenu" $
+        \ clsNamePtr ->
+          withCString "get_max_height" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If non-zero, the @PopupMenu@ will be resized vertically to that maximum value, showing a scrollbar if the content doesn't fit.
+get_max_height ::
+                 (PopupMenu :< cls, Object :< cls) => cls -> IO Float
+get_max_height cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPopupMenu_get_max_height (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod PopupMenu "get_max_height" '[] (IO Float) where
+        nodeMethod = Godot.Core.PopupMenu.get_max_height
 
 {-# NOINLINE bindPopupMenu_get_submenu_popup_delay #-}
 
@@ -1618,6 +1709,38 @@ set_allow_search cls arg1
 instance NodeMethod PopupMenu "set_allow_search" '[Bool] (IO ())
          where
         nodeMethod = Godot.Core.PopupMenu.set_allow_search
+
+{-# NOINLINE bindPopupMenu_set_current_index #-}
+
+-- | Sets the currently focused item as the given @index@.
+--   				Passing @-1@ as the index makes so that no item is focused.
+bindPopupMenu_set_current_index :: MethodBind
+bindPopupMenu_set_current_index
+  = unsafePerformIO $
+      withCString "PopupMenu" $
+        \ clsNamePtr ->
+          withCString "set_current_index" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the currently focused item as the given @index@.
+--   				Passing @-1@ as the index makes so that no item is focused.
+set_current_index ::
+                    (PopupMenu :< cls, Object :< cls) => cls -> Int -> IO ()
+set_current_index cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPopupMenu_set_current_index (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod PopupMenu "set_current_index" '[Int] (IO ())
+         where
+        nodeMethod = Godot.Core.PopupMenu.set_current_index
 
 {-# NOINLINE bindPopupMenu_set_hide_on_checkable_item_selection #-}
 
@@ -2238,6 +2361,36 @@ instance NodeMethod PopupMenu "set_item_tooltip"
            (IO ())
          where
         nodeMethod = Godot.Core.PopupMenu.set_item_tooltip
+
+{-# NOINLINE bindPopupMenu_set_max_height #-}
+
+-- | If non-zero, the @PopupMenu@ will be resized vertically to that maximum value, showing a scrollbar if the content doesn't fit.
+bindPopupMenu_set_max_height :: MethodBind
+bindPopupMenu_set_max_height
+  = unsafePerformIO $
+      withCString "PopupMenu" $
+        \ clsNamePtr ->
+          withCString "set_max_height" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If non-zero, the @PopupMenu@ will be resized vertically to that maximum value, showing a scrollbar if the content doesn't fit.
+set_max_height ::
+                 (PopupMenu :< cls, Object :< cls) => cls -> Float -> IO ()
+set_max_height cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPopupMenu_set_max_height (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod PopupMenu "set_max_height" '[Float] (IO ())
+         where
+        nodeMethod = Godot.Core.PopupMenu.set_max_height
 
 {-# NOINLINE bindPopupMenu_set_submenu_popup_delay #-}
 

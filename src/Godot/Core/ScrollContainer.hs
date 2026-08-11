@@ -293,6 +293,14 @@ instance NodeMethod ScrollContainer "get_deadzone" '[] (IO Int)
 {-# NOINLINE bindScrollContainer_get_h_scroll #-}
 
 -- | The current horizontal scroll value.
+--   			__Note:__ If you are setting this value in the @method Node._ready@ function or earlier, it needs to be wrapped with @method Object.set_deferred@, since scroll bar's @Range.max_value@ is not initialized yet.
+--   			
+--   @
+--   
+--   			func _ready():
+--   			    set_deferred("scroll_horizontal", 600)
+--   			
+--   @
 bindScrollContainer_get_h_scroll :: MethodBind
 bindScrollContainer_get_h_scroll
   = unsafePerformIO $
@@ -303,6 +311,14 @@ bindScrollContainer_get_h_scroll
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The current horizontal scroll value.
+--   			__Note:__ If you are setting this value in the @method Node._ready@ function or earlier, it needs to be wrapped with @method Object.set_deferred@, since scroll bar's @Range.max_value@ is not initialized yet.
+--   			
+--   @
+--   
+--   			func _ready():
+--   			    set_deferred("scroll_horizontal", 600)
+--   			
+--   @
 get_h_scroll ::
                (ScrollContainer :< cls, Object :< cls) => cls -> IO Int
 get_h_scroll cls
@@ -355,6 +371,14 @@ instance NodeMethod ScrollContainer "get_h_scrollbar" '[]
 {-# NOINLINE bindScrollContainer_get_v_scroll #-}
 
 -- | The current vertical scroll value.
+--   			__Note:__ Setting it early needs to be deferred, just like in @scroll_horizontal@.
+--   			
+--   @
+--   
+--   			func _ready():
+--   			    set_deferred("scroll_vertical", 600)
+--   			
+--   @
 bindScrollContainer_get_v_scroll :: MethodBind
 bindScrollContainer_get_v_scroll
   = unsafePerformIO $
@@ -365,6 +389,14 @@ bindScrollContainer_get_v_scroll
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The current vertical scroll value.
+--   			__Note:__ Setting it early needs to be deferred, just like in @scroll_horizontal@.
+--   			
+--   @
+--   
+--   			func _ready():
+--   			    set_deferred("scroll_vertical", 600)
+--   			
+--   @
 get_v_scroll ::
                (ScrollContainer :< cls, Object :< cls) => cls -> IO Int
 get_v_scroll cls
@@ -638,6 +670,14 @@ instance NodeMethod ScrollContainer "set_follow_focus" '[Bool]
 {-# NOINLINE bindScrollContainer_set_h_scroll #-}
 
 -- | The current horizontal scroll value.
+--   			__Note:__ If you are setting this value in the @method Node._ready@ function or earlier, it needs to be wrapped with @method Object.set_deferred@, since scroll bar's @Range.max_value@ is not initialized yet.
+--   			
+--   @
+--   
+--   			func _ready():
+--   			    set_deferred("scroll_horizontal", 600)
+--   			
+--   @
 bindScrollContainer_set_h_scroll :: MethodBind
 bindScrollContainer_set_h_scroll
   = unsafePerformIO $
@@ -648,6 +688,14 @@ bindScrollContainer_set_h_scroll
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The current horizontal scroll value.
+--   			__Note:__ If you are setting this value in the @method Node._ready@ function or earlier, it needs to be wrapped with @method Object.set_deferred@, since scroll bar's @Range.max_value@ is not initialized yet.
+--   			
+--   @
+--   
+--   			func _ready():
+--   			    set_deferred("scroll_horizontal", 600)
+--   			
+--   @
 set_h_scroll ::
                (ScrollContainer :< cls, Object :< cls) => cls -> Int -> IO ()
 set_h_scroll cls arg1
@@ -669,6 +717,14 @@ instance NodeMethod ScrollContainer "set_h_scroll" '[Int] (IO ())
 {-# NOINLINE bindScrollContainer_set_v_scroll #-}
 
 -- | The current vertical scroll value.
+--   			__Note:__ Setting it early needs to be deferred, just like in @scroll_horizontal@.
+--   			
+--   @
+--   
+--   			func _ready():
+--   			    set_deferred("scroll_vertical", 600)
+--   			
+--   @
 bindScrollContainer_set_v_scroll :: MethodBind
 bindScrollContainer_set_v_scroll
   = unsafePerformIO $
@@ -679,6 +735,14 @@ bindScrollContainer_set_v_scroll
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The current vertical scroll value.
+--   			__Note:__ Setting it early needs to be deferred, just like in @scroll_horizontal@.
+--   			
+--   @
+--   
+--   			func _ready():
+--   			    set_deferred("scroll_vertical", 600)
+--   			
+--   @
 set_v_scroll ::
                (ScrollContainer :< cls, Object :< cls) => cls -> Int -> IO ()
 set_v_scroll cls arg1

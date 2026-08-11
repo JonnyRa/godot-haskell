@@ -2,10 +2,17 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.Font
-       (Godot.Core.Font.draw, Godot.Core.Font.draw_char,
-        Godot.Core.Font.get_ascent, Godot.Core.Font.get_char_size,
-        Godot.Core.Font.get_descent, Godot.Core.Font.get_height,
-        Godot.Core.Font.get_string_size,
+       (Godot.Core.Font._CONTOUR_CURVE_TAG_OFF_CONIC,
+        Godot.Core.Font._CONTOUR_CURVE_TAG_OFF_CUBIC,
+        Godot.Core.Font._CONTOUR_CURVE_TAG_ON, Godot.Core.Font.draw,
+        Godot.Core.Font.draw_char, Godot.Core.Font.get_ascent,
+        Godot.Core.Font.get_char_contours, Godot.Core.Font.get_char_size,
+        Godot.Core.Font.get_char_texture,
+        Godot.Core.Font.get_char_texture_size,
+        Godot.Core.Font.get_char_tx_offset,
+        Godot.Core.Font.get_char_tx_size,
+        Godot.Core.Font.get_char_tx_uv_rect, Godot.Core.Font.get_descent,
+        Godot.Core.Font.get_height, Godot.Core.Font.get_string_size,
         Godot.Core.Font.get_wordwrap_string_size,
         Godot.Core.Font.has_outline,
         Godot.Core.Font.is_distance_field_hint,
@@ -22,6 +29,15 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Resource()
+
+_CONTOUR_CURVE_TAG_OFF_CONIC :: Int
+_CONTOUR_CURVE_TAG_OFF_CONIC = 0
+
+_CONTOUR_CURVE_TAG_OFF_CUBIC :: Int
+_CONTOUR_CURVE_TAG_OFF_CUBIC = 2
+
+_CONTOUR_CURVE_TAG_ON :: Int
+_CONTOUR_CURVE_TAG_ON = 1
 
 {-# NOINLINE bindFont_draw #-}
 
@@ -65,6 +81,7 @@ instance NodeMethod Font "draw"
 {-# NOINLINE bindFont_draw_char #-}
 
 -- | Draw character @char@ into a canvas item using the font at a given position, with @modulate@ color, and optionally kerning if @next@ is passed. clipping the width. @position@ specifies the baseline, not the top. To draw from the top, @i@ascent@/i@ must be added to the Y axis. The width used by the character is returned, making this function useful for drawing strings character by character.
+--   				If @outline@ is @true@, the outline of the character is drawn instead of the character itself.
 bindFont_draw_char :: MethodBind
 bindFont_draw_char
   = unsafePerformIO $
@@ -75,6 +92,7 @@ bindFont_draw_char
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Draw character @char@ into a canvas item using the font at a given position, with @modulate@ color, and optionally kerning if @next@ is passed. clipping the width. @position@ specifies the baseline, not the top. To draw from the top, @i@ascent@/i@ must be added to the Y axis. The width used by the character is returned, making this function useful for drawing strings character by character.
+--   				If @outline@ is @true@, the outline of the character is drawn instead of the character itself.
 draw_char ::
             (Font :< cls, Object :< cls) =>
             cls ->
@@ -126,6 +144,45 @@ get_ascent cls
 instance NodeMethod Font "get_ascent" '[] (IO Float) where
         nodeMethod = Godot.Core.Font.get_ascent
 
+{-# NOINLINE bindFont_get_char_contours #-}
+
+-- | Returns outline contours of the glyph as a @Dictionary@ with the following contents:
+--   				@points@         - @PoolVector3Array@, containing outline points. @x@ and @y@ are point coordinates. @z@ is the type of the point, using the @enum ContourPointTag@ values.
+--   				@contours@       - @PoolIntArray@, containing indices the end points of each contour.
+--   				@orientation@    - @bool@, contour orientation. If @true@, clockwise contours must be filled.
+bindFont_get_char_contours :: MethodBind
+bindFont_get_char_contours
+  = unsafePerformIO $
+      withCString "Font" $
+        \ clsNamePtr ->
+          withCString "get_char_contours" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns outline contours of the glyph as a @Dictionary@ with the following contents:
+--   				@points@         - @PoolVector3Array@, containing outline points. @x@ and @y@ are point coordinates. @z@ is the type of the point, using the @enum ContourPointTag@ values.
+--   				@contours@       - @PoolIntArray@, containing indices the end points of each contour.
+--   				@orientation@    - @bool@, contour orientation. If @true@, clockwise contours must be filled.
+get_char_contours ::
+                    (Font :< cls, Object :< cls) =>
+                    cls -> Int -> Maybe Int -> IO Dictionary
+get_char_contours cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (0)) toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindFont_get_char_contours (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Font "get_char_contours" '[Int, Maybe Int]
+           (IO Dictionary)
+         where
+        nodeMethod = Godot.Core.Font.get_char_contours
+
 {-# NOINLINE bindFont_get_char_size #-}
 
 -- | Returns the size of a character, optionally taking kerning into account if the next character is provided. Note that the height returned is the font height (see @method get_height@) and has no relation to the glyph height.
@@ -157,6 +214,181 @@ instance NodeMethod Font "get_char_size" '[Int, Maybe Int]
            (IO Vector2)
          where
         nodeMethod = Godot.Core.Font.get_char_size
+
+{-# NOINLINE bindFont_get_char_texture #-}
+
+-- | Returns resource id of the cache texture containing the char.
+bindFont_get_char_texture :: MethodBind
+bindFont_get_char_texture
+  = unsafePerformIO $
+      withCString "Font" $
+        \ clsNamePtr ->
+          withCString "get_char_texture" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns resource id of the cache texture containing the char.
+get_char_texture ::
+                   (Font :< cls, Object :< cls) =>
+                   cls -> Int -> Maybe Int -> Maybe Bool -> IO Rid
+get_char_texture cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (0)) toVariant arg2,
+       maybe (VariantBool False) toVariant arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindFont_get_char_texture (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Font "get_char_texture"
+           '[Int, Maybe Int, Maybe Bool]
+           (IO Rid)
+         where
+        nodeMethod = Godot.Core.Font.get_char_texture
+
+{-# NOINLINE bindFont_get_char_texture_size #-}
+
+-- | Returns size of the cache texture containing the char.
+bindFont_get_char_texture_size :: MethodBind
+bindFont_get_char_texture_size
+  = unsafePerformIO $
+      withCString "Font" $
+        \ clsNamePtr ->
+          withCString "get_char_texture_size" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns size of the cache texture containing the char.
+get_char_texture_size ::
+                        (Font :< cls, Object :< cls) =>
+                        cls -> Int -> Maybe Int -> Maybe Bool -> IO Vector2
+get_char_texture_size cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (0)) toVariant arg2,
+       maybe (VariantBool False) toVariant arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindFont_get_char_texture_size (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Font "get_char_texture_size"
+           '[Int, Maybe Int, Maybe Bool]
+           (IO Vector2)
+         where
+        nodeMethod = Godot.Core.Font.get_char_texture_size
+
+{-# NOINLINE bindFont_get_char_tx_offset #-}
+
+-- | Returns char offset from the baseline.
+bindFont_get_char_tx_offset :: MethodBind
+bindFont_get_char_tx_offset
+  = unsafePerformIO $
+      withCString "Font" $
+        \ clsNamePtr ->
+          withCString "get_char_tx_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns char offset from the baseline.
+get_char_tx_offset ::
+                     (Font :< cls, Object :< cls) =>
+                     cls -> Int -> Maybe Int -> Maybe Bool -> IO Vector2
+get_char_tx_offset cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (0)) toVariant arg2,
+       maybe (VariantBool False) toVariant arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindFont_get_char_tx_offset (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Font "get_char_tx_offset"
+           '[Int, Maybe Int, Maybe Bool]
+           (IO Vector2)
+         where
+        nodeMethod = Godot.Core.Font.get_char_tx_offset
+
+{-# NOINLINE bindFont_get_char_tx_size #-}
+
+-- | Returns size of the char.
+bindFont_get_char_tx_size :: MethodBind
+bindFont_get_char_tx_size
+  = unsafePerformIO $
+      withCString "Font" $
+        \ clsNamePtr ->
+          withCString "get_char_tx_size" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns size of the char.
+get_char_tx_size ::
+                   (Font :< cls, Object :< cls) =>
+                   cls -> Int -> Maybe Int -> Maybe Bool -> IO Vector2
+get_char_tx_size cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (0)) toVariant arg2,
+       maybe (VariantBool False) toVariant arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindFont_get_char_tx_size (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Font "get_char_tx_size"
+           '[Int, Maybe Int, Maybe Bool]
+           (IO Vector2)
+         where
+        nodeMethod = Godot.Core.Font.get_char_tx_size
+
+{-# NOINLINE bindFont_get_char_tx_uv_rect #-}
+
+-- | Returns rectangle in the cache texture containing the char.
+bindFont_get_char_tx_uv_rect :: MethodBind
+bindFont_get_char_tx_uv_rect
+  = unsafePerformIO $
+      withCString "Font" $
+        \ clsNamePtr ->
+          withCString "get_char_tx_uv_rect" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns rectangle in the cache texture containing the char.
+get_char_tx_uv_rect ::
+                      (Font :< cls, Object :< cls) =>
+                      cls -> Int -> Maybe Int -> Maybe Bool -> IO Rect2
+get_char_tx_uv_rect cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (0)) toVariant arg2,
+       maybe (VariantBool False) toVariant arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindFont_get_char_tx_uv_rect (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Font "get_char_tx_uv_rect"
+           '[Int, Maybe Int, Maybe Bool]
+           (IO Rect2)
+         where
+        nodeMethod = Godot.Core.Font.get_char_tx_uv_rect
 
 {-# NOINLINE bindFont_get_descent #-}
 

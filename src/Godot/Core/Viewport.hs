@@ -68,6 +68,7 @@ module Godot.Core.Viewport
         Godot.Core.Viewport.get_size_override,
         Godot.Core.Viewport.get_texture,
         Godot.Core.Viewport.get_update_mode, Godot.Core.Viewport.get_usage,
+        Godot.Core.Viewport.get_use_32_bpc_depth,
         Godot.Core.Viewport.get_use_debanding,
         Godot.Core.Viewport.get_use_fxaa, Godot.Core.Viewport.get_vflip,
         Godot.Core.Viewport.get_viewport_rid,
@@ -75,6 +76,7 @@ module Godot.Core.Viewport
         Godot.Core.Viewport.get_world, Godot.Core.Viewport.get_world_2d,
         Godot.Core.Viewport.gui_get_drag_data,
         Godot.Core.Viewport.gui_has_modal_stack,
+        Godot.Core.Viewport.gui_is_drag_successful,
         Godot.Core.Viewport.gui_is_dragging,
         Godot.Core.Viewport.has_transparent_background,
         Godot.Core.Viewport.input, Godot.Core.Viewport.is_3d_disabled,
@@ -112,6 +114,7 @@ module Godot.Core.Viewport
         Godot.Core.Viewport.set_snap_controls_to_pixels,
         Godot.Core.Viewport.set_transparent_background,
         Godot.Core.Viewport.set_update_mode, Godot.Core.Viewport.set_usage,
+        Godot.Core.Viewport.set_use_32_bpc_depth,
         Godot.Core.Viewport.set_use_arvr,
         Godot.Core.Viewport.set_use_debanding,
         Godot.Core.Viewport.set_use_fxaa,
@@ -423,6 +426,11 @@ instance NodeProperty Viewport "transparent_bg" Bool 'False where
 
 instance NodeProperty Viewport "usage" Int 'False where
         nodeProperty = (get_usage, wrapDroppingSetter set_usage, Nothing)
+
+instance NodeProperty Viewport "use_32_bpc_depth" Bool 'False where
+        nodeProperty
+          = (get_use_32_bpc_depth, wrapDroppingSetter set_use_32_bpc_depth,
+             Nothing)
 
 instance NodeProperty Viewport "world" World 'False where
         nodeProperty = (get_world, wrapDroppingSetter set_world, Nothing)
@@ -916,8 +924,9 @@ instance NodeMethod Viewport "get_global_canvas_transform" '[]
 
 {-# NOINLINE bindViewport_get_hdr #-}
 
--- | If @true@, the viewport rendering will receive benefits from High Dynamic Range algorithm. High Dynamic Range allows the viewport to receive values that are outside the 0-1 range. In Godot HDR uses 16 bits, meaning it does not store the full range of a floating point number.
+-- | If @true@, the viewport rendering will receive benefits from High Dynamic Range algorithm. High Dynamic Range allows the viewport to receive values that are outside the 0-1 range. In Godot, HDR uses half floating-point precision (16-bit) by default. To use full floating-point precision (32-bit), enable @use_32_bpc_depth@.
 --   			__Note:__ Requires @usage@ to be set to @USAGE_3D@ or @USAGE_3D_NO_EFFECTS@, since HDR is not supported for 2D.
+--   			__Note:__ Only available on the GLES3 backend.
 bindViewport_get_hdr :: MethodBind
 bindViewport_get_hdr
   = unsafePerformIO $
@@ -927,8 +936,9 @@ bindViewport_get_hdr
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the viewport rendering will receive benefits from High Dynamic Range algorithm. High Dynamic Range allows the viewport to receive values that are outside the 0-1 range. In Godot HDR uses 16 bits, meaning it does not store the full range of a floating point number.
+-- | If @true@, the viewport rendering will receive benefits from High Dynamic Range algorithm. High Dynamic Range allows the viewport to receive values that are outside the 0-1 range. In Godot, HDR uses half floating-point precision (16-bit) by default. To use full floating-point precision (32-bit), enable @use_32_bpc_depth@.
 --   			__Note:__ Requires @usage@ to be set to @USAGE_3D@ or @USAGE_3D_NO_EFFECTS@, since HDR is not supported for 2D.
+--   			__Note:__ Only available on the GLES3 backend.
 get_hdr :: (Viewport :< cls, Object :< cls) => cls -> IO Bool
 get_hdr cls
   = withVariantArray []
@@ -1002,7 +1012,7 @@ instance NodeMethod Viewport "get_modal_stack_top" '[] (IO Control)
 
 {-# NOINLINE bindViewport_get_mouse_position #-}
 
--- | Returns the mouse position relative to the viewport.
+-- | Returns the mouse's position in this @Viewport@ using the coordinate system of this @Viewport@.
 bindViewport_get_mouse_position :: MethodBind
 bindViewport_get_mouse_position
   = unsafePerformIO $
@@ -1012,7 +1022,7 @@ bindViewport_get_mouse_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the mouse position relative to the viewport.
+-- | Returns the mouse's position in this @Viewport@ using the coordinate system of this @Viewport@.
 get_mouse_position ::
                      (Viewport :< cls, Object :< cls) => cls -> IO Vector2
 get_mouse_position cls
@@ -1156,7 +1166,7 @@ instance NodeMethod Viewport "get_shadow_atlas_quadrant_subdiv"
 {-# NOINLINE bindViewport_get_shadow_atlas_size #-}
 
 -- | The shadow atlas' resolution (used for omni and spot lights). The value will be rounded up to the nearest power of 2.
---   			__Note:__ If this is set to 0, shadows won't be visible. Since user-created viewports default to a value of 0, this value must be set above 0 manually.
+--   			__Note:__ If this is set to @0@, both point @i@and@/i@ directional shadows won't be visible. Since user-created viewports default to a value of @0@, this value must be set above @0@ manually (typically at least @256@).
 bindViewport_get_shadow_atlas_size :: MethodBind
 bindViewport_get_shadow_atlas_size
   = unsafePerformIO $
@@ -1167,7 +1177,7 @@ bindViewport_get_shadow_atlas_size
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The shadow atlas' resolution (used for omni and spot lights). The value will be rounded up to the nearest power of 2.
---   			__Note:__ If this is set to 0, shadows won't be visible. Since user-created viewports default to a value of 0, this value must be set above 0 manually.
+--   			__Note:__ If this is set to @0@, both point @i@and@/i@ directional shadows won't be visible. Since user-created viewports default to a value of @0@, this value must be set above @0@ manually (typically at least @256@).
 get_shadow_atlas_size ::
                         (Viewport :< cls, Object :< cls) => cls -> IO Int
 get_shadow_atlas_size cls
@@ -1347,7 +1357,8 @@ instance NodeMethod Viewport "get_update_mode" '[] (IO Int) where
 
 {-# NOINLINE bindViewport_get_usage #-}
 
--- | The rendering mode of viewport.
+-- | The viewport's rendering mode. This controls which buffers are allocated for the viewport (2D only, or 2D + 3D). 2D-only options can reduce memory usage and improve performance slightly, especially on low-end devices.
+--   			__Note:__ If set to @USAGE_2D@ or @USAGE_2D_NO_SAMPLING@, @hdr@ will have no effect when enabled since HDR is not supported for 2D.
 bindViewport_get_usage :: MethodBind
 bindViewport_get_usage
   = unsafePerformIO $
@@ -1357,7 +1368,8 @@ bindViewport_get_usage
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The rendering mode of viewport.
+-- | The viewport's rendering mode. This controls which buffers are allocated for the viewport (2D only, or 2D + 3D). 2D-only options can reduce memory usage and improve performance slightly, especially on low-end devices.
+--   			__Note:__ If set to @USAGE_2D@ or @USAGE_2D_NO_SAMPLING@, @hdr@ will have no effect when enabled since HDR is not supported for 2D.
 get_usage :: (Viewport :< cls, Object :< cls) => cls -> IO Int
 get_usage cls
   = withVariantArray []
@@ -1372,9 +1384,45 @@ get_usage cls
 instance NodeMethod Viewport "get_usage" '[] (IO Int) where
         nodeMethod = Godot.Core.Viewport.get_usage
 
+{-# NOINLINE bindViewport_get_use_32_bpc_depth #-}
+
+-- | If @true@, allocates the viewport's framebuffer with full floating-point precision (32-bit) instead of half floating-point precision (16-bit). Only effective when @hdr@ is also enabled.
+--   			__Note:__ Enabling this setting does not improve rendering quality. Using full floating-point precision is slower, and is generally only needed for advanced shaders that require a high level of precision. To reduce banding, enable @debanding@ instead.
+--   			__Note:__ Only available on the GLES3 backend.
+bindViewport_get_use_32_bpc_depth :: MethodBind
+bindViewport_get_use_32_bpc_depth
+  = unsafePerformIO $
+      withCString "Viewport" $
+        \ clsNamePtr ->
+          withCString "get_use_32_bpc_depth" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, allocates the viewport's framebuffer with full floating-point precision (32-bit) instead of half floating-point precision (16-bit). Only effective when @hdr@ is also enabled.
+--   			__Note:__ Enabling this setting does not improve rendering quality. Using full floating-point precision is slower, and is generally only needed for advanced shaders that require a high level of precision. To reduce banding, enable @debanding@ instead.
+--   			__Note:__ Only available on the GLES3 backend.
+get_use_32_bpc_depth ::
+                       (Viewport :< cls, Object :< cls) => cls -> IO Bool
+get_use_32_bpc_depth cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindViewport_get_use_32_bpc_depth
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Viewport "get_use_32_bpc_depth" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.Viewport.get_use_32_bpc_depth
+
 {-# NOINLINE bindViewport_get_use_debanding #-}
 
--- | If @true@, uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
+-- | If @true@, uses a fast post-processing filter to make banding significantly less visible in 3D. 2D rendering is @i@not@/i@ affected by debanding unless the @Environment.background_mode@ is @Environment.BG_CANVAS@. In this case, @usage@ must also be set to @USAGE_3D@. See also @ProjectSettings.rendering/quality/filters/use_debanding@.
+--   			In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
 --   			__Note:__ Only available on the GLES3 backend. @hdr@ must also be @true@ for debanding to be effective.
 bindViewport_get_use_debanding :: MethodBind
 bindViewport_get_use_debanding
@@ -1385,7 +1433,8 @@ bindViewport_get_use_debanding
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
+-- | If @true@, uses a fast post-processing filter to make banding significantly less visible in 3D. 2D rendering is @i@not@/i@ affected by debanding unless the @Environment.background_mode@ is @Environment.BG_CANVAS@. In this case, @usage@ must also be set to @USAGE_3D@. See also @ProjectSettings.rendering/quality/filters/use_debanding@.
+--   			In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
 --   			__Note:__ Only available on the GLES3 backend. @hdr@ must also be @true@ for debanding to be effective.
 get_use_debanding ::
                     (Viewport :< cls, Object :< cls) => cls -> IO Bool
@@ -1627,9 +1676,41 @@ instance NodeMethod Viewport "gui_has_modal_stack" '[] (IO Bool)
          where
         nodeMethod = Godot.Core.Viewport.gui_has_modal_stack
 
+{-# NOINLINE bindViewport_gui_is_drag_successful #-}
+
+-- | Returns @true@ if the drag operation is successful.
+bindViewport_gui_is_drag_successful :: MethodBind
+bindViewport_gui_is_drag_successful
+  = unsafePerformIO $
+      withCString "Viewport" $
+        \ clsNamePtr ->
+          withCString "gui_is_drag_successful" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if the drag operation is successful.
+gui_is_drag_successful ::
+                         (Viewport :< cls, Object :< cls) => cls -> IO Bool
+gui_is_drag_successful cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindViewport_gui_is_drag_successful
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Viewport "gui_is_drag_successful" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.Viewport.gui_is_drag_successful
+
 {-# NOINLINE bindViewport_gui_is_dragging #-}
 
 -- | Returns @true@ if the viewport is currently performing a drag operation.
+--   				Alternative to @Node.NOTIFICATION_DRAG_BEGIN@ and @Node.NOTIFICATION_DRAG_END@ when you prefer polling the value.
 bindViewport_gui_is_dragging :: MethodBind
 bindViewport_gui_is_dragging
   = unsafePerformIO $
@@ -1640,6 +1721,7 @@ bindViewport_gui_is_dragging
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ if the viewport is currently performing a drag operation.
+--   				Alternative to @Node.NOTIFICATION_DRAG_BEGIN@ and @Node.NOTIFICATION_DRAG_END@ when you prefer polling the value.
 gui_is_dragging ::
                   (Viewport :< cls, Object :< cls) => cls -> IO Bool
 gui_is_dragging cls
@@ -1715,7 +1797,7 @@ instance NodeMethod Viewport "input" '[InputEvent] (IO ()) where
 
 {-# NOINLINE bindViewport_is_3d_disabled #-}
 
--- | If @true@, the viewport will disable 3D rendering. For actual disabling use @usage@.
+-- | If @true@, the viewport will disable 3D rendering. To actually disable allocation of 3D buffers, set @usage@ instead.
 bindViewport_is_3d_disabled :: MethodBind
 bindViewport_is_3d_disabled
   = unsafePerformIO $
@@ -1725,7 +1807,7 @@ bindViewport_is_3d_disabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the viewport will disable 3D rendering. For actual disabling use @usage@.
+-- | If @true@, the viewport will disable 3D rendering. To actually disable allocation of 3D buffers, set @usage@ instead.
 is_3d_disabled ::
                  (Viewport :< cls, Object :< cls) => cls -> IO Bool
 is_3d_disabled cls
@@ -1991,7 +2073,7 @@ instance NodeMethod Viewport "is_snap_controls_to_pixels_enabled"
 
 {-# NOINLINE bindViewport_is_using_own_world #-}
 
--- | If @true@, the viewport will use @World@ defined in @world@ property.
+-- | If @true@, the viewport will use a unique copy of the @World@ defined in @world@.
 bindViewport_is_using_own_world :: MethodBind
 bindViewport_is_using_own_world
   = unsafePerformIO $
@@ -2001,7 +2083,7 @@ bindViewport_is_using_own_world
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the viewport will use @World@ defined in @world@ property.
+-- | If @true@, the viewport will use a unique copy of the @World@ defined in @world@.
 is_using_own_world ::
                      (Viewport :< cls, Object :< cls) => cls -> IO Bool
 is_using_own_world cls
@@ -2242,7 +2324,7 @@ instance NodeMethod Viewport "set_debug_draw" '[Int] (IO ()) where
 
 {-# NOINLINE bindViewport_set_disable_3d #-}
 
--- | If @true@, the viewport will disable 3D rendering. For actual disabling use @usage@.
+-- | If @true@, the viewport will disable 3D rendering. To actually disable allocation of 3D buffers, set @usage@ instead.
 bindViewport_set_disable_3d :: MethodBind
 bindViewport_set_disable_3d
   = unsafePerformIO $
@@ -2252,7 +2334,7 @@ bindViewport_set_disable_3d
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the viewport will disable 3D rendering. For actual disabling use @usage@.
+-- | If @true@, the viewport will disable 3D rendering. To actually disable allocation of 3D buffers, set @usage@ instead.
 set_disable_3d ::
                  (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_disable_3d cls arg1
@@ -2364,8 +2446,9 @@ instance NodeMethod Viewport "set_handle_input_locally" '[Bool]
 
 {-# NOINLINE bindViewport_set_hdr #-}
 
--- | If @true@, the viewport rendering will receive benefits from High Dynamic Range algorithm. High Dynamic Range allows the viewport to receive values that are outside the 0-1 range. In Godot HDR uses 16 bits, meaning it does not store the full range of a floating point number.
+-- | If @true@, the viewport rendering will receive benefits from High Dynamic Range algorithm. High Dynamic Range allows the viewport to receive values that are outside the 0-1 range. In Godot, HDR uses half floating-point precision (16-bit) by default. To use full floating-point precision (32-bit), enable @use_32_bpc_depth@.
 --   			__Note:__ Requires @usage@ to be set to @USAGE_3D@ or @USAGE_3D_NO_EFFECTS@, since HDR is not supported for 2D.
+--   			__Note:__ Only available on the GLES3 backend.
 bindViewport_set_hdr :: MethodBind
 bindViewport_set_hdr
   = unsafePerformIO $
@@ -2375,8 +2458,9 @@ bindViewport_set_hdr
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the viewport rendering will receive benefits from High Dynamic Range algorithm. High Dynamic Range allows the viewport to receive values that are outside the 0-1 range. In Godot HDR uses 16 bits, meaning it does not store the full range of a floating point number.
+-- | If @true@, the viewport rendering will receive benefits from High Dynamic Range algorithm. High Dynamic Range allows the viewport to receive values that are outside the 0-1 range. In Godot, HDR uses half floating-point precision (16-bit) by default. To use full floating-point precision (32-bit), enable @use_32_bpc_depth@.
 --   			__Note:__ Requires @usage@ to be set to @USAGE_3D@ or @USAGE_3D_NO_EFFECTS@, since HDR is not supported for 2D.
+--   			__Note:__ Only available on the GLES3 backend.
 set_hdr :: (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_hdr cls arg1
   = withVariantArray [toVariant arg1]
@@ -2547,7 +2631,7 @@ instance NodeMethod Viewport "set_shadow_atlas_quadrant_subdiv"
 {-# NOINLINE bindViewport_set_shadow_atlas_size #-}
 
 -- | The shadow atlas' resolution (used for omni and spot lights). The value will be rounded up to the nearest power of 2.
---   			__Note:__ If this is set to 0, shadows won't be visible. Since user-created viewports default to a value of 0, this value must be set above 0 manually.
+--   			__Note:__ If this is set to @0@, both point @i@and@/i@ directional shadows won't be visible. Since user-created viewports default to a value of @0@, this value must be set above @0@ manually (typically at least @256@).
 bindViewport_set_shadow_atlas_size :: MethodBind
 bindViewport_set_shadow_atlas_size
   = unsafePerformIO $
@@ -2558,7 +2642,7 @@ bindViewport_set_shadow_atlas_size
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The shadow atlas' resolution (used for omni and spot lights). The value will be rounded up to the nearest power of 2.
---   			__Note:__ If this is set to 0, shadows won't be visible. Since user-created viewports default to a value of 0, this value must be set above 0 manually.
+--   			__Note:__ If this is set to @0@, both point @i@and@/i@ directional shadows won't be visible. Since user-created viewports default to a value of @0@, this value must be set above @0@ manually (typically at least @256@).
 set_shadow_atlas_size ::
                         (Viewport :< cls, Object :< cls) => cls -> Int -> IO ()
 set_shadow_atlas_size cls arg1
@@ -2800,7 +2884,8 @@ instance NodeMethod Viewport "set_update_mode" '[Int] (IO ()) where
 
 {-# NOINLINE bindViewport_set_usage #-}
 
--- | The rendering mode of viewport.
+-- | The viewport's rendering mode. This controls which buffers are allocated for the viewport (2D only, or 2D + 3D). 2D-only options can reduce memory usage and improve performance slightly, especially on low-end devices.
+--   			__Note:__ If set to @USAGE_2D@ or @USAGE_2D_NO_SAMPLING@, @hdr@ will have no effect when enabled since HDR is not supported for 2D.
 bindViewport_set_usage :: MethodBind
 bindViewport_set_usage
   = unsafePerformIO $
@@ -2810,7 +2895,8 @@ bindViewport_set_usage
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The rendering mode of viewport.
+-- | The viewport's rendering mode. This controls which buffers are allocated for the viewport (2D only, or 2D + 3D). 2D-only options can reduce memory usage and improve performance slightly, especially on low-end devices.
+--   			__Note:__ If set to @USAGE_2D@ or @USAGE_2D_NO_SAMPLING@, @hdr@ will have no effect when enabled since HDR is not supported for 2D.
 set_usage ::
             (Viewport :< cls, Object :< cls) => cls -> Int -> IO ()
 set_usage cls arg1
@@ -2825,6 +2911,41 @@ set_usage cls arg1
 
 instance NodeMethod Viewport "set_usage" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Viewport.set_usage
+
+{-# NOINLINE bindViewport_set_use_32_bpc_depth #-}
+
+-- | If @true@, allocates the viewport's framebuffer with full floating-point precision (32-bit) instead of half floating-point precision (16-bit). Only effective when @hdr@ is also enabled.
+--   			__Note:__ Enabling this setting does not improve rendering quality. Using full floating-point precision is slower, and is generally only needed for advanced shaders that require a high level of precision. To reduce banding, enable @debanding@ instead.
+--   			__Note:__ Only available on the GLES3 backend.
+bindViewport_set_use_32_bpc_depth :: MethodBind
+bindViewport_set_use_32_bpc_depth
+  = unsafePerformIO $
+      withCString "Viewport" $
+        \ clsNamePtr ->
+          withCString "set_use_32_bpc_depth" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, allocates the viewport's framebuffer with full floating-point precision (32-bit) instead of half floating-point precision (16-bit). Only effective when @hdr@ is also enabled.
+--   			__Note:__ Enabling this setting does not improve rendering quality. Using full floating-point precision is slower, and is generally only needed for advanced shaders that require a high level of precision. To reduce banding, enable @debanding@ instead.
+--   			__Note:__ Only available on the GLES3 backend.
+set_use_32_bpc_depth ::
+                       (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_use_32_bpc_depth cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindViewport_set_use_32_bpc_depth
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Viewport "set_use_32_bpc_depth" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.Viewport.set_use_32_bpc_depth
 
 {-# NOINLINE bindViewport_set_use_arvr #-}
 
@@ -2857,7 +2978,8 @@ instance NodeMethod Viewport "set_use_arvr" '[Bool] (IO ()) where
 
 {-# NOINLINE bindViewport_set_use_debanding #-}
 
--- | If @true@, uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
+-- | If @true@, uses a fast post-processing filter to make banding significantly less visible in 3D. 2D rendering is @i@not@/i@ affected by debanding unless the @Environment.background_mode@ is @Environment.BG_CANVAS@. In this case, @usage@ must also be set to @USAGE_3D@. See also @ProjectSettings.rendering/quality/filters/use_debanding@.
+--   			In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
 --   			__Note:__ Only available on the GLES3 backend. @hdr@ must also be @true@ for debanding to be effective.
 bindViewport_set_use_debanding :: MethodBind
 bindViewport_set_use_debanding
@@ -2868,7 +2990,8 @@ bindViewport_set_use_debanding
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, uses a fast post-processing filter to make banding significantly less visible. In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
+-- | If @true@, uses a fast post-processing filter to make banding significantly less visible in 3D. 2D rendering is @i@not@/i@ affected by debanding unless the @Environment.background_mode@ is @Environment.BG_CANVAS@. In this case, @usage@ must also be set to @USAGE_3D@. See also @ProjectSettings.rendering/quality/filters/use_debanding@.
+--   			In some cases, debanding may introduce a slightly noticeable dithering pattern. It's recommended to enable debanding only when actually needed since the dithering pattern will make lossless-compressed screenshots larger.
 --   			__Note:__ Only available on the GLES3 backend. @hdr@ must also be @true@ for debanding to be effective.
 set_use_debanding ::
                     (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
@@ -2918,7 +3041,7 @@ instance NodeMethod Viewport "set_use_fxaa" '[Bool] (IO ()) where
 
 {-# NOINLINE bindViewport_set_use_own_world #-}
 
--- | If @true@, the viewport will use @World@ defined in @world@ property.
+-- | If @true@, the viewport will use a unique copy of the @World@ defined in @world@.
 bindViewport_set_use_own_world :: MethodBind
 bindViewport_set_use_own_world
   = unsafePerformIO $
@@ -2928,7 +3051,7 @@ bindViewport_set_use_own_world
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the viewport will use @World@ defined in @world@ property.
+-- | If @true@, the viewport will use a unique copy of the @World@ defined in @world@.
 set_use_own_world ::
                     (Viewport :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_use_own_world cls arg1
@@ -3151,7 +3274,7 @@ instance NodeMethod Viewport "use_arvr" '[] (IO Bool) where
 
 {-# NOINLINE bindViewport_warp_mouse #-}
 
--- | Warps the mouse to a position relative to the viewport.
+-- | Moves the mouse pointer to the specified position in this @Viewport@ using the coordinate system of this @Viewport@.
 bindViewport_warp_mouse :: MethodBind
 bindViewport_warp_mouse
   = unsafePerformIO $
@@ -3161,7 +3284,7 @@ bindViewport_warp_mouse
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Warps the mouse to a position relative to the viewport.
+-- | Moves the mouse pointer to the specified position in this @Viewport@ using the coordinate system of this @Viewport@.
 warp_mouse ::
              (Viewport :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 warp_mouse cls arg1

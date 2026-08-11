@@ -3,12 +3,21 @@
   MultiParamTypeClasses #-}
 module Godot.Core.LineEdit
        (Godot.Core.LineEdit._MENU_PASTE, Godot.Core.LineEdit._ALIGN_RIGHT,
+        Godot.Core.LineEdit._KEYBOARD_TYPE_PASSWORD,
         Godot.Core.LineEdit._ALIGN_FILL, Godot.Core.LineEdit._MENU_CLEAR,
         Godot.Core.LineEdit._MENU_MAX, Godot.Core.LineEdit._MENU_REDO,
-        Godot.Core.LineEdit._MENU_COPY, Godot.Core.LineEdit._MENU_UNDO,
+        Godot.Core.LineEdit._MENU_COPY,
+        Godot.Core.LineEdit._KEYBOARD_TYPE_PHONE,
+        Godot.Core.LineEdit._MENU_UNDO,
+        Godot.Core.LineEdit._KEYBOARD_TYPE_NUMBER_DECIMAL,
+        Godot.Core.LineEdit._KEYBOARD_TYPE_MULTILINE,
         Godot.Core.LineEdit._MENU_SELECT_ALL,
-        Godot.Core.LineEdit._MENU_CUT, Godot.Core.LineEdit._ALIGN_LEFT,
-        Godot.Core.LineEdit._ALIGN_CENTER,
+        Godot.Core.LineEdit._KEYBOARD_TYPE_EMAIL_ADDRESS,
+        Godot.Core.LineEdit._MENU_CUT,
+        Godot.Core.LineEdit._KEYBOARD_TYPE_NUMBER,
+        Godot.Core.LineEdit._KEYBOARD_TYPE_URL,
+        Godot.Core.LineEdit._KEYBOARD_TYPE_DEFAULT,
+        Godot.Core.LineEdit._ALIGN_LEFT, Godot.Core.LineEdit._ALIGN_CENTER,
         Godot.Core.LineEdit.sig_text_change_rejected,
         Godot.Core.LineEdit.sig_text_changed,
         Godot.Core.LineEdit.sig_text_entered,
@@ -31,10 +40,17 @@ module Godot.Core.LineEdit
         Godot.Core.LineEdit.get_right_icon,
         Godot.Core.LineEdit.get_scroll_offset,
         Godot.Core.LineEdit.get_secret_character,
+        Godot.Core.LineEdit.get_selection_from_column,
+        Godot.Core.LineEdit.get_selection_to_column,
         Godot.Core.LineEdit.get_text,
+        Godot.Core.LineEdit.get_virtual_keyboard_type,
+        Godot.Core.LineEdit.has_selection,
         Godot.Core.LineEdit.is_clear_button_enabled,
         Godot.Core.LineEdit.is_context_menu_enabled,
-        Godot.Core.LineEdit.is_editable, Godot.Core.LineEdit.is_secret,
+        Godot.Core.LineEdit.is_deselect_on_focus_loss_enabled,
+        Godot.Core.LineEdit.is_editable,
+        Godot.Core.LineEdit.is_middle_mouse_paste_enabled,
+        Godot.Core.LineEdit.is_secret,
         Godot.Core.LineEdit.is_selecting_enabled,
         Godot.Core.LineEdit.is_shortcut_keys_enabled,
         Godot.Core.LineEdit.is_virtual_keyboard_enabled,
@@ -43,9 +59,11 @@ module Godot.Core.LineEdit
         Godot.Core.LineEdit.set_clear_button_enabled,
         Godot.Core.LineEdit.set_context_menu_enabled,
         Godot.Core.LineEdit.set_cursor_position,
+        Godot.Core.LineEdit.set_deselect_on_focus_loss_enabled,
         Godot.Core.LineEdit.set_editable,
         Godot.Core.LineEdit.set_expand_to_text_length,
         Godot.Core.LineEdit.set_max_length,
+        Godot.Core.LineEdit.set_middle_mouse_paste_enabled,
         Godot.Core.LineEdit.set_placeholder,
         Godot.Core.LineEdit.set_placeholder_alpha,
         Godot.Core.LineEdit.set_right_icon, Godot.Core.LineEdit.set_secret,
@@ -53,7 +71,8 @@ module Godot.Core.LineEdit
         Godot.Core.LineEdit.set_selecting_enabled,
         Godot.Core.LineEdit.set_shortcut_keys_enabled,
         Godot.Core.LineEdit.set_text,
-        Godot.Core.LineEdit.set_virtual_keyboard_enabled)
+        Godot.Core.LineEdit.set_virtual_keyboard_enabled,
+        Godot.Core.LineEdit.set_virtual_keyboard_type)
        where
 import Data.Coerce
 import Foreign.C
@@ -73,6 +92,9 @@ _MENU_PASTE = 2
 _ALIGN_RIGHT :: Int
 _ALIGN_RIGHT = 2
 
+_KEYBOARD_TYPE_PASSWORD :: Int
+_KEYBOARD_TYPE_PASSWORD = 6
+
 _ALIGN_FILL :: Int
 _ALIGN_FILL = 3
 
@@ -88,14 +110,35 @@ _MENU_REDO = 6
 _MENU_COPY :: Int
 _MENU_COPY = 1
 
+_KEYBOARD_TYPE_PHONE :: Int
+_KEYBOARD_TYPE_PHONE = 4
+
 _MENU_UNDO :: Int
 _MENU_UNDO = 5
+
+_KEYBOARD_TYPE_NUMBER_DECIMAL :: Int
+_KEYBOARD_TYPE_NUMBER_DECIMAL = 3
+
+_KEYBOARD_TYPE_MULTILINE :: Int
+_KEYBOARD_TYPE_MULTILINE = 1
 
 _MENU_SELECT_ALL :: Int
 _MENU_SELECT_ALL = 4
 
+_KEYBOARD_TYPE_EMAIL_ADDRESS :: Int
+_KEYBOARD_TYPE_EMAIL_ADDRESS = 5
+
 _MENU_CUT :: Int
 _MENU_CUT = 0
+
+_KEYBOARD_TYPE_NUMBER :: Int
+_KEYBOARD_TYPE_NUMBER = 2
+
+_KEYBOARD_TYPE_URL :: Int
+_KEYBOARD_TYPE_URL = 7
+
+_KEYBOARD_TYPE_DEFAULT :: Int
+_KEYBOARD_TYPE_DEFAULT = 0
 
 _ALIGN_LEFT :: Int
 _ALIGN_LEFT = 0
@@ -153,6 +196,14 @@ instance NodeProperty LineEdit "context_menu_enabled" Bool 'False
           = (is_context_menu_enabled,
              wrapDroppingSetter set_context_menu_enabled, Nothing)
 
+instance NodeProperty LineEdit "deselect_on_focus_loss_enabled"
+           Bool
+           'False
+         where
+        nodeProperty
+          = (is_deselect_on_focus_loss_enabled,
+             wrapDroppingSetter set_deselect_on_focus_loss_enabled, Nothing)
+
 instance NodeProperty LineEdit "editable" Bool 'False where
         nodeProperty
           = (is_editable, wrapDroppingSetter set_editable, Nothing)
@@ -166,6 +217,13 @@ instance NodeProperty LineEdit "expand_to_text_length" Bool 'False
 instance NodeProperty LineEdit "max_length" Int 'False where
         nodeProperty
           = (get_max_length, wrapDroppingSetter set_max_length, Nothing)
+
+instance NodeProperty LineEdit "middle_mouse_paste_enabled" Bool
+           'False
+         where
+        nodeProperty
+          = (is_middle_mouse_paste_enabled,
+             wrapDroppingSetter set_middle_mouse_paste_enabled, Nothing)
 
 instance NodeProperty LineEdit "placeholder_alpha" Float 'False
          where
@@ -214,6 +272,12 @@ instance NodeProperty LineEdit "virtual_keyboard_enabled" Bool
         nodeProperty
           = (is_virtual_keyboard_enabled,
              wrapDroppingSetter set_virtual_keyboard_enabled, Nothing)
+
+instance NodeProperty LineEdit "virtual_keyboard_type" Int 'False
+         where
+        nodeProperty
+          = (get_virtual_keyboard_type,
+             wrapDroppingSetter set_virtual_keyboard_type, Nothing)
 
 {-# NOINLINE bindLineEdit__editor_settings_changed #-}
 
@@ -917,6 +981,69 @@ instance NodeMethod LineEdit "get_secret_character" '[]
          where
         nodeMethod = Godot.Core.LineEdit.get_secret_character
 
+{-# NOINLINE bindLineEdit_get_selection_from_column #-}
+
+-- | Returns the selection begin column.
+bindLineEdit_get_selection_from_column :: MethodBind
+bindLineEdit_get_selection_from_column
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "get_selection_from_column" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the selection begin column.
+get_selection_from_column ::
+                            (LineEdit :< cls, Object :< cls) => cls -> IO Int
+get_selection_from_column cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_get_selection_from_column
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "get_selection_from_column" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.LineEdit.get_selection_from_column
+
+{-# NOINLINE bindLineEdit_get_selection_to_column #-}
+
+-- | Returns the selection end column.
+bindLineEdit_get_selection_to_column :: MethodBind
+bindLineEdit_get_selection_to_column
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "get_selection_to_column" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the selection end column.
+get_selection_to_column ::
+                          (LineEdit :< cls, Object :< cls) => cls -> IO Int
+get_selection_to_column cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_get_selection_to_column
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "get_selection_to_column" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.LineEdit.get_selection_to_column
+
 {-# NOINLINE bindLineEdit_get_text #-}
 
 -- | String value of the @LineEdit@.
@@ -946,6 +1073,66 @@ get_text cls
 
 instance NodeMethod LineEdit "get_text" '[] (IO GodotString) where
         nodeMethod = Godot.Core.LineEdit.get_text
+
+{-# NOINLINE bindLineEdit_get_virtual_keyboard_type #-}
+
+-- | Specifies the type of virtual keyboard to show.
+bindLineEdit_get_virtual_keyboard_type :: MethodBind
+bindLineEdit_get_virtual_keyboard_type
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "get_virtual_keyboard_type" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Specifies the type of virtual keyboard to show.
+get_virtual_keyboard_type ::
+                            (LineEdit :< cls, Object :< cls) => cls -> IO Int
+get_virtual_keyboard_type cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_get_virtual_keyboard_type
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "get_virtual_keyboard_type" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.LineEdit.get_virtual_keyboard_type
+
+{-# NOINLINE bindLineEdit_has_selection #-}
+
+-- | Returns @true@ if the user has selected text.
+bindLineEdit_has_selection :: MethodBind
+bindLineEdit_has_selection
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "has_selection" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if the user has selected text.
+has_selection :: (LineEdit :< cls, Object :< cls) => cls -> IO Bool
+has_selection cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_has_selection (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "has_selection" '[] (IO Bool) where
+        nodeMethod = Godot.Core.LineEdit.has_selection
 
 {-# NOINLINE bindLineEdit_is_clear_button_enabled #-}
 
@@ -1011,6 +1198,40 @@ instance NodeMethod LineEdit "is_context_menu_enabled" '[]
          where
         nodeMethod = Godot.Core.LineEdit.is_context_menu_enabled
 
+{-# NOINLINE bindLineEdit_is_deselect_on_focus_loss_enabled #-}
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+bindLineEdit_is_deselect_on_focus_loss_enabled :: MethodBind
+bindLineEdit_is_deselect_on_focus_loss_enabled
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "is_deselect_on_focus_loss_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+is_deselect_on_focus_loss_enabled ::
+                                    (LineEdit :< cls, Object :< cls) => cls -> IO Bool
+is_deselect_on_focus_loss_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindLineEdit_is_deselect_on_focus_loss_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "is_deselect_on_focus_loss_enabled"
+           '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.LineEdit.is_deselect_on_focus_loss_enabled
+
 {-# NOINLINE bindLineEdit_is_editable #-}
 
 -- | If @false@, existing text cannot be modified and new text cannot be added.
@@ -1037,6 +1258,40 @@ is_editable cls
 
 instance NodeMethod LineEdit "is_editable" '[] (IO Bool) where
         nodeMethod = Godot.Core.LineEdit.is_editable
+
+{-# NOINLINE bindLineEdit_is_middle_mouse_paste_enabled #-}
+
+-- | If @false@, using middle mouse button to paste clipboard will be disabled.
+--   			__Note:__ This method is only implemented on Linux.
+bindLineEdit_is_middle_mouse_paste_enabled :: MethodBind
+bindLineEdit_is_middle_mouse_paste_enabled
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "is_middle_mouse_paste_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @false@, using middle mouse button to paste clipboard will be disabled.
+--   			__Note:__ This method is only implemented on Linux.
+is_middle_mouse_paste_enabled ::
+                                (LineEdit :< cls, Object :< cls) => cls -> IO Bool
+is_middle_mouse_paste_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_is_middle_mouse_paste_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "is_middle_mouse_paste_enabled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.LineEdit.is_middle_mouse_paste_enabled
 
 {-# NOINLINE bindLineEdit_is_secret #-}
 
@@ -1388,6 +1643,40 @@ instance NodeMethod LineEdit "set_cursor_position" '[Int] (IO ())
          where
         nodeMethod = Godot.Core.LineEdit.set_cursor_position
 
+{-# NOINLINE bindLineEdit_set_deselect_on_focus_loss_enabled #-}
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+bindLineEdit_set_deselect_on_focus_loss_enabled :: MethodBind
+bindLineEdit_set_deselect_on_focus_loss_enabled
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "set_deselect_on_focus_loss_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+set_deselect_on_focus_loss_enabled ::
+                                     (LineEdit :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_deselect_on_focus_loss_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindLineEdit_set_deselect_on_focus_loss_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "set_deselect_on_focus_loss_enabled"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.LineEdit.set_deselect_on_focus_loss_enabled
+
 {-# NOINLINE bindLineEdit_set_editable #-}
 
 -- | If @false@, existing text cannot be modified and new text cannot be added.
@@ -1505,6 +1794,41 @@ set_max_length cls arg1
 
 instance NodeMethod LineEdit "set_max_length" '[Int] (IO ()) where
         nodeMethod = Godot.Core.LineEdit.set_max_length
+
+{-# NOINLINE bindLineEdit_set_middle_mouse_paste_enabled #-}
+
+-- | If @false@, using middle mouse button to paste clipboard will be disabled.
+--   			__Note:__ This method is only implemented on Linux.
+bindLineEdit_set_middle_mouse_paste_enabled :: MethodBind
+bindLineEdit_set_middle_mouse_paste_enabled
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "set_middle_mouse_paste_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @false@, using middle mouse button to paste clipboard will be disabled.
+--   			__Note:__ This method is only implemented on Linux.
+set_middle_mouse_paste_enabled ::
+                                 (LineEdit :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_middle_mouse_paste_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_set_middle_mouse_paste_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "set_middle_mouse_paste_enabled"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.LineEdit.set_middle_mouse_paste_enabled
 
 {-# NOINLINE bindLineEdit_set_placeholder #-}
 
@@ -1785,3 +2109,35 @@ instance NodeMethod LineEdit "set_virtual_keyboard_enabled" '[Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.LineEdit.set_virtual_keyboard_enabled
+
+{-# NOINLINE bindLineEdit_set_virtual_keyboard_type #-}
+
+-- | Specifies the type of virtual keyboard to show.
+bindLineEdit_set_virtual_keyboard_type :: MethodBind
+bindLineEdit_set_virtual_keyboard_type
+  = unsafePerformIO $
+      withCString "LineEdit" $
+        \ clsNamePtr ->
+          withCString "set_virtual_keyboard_type" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Specifies the type of virtual keyboard to show.
+set_virtual_keyboard_type ::
+                            (LineEdit :< cls, Object :< cls) => cls -> Int -> IO ()
+set_virtual_keyboard_type cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindLineEdit_set_virtual_keyboard_type
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod LineEdit "set_virtual_keyboard_type" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.LineEdit.set_virtual_keyboard_type

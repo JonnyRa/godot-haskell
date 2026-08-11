@@ -4,6 +4,7 @@
 module Godot.Core.Particles2D
        (Godot.Core.Particles2D._DRAW_ORDER_LIFETIME,
         Godot.Core.Particles2D._DRAW_ORDER_INDEX,
+        Godot.Core.Particles2D.sig_finished,
         Godot.Core.Particles2D.capture_rect,
         Godot.Core.Particles2D.get_amount,
         Godot.Core.Particles2D.get_draw_order,
@@ -55,6 +56,13 @@ _DRAW_ORDER_LIFETIME = 1
 
 _DRAW_ORDER_INDEX :: Int
 _DRAW_ORDER_INDEX = 0
+
+-- | Emitted when all active particles have finished processing. When @one_shot@ is disabled, particles will process continuously, so this is never emitted.
+--   				__Note:__ Due to the particles being computed on the GPU there might be a delay before the signal gets emitted.
+sig_finished :: Godot.Internal.Dispatch.Signal Particles2D
+sig_finished = Godot.Internal.Dispatch.Signal "finished"
+
+instance NodeSignal Particles2D "finished" '[]
 
 instance NodeProperty Particles2D "amount" Int 'False where
         nodeProperty = (get_amount, wrapDroppingSetter set_amount, Nothing)
@@ -133,6 +141,7 @@ instance NodeProperty Particles2D "visibility_rect" Rect2 'False
 {-# NOINLINE bindParticles2D_capture_rect #-}
 
 -- | Returns a rectangle containing the positions of all existing particles.
+--   				__Note:__ When using threaded rendering this method synchronizes the rendering thread. Calling it often may have a negative impact on performance.
 bindParticles2D_capture_rect :: MethodBind
 bindParticles2D_capture_rect
   = unsafePerformIO $
@@ -143,6 +152,7 @@ bindParticles2D_capture_rect
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns a rectangle containing the positions of all existing particles.
+--   				__Note:__ When using threaded rendering this method synchronizes the rendering thread. Calling it often may have a negative impact on performance.
 capture_rect ::
                (Particles2D :< cls, Object :< cls) => cls -> IO Rect2
 capture_rect cls

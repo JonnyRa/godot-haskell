@@ -50,22 +50,37 @@ module Godot.Core.TextEdit
         Godot.Core.TextEdit.get_breakpoints,
         Godot.Core.TextEdit.get_h_scroll,
         Godot.Core.TextEdit.get_keyword_color,
-        Godot.Core.TextEdit.get_line, Godot.Core.TextEdit.get_line_count,
+        Godot.Core.TextEdit.get_line,
+        Godot.Core.TextEdit.get_line_column_at_pos,
+        Godot.Core.TextEdit.get_line_count,
+        Godot.Core.TextEdit.get_line_height,
+        Godot.Core.TextEdit.get_line_width,
+        Godot.Core.TextEdit.get_line_wrap_count,
+        Godot.Core.TextEdit.get_line_wrapped_text,
         Godot.Core.TextEdit.get_menu,
         Godot.Core.TextEdit.get_minimap_width,
+        Godot.Core.TextEdit.get_pos_at_line_column,
+        Godot.Core.TextEdit.get_rect_at_line_column,
         Godot.Core.TextEdit.get_selection_from_column,
         Godot.Core.TextEdit.get_selection_from_line,
         Godot.Core.TextEdit.get_selection_text,
         Godot.Core.TextEdit.get_selection_to_column,
         Godot.Core.TextEdit.get_selection_to_line,
-        Godot.Core.TextEdit.get_text, Godot.Core.TextEdit.get_v_scroll,
+        Godot.Core.TextEdit.get_text,
+        Godot.Core.TextEdit.get_total_gutter_width,
+        Godot.Core.TextEdit.get_total_visible_rows,
+        Godot.Core.TextEdit.get_v_scroll,
         Godot.Core.TextEdit.get_v_scroll_speed,
+        Godot.Core.TextEdit.get_visible_rows,
         Godot.Core.TextEdit.get_word_under_cursor,
         Godot.Core.TextEdit.has_keyword_color,
         Godot.Core.TextEdit.has_redo, Godot.Core.TextEdit.has_undo,
         Godot.Core.TextEdit.insert_text_at_cursor,
+        Godot.Core.TextEdit.is_bookmark_gutter_enabled,
         Godot.Core.TextEdit.is_breakpoint_gutter_enabled,
         Godot.Core.TextEdit.is_context_menu_enabled,
+        Godot.Core.TextEdit.is_deselect_on_focus_loss_enabled,
+        Godot.Core.TextEdit.is_drag_and_drop_selection_enabled,
         Godot.Core.TextEdit.is_drawing_fold_gutter,
         Godot.Core.TextEdit.is_drawing_minimap,
         Godot.Core.TextEdit.is_drawing_spaces,
@@ -77,6 +92,9 @@ module Godot.Core.TextEdit
         Godot.Core.TextEdit.is_line_set_as_bookmark,
         Godot.Core.TextEdit.is_line_set_as_breakpoint,
         Godot.Core.TextEdit.is_line_set_as_safe,
+        Godot.Core.TextEdit.is_line_wrapped,
+        Godot.Core.TextEdit.is_middle_mouse_paste_enabled,
+        Godot.Core.TextEdit.is_mouse_over_selection,
         Godot.Core.TextEdit.is_overriding_selected_font_color,
         Godot.Core.TextEdit.is_readonly,
         Godot.Core.TextEdit.is_right_click_moving_caret,
@@ -92,8 +110,11 @@ module Godot.Core.TextEdit
         Godot.Core.TextEdit.redo, Godot.Core.TextEdit.remove_breakpoints,
         Godot.Core.TextEdit.search, Godot.Core.TextEdit.select,
         Godot.Core.TextEdit.select_all,
+        Godot.Core.TextEdit.set_bookmark_gutter_enabled,
         Godot.Core.TextEdit.set_breakpoint_gutter_enabled,
         Godot.Core.TextEdit.set_context_menu_enabled,
+        Godot.Core.TextEdit.set_deselect_on_focus_loss_enabled,
+        Godot.Core.TextEdit.set_drag_and_drop_selection_enabled,
         Godot.Core.TextEdit.set_draw_fold_gutter,
         Godot.Core.TextEdit.set_draw_spaces,
         Godot.Core.TextEdit.set_draw_tabs,
@@ -106,6 +127,7 @@ module Godot.Core.TextEdit
         Godot.Core.TextEdit.set_line_as_breakpoint,
         Godot.Core.TextEdit.set_line_as_hidden,
         Godot.Core.TextEdit.set_line_as_safe,
+        Godot.Core.TextEdit.set_middle_mouse_paste_enabled,
         Godot.Core.TextEdit.set_minimap_width,
         Godot.Core.TextEdit.set_override_selected_font_color,
         Godot.Core.TextEdit.set_readonly,
@@ -212,6 +234,11 @@ sig_text_changed = Godot.Internal.Dispatch.Signal "text_changed"
 
 instance NodeSignal TextEdit "text_changed" '[]
 
+instance NodeProperty TextEdit "bookmark_gutter" Bool 'False where
+        nodeProperty
+          = (is_bookmark_gutter_enabled,
+             wrapDroppingSetter set_bookmark_gutter_enabled, Nothing)
+
 instance NodeProperty TextEdit "breakpoint_gutter" Bool 'False
          where
         nodeProperty
@@ -247,6 +274,22 @@ instance NodeProperty TextEdit "context_menu_enabled" Bool 'False
           = (is_context_menu_enabled,
              wrapDroppingSetter set_context_menu_enabled, Nothing)
 
+instance NodeProperty TextEdit "deselect_on_focus_loss_enabled"
+           Bool
+           'False
+         where
+        nodeProperty
+          = (is_deselect_on_focus_loss_enabled,
+             wrapDroppingSetter set_deselect_on_focus_loss_enabled, Nothing)
+
+instance NodeProperty TextEdit "drag_and_drop_selection_enabled"
+           Bool
+           'False
+         where
+        nodeProperty
+          = (is_drag_and_drop_selection_enabled,
+             wrapDroppingSetter set_drag_and_drop_selection_enabled, Nothing)
+
 instance NodeProperty TextEdit "draw_spaces" Bool 'False where
         nodeProperty
           = (is_drawing_spaces, wrapDroppingSetter set_draw_spaces, Nothing)
@@ -277,6 +320,13 @@ instance NodeProperty TextEdit "highlight_current_line" Bool 'False
         nodeProperty
           = (is_highlight_current_line_enabled,
              wrapDroppingSetter set_highlight_current_line, Nothing)
+
+instance NodeProperty TextEdit "middle_mouse_paste_enabled" Bool
+           'False
+         where
+        nodeProperty
+          = (is_middle_mouse_paste_enabled,
+             wrapDroppingSetter set_middle_mouse_paste_enabled, Nothing)
 
 instance NodeProperty TextEdit "minimap_draw" Bool 'False where
         nodeProperty
@@ -1392,6 +1442,38 @@ instance NodeMethod TextEdit "get_line" '[Int] (IO GodotString)
          where
         nodeMethod = Godot.Core.TextEdit.get_line
 
+{-# NOINLINE bindTextEdit_get_line_column_at_pos #-}
+
+-- | Returns the line and column at the given position. In the returned vector, @x@ is the column, @y@ is the line.
+bindTextEdit_get_line_column_at_pos :: MethodBind
+bindTextEdit_get_line_column_at_pos
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "get_line_column_at_pos" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the line and column at the given position. In the returned vector, @x@ is the column, @y@ is the line.
+get_line_column_at_pos ::
+                         (TextEdit :< cls, Object :< cls) => cls -> Vector2 -> IO Vector2
+get_line_column_at_pos cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_get_line_column_at_pos
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "get_line_column_at_pos" '[Vector2]
+           (IO Vector2)
+         where
+        nodeMethod = Godot.Core.TextEdit.get_line_column_at_pos
+
 {-# NOINLINE bindTextEdit_get_line_count #-}
 
 -- | Returns the amount of total lines in the text.
@@ -1419,6 +1501,132 @@ get_line_count cls
 
 instance NodeMethod TextEdit "get_line_count" '[] (IO Int) where
         nodeMethod = Godot.Core.TextEdit.get_line_count
+
+{-# NOINLINE bindTextEdit_get_line_height #-}
+
+-- | Returns the height of a largest line.
+bindTextEdit_get_line_height :: MethodBind
+bindTextEdit_get_line_height
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "get_line_height" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the height of a largest line.
+get_line_height ::
+                  (TextEdit :< cls, Object :< cls) => cls -> IO Int
+get_line_height cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_get_line_height (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "get_line_height" '[] (IO Int) where
+        nodeMethod = Godot.Core.TextEdit.get_line_height
+
+{-# NOINLINE bindTextEdit_get_line_width #-}
+
+-- | Returns the width in pixels of the @wrap_index@ on @line@.
+bindTextEdit_get_line_width :: MethodBind
+bindTextEdit_get_line_width
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "get_line_width" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the width in pixels of the @wrap_index@ on @line@.
+get_line_width ::
+                 (TextEdit :< cls, Object :< cls) =>
+                 cls -> Int -> Maybe Int -> IO Int
+get_line_width cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (-1)) toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_get_line_width (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "get_line_width" '[Int, Maybe Int]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.TextEdit.get_line_width
+
+{-# NOINLINE bindTextEdit_get_line_wrap_count #-}
+
+-- | Returns the number of times the given line is wrapped.
+bindTextEdit_get_line_wrap_count :: MethodBind
+bindTextEdit_get_line_wrap_count
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "get_line_wrap_count" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the number of times the given line is wrapped.
+get_line_wrap_count ::
+                      (TextEdit :< cls, Object :< cls) => cls -> Int -> IO Int
+get_line_wrap_count cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_get_line_wrap_count
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "get_line_wrap_count" '[Int] (IO Int)
+         where
+        nodeMethod = Godot.Core.TextEdit.get_line_wrap_count
+
+{-# NOINLINE bindTextEdit_get_line_wrapped_text #-}
+
+-- | Returns an array of @String@s representing each wrapped index.
+bindTextEdit_get_line_wrapped_text :: MethodBind
+bindTextEdit_get_line_wrapped_text
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "get_line_wrapped_text" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns an array of @String@s representing each wrapped index.
+get_line_wrapped_text ::
+                        (TextEdit :< cls, Object :< cls) =>
+                        cls -> Int -> IO PoolStringArray
+get_line_wrapped_text cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_get_line_wrapped_text
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "get_line_wrapped_text" '[Int]
+           (IO PoolStringArray)
+         where
+        nodeMethod = Godot.Core.TextEdit.get_line_wrapped_text
 
 {-# NOINLINE bindTextEdit_get_menu #-}
 
@@ -1474,6 +1682,74 @@ get_minimap_width cls
 
 instance NodeMethod TextEdit "get_minimap_width" '[] (IO Int) where
         nodeMethod = Godot.Core.TextEdit.get_minimap_width
+
+{-# NOINLINE bindTextEdit_get_pos_at_line_column #-}
+
+-- | Returns the local position for the given @line@ and @column@. If @x@ or @y@ of the returned vector equal @-1@, the position is outside of the viewable area of the control.
+--   				__Note:__ The Y position corresponds to the bottom side of the line. Use @method get_rect_at_line_column@ to get the top side position.
+bindTextEdit_get_pos_at_line_column :: MethodBind
+bindTextEdit_get_pos_at_line_column
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "get_pos_at_line_column" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the local position for the given @line@ and @column@. If @x@ or @y@ of the returned vector equal @-1@, the position is outside of the viewable area of the control.
+--   				__Note:__ The Y position corresponds to the bottom side of the line. Use @method get_rect_at_line_column@ to get the top side position.
+get_pos_at_line_column ::
+                         (TextEdit :< cls, Object :< cls) => cls -> Int -> Int -> IO Vector2
+get_pos_at_line_column cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_get_pos_at_line_column
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "get_pos_at_line_column" '[Int, Int]
+           (IO Vector2)
+         where
+        nodeMethod = Godot.Core.TextEdit.get_pos_at_line_column
+
+{-# NOINLINE bindTextEdit_get_rect_at_line_column #-}
+
+-- | Returns the local position and size for the grapheme at the given @line@ and @column@. If @x@ or @y@ position of the returned rect equal @-1@, the position is outside of the viewable area of the control.
+--   				__Note:__ The Y position of the returned rect corresponds to the top side of the line, unlike @method get_pos_at_line_column@ which returns the bottom side.
+bindTextEdit_get_rect_at_line_column :: MethodBind
+bindTextEdit_get_rect_at_line_column
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "get_rect_at_line_column" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the local position and size for the grapheme at the given @line@ and @column@. If @x@ or @y@ position of the returned rect equal @-1@, the position is outside of the viewable area of the control.
+--   				__Note:__ The Y position of the returned rect corresponds to the top side of the line, unlike @method get_pos_at_line_column@ which returns the bottom side.
+get_rect_at_line_column ::
+                          (TextEdit :< cls, Object :< cls) => cls -> Int -> Int -> IO Rect2
+get_rect_at_line_column cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_get_rect_at_line_column
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "get_rect_at_line_column" '[Int, Int]
+           (IO Rect2)
+         where
+        nodeMethod = Godot.Core.TextEdit.get_rect_at_line_column
 
 {-# NOINLINE bindTextEdit_get_selection_from_column #-}
 
@@ -1659,6 +1935,68 @@ get_text cls
 instance NodeMethod TextEdit "get_text" '[] (IO GodotString) where
         nodeMethod = Godot.Core.TextEdit.get_text
 
+{-# NOINLINE bindTextEdit_get_total_gutter_width #-}
+
+-- | Returns the total width of all gutters and internal padding.
+bindTextEdit_get_total_gutter_width :: MethodBind
+bindTextEdit_get_total_gutter_width
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "get_total_gutter_width" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the total width of all gutters and internal padding.
+get_total_gutter_width ::
+                         (TextEdit :< cls, Object :< cls) => cls -> IO Int
+get_total_gutter_width cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_get_total_gutter_width
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "get_total_gutter_width" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.TextEdit.get_total_gutter_width
+
+{-# NOINLINE bindTextEdit_get_total_visible_rows #-}
+
+-- | Returns the total amount of lines that could be drawn.
+bindTextEdit_get_total_visible_rows :: MethodBind
+bindTextEdit_get_total_visible_rows
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "get_total_visible_rows" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the total amount of lines that could be drawn.
+get_total_visible_rows ::
+                         (TextEdit :< cls, Object :< cls) => cls -> IO Int
+get_total_visible_rows cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_get_total_visible_rows
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "get_total_visible_rows" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.TextEdit.get_total_visible_rows
+
 {-# NOINLINE bindTextEdit_get_v_scroll #-}
 
 -- | If there is a vertical scrollbar, this determines the current vertical scroll value in line numbers, starting at 0 for the top line.
@@ -1716,6 +2054,35 @@ get_v_scroll_speed cls
 instance NodeMethod TextEdit "get_v_scroll_speed" '[] (IO Float)
          where
         nodeMethod = Godot.Core.TextEdit.get_v_scroll_speed
+
+{-# NOINLINE bindTextEdit_get_visible_rows #-}
+
+-- | Returns the number of visible lines, including wrapped text.
+bindTextEdit_get_visible_rows :: MethodBind
+bindTextEdit_get_visible_rows
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "get_visible_rows" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the number of visible lines, including wrapped text.
+get_visible_rows ::
+                   (TextEdit :< cls, Object :< cls) => cls -> IO Int
+get_visible_rows cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_get_visible_rows (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "get_visible_rows" '[] (IO Int) where
+        nodeMethod = Godot.Core.TextEdit.get_visible_rows
 
 {-# NOINLINE bindTextEdit_get_word_under_cursor #-}
 
@@ -1866,6 +2233,38 @@ instance NodeMethod TextEdit "insert_text_at_cursor" '[GodotString]
          where
         nodeMethod = Godot.Core.TextEdit.insert_text_at_cursor
 
+{-# NOINLINE bindTextEdit_is_bookmark_gutter_enabled #-}
+
+-- | If @true@, the bookmark gutter is visible.
+bindTextEdit_is_bookmark_gutter_enabled :: MethodBind
+bindTextEdit_is_bookmark_gutter_enabled
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "is_bookmark_gutter_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the bookmark gutter is visible.
+is_bookmark_gutter_enabled ::
+                             (TextEdit :< cls, Object :< cls) => cls -> IO Bool
+is_bookmark_gutter_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_is_bookmark_gutter_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "is_bookmark_gutter_enabled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextEdit.is_bookmark_gutter_enabled
+
 {-# NOINLINE bindTextEdit_is_breakpoint_gutter_enabled #-}
 
 -- | If @true@, the breakpoint gutter is visible.
@@ -1929,6 +2328,74 @@ instance NodeMethod TextEdit "is_context_menu_enabled" '[]
            (IO Bool)
          where
         nodeMethod = Godot.Core.TextEdit.is_context_menu_enabled
+
+{-# NOINLINE bindTextEdit_is_deselect_on_focus_loss_enabled #-}
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+bindTextEdit_is_deselect_on_focus_loss_enabled :: MethodBind
+bindTextEdit_is_deselect_on_focus_loss_enabled
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "is_deselect_on_focus_loss_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+is_deselect_on_focus_loss_enabled ::
+                                    (TextEdit :< cls, Object :< cls) => cls -> IO Bool
+is_deselect_on_focus_loss_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindTextEdit_is_deselect_on_focus_loss_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "is_deselect_on_focus_loss_enabled"
+           '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextEdit.is_deselect_on_focus_loss_enabled
+
+{-# NOINLINE bindTextEdit_is_drag_and_drop_selection_enabled #-}
+
+-- | If @true@, allow drag and drop of selected text.
+bindTextEdit_is_drag_and_drop_selection_enabled :: MethodBind
+bindTextEdit_is_drag_and_drop_selection_enabled
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "is_drag_and_drop_selection_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, allow drag and drop of selected text.
+is_drag_and_drop_selection_enabled ::
+                                     (TextEdit :< cls, Object :< cls) => cls -> IO Bool
+is_drag_and_drop_selection_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindTextEdit_is_drag_and_drop_selection_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "is_drag_and_drop_selection_enabled"
+           '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextEdit.is_drag_and_drop_selection_enabled
 
 {-# NOINLINE bindTextEdit_is_drawing_fold_gutter #-}
 
@@ -2301,6 +2768,102 @@ is_line_set_as_safe cls arg1
 instance NodeMethod TextEdit "is_line_set_as_safe" '[Int] (IO Bool)
          where
         nodeMethod = Godot.Core.TextEdit.is_line_set_as_safe
+
+{-# NOINLINE bindTextEdit_is_line_wrapped #-}
+
+-- | Returns if the given line is wrapped.
+bindTextEdit_is_line_wrapped :: MethodBind
+bindTextEdit_is_line_wrapped
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "is_line_wrapped" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns if the given line is wrapped.
+is_line_wrapped ::
+                  (TextEdit :< cls, Object :< cls) => cls -> Int -> IO Bool
+is_line_wrapped cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_is_line_wrapped (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "is_line_wrapped" '[Int] (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextEdit.is_line_wrapped
+
+{-# NOINLINE bindTextEdit_is_middle_mouse_paste_enabled #-}
+
+-- | If @false@, using middle mouse button to paste clipboard will be disabled.
+--   			__Note:__ This method is only implemented on Linux.
+bindTextEdit_is_middle_mouse_paste_enabled :: MethodBind
+bindTextEdit_is_middle_mouse_paste_enabled
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "is_middle_mouse_paste_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @false@, using middle mouse button to paste clipboard will be disabled.
+--   			__Note:__ This method is only implemented on Linux.
+is_middle_mouse_paste_enabled ::
+                                (TextEdit :< cls, Object :< cls) => cls -> IO Bool
+is_middle_mouse_paste_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_is_middle_mouse_paste_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "is_middle_mouse_paste_enabled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextEdit.is_middle_mouse_paste_enabled
+
+{-# NOINLINE bindTextEdit_is_mouse_over_selection #-}
+
+-- | Returns whether the mouse is over selection. If @edges@ is @true@, the edges are considered part of the selection.
+bindTextEdit_is_mouse_over_selection :: MethodBind
+bindTextEdit_is_mouse_over_selection
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "is_mouse_over_selection" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns whether the mouse is over selection. If @edges@ is @true@, the edges are considered part of the selection.
+is_mouse_over_selection ::
+                          (TextEdit :< cls, Object :< cls) => cls -> Bool -> IO Bool
+is_mouse_over_selection cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_is_mouse_over_selection
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "is_mouse_over_selection" '[Bool]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.TextEdit.is_mouse_over_selection
 
 {-# NOINLINE bindTextEdit_is_overriding_selected_font_color #-}
 
@@ -2873,6 +3436,38 @@ select_all cls
 instance NodeMethod TextEdit "select_all" '[] (IO ()) where
         nodeMethod = Godot.Core.TextEdit.select_all
 
+{-# NOINLINE bindTextEdit_set_bookmark_gutter_enabled #-}
+
+-- | If @true@, the bookmark gutter is visible.
+bindTextEdit_set_bookmark_gutter_enabled :: MethodBind
+bindTextEdit_set_bookmark_gutter_enabled
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "set_bookmark_gutter_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the bookmark gutter is visible.
+set_bookmark_gutter_enabled ::
+                              (TextEdit :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_bookmark_gutter_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_set_bookmark_gutter_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "set_bookmark_gutter_enabled" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TextEdit.set_bookmark_gutter_enabled
+
 {-# NOINLINE bindTextEdit_set_breakpoint_gutter_enabled #-}
 
 -- | If @true@, the breakpoint gutter is visible.
@@ -2937,6 +3532,75 @@ instance NodeMethod TextEdit "set_context_menu_enabled" '[Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.TextEdit.set_context_menu_enabled
+
+{-# NOINLINE bindTextEdit_set_deselect_on_focus_loss_enabled #-}
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+bindTextEdit_set_deselect_on_focus_loss_enabled :: MethodBind
+bindTextEdit_set_deselect_on_focus_loss_enabled
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "set_deselect_on_focus_loss_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+set_deselect_on_focus_loss_enabled ::
+                                     (TextEdit :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_deselect_on_focus_loss_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindTextEdit_set_deselect_on_focus_loss_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "set_deselect_on_focus_loss_enabled"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TextEdit.set_deselect_on_focus_loss_enabled
+
+{-# NOINLINE bindTextEdit_set_drag_and_drop_selection_enabled #-}
+
+-- | If @true@, allow drag and drop of selected text.
+bindTextEdit_set_drag_and_drop_selection_enabled :: MethodBind
+bindTextEdit_set_drag_and_drop_selection_enabled
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "set_drag_and_drop_selection_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, allow drag and drop of selected text.
+set_drag_and_drop_selection_enabled ::
+                                      (TextEdit :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_drag_and_drop_selection_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindTextEdit_set_drag_and_drop_selection_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "set_drag_and_drop_selection_enabled"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.TextEdit.set_drag_and_drop_selection_enabled
 
 {-# NOINLINE bindTextEdit_set_draw_fold_gutter #-}
 
@@ -3184,7 +3848,7 @@ instance NodeMethod TextEdit "set_line" '[Int, GodotString] (IO ())
 
 {-# NOINLINE bindTextEdit_set_line_as_bookmark #-}
 
--- | Bookmarks the @line@ if @bookmark@ is true. Deletes the bookmark if @bookmark@ is false.
+-- | Bookmarks the @line@ if @bookmark@ is @true@. Deletes the bookmark if @bookmark@ is @false@.
 --   				Bookmarks are shown in the @breakpoint_gutter@.
 bindTextEdit_set_line_as_bookmark :: MethodBind
 bindTextEdit_set_line_as_bookmark
@@ -3195,7 +3859,7 @@ bindTextEdit_set_line_as_bookmark
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Bookmarks the @line@ if @bookmark@ is true. Deletes the bookmark if @bookmark@ is false.
+-- | Bookmarks the @line@ if @bookmark@ is @true@. Deletes the bookmark if @bookmark@ is @false@.
 --   				Bookmarks are shown in the @breakpoint_gutter@.
 set_line_as_bookmark ::
                        (TextEdit :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
@@ -3311,6 +3975,41 @@ instance NodeMethod TextEdit "set_line_as_safe" '[Int, Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.TextEdit.set_line_as_safe
+
+{-# NOINLINE bindTextEdit_set_middle_mouse_paste_enabled #-}
+
+-- | If @false@, using middle mouse button to paste clipboard will be disabled.
+--   			__Note:__ This method is only implemented on Linux.
+bindTextEdit_set_middle_mouse_paste_enabled :: MethodBind
+bindTextEdit_set_middle_mouse_paste_enabled
+  = unsafePerformIO $
+      withCString "TextEdit" $
+        \ clsNamePtr ->
+          withCString "set_middle_mouse_paste_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @false@, using middle mouse button to paste clipboard will be disabled.
+--   			__Note:__ This method is only implemented on Linux.
+set_middle_mouse_paste_enabled ::
+                                 (TextEdit :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_middle_mouse_paste_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextEdit_set_middle_mouse_paste_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextEdit "set_middle_mouse_paste_enabled"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TextEdit.set_middle_mouse_paste_enabled
 
 {-# NOINLINE bindTextEdit_set_minimap_width #-}
 

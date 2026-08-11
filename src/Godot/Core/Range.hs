@@ -14,8 +14,8 @@ module Godot.Core.Range
         Godot.Core.Range.set_exp_ratio, Godot.Core.Range.set_max,
         Godot.Core.Range.set_min, Godot.Core.Range.set_page,
         Godot.Core.Range.set_step, Godot.Core.Range.set_use_rounded_values,
-        Godot.Core.Range.set_value, Godot.Core.Range.share,
-        Godot.Core.Range.unshare)
+        Godot.Core.Range.set_value, Godot.Core.Range.set_value_no_signal,
+        Godot.Core.Range.share, Godot.Core.Range.unshare)
        where
 import Data.Coerce
 import Foreign.C
@@ -212,7 +212,7 @@ instance NodeMethod Range "get_step" '[] (IO Float) where
 
 {-# NOINLINE bindRange_get_value #-}
 
--- | Range's current value.
+-- | Range's current value. Changing this property (even via code) will trigger @signal value_changed@ signal. Use @method set_value_no_signal@ if you want to avoid it.
 bindRange_get_value :: MethodBind
 bindRange_get_value
   = unsafePerformIO $
@@ -222,7 +222,7 @@ bindRange_get_value
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Range's current value.
+-- | Range's current value. Changing this property (even via code) will trigger @signal value_changed@ signal. Use @method set_value_no_signal@ if you want to avoid it.
 get_value :: (Range :< cls, Object :< cls) => cls -> IO Float
 get_value cls
   = withVariantArray []
@@ -603,7 +603,7 @@ instance NodeMethod Range "set_use_rounded_values" '[Bool] (IO ())
 
 {-# NOINLINE bindRange_set_value #-}
 
--- | Range's current value.
+-- | Range's current value. Changing this property (even via code) will trigger @signal value_changed@ signal. Use @method set_value_no_signal@ if you want to avoid it.
 bindRange_set_value :: MethodBind
 bindRange_set_value
   = unsafePerformIO $
@@ -613,7 +613,7 @@ bindRange_set_value
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Range's current value.
+-- | Range's current value. Changing this property (even via code) will trigger @signal value_changed@ signal. Use @method set_value_no_signal@ if you want to avoid it.
 set_value :: (Range :< cls, Object :< cls) => cls -> Float -> IO ()
 set_value cls arg1
   = withVariantArray [toVariant arg1]
@@ -626,6 +626,36 @@ set_value cls arg1
 
 instance NodeMethod Range "set_value" '[Float] (IO ()) where
         nodeMethod = Godot.Core.Range.set_value
+
+{-# NOINLINE bindRange_set_value_no_signal #-}
+
+-- | Sets the @Range@'s current value to the specified @value@, without emitting the @signal value_changed@ signal.
+bindRange_set_value_no_signal :: MethodBind
+bindRange_set_value_no_signal
+  = unsafePerformIO $
+      withCString "Range" $
+        \ clsNamePtr ->
+          withCString "set_value_no_signal" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the @Range@'s current value to the specified @value@, without emitting the @signal value_changed@ signal.
+set_value_no_signal ::
+                      (Range :< cls, Object :< cls) => cls -> Float -> IO ()
+set_value_no_signal cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRange_set_value_no_signal (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Range "set_value_no_signal" '[Float] (IO ())
+         where
+        nodeMethod = Godot.Core.Range.set_value_no_signal
 
 {-# NOINLINE bindRange_share #-}
 

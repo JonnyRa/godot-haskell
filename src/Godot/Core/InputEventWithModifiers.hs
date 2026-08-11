@@ -50,7 +50,7 @@ instance NodeProperty InputEventWithModifiers "shift" Bool 'False
 
 {-# NOINLINE bindInputEventWithModifiers_get_alt #-}
 
--- | State of the @Alt@ modifier.
+-- | State of the @kbd@Alt@/kbd@ modifier.
 bindInputEventWithModifiers_get_alt :: MethodBind
 bindInputEventWithModifiers_get_alt
   = unsafePerformIO $
@@ -60,7 +60,7 @@ bindInputEventWithModifiers_get_alt
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | State of the @Alt@ modifier.
+-- | State of the @kbd@Alt@/kbd@ modifier.
 get_alt ::
           (InputEventWithModifiers :< cls, Object :< cls) => cls -> IO Bool
 get_alt cls
@@ -81,7 +81,7 @@ instance NodeMethod InputEventWithModifiers "get_alt" '[] (IO Bool)
 
 {-# NOINLINE bindInputEventWithModifiers_get_command #-}
 
--- | State of the @Command@ modifier.
+-- | State of the @kbd@Command@/kbd@ modifier.
 bindInputEventWithModifiers_get_command :: MethodBind
 bindInputEventWithModifiers_get_command
   = unsafePerformIO $
@@ -91,7 +91,7 @@ bindInputEventWithModifiers_get_command
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | State of the @Command@ modifier.
+-- | State of the @kbd@Command@/kbd@ modifier.
 get_command ::
               (InputEventWithModifiers :< cls, Object :< cls) => cls -> IO Bool
 get_command cls
@@ -113,7 +113,7 @@ instance NodeMethod InputEventWithModifiers "get_command" '[]
 
 {-# NOINLINE bindInputEventWithModifiers_get_control #-}
 
--- | State of the @Ctrl@ modifier.
+-- | State of the @kbd@Ctrl@/kbd@ modifier.
 bindInputEventWithModifiers_get_control :: MethodBind
 bindInputEventWithModifiers_get_control
   = unsafePerformIO $
@@ -123,7 +123,7 @@ bindInputEventWithModifiers_get_control
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | State of the @Ctrl@ modifier.
+-- | State of the @kbd@Ctrl@/kbd@ modifier.
 get_control ::
               (InputEventWithModifiers :< cls, Object :< cls) => cls -> IO Bool
 get_control cls
@@ -145,7 +145,7 @@ instance NodeMethod InputEventWithModifiers "get_control" '[]
 
 {-# NOINLINE bindInputEventWithModifiers_get_metakey #-}
 
--- | State of the @Meta@ modifier.
+-- | State of the @kbd@Meta@/kbd@ modifier.
 bindInputEventWithModifiers_get_metakey :: MethodBind
 bindInputEventWithModifiers_get_metakey
   = unsafePerformIO $
@@ -155,7 +155,7 @@ bindInputEventWithModifiers_get_metakey
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | State of the @Meta@ modifier.
+-- | State of the @kbd@Meta@/kbd@ modifier.
 get_metakey ::
               (InputEventWithModifiers :< cls, Object :< cls) => cls -> IO Bool
 get_metakey cls
@@ -177,7 +177,7 @@ instance NodeMethod InputEventWithModifiers "get_metakey" '[]
 
 {-# NOINLINE bindInputEventWithModifiers_get_shift #-}
 
--- | State of the @Shift@ modifier.
+-- | State of the @kbd@Shift@/kbd@ modifier.
 bindInputEventWithModifiers_get_shift :: MethodBind
 bindInputEventWithModifiers_get_shift
   = unsafePerformIO $
@@ -187,7 +187,7 @@ bindInputEventWithModifiers_get_shift
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | State of the @Shift@ modifier.
+-- | State of the @kbd@Shift@/kbd@ modifier.
 get_shift ::
             (InputEventWithModifiers :< cls, Object :< cls) => cls -> IO Bool
 get_shift cls
@@ -209,7 +209,7 @@ instance NodeMethod InputEventWithModifiers "get_shift" '[]
 
 {-# NOINLINE bindInputEventWithModifiers_set_alt #-}
 
--- | State of the @Alt@ modifier.
+-- | State of the @kbd@Alt@/kbd@ modifier.
 bindInputEventWithModifiers_set_alt :: MethodBind
 bindInputEventWithModifiers_set_alt
   = unsafePerformIO $
@@ -219,7 +219,7 @@ bindInputEventWithModifiers_set_alt
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | State of the @Alt@ modifier.
+-- | State of the @kbd@Alt@/kbd@ modifier.
 set_alt ::
           (InputEventWithModifiers :< cls, Object :< cls) =>
           cls -> Bool -> IO ()
@@ -242,7 +242,7 @@ instance NodeMethod InputEventWithModifiers "set_alt" '[Bool]
 
 {-# NOINLINE bindInputEventWithModifiers_set_command #-}
 
--- | State of the @Command@ modifier.
+-- | State of the @kbd@Command@/kbd@ modifier.
 bindInputEventWithModifiers_set_command :: MethodBind
 bindInputEventWithModifiers_set_command
   = unsafePerformIO $
@@ -252,7 +252,7 @@ bindInputEventWithModifiers_set_command
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | State of the @Command@ modifier.
+-- | State of the @kbd@Command@/kbd@ modifier.
 set_command ::
               (InputEventWithModifiers :< cls, Object :< cls) =>
               cls -> Bool -> IO ()
@@ -275,7 +275,7 @@ instance NodeMethod InputEventWithModifiers "set_command" '[Bool]
 
 {-# NOINLINE bindInputEventWithModifiers_set_control #-}
 
--- | State of the @Ctrl@ modifier.
+-- | State of the @kbd@Ctrl@/kbd@ modifier.
 bindInputEventWithModifiers_set_control :: MethodBind
 bindInputEventWithModifiers_set_control
   = unsafePerformIO $
@@ -285,7 +285,7 @@ bindInputEventWithModifiers_set_control
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | State of the @Ctrl@ modifier.
+-- | State of the @kbd@Ctrl@/kbd@ modifier.
 set_control ::
               (InputEventWithModifiers :< cls, Object :< cls) =>
               cls -> Bool -> IO ()
@@ -308,7 +308,7 @@ instance NodeMethod InputEventWithModifiers "set_control" '[Bool]
 
 {-# NOINLINE bindInputEventWithModifiers_set_metakey #-}
 
--- | State of the @Meta@ modifier.
+-- | State of the @kbd@Meta@/kbd@ modifier.
 bindInputEventWithModifiers_set_metakey :: MethodBind
 bindInputEventWithModifiers_set_metakey
   = unsafePerformIO $
@@ -318,7 +318,7 @@ bindInputEventWithModifiers_set_metakey
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | State of the @Meta@ modifier.
+-- | State of the @kbd@Meta@/kbd@ modifier.
 set_metakey ::
               (InputEventWithModifiers :< cls, Object :< cls) =>
               cls -> Bool -> IO ()
@@ -341,7 +341,7 @@ instance NodeMethod InputEventWithModifiers "set_metakey" '[Bool]
 
 {-# NOINLINE bindInputEventWithModifiers_set_shift #-}
 
--- | State of the @Shift@ modifier.
+-- | State of the @kbd@Shift@/kbd@ modifier.
 bindInputEventWithModifiers_set_shift :: MethodBind
 bindInputEventWithModifiers_set_shift
   = unsafePerformIO $
@@ -351,7 +351,7 @@ bindInputEventWithModifiers_set_shift
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | State of the @Shift@ modifier.
+-- | State of the @kbd@Shift@/kbd@ modifier.
 set_shift ::
             (InputEventWithModifiers :< cls, Object :< cls) =>
             cls -> Bool -> IO ()

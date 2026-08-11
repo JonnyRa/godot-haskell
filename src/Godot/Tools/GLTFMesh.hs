@@ -3,8 +3,10 @@
   MultiParamTypeClasses #-}
 module Godot.Tools.GLTFMesh
        (Godot.Tools.GLTFMesh.get_blend_weights,
+        Godot.Tools.GLTFMesh.get_instance_materials,
         Godot.Tools.GLTFMesh.get_mesh,
         Godot.Tools.GLTFMesh.set_blend_weights,
+        Godot.Tools.GLTFMesh.set_instance_materials,
         Godot.Tools.GLTFMesh.set_mesh)
        where
 import Data.Coerce
@@ -25,7 +27,13 @@ instance NodeProperty GLTFMesh "blend_weights" PoolRealArray 'False
           = (get_blend_weights, wrapDroppingSetter set_blend_weights,
              Nothing)
 
-instance NodeProperty GLTFMesh "mesh" ArrayMesh 'False where
+instance NodeProperty GLTFMesh "instance_materials" Array 'False
+         where
+        nodeProperty
+          = (get_instance_materials,
+             wrapDroppingSetter set_instance_materials, Nothing)
+
+instance NodeProperty GLTFMesh "mesh" Object 'False where
         nodeProperty = (get_mesh, wrapDroppingSetter set_mesh, Nothing)
 
 {-# NOINLINE bindGLTFMesh_get_blend_weights #-}
@@ -56,6 +64,36 @@ instance NodeMethod GLTFMesh "get_blend_weights" '[]
            (IO PoolRealArray)
          where
         nodeMethod = Godot.Tools.GLTFMesh.get_blend_weights
+
+{-# NOINLINE bindGLTFMesh_get_instance_materials #-}
+
+bindGLTFMesh_get_instance_materials :: MethodBind
+bindGLTFMesh_get_instance_materials
+  = unsafePerformIO $
+      withCString "GLTFMesh" $
+        \ clsNamePtr ->
+          withCString "get_instance_materials" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_instance_materials ::
+                         (GLTFMesh :< cls, Object :< cls) => cls -> IO Array
+get_instance_materials cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFMesh_get_instance_materials
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFMesh "get_instance_materials" '[]
+           (IO Array)
+         where
+        nodeMethod = Godot.Tools.GLTFMesh.get_instance_materials
 
 {-# NOINLINE bindGLTFMesh_get_mesh #-}
 
@@ -107,6 +145,36 @@ instance NodeMethod GLTFMesh "set_blend_weights" '[PoolRealArray]
            (IO ())
          where
         nodeMethod = Godot.Tools.GLTFMesh.set_blend_weights
+
+{-# NOINLINE bindGLTFMesh_set_instance_materials #-}
+
+bindGLTFMesh_set_instance_materials :: MethodBind
+bindGLTFMesh_set_instance_materials
+  = unsafePerformIO $
+      withCString "GLTFMesh" $
+        \ clsNamePtr ->
+          withCString "set_instance_materials" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_instance_materials ::
+                         (GLTFMesh :< cls, Object :< cls) => cls -> Array -> IO ()
+set_instance_materials cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFMesh_set_instance_materials
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFMesh "set_instance_materials" '[Array]
+           (IO ())
+         where
+        nodeMethod = Godot.Tools.GLTFMesh.set_instance_materials
 
 {-# NOINLINE bindGLTFMesh_set_mesh #-}
 

@@ -16,7 +16,7 @@ import Godot.Core.Reference()
 
 {-# NOINLINE bindWeakRef_get_ref #-}
 
--- | Returns the @Object@ this weakref is referring to.
+-- | Returns the @Object@ this weakref is referring to. Returns @null@ if that object no longer exists.
 bindWeakRef_get_ref :: MethodBind
 bindWeakRef_get_ref
   = unsafePerformIO $
@@ -26,7 +26,7 @@ bindWeakRef_get_ref
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the @Object@ this weakref is referring to.
+-- | Returns the @Object@ this weakref is referring to. Returns @null@ if that object no longer exists.
 get_ref ::
           (WeakRef :< cls, Object :< cls) => cls -> IO GodotVariant
 get_ref cls

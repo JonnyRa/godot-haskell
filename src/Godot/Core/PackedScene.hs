@@ -2,7 +2,8 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.PackedScene
-       (Godot.Core.PackedScene._GEN_EDIT_STATE_DISABLED,
+       (Godot.Core.PackedScene._GEN_EDIT_STATE_MAIN_INHERITED,
+        Godot.Core.PackedScene._GEN_EDIT_STATE_DISABLED,
         Godot.Core.PackedScene._GEN_EDIT_STATE_MAIN,
         Godot.Core.PackedScene._GEN_EDIT_STATE_INSTANCE,
         Godot.Core.PackedScene._get_bundled_scene,
@@ -22,6 +23,9 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Resource()
+
+_GEN_EDIT_STATE_MAIN_INHERITED :: Int
+_GEN_EDIT_STATE_MAIN_INHERITED = 3
 
 _GEN_EDIT_STATE_DISABLED :: Int
 _GEN_EDIT_STATE_DISABLED = 0

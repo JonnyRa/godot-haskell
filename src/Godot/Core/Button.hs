@@ -3,13 +3,15 @@
   MultiParamTypeClasses #-}
 module Godot.Core.Button
        (Godot.Core.Button._ALIGN_RIGHT, Godot.Core.Button._ALIGN_LEFT,
-        Godot.Core.Button._ALIGN_CENTER, Godot.Core.Button.get_button_icon,
-        Godot.Core.Button.get_clip_text, Godot.Core.Button.get_text,
+        Godot.Core.Button._ALIGN_CENTER,
+        Godot.Core.Button._texture_changed,
+        Godot.Core.Button.get_button_icon, Godot.Core.Button.get_clip_text,
+        Godot.Core.Button.get_icon_align, Godot.Core.Button.get_text,
         Godot.Core.Button.get_text_align, Godot.Core.Button.is_expand_icon,
         Godot.Core.Button.is_flat, Godot.Core.Button.set_button_icon,
         Godot.Core.Button.set_clip_text, Godot.Core.Button.set_expand_icon,
-        Godot.Core.Button.set_flat, Godot.Core.Button.set_text,
-        Godot.Core.Button.set_text_align)
+        Godot.Core.Button.set_flat, Godot.Core.Button.set_icon_align,
+        Godot.Core.Button.set_text, Godot.Core.Button.set_text_align)
        where
 import Data.Coerce
 import Foreign.C
@@ -51,8 +53,38 @@ instance NodeProperty Button "icon" Texture 'False where
         nodeProperty
           = (get_button_icon, wrapDroppingSetter set_button_icon, Nothing)
 
+instance NodeProperty Button "icon_align" Int 'False where
+        nodeProperty
+          = (get_icon_align, wrapDroppingSetter set_icon_align, Nothing)
+
 instance NodeProperty Button "text" GodotString 'False where
         nodeProperty = (get_text, wrapDroppingSetter set_text, Nothing)
+
+{-# NOINLINE bindButton__texture_changed #-}
+
+bindButton__texture_changed :: MethodBind
+bindButton__texture_changed
+  = unsafePerformIO $
+      withCString "Button" $
+        \ clsNamePtr ->
+          withCString "_texture_changed" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_texture_changed :: (Button :< cls, Object :< cls) => cls -> IO ()
+_texture_changed cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindButton__texture_changed (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Button "_texture_changed" '[] (IO ()) where
+        nodeMethod = Godot.Core.Button._texture_changed
 
 {-# NOINLINE bindButton_get_button_icon #-}
 
@@ -108,6 +140,34 @@ get_clip_text cls
 
 instance NodeMethod Button "get_clip_text" '[] (IO Bool) where
         nodeMethod = Godot.Core.Button.get_clip_text
+
+{-# NOINLINE bindButton_get_icon_align #-}
+
+-- | Specifies if the icon should be aligned to the left, right, or center of a button. Uses the same @enum TextAlign@ constants as the text alignment. If centered, text will draw on top of the icon.
+bindButton_get_icon_align :: MethodBind
+bindButton_get_icon_align
+  = unsafePerformIO $
+      withCString "Button" $
+        \ clsNamePtr ->
+          withCString "get_icon_align" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Specifies if the icon should be aligned to the left, right, or center of a button. Uses the same @enum TextAlign@ constants as the text alignment. If centered, text will draw on top of the icon.
+get_icon_align :: (Button :< cls, Object :< cls) => cls -> IO Int
+get_icon_align cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindButton_get_icon_align (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Button "get_icon_align" '[] (IO Int) where
+        nodeMethod = Godot.Core.Button.get_icon_align
 
 {-# NOINLINE bindButton_get_text #-}
 
@@ -331,6 +391,35 @@ set_flat cls arg1
 
 instance NodeMethod Button "set_flat" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Button.set_flat
+
+{-# NOINLINE bindButton_set_icon_align #-}
+
+-- | Specifies if the icon should be aligned to the left, right, or center of a button. Uses the same @enum TextAlign@ constants as the text alignment. If centered, text will draw on top of the icon.
+bindButton_set_icon_align :: MethodBind
+bindButton_set_icon_align
+  = unsafePerformIO $
+      withCString "Button" $
+        \ clsNamePtr ->
+          withCString "set_icon_align" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Specifies if the icon should be aligned to the left, right, or center of a button. Uses the same @enum TextAlign@ constants as the text alignment. If centered, text will draw on top of the icon.
+set_icon_align ::
+                 (Button :< cls, Object :< cls) => cls -> Int -> IO ()
+set_icon_align cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindButton_set_icon_align (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Button "set_icon_align" '[Int] (IO ()) where
+        nodeMethod = Godot.Core.Button.set_icon_align
 
 {-# NOINLINE bindButton_set_text #-}
 

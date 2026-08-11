@@ -2,12 +2,14 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.CSGPolygon
-       (Godot.Core.CSGPolygon._MODE_PATH,
+       (Godot.Core.CSGPolygon._PATH_INTERVAL_SUBDIVIDE,
+        Godot.Core.CSGPolygon._MODE_PATH,
         Godot.Core.CSGPolygon._PATH_ROTATION_PATH,
         Godot.Core.CSGPolygon._PATH_ROTATION_PATH_FOLLOW,
         Godot.Core.CSGPolygon._PATH_ROTATION_POLYGON,
         Godot.Core.CSGPolygon._MODE_SPIN,
         Godot.Core.CSGPolygon._MODE_DEPTH,
+        Godot.Core.CSGPolygon._PATH_INTERVAL_DISTANCE,
         Godot.Core.CSGPolygon._has_editable_3d_polygon_no_depth,
         Godot.Core.CSGPolygon._is_editable_3d_polygon,
         Godot.Core.CSGPolygon._path_changed,
@@ -15,8 +17,11 @@ module Godot.Core.CSGPolygon
         Godot.Core.CSGPolygon.get_depth,
         Godot.Core.CSGPolygon.get_material, Godot.Core.CSGPolygon.get_mode,
         Godot.Core.CSGPolygon.get_path_interval,
+        Godot.Core.CSGPolygon.get_path_interval_type,
         Godot.Core.CSGPolygon.get_path_node,
         Godot.Core.CSGPolygon.get_path_rotation,
+        Godot.Core.CSGPolygon.get_path_simplify_angle,
+        Godot.Core.CSGPolygon.get_path_u_distance,
         Godot.Core.CSGPolygon.get_polygon,
         Godot.Core.CSGPolygon.get_smooth_faces,
         Godot.Core.CSGPolygon.get_spin_degrees,
@@ -28,10 +33,13 @@ module Godot.Core.CSGPolygon
         Godot.Core.CSGPolygon.set_material, Godot.Core.CSGPolygon.set_mode,
         Godot.Core.CSGPolygon.set_path_continuous_u,
         Godot.Core.CSGPolygon.set_path_interval,
+        Godot.Core.CSGPolygon.set_path_interval_type,
         Godot.Core.CSGPolygon.set_path_joined,
         Godot.Core.CSGPolygon.set_path_local,
         Godot.Core.CSGPolygon.set_path_node,
         Godot.Core.CSGPolygon.set_path_rotation,
+        Godot.Core.CSGPolygon.set_path_simplify_angle,
+        Godot.Core.CSGPolygon.set_path_u_distance,
         Godot.Core.CSGPolygon.set_polygon,
         Godot.Core.CSGPolygon.set_smooth_faces,
         Godot.Core.CSGPolygon.set_spin_degrees,
@@ -48,6 +56,9 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.CSGPrimitive()
+
+_PATH_INTERVAL_SUBDIVIDE :: Int
+_PATH_INTERVAL_SUBDIVIDE = 1
 
 _MODE_PATH :: Int
 _MODE_PATH = 2
@@ -66,6 +77,9 @@ _MODE_SPIN = 1
 
 _MODE_DEPTH :: Int
 _MODE_DEPTH = 0
+
+_PATH_INTERVAL_DISTANCE :: Int
+_PATH_INTERVAL_DISTANCE = 0
 
 instance NodeProperty CSGPolygon "depth" Float 'False where
         nodeProperty = (get_depth, wrapDroppingSetter set_depth, Nothing)
@@ -88,6 +102,12 @@ instance NodeProperty CSGPolygon "path_interval" Float 'False where
           = (get_path_interval, wrapDroppingSetter set_path_interval,
              Nothing)
 
+instance NodeProperty CSGPolygon "path_interval_type" Int 'False
+         where
+        nodeProperty
+          = (get_path_interval_type,
+             wrapDroppingSetter set_path_interval_type, Nothing)
+
 instance NodeProperty CSGPolygon "path_joined" Bool 'False where
         nodeProperty
           = (is_path_joined, wrapDroppingSetter set_path_joined, Nothing)
@@ -103,6 +123,18 @@ instance NodeProperty CSGPolygon "path_node" NodePath 'False where
 instance NodeProperty CSGPolygon "path_rotation" Int 'False where
         nodeProperty
           = (get_path_rotation, wrapDroppingSetter set_path_rotation,
+             Nothing)
+
+instance NodeProperty CSGPolygon "path_simplify_angle" Float 'False
+         where
+        nodeProperty
+          = (get_path_simplify_angle,
+             wrapDroppingSetter set_path_simplify_angle, Nothing)
+
+instance NodeProperty CSGPolygon "path_u_distance" Float 'False
+         where
+        nodeProperty
+          = (get_path_u_distance, wrapDroppingSetter set_path_u_distance,
              Nothing)
 
 instance NodeProperty CSGPolygon "polygon" PoolVector2Array 'False
@@ -341,6 +373,36 @@ instance NodeMethod CSGPolygon "get_path_interval" '[] (IO Float)
          where
         nodeMethod = Godot.Core.CSGPolygon.get_path_interval
 
+{-# NOINLINE bindCSGPolygon_get_path_interval_type #-}
+
+bindCSGPolygon_get_path_interval_type :: MethodBind
+bindCSGPolygon_get_path_interval_type
+  = unsafePerformIO $
+      withCString "CSGPolygon" $
+        \ clsNamePtr ->
+          withCString "get_path_interval_type" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_path_interval_type ::
+                         (CSGPolygon :< cls, Object :< cls) => cls -> IO Int
+get_path_interval_type cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCSGPolygon_get_path_interval_type
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CSGPolygon "get_path_interval_type" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.CSGPolygon.get_path_interval_type
+
 {-# NOINLINE bindCSGPolygon_get_path_node #-}
 
 bindCSGPolygon_get_path_node :: MethodBind
@@ -397,6 +459,65 @@ get_path_rotation cls
 instance NodeMethod CSGPolygon "get_path_rotation" '[] (IO Int)
          where
         nodeMethod = Godot.Core.CSGPolygon.get_path_rotation
+
+{-# NOINLINE bindCSGPolygon_get_path_simplify_angle #-}
+
+bindCSGPolygon_get_path_simplify_angle :: MethodBind
+bindCSGPolygon_get_path_simplify_angle
+  = unsafePerformIO $
+      withCString "CSGPolygon" $
+        \ clsNamePtr ->
+          withCString "get_path_simplify_angle" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_path_simplify_angle ::
+                          (CSGPolygon :< cls, Object :< cls) => cls -> IO Float
+get_path_simplify_angle cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCSGPolygon_get_path_simplify_angle
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CSGPolygon "get_path_simplify_angle" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.CSGPolygon.get_path_simplify_angle
+
+{-# NOINLINE bindCSGPolygon_get_path_u_distance #-}
+
+bindCSGPolygon_get_path_u_distance :: MethodBind
+bindCSGPolygon_get_path_u_distance
+  = unsafePerformIO $
+      withCString "CSGPolygon" $
+        \ clsNamePtr ->
+          withCString "get_path_u_distance" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_path_u_distance ::
+                      (CSGPolygon :< cls, Object :< cls) => cls -> IO Float
+get_path_u_distance cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCSGPolygon_get_path_u_distance
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CSGPolygon "get_path_u_distance" '[] (IO Float)
+         where
+        nodeMethod = Godot.Core.CSGPolygon.get_path_u_distance
 
 {-# NOINLINE bindCSGPolygon_get_polygon #-}
 
@@ -732,6 +853,36 @@ instance NodeMethod CSGPolygon "set_path_interval" '[Float] (IO ())
          where
         nodeMethod = Godot.Core.CSGPolygon.set_path_interval
 
+{-# NOINLINE bindCSGPolygon_set_path_interval_type #-}
+
+bindCSGPolygon_set_path_interval_type :: MethodBind
+bindCSGPolygon_set_path_interval_type
+  = unsafePerformIO $
+      withCString "CSGPolygon" $
+        \ clsNamePtr ->
+          withCString "set_path_interval_type" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_path_interval_type ::
+                         (CSGPolygon :< cls, Object :< cls) => cls -> Int -> IO ()
+set_path_interval_type cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCSGPolygon_set_path_interval_type
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CSGPolygon "set_path_interval_type" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CSGPolygon.set_path_interval_type
+
 {-# NOINLINE bindCSGPolygon_set_path_joined #-}
 
 bindCSGPolygon_set_path_joined :: MethodBind
@@ -844,6 +995,66 @@ set_path_rotation cls arg1
 instance NodeMethod CSGPolygon "set_path_rotation" '[Int] (IO ())
          where
         nodeMethod = Godot.Core.CSGPolygon.set_path_rotation
+
+{-# NOINLINE bindCSGPolygon_set_path_simplify_angle #-}
+
+bindCSGPolygon_set_path_simplify_angle :: MethodBind
+bindCSGPolygon_set_path_simplify_angle
+  = unsafePerformIO $
+      withCString "CSGPolygon" $
+        \ clsNamePtr ->
+          withCString "set_path_simplify_angle" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_path_simplify_angle ::
+                          (CSGPolygon :< cls, Object :< cls) => cls -> Float -> IO ()
+set_path_simplify_angle cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCSGPolygon_set_path_simplify_angle
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CSGPolygon "set_path_simplify_angle" '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CSGPolygon.set_path_simplify_angle
+
+{-# NOINLINE bindCSGPolygon_set_path_u_distance #-}
+
+bindCSGPolygon_set_path_u_distance :: MethodBind
+bindCSGPolygon_set_path_u_distance
+  = unsafePerformIO $
+      withCString "CSGPolygon" $
+        \ clsNamePtr ->
+          withCString "set_path_u_distance" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_path_u_distance ::
+                      (CSGPolygon :< cls, Object :< cls) => cls -> Float -> IO ()
+set_path_u_distance cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCSGPolygon_set_path_u_distance
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CSGPolygon "set_path_u_distance" '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CSGPolygon.set_path_u_distance
 
 {-# NOINLINE bindCSGPolygon_set_polygon #-}
 

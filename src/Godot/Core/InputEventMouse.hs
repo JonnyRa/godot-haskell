@@ -71,7 +71,8 @@ instance NodeMethod InputEventMouse "get_button_mask" '[] (IO Int)
 
 {-# NOINLINE bindInputEventMouse_get_global_position #-}
 
--- | The global mouse position relative to the current @Viewport@. If used in @method Control._gui_input@ and if the current @Control@ is not under the mouse, moving it will not update this value.
+-- | When received in @method Node._input@ or @method Node._unhandled_input@, returns the mouse's position in the root @Viewport@ using the coordinate system of the root @Viewport@.
+--   			When received in @method Control._gui_input@, returns the mouse's position in the @CanvasLayer@ that the @Control@ is in using the coordinate system of the @CanvasLayer@.
 bindInputEventMouse_get_global_position :: MethodBind
 bindInputEventMouse_get_global_position
   = unsafePerformIO $
@@ -81,7 +82,8 @@ bindInputEventMouse_get_global_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The global mouse position relative to the current @Viewport@. If used in @method Control._gui_input@ and if the current @Control@ is not under the mouse, moving it will not update this value.
+-- | When received in @method Node._input@ or @method Node._unhandled_input@, returns the mouse's position in the root @Viewport@ using the coordinate system of the root @Viewport@.
+--   			When received in @method Control._gui_input@, returns the mouse's position in the @CanvasLayer@ that the @Control@ is in using the coordinate system of the @CanvasLayer@.
 get_global_position ::
                       (InputEventMouse :< cls, Object :< cls) => cls -> IO Vector2
 get_global_position cls
@@ -103,7 +105,8 @@ instance NodeMethod InputEventMouse "get_global_position" '[]
 
 {-# NOINLINE bindInputEventMouse_get_position #-}
 
--- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse. If the current @Control@ is not under the mouse, moving it will not update this value.
+-- | When received in @method Node._input@ or @method Node._unhandled_input@, returns the mouse's position in the @Viewport@ this @Node@ is in using the coordinate system of this @Viewport@.
+--   			When received in @method Control._gui_input@, returns the mouse's position in the @Control@ using the local coordinate system of the @Control@.
 bindInputEventMouse_get_position :: MethodBind
 bindInputEventMouse_get_position
   = unsafePerformIO $
@@ -113,7 +116,8 @@ bindInputEventMouse_get_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse. If the current @Control@ is not under the mouse, moving it will not update this value.
+-- | When received in @method Node._input@ or @method Node._unhandled_input@, returns the mouse's position in the @Viewport@ this @Node@ is in using the coordinate system of this @Viewport@.
+--   			When received in @method Control._gui_input@, returns the mouse's position in the @Control@ using the local coordinate system of the @Control@.
 get_position ::
                (InputEventMouse :< cls, Object :< cls) => cls -> IO Vector2
 get_position cls
@@ -166,7 +170,8 @@ instance NodeMethod InputEventMouse "set_button_mask" '[Int]
 
 {-# NOINLINE bindInputEventMouse_set_global_position #-}
 
--- | The global mouse position relative to the current @Viewport@. If used in @method Control._gui_input@ and if the current @Control@ is not under the mouse, moving it will not update this value.
+-- | When received in @method Node._input@ or @method Node._unhandled_input@, returns the mouse's position in the root @Viewport@ using the coordinate system of the root @Viewport@.
+--   			When received in @method Control._gui_input@, returns the mouse's position in the @CanvasLayer@ that the @Control@ is in using the coordinate system of the @CanvasLayer@.
 bindInputEventMouse_set_global_position :: MethodBind
 bindInputEventMouse_set_global_position
   = unsafePerformIO $
@@ -176,7 +181,8 @@ bindInputEventMouse_set_global_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The global mouse position relative to the current @Viewport@. If used in @method Control._gui_input@ and if the current @Control@ is not under the mouse, moving it will not update this value.
+-- | When received in @method Node._input@ or @method Node._unhandled_input@, returns the mouse's position in the root @Viewport@ using the coordinate system of the root @Viewport@.
+--   			When received in @method Control._gui_input@, returns the mouse's position in the @CanvasLayer@ that the @Control@ is in using the coordinate system of the @CanvasLayer@.
 set_global_position ::
                       (InputEventMouse :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_global_position cls arg1
@@ -199,7 +205,8 @@ instance NodeMethod InputEventMouse "set_global_position"
 
 {-# NOINLINE bindInputEventMouse_set_position #-}
 
--- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse. If the current @Control@ is not under the mouse, moving it will not update this value.
+-- | When received in @method Node._input@ or @method Node._unhandled_input@, returns the mouse's position in the @Viewport@ this @Node@ is in using the coordinate system of this @Viewport@.
+--   			When received in @method Control._gui_input@, returns the mouse's position in the @Control@ using the local coordinate system of the @Control@.
 bindInputEventMouse_set_position :: MethodBind
 bindInputEventMouse_set_position
   = unsafePerformIO $
@@ -209,7 +216,8 @@ bindInputEventMouse_set_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The local mouse position relative to the @Viewport@. If used in @method Control._gui_input@, the position is relative to the current @Control@ which is under the mouse. If the current @Control@ is not under the mouse, moving it will not update this value.
+-- | When received in @method Node._input@ or @method Node._unhandled_input@, returns the mouse's position in the @Viewport@ this @Node@ is in using the coordinate system of this @Viewport@.
+--   			When received in @method Control._gui_input@, returns the mouse's position in the @Control@ using the local coordinate system of the @Control@.
 set_position ::
                (InputEventMouse :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_position cls arg1

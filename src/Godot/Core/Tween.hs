@@ -364,13 +364,18 @@ interpolate_callback ::
                                Maybe GodotVariant ->
                                  Maybe GodotVariant ->
                                    Maybe GodotVariant ->
-                                     Maybe GodotVariant -> Maybe GodotVariant -> IO Bool
+                                     Maybe GodotVariant ->
+                                       Maybe GodotVariant ->
+                                         Maybe GodotVariant ->
+                                           Maybe GodotVariant -> Maybe GodotVariant -> IO Bool
 interpolate_callback cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
+  arg9 arg10 arg11
   = withVariantArray
       [toVariant arg1, toVariant arg2, toVariant arg3,
        maybe VariantNil toVariant arg4, maybe VariantNil toVariant arg5,
        maybe VariantNil toVariant arg6, maybe VariantNil toVariant arg7,
-       maybe VariantNil toVariant arg8]
+       maybe VariantNil toVariant arg8, maybe VariantNil toVariant arg9,
+       maybe VariantNil toVariant arg10, maybe VariantNil toVariant arg11]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_interpolate_callback (upcast cls)
            arrPtr
@@ -382,6 +387,7 @@ interpolate_callback cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
 
 instance NodeMethod Tween "interpolate_callback"
            '[Object, Float, GodotString, Maybe GodotVariant,
+             Maybe GodotVariant, Maybe GodotVariant, Maybe GodotVariant,
              Maybe GodotVariant, Maybe GodotVariant, Maybe GodotVariant,
              Maybe GodotVariant]
            (IO Bool)
@@ -410,14 +416,19 @@ interpolate_deferred_callback ::
                                         Maybe GodotVariant ->
                                           Maybe GodotVariant ->
                                             Maybe GodotVariant ->
-                                              Maybe GodotVariant -> Maybe GodotVariant -> IO Bool
+                                              Maybe GodotVariant ->
+                                                Maybe GodotVariant ->
+                                                  Maybe GodotVariant ->
+                                                    Maybe GodotVariant ->
+                                                      Maybe GodotVariant -> IO Bool
 interpolate_deferred_callback cls arg1 arg2 arg3 arg4 arg5 arg6
-  arg7 arg8
+  arg7 arg8 arg9 arg10 arg11
   = withVariantArray
       [toVariant arg1, toVariant arg2, toVariant arg3,
        maybe VariantNil toVariant arg4, maybe VariantNil toVariant arg5,
        maybe VariantNil toVariant arg6, maybe VariantNil toVariant arg7,
-       maybe VariantNil toVariant arg8]
+       maybe VariantNil toVariant arg8, maybe VariantNil toVariant arg9,
+       maybe VariantNil toVariant arg10, maybe VariantNil toVariant arg11]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTween_interpolate_deferred_callback
            (upcast cls)
@@ -430,6 +441,7 @@ interpolate_deferred_callback cls arg1 arg2 arg3 arg4 arg5 arg6
 
 instance NodeMethod Tween "interpolate_deferred_callback"
            '[Object, Float, GodotString, Maybe GodotVariant,
+             Maybe GodotVariant, Maybe GodotVariant, Maybe GodotVariant,
              Maybe GodotVariant, Maybe GodotVariant, Maybe GodotVariant,
              Maybe GodotVariant]
            (IO Bool)
@@ -638,7 +650,7 @@ instance NodeMethod Tween "remove_all" '[] (IO Bool) where
 
 {-# NOINLINE bindTween_reset #-}
 
--- | Resets a tween to its initial value (the one given, not the one before the tween), given its object and property/method pair. By default, all tweens are removed, unless @key@ is specified.
+-- | Resets a tween to its initial value (the one given, not the one before the tween), given its object and property/method pair. By default, all tweens are reset, unless @key@ is specified.
 bindTween_reset :: MethodBind
 bindTween_reset
   = unsafePerformIO $
@@ -648,7 +660,7 @@ bindTween_reset
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Resets a tween to its initial value (the one given, not the one before the tween), given its object and property/method pair. By default, all tweens are removed, unless @key@ is specified.
+-- | Resets a tween to its initial value (the one given, not the one before the tween), given its object and property/method pair. By default, all tweens are reset, unless @key@ is specified.
 reset ::
         (Tween :< cls, Object :< cls) =>
         cls -> Object -> Maybe GodotString -> IO Bool

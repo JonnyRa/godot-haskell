@@ -4,6 +4,7 @@
 module Godot.Tools.EditorInterface
        (Godot.Tools.EditorInterface.edit_node,
         Godot.Tools.EditorInterface.edit_resource,
+        Godot.Tools.EditorInterface.edit_script,
         Godot.Tools.EditorInterface.get_base_control,
         Godot.Tools.EditorInterface.get_current_path,
         Godot.Tools.EditorInterface.get_edited_scene_root,
@@ -117,6 +118,42 @@ instance NodeMethod EditorInterface "edit_resource" '[Resource]
            (IO ())
          where
         nodeMethod = Godot.Tools.EditorInterface.edit_resource
+
+{-# NOINLINE bindEditorInterface_edit_script #-}
+
+-- | Edits the given @Script@. The line and column on which to open the script can also be specified. The script will be open with the user-configured editor for the script's language which may be an external editor.
+bindEditorInterface_edit_script :: MethodBind
+bindEditorInterface_edit_script
+  = unsafePerformIO $
+      withCString "EditorInterface" $
+        \ clsNamePtr ->
+          withCString "edit_script" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Edits the given @Script@. The line and column on which to open the script can also be specified. The script will be open with the user-configured editor for the script's language which may be an external editor.
+edit_script ::
+              (EditorInterface :< cls, Object :< cls) =>
+              cls -> Script -> Maybe Int -> Maybe Int -> Maybe Bool -> IO ()
+edit_script cls arg1 arg2 arg3 arg4
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (-1)) toVariant arg2,
+       maybe (VariantInt (0)) toVariant arg3,
+       maybe (VariantBool True) toVariant arg4]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEditorInterface_edit_script (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorInterface "edit_script"
+           '[Script, Maybe Int, Maybe Int, Maybe Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Tools.EditorInterface.edit_script
 
 {-# NOINLINE bindEditorInterface_get_base_control #-}
 

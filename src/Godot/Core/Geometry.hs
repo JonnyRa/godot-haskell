@@ -797,7 +797,7 @@ instance NodeMethod Geometry "is_polygon_clockwise"
 
 {-# NOINLINE bindGeometry_line_intersects_line_2d #-}
 
--- | Checks if the two lines (@from_a@, @dir_a@) and (@from_b@, @dir_b@) intersect. If yes, return the point of intersection as @Vector2@. If no intersection takes place, returns an empty @Variant@.
+-- | Checks if the two lines (@from_a@, @dir_a@) and (@from_b@, @dir_b@) intersect. If yes, return the point of intersection as @Vector2@. If no intersection takes place, returns @null@.
 --   				__Note:__ The lines are specified using direction vectors, not end points.
 bindGeometry_line_intersects_line_2d :: MethodBind
 bindGeometry_line_intersects_line_2d
@@ -808,7 +808,7 @@ bindGeometry_line_intersects_line_2d
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Checks if the two lines (@from_a@, @dir_a@) and (@from_b@, @dir_b@) intersect. If yes, return the point of intersection as @Vector2@. If no intersection takes place, returns an empty @Variant@.
+-- | Checks if the two lines (@from_a@, @dir_a@) and (@from_b@, @dir_b@) intersect. If yes, return the point of intersection as @Vector2@. If no intersection takes place, returns @null@.
 --   				__Note:__ The lines are specified using direction vectors, not end points.
 line_intersects_line_2d ::
                           (Geometry :< cls, Object :< cls) =>
@@ -831,7 +831,7 @@ instance NodeMethod Geometry "line_intersects_line_2d"
 
 {-# NOINLINE bindGeometry_make_atlas #-}
 
--- | Given an array of @Vector2@s representing tiles, builds an atlas. The returned dictionary has two keys: @points@ is a vector of @Vector2@ that specifies the positions of each tile, @size@ contains the overall size of the whole atlas as @Vector2@.
+-- | Given an array of @Vector2@s representing tiles, builds an atlas. The returned dictionary has two keys: @points@ is an array of @Vector2@ that specifies the positions of each tile, @size@ contains the overall size of the whole atlas as @Vector2@.
 bindGeometry_make_atlas :: MethodBind
 bindGeometry_make_atlas
   = unsafePerformIO $
@@ -841,7 +841,7 @@ bindGeometry_make_atlas
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Given an array of @Vector2@s representing tiles, builds an atlas. The returned dictionary has two keys: @points@ is a vector of @Vector2@ that specifies the positions of each tile, @size@ contains the overall size of the whole atlas as @Vector2@.
+-- | Given an array of @Vector2@s representing tiles, builds an atlas. The returned dictionary has two keys: @points@ is an array of @Vector2@ that specifies the positions of each tile, @size@ contains the overall size of the whole atlas as @Vector2@.
 make_atlas ::
              (Geometry :< cls, Object :< cls) =>
              cls -> PoolVector2Array -> IO Dictionary
@@ -1173,7 +1173,7 @@ instance NodeMethod Geometry "segment_intersects_cylinder"
 
 {-# NOINLINE bindGeometry_segment_intersects_segment_2d #-}
 
--- | Checks if the two segments (@from_a@, @to_a@) and (@from_b@, @to_b@) intersect. If yes, return the point of intersection as @Vector2@. If no intersection takes place, returns an empty @Variant@.
+-- | Checks if the two segments (@from_a@, @to_a@) and (@from_b@, @to_b@) intersect. If yes, return the point of intersection as @Vector2@. If no intersection takes place, returns @null@.
 bindGeometry_segment_intersects_segment_2d :: MethodBind
 bindGeometry_segment_intersects_segment_2d
   = unsafePerformIO $
@@ -1183,7 +1183,7 @@ bindGeometry_segment_intersects_segment_2d
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Checks if the two segments (@from_a@, @to_a@) and (@from_b@, @to_b@) intersect. If yes, return the point of intersection as @Vector2@. If no intersection takes place, returns an empty @Variant@.
+-- | Checks if the two segments (@from_a@, @to_a@) and (@from_b@, @to_b@) intersect. If yes, return the point of intersection as @Vector2@. If no intersection takes place, returns @null@.
 segment_intersects_segment_2d ::
                                 (Geometry :< cls, Object :< cls) =>
                                 cls -> Vector2 -> Vector2 -> Vector2 -> Vector2 -> IO GodotVariant

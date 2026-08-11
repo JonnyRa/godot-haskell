@@ -62,7 +62,9 @@ instance NodeMethod Shape2D "collide"
 
 {-# NOINLINE bindShape2D_collide_and_get_contacts #-}
 
--- | Returns a list of the points where this shape touches another. If there are no collisions the list is empty.
+-- | Returns a list of contact point pairs where this shape touches another.
+--   				If there are no collisions, the returned list is empty. Otherwise, the returned list contains contact points arranged in pairs, with entries alternating between points on the boundary of this shape and points on the boundary of @with_shape@.
+--   				A collision pair A, B can be used to calculate the collision normal with @(B - A).normalized()@, and the collision depth with @(B - A).length()@. This information is typically used to separate shapes, particularly in collision solvers.
 --   				This method needs the transformation matrix for this shape (@local_xform@), the shape to check collisions with (@with_shape@), and the transformation matrix of that shape (@shape_xform@).
 bindShape2D_collide_and_get_contacts :: MethodBind
 bindShape2D_collide_and_get_contacts
@@ -73,7 +75,9 @@ bindShape2D_collide_and_get_contacts
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a list of the points where this shape touches another. If there are no collisions the list is empty.
+-- | Returns a list of contact point pairs where this shape touches another.
+--   				If there are no collisions, the returned list is empty. Otherwise, the returned list contains contact points arranged in pairs, with entries alternating between points on the boundary of this shape and points on the boundary of @with_shape@.
+--   				A collision pair A, B can be used to calculate the collision normal with @(B - A).normalized()@, and the collision depth with @(B - A).length()@. This information is typically used to separate shapes, particularly in collision solvers.
 --   				This method needs the transformation matrix for this shape (@local_xform@), the shape to check collisions with (@with_shape@), and the transformation matrix of that shape (@shape_xform@).
 collide_and_get_contacts ::
                            (Shape2D :< cls, Object :< cls) =>
@@ -137,7 +141,9 @@ instance NodeMethod Shape2D "collide_with_motion"
 
 {-# NOINLINE bindShape2D_collide_with_motion_and_get_contacts #-}
 
--- | Returns a list of the points where this shape would touch another, if a given movement was applied. If there are no collisions the list is empty.
+-- | Returns a list of contact point pairs where this shape would touch another, if a given movement was applied.
+--   				If there would be no collisions, the returned list is empty. Otherwise, the returned list contains contact points arranged in pairs, with entries alternating between points on the boundary of this shape and points on the boundary of @with_shape@.
+--   				A collision pair A, B can be used to calculate the collision normal with @(B - A).normalized()@, and the collision depth with @(B - A).length()@. This information is typically used to separate shapes, particularly in collision solvers.
 --   				This method needs the transformation matrix for this shape (@local_xform@), the movement to test on this shape (@local_motion@), the shape to check collisions with (@with_shape@), the transformation matrix of that shape (@shape_xform@), and the movement to test onto the other object (@shape_motion@).
 bindShape2D_collide_with_motion_and_get_contacts :: MethodBind
 bindShape2D_collide_with_motion_and_get_contacts
@@ -148,7 +154,9 @@ bindShape2D_collide_with_motion_and_get_contacts
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a list of the points where this shape would touch another, if a given movement was applied. If there are no collisions the list is empty.
+-- | Returns a list of contact point pairs where this shape would touch another, if a given movement was applied.
+--   				If there would be no collisions, the returned list is empty. Otherwise, the returned list contains contact points arranged in pairs, with entries alternating between points on the boundary of this shape and points on the boundary of @with_shape@.
+--   				A collision pair A, B can be used to calculate the collision normal with @(B - A).normalized()@, and the collision depth with @(B - A).length()@. This information is typically used to separate shapes, particularly in collision solvers.
 --   				This method needs the transformation matrix for this shape (@local_xform@), the movement to test on this shape (@local_motion@), the shape to check collisions with (@with_shape@), the transformation matrix of that shape (@shape_xform@), and the movement to test onto the other object (@shape_motion@).
 collide_with_motion_and_get_contacts ::
                                        (Shape2D :< cls, Object :< cls) =>
@@ -205,7 +213,8 @@ instance NodeMethod Shape2D "draw" '[Rid, Color] (IO ()) where
 
 {-# NOINLINE bindShape2D_get_custom_solver_bias #-}
 
--- | The shape's custom solver bias.
+-- | The shape's custom solver bias. Defines how much bodies react to enforce contact separation when this shape is involved.
+--   			When set to @0.0@, the default value of @0.3@ is used.
 bindShape2D_get_custom_solver_bias :: MethodBind
 bindShape2D_get_custom_solver_bias
   = unsafePerformIO $
@@ -215,7 +224,8 @@ bindShape2D_get_custom_solver_bias
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The shape's custom solver bias.
+-- | The shape's custom solver bias. Defines how much bodies react to enforce contact separation when this shape is involved.
+--   			When set to @0.0@, the default value of @0.3@ is used.
 get_custom_solver_bias ::
                          (Shape2D :< cls, Object :< cls) => cls -> IO Float
 get_custom_solver_bias cls
@@ -236,7 +246,8 @@ instance NodeMethod Shape2D "get_custom_solver_bias" '[] (IO Float)
 
 {-# NOINLINE bindShape2D_set_custom_solver_bias #-}
 
--- | The shape's custom solver bias.
+-- | The shape's custom solver bias. Defines how much bodies react to enforce contact separation when this shape is involved.
+--   			When set to @0.0@, the default value of @0.3@ is used.
 bindShape2D_set_custom_solver_bias :: MethodBind
 bindShape2D_set_custom_solver_bias
   = unsafePerformIO $
@@ -246,7 +257,8 @@ bindShape2D_set_custom_solver_bias
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The shape's custom solver bias.
+-- | The shape's custom solver bias. Defines how much bodies react to enforce contact separation when this shape is involved.
+--   			When set to @0.0@, the default value of @0.3@ is used.
 set_custom_solver_bias ::
                          (Shape2D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_custom_solver_bias cls arg1

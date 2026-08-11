@@ -2,10 +2,12 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.InputEventMouseMotion
-       (Godot.Core.InputEventMouseMotion.get_pressure,
+       (Godot.Core.InputEventMouseMotion.get_pen_inverted,
+        Godot.Core.InputEventMouseMotion.get_pressure,
         Godot.Core.InputEventMouseMotion.get_relative,
         Godot.Core.InputEventMouseMotion.get_speed,
         Godot.Core.InputEventMouseMotion.get_tilt,
+        Godot.Core.InputEventMouseMotion.set_pen_inverted,
         Godot.Core.InputEventMouseMotion.set_pressure,
         Godot.Core.InputEventMouseMotion.set_relative,
         Godot.Core.InputEventMouseMotion.set_speed,
@@ -22,6 +24,12 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.InputEventMouse()
+
+instance NodeProperty InputEventMouseMotion "pen_inverted" Bool
+           'False
+         where
+        nodeProperty
+          = (get_pen_inverted, wrapDroppingSetter set_pen_inverted, Nothing)
 
 instance NodeProperty InputEventMouseMotion "pressure" Float 'False
          where
@@ -41,6 +49,40 @@ instance NodeProperty InputEventMouseMotion "speed" Vector2 'False
 instance NodeProperty InputEventMouseMotion "tilt" Vector2 'False
          where
         nodeProperty = (get_tilt, wrapDroppingSetter set_tilt, Nothing)
+
+{-# NOINLINE bindInputEventMouseMotion_get_pen_inverted #-}
+
+-- | Returns @true@ when using the eraser end of a stylus pen.
+--   			__Note:__ This property is implemented on Linux, macOS and Windows.
+bindInputEventMouseMotion_get_pen_inverted :: MethodBind
+bindInputEventMouseMotion_get_pen_inverted
+  = unsafePerformIO $
+      withCString "InputEventMouseMotion" $
+        \ clsNamePtr ->
+          withCString "get_pen_inverted" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ when using the eraser end of a stylus pen.
+--   			__Note:__ This property is implemented on Linux, macOS and Windows.
+get_pen_inverted ::
+                   (InputEventMouseMotion :< cls, Object :< cls) => cls -> IO Bool
+get_pen_inverted cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputEventMouseMotion_get_pen_inverted
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventMouseMotion "get_pen_inverted" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.InputEventMouseMotion.get_pen_inverted
 
 {-# NOINLINE bindInputEventMouseMotion_get_pressure #-}
 
@@ -171,6 +213,42 @@ instance NodeMethod InputEventMouseMotion "get_tilt" '[]
            (IO Vector2)
          where
         nodeMethod = Godot.Core.InputEventMouseMotion.get_tilt
+
+{-# NOINLINE bindInputEventMouseMotion_set_pen_inverted #-}
+
+-- | Returns @true@ when using the eraser end of a stylus pen.
+--   			__Note:__ This property is implemented on Linux, macOS and Windows.
+bindInputEventMouseMotion_set_pen_inverted :: MethodBind
+bindInputEventMouseMotion_set_pen_inverted
+  = unsafePerformIO $
+      withCString "InputEventMouseMotion" $
+        \ clsNamePtr ->
+          withCString "set_pen_inverted" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ when using the eraser end of a stylus pen.
+--   			__Note:__ This property is implemented on Linux, macOS and Windows.
+set_pen_inverted ::
+                   (InputEventMouseMotion :< cls, Object :< cls) =>
+                   cls -> Bool -> IO ()
+set_pen_inverted cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputEventMouseMotion_set_pen_inverted
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventMouseMotion "set_pen_inverted"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.InputEventMouseMotion.set_pen_inverted
 
 {-# NOINLINE bindInputEventMouseMotion_set_pressure #-}
 

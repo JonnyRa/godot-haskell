@@ -480,7 +480,7 @@ instance NodeMethod AnimationPlayer "find_animation" '[Animation]
 
 {-# NOINLINE bindAnimationPlayer_get_animation #-}
 
--- | Returns the @Animation@ with key @name@ or @null@ if not found.
+-- | Returns the @Animation@ with the key @name@. If the animation does not exist, @null@ is returned and an error is logged.
 bindAnimationPlayer_get_animation :: MethodBind
 bindAnimationPlayer_get_animation
   = unsafePerformIO $
@@ -490,7 +490,7 @@ bindAnimationPlayer_get_animation
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the @Animation@ with key @name@ or @null@ if not found.
+-- | Returns the @Animation@ with the key @name@. If the animation does not exist, @null@ is returned and an error is logged.
 get_animation ::
                 (AnimationPlayer :< cls, Object :< cls) =>
                 cls -> GodotString -> IO Animation
@@ -1278,6 +1278,7 @@ instance NodeMethod AnimationPlayer "rename_animation"
 {-# NOINLINE bindAnimationPlayer_seek #-}
 
 -- | Seeks the animation to the @seconds@ point in time (in seconds). If @update@ is @true@, the animation updates too, otherwise it updates at process time. Events between the current frame and @seconds@ are skipped.
+--   				__Note:__ Seeking to the end of the animation doesn't emit @signal animation_finished@. If you want to skip animation and emit the signal, use @method advance@.
 bindAnimationPlayer_seek :: MethodBind
 bindAnimationPlayer_seek
   = unsafePerformIO $
@@ -1288,6 +1289,7 @@ bindAnimationPlayer_seek
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Seeks the animation to the @seconds@ point in time (in seconds). If @update@ is @true@, the animation updates too, otherwise it updates at process time. Events between the current frame and @seconds@ are skipped.
+--   				__Note:__ Seeking to the end of the animation doesn't emit @signal animation_finished@. If you want to skip animation and emit the signal, use @method advance@.
 seek ::
        (AnimationPlayer :< cls, Object :< cls) =>
        cls -> Float -> Maybe Bool -> IO ()

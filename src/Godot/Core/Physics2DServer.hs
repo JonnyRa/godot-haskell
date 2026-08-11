@@ -4,7 +4,6 @@
 module Godot.Core.Physics2DServer
        (Godot.Core.Physics2DServer._SPACE_PARAM_CONSTRAINT_DEFAULT_BIAS,
         Godot.Core.Physics2DServer._AREA_SPACE_OVERRIDE_REPLACE,
-        Godot.Core.Physics2DServer._SPACE_PARAM_TEST_MOTION_MIN_CONTACT_DEPTH,
         Godot.Core.Physics2DServer._CCD_MODE_DISABLED,
         Godot.Core.Physics2DServer._JOINT_PARAM_MAX_FORCE,
         Godot.Core.Physics2DServer._CCD_MODE_CAST_RAY,
@@ -187,9 +186,6 @@ _SPACE_PARAM_CONSTRAINT_DEFAULT_BIAS = 6
 
 _AREA_SPACE_OVERRIDE_REPLACE :: Int
 _AREA_SPACE_OVERRIDE_REPLACE = 3
-
-_SPACE_PARAM_TEST_MOTION_MIN_CONTACT_DEPTH :: Int
-_SPACE_PARAM_TEST_MOTION_MIN_CONTACT_DEPTH = 7
 
 _CCD_MODE_DISABLED :: Int
 _CCD_MODE_DISABLED = 0
@@ -3158,7 +3154,8 @@ instance NodeMethod Physics2DServer "damped_string_joint_set_param"
 
 {-# NOINLINE bindPhysics2DServer_free_rid #-}
 
--- | Destroys any of the objects created by Physics2DServer. If the @RID@ passed is not one of the objects that can be created by Physics2DServer, an error will be sent to the console.
+-- | Destroys an object created by the Physics2DServer.
+--   				__Note:__ See @method VisualServer.free_rid@ for details on how to handle RIDs for freed objects.
 bindPhysics2DServer_free_rid :: MethodBind
 bindPhysics2DServer_free_rid
   = unsafePerformIO $
@@ -3168,7 +3165,8 @@ bindPhysics2DServer_free_rid
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Destroys any of the objects created by Physics2DServer. If the @RID@ passed is not one of the objects that can be created by Physics2DServer, an error will be sent to the console.
+-- | Destroys an object created by the Physics2DServer.
+--   				__Note:__ See @method VisualServer.free_rid@ for details on how to handle RIDs for freed objects.
 free_rid ::
            (Physics2DServer :< cls, Object :< cls) => cls -> Rid -> IO ()
 free_rid cls arg1

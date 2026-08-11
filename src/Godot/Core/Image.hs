@@ -18,8 +18,8 @@ module Godot.Core.Image
         Godot.Core.Image._FORMAT_RGBA5551, Godot.Core.Image._COMPRESS_ETC2,
         Godot.Core.Image._FORMAT_ETC2_R11, Godot.Core.Image._FORMAT_LA8,
         Godot.Core.Image._FORMAT_DXT5, Godot.Core.Image._ALPHA_NONE,
-        Godot.Core.Image._MAX_HEIGHT, Godot.Core.Image._ALPHA_BIT,
-        Godot.Core.Image._FORMAT_ETC2_RGB8A1,
+        Godot.Core.Image._COMPRESS_BPTC, Godot.Core.Image._MAX_HEIGHT,
+        Godot.Core.Image._ALPHA_BIT, Godot.Core.Image._FORMAT_ETC2_RGB8A1,
         Godot.Core.Image._FORMAT_RGTC_RG,
         Godot.Core.Image._FORMAT_BPTC_RGBF,
         Godot.Core.Image._COMPRESS_SOURCE_SRGB,
@@ -31,7 +31,7 @@ module Godot.Core.Image
         Godot.Core.Image._ALPHA_BLEND, Godot.Core.Image._FORMAT_PVRTC2,
         Godot.Core.Image._FORMAT_DXT1, Godot.Core.Image._MAX_WIDTH,
         Godot.Core.Image._FORMAT_ETC2_RGBA8,
-        Godot.Core.Image._FORMAT_BPTC_RGBA,
+        Godot.Core.Image._COMPRESS_MAX, Godot.Core.Image._FORMAT_BPTC_RGBA,
         Godot.Core.Image._COMPRESS_PVRTC2, Godot.Core.Image._FORMAT_RF,
         Godot.Core.Image._FORMAT_L8, Godot.Core.Image._FORMAT_RGB8,
         Godot.Core.Image._FORMAT_RGBH, Godot.Core.Image._FORMAT_PVRTC4,
@@ -39,27 +39,29 @@ module Godot.Core.Image
         Godot.Core.Image._INTERPOLATE_BILINEAR,
         Godot.Core.Image._INTERPOLATE_CUBIC,
         Godot.Core.Image._INTERPOLATE_LANCZOS,
-        Godot.Core.Image._FORMAT_RG8, Godot.Core.Image._FORMAT_RGH,
-        Godot.Core.Image._get_data, Godot.Core.Image._set_data,
-        Godot.Core.Image.blend_rect, Godot.Core.Image.blend_rect_mask,
-        Godot.Core.Image.blit_rect, Godot.Core.Image.blit_rect_mask,
+        Godot.Core.Image._FORMAT_RG8,
+        Godot.Core.Image._COMPRESS_SOURCE_LAYERED,
+        Godot.Core.Image._FORMAT_RGH, Godot.Core.Image._get_data,
+        Godot.Core.Image._set_data, Godot.Core.Image.blend_rect,
+        Godot.Core.Image.blend_rect_mask, Godot.Core.Image.blit_rect,
+        Godot.Core.Image.blit_rect_mask,
         Godot.Core.Image.bumpmap_to_normalmap,
         Godot.Core.Image.clear_mipmaps, Godot.Core.Image.compress,
         Godot.Core.Image.convert, Godot.Core.Image.copy_from,
         Godot.Core.Image.create, Godot.Core.Image.create_from_data,
         Godot.Core.Image.crop, Godot.Core.Image.decompress,
         Godot.Core.Image.detect_alpha, Godot.Core.Image.expand_x2_hq2x,
-        Godot.Core.Image.fill, Godot.Core.Image.fix_alpha_edges,
-        Godot.Core.Image.flip_x, Godot.Core.Image.flip_y,
-        Godot.Core.Image.generate_mipmaps, Godot.Core.Image.get_data,
-        Godot.Core.Image.get_format, Godot.Core.Image.get_height,
-        Godot.Core.Image.get_mipmap_offset, Godot.Core.Image.get_pixel,
-        Godot.Core.Image.get_pixelv, Godot.Core.Image.get_rect,
-        Godot.Core.Image.get_size, Godot.Core.Image.get_used_rect,
-        Godot.Core.Image.get_width, Godot.Core.Image.has_mipmaps,
-        Godot.Core.Image.is_compressed, Godot.Core.Image.is_empty,
-        Godot.Core.Image.is_invisible, Godot.Core.Image.load,
-        Godot.Core.Image.load_bmp_from_buffer,
+        Godot.Core.Image.fill, Godot.Core.Image.fill_rect,
+        Godot.Core.Image.fix_alpha_edges, Godot.Core.Image.flip_x,
+        Godot.Core.Image.flip_y, Godot.Core.Image.generate_mipmaps,
+        Godot.Core.Image.get_data, Godot.Core.Image.get_format,
+        Godot.Core.Image.get_height, Godot.Core.Image.get_mipmap_offset,
+        Godot.Core.Image.get_pixel, Godot.Core.Image.get_pixelv,
+        Godot.Core.Image.get_rect, Godot.Core.Image.get_size,
+        Godot.Core.Image.get_used_rect, Godot.Core.Image.get_width,
+        Godot.Core.Image.has_mipmaps, Godot.Core.Image.is_compressed,
+        Godot.Core.Image.is_empty, Godot.Core.Image.is_invisible,
+        Godot.Core.Image.load, Godot.Core.Image.load_bmp_from_buffer,
         Godot.Core.Image.load_jpg_from_buffer,
         Godot.Core.Image.load_png_from_buffer,
         Godot.Core.Image.load_tga_from_buffer,
@@ -159,6 +161,9 @@ _FORMAT_DXT5 = 19
 _ALPHA_NONE :: Int
 _ALPHA_NONE = 0
 
+_COMPRESS_BPTC :: Int
+_COMPRESS_BPTC = 5
+
 _MAX_HEIGHT :: Int
 _MAX_HEIGHT = 16384
 
@@ -210,6 +215,9 @@ _MAX_WIDTH = 16384
 _FORMAT_ETC2_RGBA8 :: Int
 _FORMAT_ETC2_RGBA8 = 35
 
+_COMPRESS_MAX :: Int
+_COMPRESS_MAX = 6
+
 _FORMAT_BPTC_RGBA :: Int
 _FORMAT_BPTC_RGBA = 22
 
@@ -248,6 +256,9 @@ _INTERPOLATE_LANCZOS = 4
 
 _FORMAT_RG8 :: Int
 _FORMAT_RG8 = 3
+
+_COMPRESS_SOURCE_LAYERED :: Int
+_COMPRESS_SOURCE_LAYERED = 3
 
 _FORMAT_RGH :: Int
 _FORMAT_RGH = 13
@@ -310,7 +321,7 @@ instance NodeMethod Image "_set_data" '[Dictionary] (IO ()) where
 
 {-# NOINLINE bindImage_blend_rect #-}
 
--- | Alpha-blends @src_rect@ from @src@ image to this image at coordinates @dest@.
+-- | Alpha-blends @src_rect@ from @src@ image to this image at coordinates @dest@, clipped accordingly to both image bounds. This image and @src@ image __must__ have the same format. @src_rect@ with not positive size is treated as empty.
 bindImage_blend_rect :: MethodBind
 bindImage_blend_rect
   = unsafePerformIO $
@@ -320,7 +331,7 @@ bindImage_blend_rect
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Alpha-blends @src_rect@ from @src@ image to this image at coordinates @dest@.
+-- | Alpha-blends @src_rect@ from @src@ image to this image at coordinates @dest@, clipped accordingly to both image bounds. This image and @src@ image __must__ have the same format. @src_rect@ with not positive size is treated as empty.
 blend_rect ::
              (Image :< cls, Object :< cls) =>
              cls -> Image -> Rect2 -> Vector2 -> IO ()
@@ -340,7 +351,7 @@ instance NodeMethod Image "blend_rect" '[Image, Rect2, Vector2]
 
 {-# NOINLINE bindImage_blend_rect_mask #-}
 
--- | Alpha-blends @src_rect@ from @src@ image to this image using @mask@ image at coordinates @dst@. Alpha channels are required for both @src@ and @mask@. @dst@ pixels and @src@ pixels will blend if the corresponding mask pixel's alpha value is not 0. @src@ image and @mask@ image __must__ have the same size (width and height) but they can have different formats.
+-- | Alpha-blends @src_rect@ from @src@ image to this image using @mask@ image at coordinates @dst@, clipped accordingly to both image bounds. Alpha channels are required for both @src@ and @mask@. @dst@ pixels and @src@ pixels will blend if the corresponding mask pixel's alpha value is not 0. This image and @src@ image __must__ have the same format. @src@ image and @mask@ image __must__ have the same size (width and height) but they can have different formats. @src_rect@ with not positive size is treated as empty.
 bindImage_blend_rect_mask :: MethodBind
 bindImage_blend_rect_mask
   = unsafePerformIO $
@@ -350,7 +361,7 @@ bindImage_blend_rect_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Alpha-blends @src_rect@ from @src@ image to this image using @mask@ image at coordinates @dst@. Alpha channels are required for both @src@ and @mask@. @dst@ pixels and @src@ pixels will blend if the corresponding mask pixel's alpha value is not 0. @src@ image and @mask@ image __must__ have the same size (width and height) but they can have different formats.
+-- | Alpha-blends @src_rect@ from @src@ image to this image using @mask@ image at coordinates @dst@, clipped accordingly to both image bounds. Alpha channels are required for both @src@ and @mask@. @dst@ pixels and @src@ pixels will blend if the corresponding mask pixel's alpha value is not 0. This image and @src@ image __must__ have the same format. @src@ image and @mask@ image __must__ have the same size (width and height) but they can have different formats. @src_rect@ with not positive size is treated as empty.
 blend_rect_mask ::
                   (Image :< cls, Object :< cls) =>
                   cls -> Image -> Image -> Rect2 -> Vector2 -> IO ()
@@ -374,7 +385,7 @@ instance NodeMethod Image "blend_rect_mask"
 
 {-# NOINLINE bindImage_blit_rect #-}
 
--- | Copies @src_rect@ from @src@ image to this image at coordinates @dst@.
+-- | Copies @src_rect@ from @src@ image to this image at coordinates @dst@, clipped accordingly to both image bounds. This image and @src@ image __must__ have the same format. @src_rect@ with not positive size is treated as empty.
 bindImage_blit_rect :: MethodBind
 bindImage_blit_rect
   = unsafePerformIO $
@@ -384,7 +395,7 @@ bindImage_blit_rect
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Copies @src_rect@ from @src@ image to this image at coordinates @dst@.
+-- | Copies @src_rect@ from @src@ image to this image at coordinates @dst@, clipped accordingly to both image bounds. This image and @src@ image __must__ have the same format. @src_rect@ with not positive size is treated as empty.
 blit_rect ::
             (Image :< cls, Object :< cls) =>
             cls -> Image -> Rect2 -> Vector2 -> IO ()
@@ -404,7 +415,7 @@ instance NodeMethod Image "blit_rect" '[Image, Rect2, Vector2]
 
 {-# NOINLINE bindImage_blit_rect_mask #-}
 
--- | Blits @src_rect@ area from @src@ image to this image at the coordinates given by @dst@. @src@ pixel is copied onto @dst@ if the corresponding @mask@ pixel's alpha value is not 0. @src@ image and @mask@ image __must__ have the same size (width and height) but they can have different formats.
+-- | Blits @src_rect@ area from @src@ image to this image at the coordinates given by @dst@, clipped accordingly to both image bounds. @src@ pixel is copied onto @dst@ if the corresponding @mask@ pixel's alpha value is not 0. This image and @src@ image __must__ have the same format. @src@ image and @mask@ image __must__ have the same size (width and height) but they can have different formats. @src_rect@ with not positive size is treated as empty.
 bindImage_blit_rect_mask :: MethodBind
 bindImage_blit_rect_mask
   = unsafePerformIO $
@@ -414,7 +425,7 @@ bindImage_blit_rect_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Blits @src_rect@ area from @src@ image to this image at the coordinates given by @dst@. @src@ pixel is copied onto @dst@ if the corresponding @mask@ pixel's alpha value is not 0. @src@ image and @mask@ image __must__ have the same size (width and height) but they can have different formats.
+-- | Blits @src_rect@ area from @src@ image to this image at the coordinates given by @dst@, clipped accordingly to both image bounds. @src@ pixel is copied onto @dst@ if the corresponding @mask@ pixel's alpha value is not 0. This image and @src@ image __must__ have the same format. @src@ image and @mask@ image __must__ have the same size (width and height) but they can have different formats. @src_rect@ with not positive size is treated as empty.
 blit_rect_mask ::
                  (Image :< cls, Object :< cls) =>
                  cls -> Image -> Image -> Rect2 -> Vector2 -> IO ()
@@ -745,7 +756,7 @@ instance NodeMethod Image "expand_x2_hq2x" '[] (IO ()) where
 
 {-# NOINLINE bindImage_fill #-}
 
--- | Fills the image with a given @Color@.
+-- | Fills the image with @color@.
 bindImage_fill :: MethodBind
 bindImage_fill
   = unsafePerformIO $
@@ -755,7 +766,7 @@ bindImage_fill
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Fills the image with a given @Color@.
+-- | Fills the image with @color@.
 fill :: (Image :< cls, Object :< cls) => cls -> Color -> IO ()
 fill cls arg1
   = withVariantArray [toVariant arg1]
@@ -767,6 +778,33 @@ fill cls arg1
 
 instance NodeMethod Image "fill" '[Color] (IO ()) where
         nodeMethod = Godot.Core.Image.fill
+
+{-# NOINLINE bindImage_fill_rect #-}
+
+-- | Fills @rect@ with @color@.
+bindImage_fill_rect :: MethodBind
+bindImage_fill_rect
+  = unsafePerformIO $
+      withCString "Image" $
+        \ clsNamePtr ->
+          withCString "fill_rect" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Fills @rect@ with @color@.
+fill_rect ::
+            (Image :< cls, Object :< cls) => cls -> Rect2 -> Color -> IO ()
+fill_rect cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindImage_fill_rect (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Image "fill_rect" '[Rect2, Color] (IO ()) where
+        nodeMethod = Godot.Core.Image.fill_rect
 
 {-# NOINLINE bindImage_fix_alpha_edges #-}
 
@@ -1252,7 +1290,7 @@ instance NodeMethod Image "is_invisible" '[] (IO Bool) where
 
 {-# NOINLINE bindImage_load #-}
 
--- | Loads an image from file @path@. See @url=https://docs.godotengine.org/en/3.4/tutorials/assets_pipeline/importing_images.html#supported-image-formats@Supported image formats@/url@ for a list of supported image formats and limitations.
+-- | Loads an image from file @path@. See @url=$DOCS_URL/tutorials/assets_pipeline/importing_images.html#supported-image-formats@Supported image formats@/url@ for a list of supported image formats and limitations.
 --   				__Warning:__ This method should only be used in the editor or in cases when you need to load external images at run-time, such as images located at the @user://@ directory, and may not work in exported projects.
 --   				See also @ImageTexture@ description for usage examples.
 bindImage_load :: MethodBind
@@ -1264,7 +1302,7 @@ bindImage_load
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Loads an image from file @path@. See @url=https://docs.godotengine.org/en/3.4/tutorials/assets_pipeline/importing_images.html#supported-image-formats@Supported image formats@/url@ for a list of supported image formats and limitations.
+-- | Loads an image from file @path@. See @url=$DOCS_URL/tutorials/assets_pipeline/importing_images.html#supported-image-formats@Supported image formats@/url@ for a list of supported image formats and limitations.
 --   				__Warning:__ This method should only be used in the editor or in cases when you need to load external images at run-time, such as images located at the @user://@ directory, and may not work in exported projects.
 --   				See also @ImageTexture@ description for usage examples.
 load ::
@@ -1708,6 +1746,17 @@ instance NodeMethod Image "save_png_to_buffer" '[]
 --   				img.set_pixel(x, y, color) # Does not have an effect
 --   				
 --   @
+--   
+--   				__Note:__ Some image methods can leave the image unlocked, making subsequent @method set_pixel@ calls fail unless the image is locked again. Methods potentially unlocking the image: @method blend_rect@, @method blend_rect_mask@, @method blit_rect_mask@, @method convert@, @method fill@, @method fill_rect@, @method get_used_rect@, and @method rgbe_to_srgb@.
+--   				
+--   @
+--   
+--   				img.lock()
+--   				img.set_pixel(x, y, color) # Works
+--   				img.fill(color) # Unlocks the image
+--   				img.set_pixel(x, y, color) # Does not have an effect
+--   				
+--   @
 bindImage_set_pixel :: MethodBind
 bindImage_set_pixel
   = unsafePerformIO $
@@ -1726,6 +1775,17 @@ bindImage_set_pixel
 --   				img.lock()
 --   				img.set_pixel(x, y, color) # Works
 --   				img.unlock()
+--   				img.set_pixel(x, y, color) # Does not have an effect
+--   				
+--   @
+--   
+--   				__Note:__ Some image methods can leave the image unlocked, making subsequent @method set_pixel@ calls fail unless the image is locked again. Methods potentially unlocking the image: @method blend_rect@, @method blend_rect_mask@, @method blit_rect_mask@, @method convert@, @method fill@, @method fill_rect@, @method get_used_rect@, and @method rgbe_to_srgb@.
+--   				
+--   @
+--   
+--   				img.lock()
+--   				img.set_pixel(x, y, color) # Works
+--   				img.fill(color) # Unlocks the image
 --   				img.set_pixel(x, y, color) # Does not have an effect
 --   				
 --   @
@@ -1759,6 +1819,17 @@ instance NodeMethod Image "set_pixel" '[Int, Int, Color] (IO ())
 --   				img.set_pixelv(Vector2(x, y), color) # Does not have an effect
 --   				
 --   @
+--   
+--   				__Note:__ Some image methods can leave the image unlocked, making subsequent @method set_pixelv@ calls fail unless the image is locked again. Methods potentially unlocking the image: @method blend_rect@, @method blend_rect_mask@, @method blit_rect_mask@, @method convert@, @method fill@, @method fill_rect@, @method get_used_rect@, and @method rgbe_to_srgb@.
+--   				
+--   @
+--   
+--   				img.lock()
+--   				img.set_pixelv(Vector2(x, y), color) # Works
+--   				img.fill(dcolor) # Unlocks the image
+--   				img.set_pixelv(Vector2(x, y), color) # Does not have an effect
+--   				
+--   @
 bindImage_set_pixelv :: MethodBind
 bindImage_set_pixelv
   = unsafePerformIO $
@@ -1777,6 +1848,17 @@ bindImage_set_pixelv
 --   				img.lock()
 --   				img.set_pixelv(Vector2(x, y), color) # Works
 --   				img.unlock()
+--   				img.set_pixelv(Vector2(x, y), color) # Does not have an effect
+--   				
+--   @
+--   
+--   				__Note:__ Some image methods can leave the image unlocked, making subsequent @method set_pixelv@ calls fail unless the image is locked again. Methods potentially unlocking the image: @method blend_rect@, @method blend_rect_mask@, @method blit_rect_mask@, @method convert@, @method fill@, @method fill_rect@, @method get_used_rect@, and @method rgbe_to_srgb@.
+--   				
+--   @
+--   
+--   				img.lock()
+--   				img.set_pixelv(Vector2(x, y), color) # Works
+--   				img.fill(dcolor) # Unlocks the image
 --   				img.set_pixelv(Vector2(x, y), color) # Does not have an effect
 --   				
 --   @

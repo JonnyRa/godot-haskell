@@ -41,6 +41,7 @@ instance NodeProperty ParallaxLayer "motion_scale" Vector2 'False
 {-# NOINLINE bindParallaxLayer_get_mirroring #-}
 
 -- | The ParallaxLayer's @Texture@ mirroring. Useful for creating an infinite scrolling background. If an axis is set to @0@, the @Texture@ will not be mirrored.
+--   			If the length of the viewport axis is bigger than twice the mirrored axis size, it will not repeat infinitely, as the parallax layer only draws 2 instances of the texture at any one time.
 bindParallaxLayer_get_mirroring :: MethodBind
 bindParallaxLayer_get_mirroring
   = unsafePerformIO $
@@ -51,6 +52,7 @@ bindParallaxLayer_get_mirroring
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The ParallaxLayer's @Texture@ mirroring. Useful for creating an infinite scrolling background. If an axis is set to @0@, the @Texture@ will not be mirrored.
+--   			If the length of the viewport axis is bigger than twice the mirrored axis size, it will not repeat infinitely, as the parallax layer only draws 2 instances of the texture at any one time.
 get_mirroring ::
                 (ParallaxLayer :< cls, Object :< cls) => cls -> IO Vector2
 get_mirroring cls
@@ -135,6 +137,7 @@ instance NodeMethod ParallaxLayer "get_motion_scale" '[]
 {-# NOINLINE bindParallaxLayer_set_mirroring #-}
 
 -- | The ParallaxLayer's @Texture@ mirroring. Useful for creating an infinite scrolling background. If an axis is set to @0@, the @Texture@ will not be mirrored.
+--   			If the length of the viewport axis is bigger than twice the mirrored axis size, it will not repeat infinitely, as the parallax layer only draws 2 instances of the texture at any one time.
 bindParallaxLayer_set_mirroring :: MethodBind
 bindParallaxLayer_set_mirroring
   = unsafePerformIO $
@@ -145,6 +148,7 @@ bindParallaxLayer_set_mirroring
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The ParallaxLayer's @Texture@ mirroring. Useful for creating an infinite scrolling background. If an axis is set to @0@, the @Texture@ will not be mirrored.
+--   			If the length of the viewport axis is bigger than twice the mirrored axis size, it will not repeat infinitely, as the parallax layer only draws 2 instances of the texture at any one time.
 set_mirroring ::
                 (ParallaxLayer :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_mirroring cls arg1

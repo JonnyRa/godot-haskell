@@ -56,7 +56,7 @@ sig_resource_selected
   = Godot.Internal.Dispatch.Signal "resource_selected"
 
 instance NodeSignal EditorResourcePicker "resource_selected"
-           '[Resource]
+           '[Resource, Bool]
 
 instance NodeProperty EditorResourcePicker "base_type" GodotString
            'False
@@ -533,7 +533,8 @@ bindEditorResourcePicker_handle_menu_selected
 
 -- | This virtual method can be implemented to handle context menu items not handled by default. See @method set_create_options@.
 handle_menu_selected ::
-                       (EditorResourcePicker :< cls, Object :< cls) => cls -> Int -> IO ()
+                       (EditorResourcePicker :< cls, Object :< cls) =>
+                       cls -> Int -> IO Bool
 handle_menu_selected cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
@@ -549,7 +550,7 @@ handle_menu_selected cls arg1
 
 instance NodeMethod EditorResourcePicker "handle_menu_selected"
            '[Int]
-           (IO ())
+           (IO Bool)
          where
         nodeMethod = Godot.Tools.EditorResourcePicker.handle_menu_selected
 

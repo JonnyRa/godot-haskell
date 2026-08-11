@@ -102,8 +102,20 @@ instance NodeSignal RigidBody "body_exited" '[Node]
 -- | Emitted when one of this RigidBody's @Shape@s collides with another @PhysicsBody@ or @GridMap@'s @Shape@s. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions. @GridMap@s are detected if the @MeshLibrary@ has Collision @Shape@s.
 --   				@body_rid@ the @RID@ of the other @PhysicsBody@ or @MeshLibrary@'s @CollisionObject@ used by the @PhysicsServer@.
 --   				@body@ the @Node@, if it exists in the tree, of the other @PhysicsBody@ or @GridMap@.
---   				@body_shape_index@ the index of the @Shape@ of the other @PhysicsBody@ or @GridMap@ used by the @PhysicsServer@. Get the @CollisionShape@ node with @body.shape_owner_get_owner(body_shape_index)@.
---   				@local_shape_index@ the index of the @Shape@ of this RigidBody used by the @PhysicsServer@. Get the @CollisionShape@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@body_shape_index@ the index of the @Shape@ of the other @PhysicsBody@ or @GridMap@.
+--   				@local_shape_index@ the index of the @Shape@ of this RigidBody.
+--   				__Example of getting the__ @CollisionShape@ __node from the shape index:__
+--   				
+--   @
+--   
+--   				var body_shape_owner = body.shape_find_owner(body_shape_index)
+--   				var body_shape_node = body.shape_owner_get_owner(body_shape_owner)
+--   
+--   				var local_shape_owner = shape_find_owner(local_shape_index)
+--   				var local_shape_node = shape_owner_get_owner(local_shape_owner)
+--   				
+--   @
+--   
 --   				__Note:__ Bullet physics cannot identify the shape index when using a @ConcavePolygonShape@. Don't use multiple @CollisionShape@s when using a @ConcavePolygonShape@ with Bullet physics if you need shape indices.
 sig_body_shape_entered :: Godot.Internal.Dispatch.Signal RigidBody
 sig_body_shape_entered
@@ -115,9 +127,10 @@ instance NodeSignal RigidBody "body_shape_entered"
 -- | Emitted when the collision between one of this RigidBody's @Shape@s and another @PhysicsBody@ or @GridMap@'s @Shape@s ends. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions. @GridMap@s are detected if the @MeshLibrary@ has Collision @Shape@s.
 --   				@body_rid@ the @RID@ of the other @PhysicsBody@ or @MeshLibrary@'s @CollisionObject@ used by the @PhysicsServer@. @GridMap@s are detected if the Meshes have @Shape@s.
 --   				@body@ the @Node@, if it exists in the tree, of the other @PhysicsBody@ or @GridMap@.
---   				@body_shape_index@ the index of the @Shape@ of the other @PhysicsBody@ or @GridMap@ used by the @PhysicsServer@. Get the @CollisionShape@ node with @body.shape_owner_get_owner(body_shape_index)@.
---   				@local_shape_index@ the index of the @Shape@ of this RigidBody used by the @PhysicsServer@. Get the @CollisionShape@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@body_shape_index@ the index of the @Shape@ of the other @PhysicsBody@ or @GridMap@.
+--   				@local_shape_index@ the index of the @Shape@ of this RigidBody.
 --   				__Note:__ Bullet physics cannot identify the shape index when using a @ConcavePolygonShape@. Don't use multiple @CollisionShape@s when using a @ConcavePolygonShape@ with Bullet physics if you need shape indices.
+--   				See also @signal body_shape_entered@.
 sig_body_shape_exited :: Godot.Internal.Dispatch.Signal RigidBody
 sig_body_shape_exited
   = Godot.Internal.Dispatch.Signal "body_shape_exited"
@@ -593,7 +606,7 @@ instance NodeMethod RigidBody "apply_torque_impulse" '[Vector3]
 
 {-# NOINLINE bindRigidBody_get_angular_damp #-}
 
--- | Damps RigidBody's rotational forces.
+-- | Damps the body's rotational forces. If this value is different from -1.0 it will be added to any angular damp derived from the world or areas.
 --   			See @ProjectSettings.physics/3d/default_angular_damp@ for more details about damping.
 bindRigidBody_get_angular_damp :: MethodBind
 bindRigidBody_get_angular_damp
@@ -604,7 +617,7 @@ bindRigidBody_get_angular_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Damps RigidBody's rotational forces.
+-- | Damps the body's rotational forces. If this value is different from -1.0 it will be added to any angular damp derived from the world or areas.
 --   			See @ProjectSettings.physics/3d/default_angular_damp@ for more details about damping.
 get_angular_damp ::
                    (RigidBody :< cls, Object :< cls) => cls -> IO Float
@@ -842,7 +855,7 @@ instance NodeMethod RigidBody "get_inverse_inertia_tensor" '[]
 
 {-# NOINLINE bindRigidBody_get_linear_damp #-}
 
--- | The body's linear damp. Cannot be less than -1.0. If this value is different from -1.0, any linear damp derived from the world or areas will be overridden.
+-- | The body's linear damp. Cannot be less than -1.0. If this value is different from -1.0 it will be added to any linear damp derived from the world or areas.
 --   			See @ProjectSettings.physics/3d/default_linear_damp@ for more details about damping.
 bindRigidBody_get_linear_damp :: MethodBind
 bindRigidBody_get_linear_damp
@@ -853,7 +866,7 @@ bindRigidBody_get_linear_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The body's linear damp. Cannot be less than -1.0. If this value is different from -1.0, any linear damp derived from the world or areas will be overridden.
+-- | The body's linear damp. Cannot be less than -1.0. If this value is different from -1.0 it will be added to any linear damp derived from the world or areas.
 --   			See @ProjectSettings.physics/3d/default_linear_damp@ for more details about damping.
 get_linear_damp ::
                   (RigidBody :< cls, Object :< cls) => cls -> IO Float
@@ -1215,7 +1228,7 @@ instance NodeMethod RigidBody "is_using_custom_integrator" '[]
 
 {-# NOINLINE bindRigidBody_set_angular_damp #-}
 
--- | Damps RigidBody's rotational forces.
+-- | Damps the body's rotational forces. If this value is different from -1.0 it will be added to any angular damp derived from the world or areas.
 --   			See @ProjectSettings.physics/3d/default_angular_damp@ for more details about damping.
 bindRigidBody_set_angular_damp :: MethodBind
 bindRigidBody_set_angular_damp
@@ -1226,7 +1239,7 @@ bindRigidBody_set_angular_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Damps RigidBody's rotational forces.
+-- | Damps the body's rotational forces. If this value is different from -1.0 it will be added to any angular damp derived from the world or areas.
 --   			See @ProjectSettings.physics/3d/default_angular_damp@ for more details about damping.
 set_angular_damp ::
                    (RigidBody :< cls, Object :< cls) => cls -> Float -> IO ()
@@ -1493,7 +1506,7 @@ instance NodeMethod RigidBody "set_gravity_scale" '[Float] (IO ())
 
 {-# NOINLINE bindRigidBody_set_linear_damp #-}
 
--- | The body's linear damp. Cannot be less than -1.0. If this value is different from -1.0, any linear damp derived from the world or areas will be overridden.
+-- | The body's linear damp. Cannot be less than -1.0. If this value is different from -1.0 it will be added to any linear damp derived from the world or areas.
 --   			See @ProjectSettings.physics/3d/default_linear_damp@ for more details about damping.
 bindRigidBody_set_linear_damp :: MethodBind
 bindRigidBody_set_linear_damp
@@ -1504,7 +1517,7 @@ bindRigidBody_set_linear_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The body's linear damp. Cannot be less than -1.0. If this value is different from -1.0, any linear damp derived from the world or areas will be overridden.
+-- | The body's linear damp. Cannot be less than -1.0. If this value is different from -1.0 it will be added to any linear damp derived from the world or areas.
 --   			See @ProjectSettings.physics/3d/default_linear_damp@ for more details about damping.
 set_linear_damp ::
                   (RigidBody :< cls, Object :< cls) => cls -> Float -> IO ()

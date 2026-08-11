@@ -2,10 +2,12 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.ResourceInteractiveLoader
-       (Godot.Core.ResourceInteractiveLoader.get_resource,
+       (Godot.Core.ResourceInteractiveLoader.get_no_subresource_cache,
+        Godot.Core.ResourceInteractiveLoader.get_resource,
         Godot.Core.ResourceInteractiveLoader.get_stage,
         Godot.Core.ResourceInteractiveLoader.get_stage_count,
         Godot.Core.ResourceInteractiveLoader.poll,
+        Godot.Core.ResourceInteractiveLoader.set_no_subresource_cache,
         Godot.Core.ResourceInteractiveLoader.wait)
        where
 import Data.Coerce
@@ -19,6 +21,53 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Reference()
+
+instance NodeProperty ResourceInteractiveLoader
+           "no_subresource_cache"
+           Bool
+           'False
+         where
+        nodeProperty
+          = (get_no_subresource_cache,
+             wrapDroppingSetter set_no_subresource_cache, Nothing)
+
+{-# NOINLINE bindResourceInteractiveLoader_get_no_subresource_cache
+             #-}
+
+-- | Configures whether nested resources, if included, should not be cached.
+bindResourceInteractiveLoader_get_no_subresource_cache ::
+                                                       MethodBind
+bindResourceInteractiveLoader_get_no_subresource_cache
+  = unsafePerformIO $
+      withCString "ResourceInteractiveLoader" $
+        \ clsNamePtr ->
+          withCString "get_no_subresource_cache" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Configures whether nested resources, if included, should not be cached.
+get_no_subresource_cache ::
+                           (ResourceInteractiveLoader :< cls, Object :< cls) => cls -> IO Bool
+get_no_subresource_cache cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindResourceInteractiveLoader_get_no_subresource_cache
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ResourceInteractiveLoader
+           "get_no_subresource_cache"
+           '[]
+           (IO Bool)
+         where
+        nodeMethod
+          = Godot.Core.ResourceInteractiveLoader.get_no_subresource_cache
 
 {-# NOINLINE bindResourceInteractiveLoader_get_resource #-}
 
@@ -151,6 +200,45 @@ poll cls
 instance NodeMethod ResourceInteractiveLoader "poll" '[] (IO Int)
          where
         nodeMethod = Godot.Core.ResourceInteractiveLoader.poll
+
+{-# NOINLINE bindResourceInteractiveLoader_set_no_subresource_cache
+             #-}
+
+-- | Configures whether nested resources, if included, should not be cached.
+bindResourceInteractiveLoader_set_no_subresource_cache ::
+                                                       MethodBind
+bindResourceInteractiveLoader_set_no_subresource_cache
+  = unsafePerformIO $
+      withCString "ResourceInteractiveLoader" $
+        \ clsNamePtr ->
+          withCString "set_no_subresource_cache" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Configures whether nested resources, if included, should not be cached.
+set_no_subresource_cache ::
+                           (ResourceInteractiveLoader :< cls, Object :< cls) =>
+                           cls -> Bool -> IO ()
+set_no_subresource_cache cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindResourceInteractiveLoader_set_no_subresource_cache
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ResourceInteractiveLoader
+           "set_no_subresource_cache"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.ResourceInteractiveLoader.set_no_subresource_cache
 
 {-# NOINLINE bindResourceInteractiveLoader_wait #-}
 

@@ -12,6 +12,7 @@ module Godot.Core.TabContainer
         Godot.Core.TabContainer._gui_input,
         Godot.Core.TabContainer._on_mouse_exited,
         Godot.Core.TabContainer._on_theme_changed,
+        Godot.Core.TabContainer._repaint,
         Godot.Core.TabContainer._update_current_tab,
         Godot.Core.TabContainer.are_tabs_visible,
         Godot.Core.TabContainer.get_current_tab,
@@ -23,8 +24,10 @@ module Godot.Core.TabContainer
         Godot.Core.TabContainer.get_tab_control,
         Godot.Core.TabContainer.get_tab_count,
         Godot.Core.TabContainer.get_tab_disabled,
+        Godot.Core.TabContainer.get_tab_hidden,
         Godot.Core.TabContainer.get_tab_icon,
         Godot.Core.TabContainer.get_tab_idx_at_point,
+        Godot.Core.TabContainer.get_tab_metadata,
         Godot.Core.TabContainer.get_tab_title,
         Godot.Core.TabContainer.get_tabs_rearrange_group,
         Godot.Core.TabContainer.get_use_hidden_tabs_for_min_size,
@@ -35,7 +38,9 @@ module Godot.Core.TabContainer
         Godot.Core.TabContainer.set_popup,
         Godot.Core.TabContainer.set_tab_align,
         Godot.Core.TabContainer.set_tab_disabled,
+        Godot.Core.TabContainer.set_tab_hidden,
         Godot.Core.TabContainer.set_tab_icon,
+        Godot.Core.TabContainer.set_tab_metadata,
         Godot.Core.TabContainer.set_tab_title,
         Godot.Core.TabContainer.set_tabs_rearrange_group,
         Godot.Core.TabContainer.set_tabs_visible,
@@ -230,6 +235,32 @@ _on_theme_changed cls
 instance NodeMethod TabContainer "_on_theme_changed" '[] (IO ())
          where
         nodeMethod = Godot.Core.TabContainer._on_theme_changed
+
+{-# NOINLINE bindTabContainer__repaint #-}
+
+bindTabContainer__repaint :: MethodBind
+bindTabContainer__repaint
+  = unsafePerformIO $
+      withCString "TabContainer" $
+        \ clsNamePtr ->
+          withCString "_repaint" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_repaint :: (TabContainer :< cls, Object :< cls) => cls -> IO ()
+_repaint cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabContainer__repaint (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TabContainer "_repaint" '[] (IO ()) where
+        nodeMethod = Godot.Core.TabContainer._repaint
 
 {-# NOINLINE bindTabContainer__update_current_tab #-}
 
@@ -563,6 +594,36 @@ instance NodeMethod TabContainer "get_tab_disabled" '[Int]
          where
         nodeMethod = Godot.Core.TabContainer.get_tab_disabled
 
+{-# NOINLINE bindTabContainer_get_tab_hidden #-}
+
+-- | Returns @true@ if the tab at index @tab_idx@ is hidden.
+bindTabContainer_get_tab_hidden :: MethodBind
+bindTabContainer_get_tab_hidden
+  = unsafePerformIO $
+      withCString "TabContainer" $
+        \ clsNamePtr ->
+          withCString "get_tab_hidden" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if the tab at index @tab_idx@ is hidden.
+get_tab_hidden ::
+                 (TabContainer :< cls, Object :< cls) => cls -> Int -> IO Bool
+get_tab_hidden cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabContainer_get_tab_hidden (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TabContainer "get_tab_hidden" '[Int] (IO Bool)
+         where
+        nodeMethod = Godot.Core.TabContainer.get_tab_hidden
+
 {-# NOINLINE bindTabContainer_get_tab_icon #-}
 
 -- | Returns the @Texture@ for the tab at index @tab_idx@ or @null@ if the tab has no @Texture@.
@@ -621,6 +682,36 @@ instance NodeMethod TabContainer "get_tab_idx_at_point" '[Vector2]
            (IO Int)
          where
         nodeMethod = Godot.Core.TabContainer.get_tab_idx_at_point
+
+{-# NOINLINE bindTabContainer_get_tab_metadata #-}
+
+-- | Returns the metadata value set to the tab at index @tab_idx@. If no metadata was previously set, returns @null@ by default.
+bindTabContainer_get_tab_metadata :: MethodBind
+bindTabContainer_get_tab_metadata
+  = unsafePerformIO $
+      withCString "TabContainer" $
+        \ clsNamePtr ->
+          withCString "get_tab_metadata" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the metadata value set to the tab at index @tab_idx@. If no metadata was previously set, returns @null@ by default.
+get_tab_metadata ::
+                   (TabContainer :< cls, Object :< cls) =>
+                   cls -> Int -> IO GodotVariant
+get_tab_metadata cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabContainer_get_tab_metadata
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> return var)
+
+instance NodeMethod TabContainer "get_tab_metadata" '[Int]
+           (IO GodotVariant)
+         where
+        nodeMethod = Godot.Core.TabContainer.get_tab_metadata
 
 {-# NOINLINE bindTabContainer_get_tab_title #-}
 
@@ -941,6 +1032,37 @@ instance NodeMethod TabContainer "set_tab_disabled" '[Int, Bool]
          where
         nodeMethod = Godot.Core.TabContainer.set_tab_disabled
 
+{-# NOINLINE bindTabContainer_set_tab_hidden #-}
+
+-- | If @hidden@ is @true@, hides the tab at index @tab_idx@, making it disappear from the tab area.
+bindTabContainer_set_tab_hidden :: MethodBind
+bindTabContainer_set_tab_hidden
+  = unsafePerformIO $
+      withCString "TabContainer" $
+        \ clsNamePtr ->
+          withCString "set_tab_hidden" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @hidden@ is @true@, hides the tab at index @tab_idx@, making it disappear from the tab area.
+set_tab_hidden ::
+                 (TabContainer :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
+set_tab_hidden cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabContainer_set_tab_hidden (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TabContainer "set_tab_hidden" '[Int, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TabContainer.set_tab_hidden
+
 {-# NOINLINE bindTabContainer_set_tab_icon #-}
 
 -- | Sets an icon for the tab at index @tab_idx@.
@@ -972,6 +1094,40 @@ instance NodeMethod TabContainer "set_tab_icon" '[Int, Texture]
            (IO ())
          where
         nodeMethod = Godot.Core.TabContainer.set_tab_icon
+
+{-# NOINLINE bindTabContainer_set_tab_metadata #-}
+
+-- | Sets the metadata value for the tab at index @tab_idx@.
+bindTabContainer_set_tab_metadata :: MethodBind
+bindTabContainer_set_tab_metadata
+  = unsafePerformIO $
+      withCString "TabContainer" $
+        \ clsNamePtr ->
+          withCString "set_tab_metadata" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the metadata value for the tab at index @tab_idx@.
+set_tab_metadata ::
+                   (TabContainer :< cls, Object :< cls) =>
+                   cls -> Int -> GodotVariant -> IO ()
+set_tab_metadata cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTabContainer_set_tab_metadata
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TabContainer "set_tab_metadata"
+           '[Int, GodotVariant]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TabContainer.set_tab_metadata
 
 {-# NOINLINE bindTabContainer_set_tab_title #-}
 

@@ -2,16 +2,19 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.CanvasLayer
-       (Godot.Core.CanvasLayer.get_canvas,
+       (Godot.Core.CanvasLayer.sig_visibility_changed,
+        Godot.Core.CanvasLayer.get_canvas,
         Godot.Core.CanvasLayer.get_custom_viewport,
+        Godot.Core.CanvasLayer.get_final_transform,
         Godot.Core.CanvasLayer.get_follow_viewport_scale,
         Godot.Core.CanvasLayer.get_layer,
         Godot.Core.CanvasLayer.get_offset,
         Godot.Core.CanvasLayer.get_rotation,
         Godot.Core.CanvasLayer.get_rotation_degrees,
         Godot.Core.CanvasLayer.get_scale,
-        Godot.Core.CanvasLayer.get_transform,
+        Godot.Core.CanvasLayer.get_transform, Godot.Core.CanvasLayer.hide,
         Godot.Core.CanvasLayer.is_following_viewport,
+        Godot.Core.CanvasLayer.is_visible,
         Godot.Core.CanvasLayer.set_custom_viewport,
         Godot.Core.CanvasLayer.set_follow_viewport,
         Godot.Core.CanvasLayer.set_follow_viewport_scale,
@@ -20,7 +23,8 @@ module Godot.Core.CanvasLayer
         Godot.Core.CanvasLayer.set_rotation,
         Godot.Core.CanvasLayer.set_rotation_degrees,
         Godot.Core.CanvasLayer.set_scale,
-        Godot.Core.CanvasLayer.set_transform)
+        Godot.Core.CanvasLayer.set_transform,
+        Godot.Core.CanvasLayer.set_visible, Godot.Core.CanvasLayer.show)
        where
 import Data.Coerce
 import Foreign.C
@@ -33,6 +37,14 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Node()
+
+-- | Emitted when visibility of the layer is changed. See @visible@.
+sig_visibility_changed ::
+                       Godot.Internal.Dispatch.Signal CanvasLayer
+sig_visibility_changed
+  = Godot.Internal.Dispatch.Signal "visibility_changed"
+
+instance NodeSignal CanvasLayer "visibility_changed" '[]
 
 instance NodeProperty CanvasLayer "custom_viewport" Node 'False
          where
@@ -77,6 +89,10 @@ instance NodeProperty CanvasLayer "transform" Transform2d 'False
          where
         nodeProperty
           = (get_transform, wrapDroppingSetter set_transform, Nothing)
+
+instance NodeProperty CanvasLayer "visible" Bool 'False where
+        nodeProperty
+          = (is_visible, wrapDroppingSetter set_visible, Nothing)
 
 {-# NOINLINE bindCanvasLayer_get_canvas #-}
 
@@ -134,6 +150,38 @@ instance NodeMethod CanvasLayer "get_custom_viewport" '[] (IO Node)
          where
         nodeMethod = Godot.Core.CanvasLayer.get_custom_viewport
 
+{-# NOINLINE bindCanvasLayer_get_final_transform #-}
+
+-- | Returns the transform from the @CanvasLayer@s coordinate system to the @Viewport@s coordinate system.
+bindCanvasLayer_get_final_transform :: MethodBind
+bindCanvasLayer_get_final_transform
+  = unsafePerformIO $
+      withCString "CanvasLayer" $
+        \ clsNamePtr ->
+          withCString "get_final_transform" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the transform from the @CanvasLayer@s coordinate system to the @Viewport@s coordinate system.
+get_final_transform ::
+                      (CanvasLayer :< cls, Object :< cls) => cls -> IO Transform2d
+get_final_transform cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCanvasLayer_get_final_transform
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CanvasLayer "get_final_transform" '[]
+           (IO Transform2d)
+         where
+        nodeMethod = Godot.Core.CanvasLayer.get_final_transform
+
 {-# NOINLINE bindCanvasLayer_get_follow_viewport_scale #-}
 
 -- | Scales the layer when using @follow_viewport_enable@. Layers moving into the foreground should have increasing scales, while layers moving into the background should have decreasing scales.
@@ -168,7 +216,7 @@ instance NodeMethod CanvasLayer "get_follow_viewport_scale" '[]
 
 {-# NOINLINE bindCanvasLayer_get_layer #-}
 
--- | Layer index for draw order. Lower values are drawn first.
+-- | Layer index for draw order. Lower values are drawn behind higher values.
 bindCanvasLayer_get_layer :: MethodBind
 bindCanvasLayer_get_layer
   = unsafePerformIO $
@@ -178,7 +226,7 @@ bindCanvasLayer_get_layer
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Layer index for draw order. Lower values are drawn first.
+-- | Layer index for draw order. Lower values are drawn behind higher values.
 get_layer :: (CanvasLayer :< cls, Object :< cls) => cls -> IO Int
 get_layer cls
   = withVariantArray []
@@ -344,9 +392,36 @@ instance NodeMethod CanvasLayer "get_transform" '[]
          where
         nodeMethod = Godot.Core.CanvasLayer.get_transform
 
+{-# NOINLINE bindCanvasLayer_hide #-}
+
+-- | Hides any @CanvasItem@ under this @CanvasLayer@. This is equivalent to setting @visible@ to @false@.
+bindCanvasLayer_hide :: MethodBind
+bindCanvasLayer_hide
+  = unsafePerformIO $
+      withCString "CanvasLayer" $
+        \ clsNamePtr ->
+          withCString "hide" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Hides any @CanvasItem@ under this @CanvasLayer@. This is equivalent to setting @visible@ to @false@.
+hide :: (CanvasLayer :< cls, Object :< cls) => cls -> IO ()
+hide cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCanvasLayer_hide (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CanvasLayer "hide" '[] (IO ()) where
+        nodeMethod = Godot.Core.CanvasLayer.hide
+
 {-# NOINLINE bindCanvasLayer_is_following_viewport #-}
 
--- | Sets the layer to follow the viewport in order to simulate a pseudo 3D effect.
+-- | If enabled, the @CanvasLayer@ will use the viewport's transform, so it will move when camera moves instead of being anchored in a fixed position on the screen.
+--   			Together with @follow_viewport_scale@ it can be used for a pseudo 3D effect.
 bindCanvasLayer_is_following_viewport :: MethodBind
 bindCanvasLayer_is_following_viewport
   = unsafePerformIO $
@@ -356,7 +431,8 @@ bindCanvasLayer_is_following_viewport
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the layer to follow the viewport in order to simulate a pseudo 3D effect.
+-- | If enabled, the @CanvasLayer@ will use the viewport's transform, so it will move when camera moves instead of being anchored in a fixed position on the screen.
+--   			Together with @follow_viewport_scale@ it can be used for a pseudo 3D effect.
 is_following_viewport ::
                         (CanvasLayer :< cls, Object :< cls) => cls -> IO Bool
 is_following_viewport cls
@@ -375,6 +451,36 @@ instance NodeMethod CanvasLayer "is_following_viewport" '[]
            (IO Bool)
          where
         nodeMethod = Godot.Core.CanvasLayer.is_following_viewport
+
+{-# NOINLINE bindCanvasLayer_is_visible #-}
+
+-- | If @false@, any @CanvasItem@ under this @CanvasLayer@ will be hidden.
+--   			Unlike @CanvasItem.visible@, visibility of a @CanvasLayer@ isn't propagated to underlying layers.
+bindCanvasLayer_is_visible :: MethodBind
+bindCanvasLayer_is_visible
+  = unsafePerformIO $
+      withCString "CanvasLayer" $
+        \ clsNamePtr ->
+          withCString "is_visible" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @false@, any @CanvasItem@ under this @CanvasLayer@ will be hidden.
+--   			Unlike @CanvasItem.visible@, visibility of a @CanvasLayer@ isn't propagated to underlying layers.
+is_visible :: (CanvasLayer :< cls, Object :< cls) => cls -> IO Bool
+is_visible cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCanvasLayer_is_visible (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CanvasLayer "is_visible" '[] (IO Bool) where
+        nodeMethod = Godot.Core.CanvasLayer.is_visible
 
 {-# NOINLINE bindCanvasLayer_set_custom_viewport #-}
 
@@ -410,7 +516,8 @@ instance NodeMethod CanvasLayer "set_custom_viewport" '[Node]
 
 {-# NOINLINE bindCanvasLayer_set_follow_viewport #-}
 
--- | Sets the layer to follow the viewport in order to simulate a pseudo 3D effect.
+-- | If enabled, the @CanvasLayer@ will use the viewport's transform, so it will move when camera moves instead of being anchored in a fixed position on the screen.
+--   			Together with @follow_viewport_scale@ it can be used for a pseudo 3D effect.
 bindCanvasLayer_set_follow_viewport :: MethodBind
 bindCanvasLayer_set_follow_viewport
   = unsafePerformIO $
@@ -420,7 +527,8 @@ bindCanvasLayer_set_follow_viewport
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the layer to follow the viewport in order to simulate a pseudo 3D effect.
+-- | If enabled, the @CanvasLayer@ will use the viewport's transform, so it will move when camera moves instead of being anchored in a fixed position on the screen.
+--   			Together with @follow_viewport_scale@ it can be used for a pseudo 3D effect.
 set_follow_viewport ::
                       (CanvasLayer :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_follow_viewport cls arg1
@@ -475,7 +583,7 @@ instance NodeMethod CanvasLayer "set_follow_viewport_scale"
 
 {-# NOINLINE bindCanvasLayer_set_layer #-}
 
--- | Layer index for draw order. Lower values are drawn first.
+-- | Layer index for draw order. Lower values are drawn behind higher values.
 bindCanvasLayer_set_layer :: MethodBind
 bindCanvasLayer_set_layer
   = unsafePerformIO $
@@ -485,7 +593,7 @@ bindCanvasLayer_set_layer
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Layer index for draw order. Lower values are drawn first.
+-- | Layer index for draw order. Lower values are drawn behind higher values.
 set_layer ::
             (CanvasLayer :< cls, Object :< cls) => cls -> Int -> IO ()
 set_layer cls arg1
@@ -654,3 +762,60 @@ instance NodeMethod CanvasLayer "set_transform" '[Transform2d]
            (IO ())
          where
         nodeMethod = Godot.Core.CanvasLayer.set_transform
+
+{-# NOINLINE bindCanvasLayer_set_visible #-}
+
+-- | If @false@, any @CanvasItem@ under this @CanvasLayer@ will be hidden.
+--   			Unlike @CanvasItem.visible@, visibility of a @CanvasLayer@ isn't propagated to underlying layers.
+bindCanvasLayer_set_visible :: MethodBind
+bindCanvasLayer_set_visible
+  = unsafePerformIO $
+      withCString "CanvasLayer" $
+        \ clsNamePtr ->
+          withCString "set_visible" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @false@, any @CanvasItem@ under this @CanvasLayer@ will be hidden.
+--   			Unlike @CanvasItem.visible@, visibility of a @CanvasLayer@ isn't propagated to underlying layers.
+set_visible ::
+              (CanvasLayer :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_visible cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCanvasLayer_set_visible (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CanvasLayer "set_visible" '[Bool] (IO ()) where
+        nodeMethod = Godot.Core.CanvasLayer.set_visible
+
+{-# NOINLINE bindCanvasLayer_show #-}
+
+-- | Shows any @CanvasItem@ under this @CanvasLayer@. This is equivalent to setting @visible@ to @true@.
+bindCanvasLayer_show :: MethodBind
+bindCanvasLayer_show
+  = unsafePerformIO $
+      withCString "CanvasLayer" $
+        \ clsNamePtr ->
+          withCString "show" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Shows any @CanvasItem@ under this @CanvasLayer@. This is equivalent to setting @visible@ to @true@.
+show :: (CanvasLayer :< cls, Object :< cls) => cls -> IO ()
+show cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCanvasLayer_show (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CanvasLayer "show" '[] (IO ()) where
+        nodeMethod = Godot.Core.CanvasLayer.show

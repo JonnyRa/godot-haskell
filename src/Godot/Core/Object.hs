@@ -451,7 +451,7 @@ instance NodeMethod Object "can_translate_messages" '[] (IO Bool)
 {-# NOINLINE bindObject_connect #-}
 
 -- | Connects a @signal@ to a @method@ on a @target@ object. Pass optional @binds@ to the call as an @Array@ of parameters. These parameters will be passed to the method after any parameter used in the call to @method emit_signal@. Use @flags@ to set deferred or one-shot connections. See @enum ConnectFlags@ constants.
---   				A @signal@ can only be connected once to a @method@. It will throw an error if already connected, unless the signal was connected with @CONNECT_REFERENCE_COUNTED@. To avoid this, first, use @method is_connected@ to check for existing connections.
+--   				A @signal@ can only be connected once to a @method@. It will print an error if already connected, unless the signal was connected with @CONNECT_REFERENCE_COUNTED@. To avoid this, first, use @method is_connected@ to check for existing connections.
 --   				If the @target@ is destroyed in the game's lifecycle, the connection will be lost.
 --   				Examples:
 --   				
@@ -483,7 +483,7 @@ bindObject_connect
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Connects a @signal@ to a @method@ on a @target@ object. Pass optional @binds@ to the call as an @Array@ of parameters. These parameters will be passed to the method after any parameter used in the call to @method emit_signal@. Use @flags@ to set deferred or one-shot connections. See @enum ConnectFlags@ constants.
---   				A @signal@ can only be connected once to a @method@. It will throw an error if already connected, unless the signal was connected with @CONNECT_REFERENCE_COUNTED@. To avoid this, first, use @method is_connected@ to check for existing connections.
+--   				A @signal@ can only be connected once to a @method@. It will print an error if already connected, unless the signal was connected with @CONNECT_REFERENCE_COUNTED@. To avoid this, first, use @method is_connected@ to check for existing connections.
 --   				If the @target@ is destroyed in the game's lifecycle, the connection will be lost.
 --   				Examples:
 --   				
@@ -531,7 +531,7 @@ instance NodeMethod Object "connect"
 {-# NOINLINE bindObject_disconnect #-}
 
 -- | Disconnects a @signal@ from a @method@ on the given @target@.
---   				If you try to disconnect a connection that does not exist, the method will throw an error. Use @method is_connected@ to ensure that the connection exists.
+--   				If you try to disconnect a connection that does not exist, the method will print an error. Use @method is_connected@ to ensure that the connection exists.
 bindObject_disconnect :: MethodBind
 bindObject_disconnect
   = unsafePerformIO $
@@ -542,7 +542,7 @@ bindObject_disconnect
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Disconnects a @signal@ from a @method@ on the given @target@.
---   				If you try to disconnect a connection that does not exist, the method will throw an error. Use @method is_connected@ to ensure that the connection exists.
+--   				If you try to disconnect a connection that does not exist, the method will print an error. Use @method is_connected@ to ensure that the connection exists.
 disconnect ::
              (Object :< cls, Object :< cls) =>
              cls -> GodotString -> Object -> GodotString -> IO ()
@@ -734,7 +734,7 @@ instance NodeMethod Object "get_incoming_connections" '[]
 
 {-# NOINLINE bindObject_get_indexed #-}
 
--- | Gets the object's property indexed by the given @NodePath@. The node path should be relative to the current object and can use the colon character (@:@) to access nested properties. Examples: @"position:x"@ or @"material:next_pass:blend_mode"@.
+-- | Gets the object's property indexed by the given @property_path@. The path should be a @NodePath@ relative to the current object and can use the colon character (@:@) to access nested properties. Examples: @"position:x"@ or @"material:next_pass:blend_mode"@.
 --   				__Note:__ Even though the method takes @NodePath@ argument, it doesn't support actual paths to @Node@s in the scene tree, only colon-separated sub-property paths. For the purpose of nodes, use @method Node.get_node_and_resource@ instead.
 bindObject_get_indexed :: MethodBind
 bindObject_get_indexed
@@ -745,7 +745,7 @@ bindObject_get_indexed
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the object's property indexed by the given @NodePath@. The node path should be relative to the current object and can use the colon character (@:@) to access nested properties. Examples: @"position:x"@ or @"material:next_pass:blend_mode"@.
+-- | Gets the object's property indexed by the given @property_path@. The path should be a @NodePath@ relative to the current object and can use the colon character (@:@) to access nested properties. Examples: @"position:x"@ or @"material:next_pass:blend_mode"@.
 --   				__Note:__ Even though the method takes @NodePath@ argument, it doesn't support actual paths to @Node@s in the scene tree, only colon-separated sub-property paths. For the purpose of nodes, use @method Node.get_node_and_resource@ instead.
 get_indexed ::
               (Object :< cls, Object :< cls) =>
@@ -795,6 +795,7 @@ instance NodeMethod Object "get_instance_id" '[] (IO Int) where
 {-# NOINLINE bindObject_get_meta #-}
 
 -- | Returns the object's metadata entry for the given @name@.
+--   				Throws error if the entry does not exist, unless @default@ is not @null@ (in which case the default value will be returned).
 bindObject_get_meta :: MethodBind
 bindObject_get_meta
   = unsafePerformIO $
@@ -805,16 +806,19 @@ bindObject_get_meta
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the object's metadata entry for the given @name@.
+--   				Throws error if the entry does not exist, unless @default@ is not @null@ (in which case the default value will be returned).
 get_meta ::
            (Object :< cls, Object :< cls) =>
-           cls -> GodotString -> IO GodotVariant
-get_meta cls arg1
-  = withVariantArray [toVariant arg1]
+           cls -> GodotString -> Maybe GodotVariant -> IO GodotVariant
+get_meta cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe VariantNil toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindObject_get_meta (upcast cls) arrPtr len
            >>= \ (err, var) -> throwIfErr err >> return var)
 
-instance NodeMethod Object "get_meta" '[GodotString]
+instance NodeMethod Object "get_meta"
+           '[GodotString, Maybe GodotVariant]
            (IO GodotVariant)
          where
         nodeMethod = Godot.Core.Object.get_meta
@@ -1425,7 +1429,7 @@ instance NodeMethod Object "set_deferred"
 
 {-# NOINLINE bindObject_set_indexed #-}
 
--- | Assigns a new value to the property identified by the @NodePath@. The node path should be relative to the current object and can use the colon character (@:@) to access nested properties. Example:
+-- | Assigns a new value to the property identified by the @property_path@. The path should be a @NodePath@ relative to the current object and can use the colon character (@:@) to access nested properties. Example:
 --   				
 --   @
 --   
@@ -1443,7 +1447,7 @@ bindObject_set_indexed
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Assigns a new value to the property identified by the @NodePath@. The node path should be relative to the current object and can use the colon character (@:@) to access nested properties. Example:
+-- | Assigns a new value to the property identified by the @property_path@. The path should be a @NodePath@ relative to the current object and can use the colon character (@:@) to access nested properties. Example:
 --   				
 --   @
 --   

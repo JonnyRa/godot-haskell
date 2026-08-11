@@ -2,7 +2,8 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.DirectionalLight
-       (Godot.Core.DirectionalLight._SHADOW_ORTHOGONAL,
+       (Godot.Core.DirectionalLight._SHADOW_PARALLEL_3_SPLITS,
+        Godot.Core.DirectionalLight._SHADOW_ORTHOGONAL,
         Godot.Core.DirectionalLight._SHADOW_PARALLEL_4_SPLITS,
         Godot.Core.DirectionalLight._SHADOW_DEPTH_RANGE_STABLE,
         Godot.Core.DirectionalLight._SHADOW_DEPTH_RANGE_OPTIMIZED,
@@ -28,11 +29,14 @@ import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Light()
 
+_SHADOW_PARALLEL_3_SPLITS :: Int
+_SHADOW_PARALLEL_3_SPLITS = 2
+
 _SHADOW_ORTHOGONAL :: Int
 _SHADOW_ORTHOGONAL = 0
 
 _SHADOW_PARALLEL_4_SPLITS :: Int
-_SHADOW_PARALLEL_4_SPLITS = 2
+_SHADOW_PARALLEL_4_SPLITS = 3
 
 _SHADOW_DEPTH_RANGE_STABLE :: Int
 _SHADOW_DEPTH_RANGE_STABLE = 0
@@ -45,7 +49,7 @@ _SHADOW_PARALLEL_2_SPLITS = 1
 
 {-# NOINLINE bindDirectionalLight_get_param #-}
 
--- | Amount of extra bias for shadow splits that are far away. If self-shadowing occurs only on the splits far away, increasing this value can fix them.
+-- | Amount of extra bias for shadow splits that are far away. If self-shadowing occurs only on the splits far away, increasing this value can fix them. This is ignored when @directional_shadow_mode@ is @SHADOW_ORTHOGONAL@.
 bindDirectionalLight_get_param :: MethodBind
 bindDirectionalLight_get_param
   = unsafePerformIO $
@@ -55,7 +59,7 @@ bindDirectionalLight_get_param
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount of extra bias for shadow splits that are far away. If self-shadowing occurs only on the splits far away, increasing this value can fix them.
+-- | Amount of extra bias for shadow splits that are far away. If self-shadowing occurs only on the splits far away, increasing this value can fix them. This is ignored when @directional_shadow_mode@ is @SHADOW_ORTHOGONAL@.
 get_param ::
             (DirectionalLight :< cls, Object :< cls) => cls -> Int -> IO Float
 get_param cls arg1
@@ -75,7 +79,7 @@ instance NodeMethod DirectionalLight "get_param" '[Int] (IO Float)
 
 {-# NOINLINE bindDirectionalLight_set_param #-}
 
--- | Amount of extra bias for shadow splits that are far away. If self-shadowing occurs only on the splits far away, increasing this value can fix them.
+-- | Amount of extra bias for shadow splits that are far away. If self-shadowing occurs only on the splits far away, increasing this value can fix them. This is ignored when @directional_shadow_mode@ is @SHADOW_ORTHOGONAL@.
 bindDirectionalLight_set_param :: MethodBind
 bindDirectionalLight_set_param
   = unsafePerformIO $
@@ -85,7 +89,7 @@ bindDirectionalLight_set_param
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Amount of extra bias for shadow splits that are far away. If self-shadowing occurs only on the splits far away, increasing this value can fix them.
+-- | Amount of extra bias for shadow splits that are far away. If self-shadowing occurs only on the splits far away, increasing this value can fix them. This is ignored when @directional_shadow_mode@ is @SHADOW_ORTHOGONAL@.
 set_param ::
             (DirectionalLight :< cls, Object :< cls) =>
             cls -> Int -> Float -> IO ()
@@ -131,6 +135,15 @@ instance NodeProperty DirectionalLight
         nodeProperty
           = (get_shadow_depth_range,
              wrapDroppingSetter set_shadow_depth_range, Nothing)
+
+instance NodeProperty DirectionalLight
+           "directional_shadow_fade_start"
+           Float
+           'False
+         where
+        nodeProperty
+          = (wrapIndexedGetter 16 get_param, wrapIndexedSetter 16 set_param,
+             Nothing)
 
 instance NodeProperty DirectionalLight
            "directional_shadow_max_distance"
@@ -246,7 +259,7 @@ instance NodeMethod DirectionalLight "get_shadow_mode" '[] (IO Int)
 
 {-# NOINLINE bindDirectionalLight_is_blend_splits_enabled #-}
 
--- | If @true@, shadow detail is sacrificed in exchange for smoother transitions between splits.
+-- | If @true@, shadow detail is sacrificed in exchange for smoother transitions between splits. Enabling shadow blend splitting also has a moderate performance cost. This is ignored when @directional_shadow_mode@ is @SHADOW_ORTHOGONAL@.
 bindDirectionalLight_is_blend_splits_enabled :: MethodBind
 bindDirectionalLight_is_blend_splits_enabled
   = unsafePerformIO $
@@ -256,7 +269,7 @@ bindDirectionalLight_is_blend_splits_enabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, shadow detail is sacrificed in exchange for smoother transitions between splits.
+-- | If @true@, shadow detail is sacrificed in exchange for smoother transitions between splits. Enabling shadow blend splitting also has a moderate performance cost. This is ignored when @directional_shadow_mode@ is @SHADOW_ORTHOGONAL@.
 is_blend_splits_enabled ::
                           (DirectionalLight :< cls, Object :< cls) => cls -> IO Bool
 is_blend_splits_enabled cls
@@ -278,7 +291,7 @@ instance NodeMethod DirectionalLight "is_blend_splits_enabled" '[]
 
 {-# NOINLINE bindDirectionalLight_set_blend_splits #-}
 
--- | If @true@, shadow detail is sacrificed in exchange for smoother transitions between splits.
+-- | If @true@, shadow detail is sacrificed in exchange for smoother transitions between splits. Enabling shadow blend splitting also has a moderate performance cost. This is ignored when @directional_shadow_mode@ is @SHADOW_ORTHOGONAL@.
 bindDirectionalLight_set_blend_splits :: MethodBind
 bindDirectionalLight_set_blend_splits
   = unsafePerformIO $
@@ -288,7 +301,7 @@ bindDirectionalLight_set_blend_splits
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, shadow detail is sacrificed in exchange for smoother transitions between splits.
+-- | If @true@, shadow detail is sacrificed in exchange for smoother transitions between splits. Enabling shadow blend splitting also has a moderate performance cost. This is ignored when @directional_shadow_mode@ is @SHADOW_ORTHOGONAL@.
 set_blend_splits ::
                    (DirectionalLight :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_blend_splits cls arg1

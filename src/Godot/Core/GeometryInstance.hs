@@ -19,10 +19,7 @@ module Godot.Core.GeometryInstance
         Godot.Core.GeometryInstance.get_flag,
         Godot.Core.GeometryInstance.get_generate_lightmap,
         Godot.Core.GeometryInstance.get_lightmap_scale,
-        Godot.Core.GeometryInstance.get_lod_max_distance,
-        Godot.Core.GeometryInstance.get_lod_max_hysteresis,
-        Godot.Core.GeometryInstance.get_lod_min_distance,
-        Godot.Core.GeometryInstance.get_lod_min_hysteresis,
+        Godot.Core.GeometryInstance.get_material_overlay,
         Godot.Core.GeometryInstance.get_material_override,
         Godot.Core.GeometryInstance.set_cast_shadows_setting,
         Godot.Core.GeometryInstance.set_custom_aabb,
@@ -30,10 +27,7 @@ module Godot.Core.GeometryInstance
         Godot.Core.GeometryInstance.set_flag,
         Godot.Core.GeometryInstance.set_generate_lightmap,
         Godot.Core.GeometryInstance.set_lightmap_scale,
-        Godot.Core.GeometryInstance.set_lod_max_distance,
-        Godot.Core.GeometryInstance.set_lod_max_hysteresis,
-        Godot.Core.GeometryInstance.set_lod_min_distance,
-        Godot.Core.GeometryInstance.set_lod_min_hysteresis,
+        Godot.Core.GeometryInstance.set_material_overlay,
         Godot.Core.GeometryInstance.set_material_override)
        where
 import Data.Coerce
@@ -110,33 +104,12 @@ instance NodeProperty GeometryInstance "lightmap_scale" Int 'False
           = (get_lightmap_scale, wrapDroppingSetter set_lightmap_scale,
              Nothing)
 
-instance NodeProperty GeometryInstance "lod_max_distance" Float
+instance NodeProperty GeometryInstance "material_overlay" Material
            'False
          where
         nodeProperty
-          = (get_lod_max_distance, wrapDroppingSetter set_lod_max_distance,
+          = (get_material_overlay, wrapDroppingSetter set_material_overlay,
              Nothing)
-
-instance NodeProperty GeometryInstance "lod_max_hysteresis" Float
-           'False
-         where
-        nodeProperty
-          = (get_lod_max_hysteresis,
-             wrapDroppingSetter set_lod_max_hysteresis, Nothing)
-
-instance NodeProperty GeometryInstance "lod_min_distance" Float
-           'False
-         where
-        nodeProperty
-          = (get_lod_min_distance, wrapDroppingSetter set_lod_min_distance,
-             Nothing)
-
-instance NodeProperty GeometryInstance "lod_min_hysteresis" Float
-           'False
-         where
-        nodeProperty
-          = (get_lod_min_hysteresis,
-             wrapDroppingSetter set_lod_min_hysteresis, Nothing)
 
 instance NodeProperty GeometryInstance "material_override" Material
            'False
@@ -311,141 +284,36 @@ instance NodeMethod GeometryInstance "get_lightmap_scale" '[]
          where
         nodeMethod = Godot.Core.GeometryInstance.get_lightmap_scale
 
-{-# NOINLINE bindGeometryInstance_get_lod_max_distance #-}
+{-# NOINLINE bindGeometryInstance_get_material_overlay #-}
 
--- | The GeometryInstance's max LOD distance.
---   			__Note:__ This property currently has no effect.
-bindGeometryInstance_get_lod_max_distance :: MethodBind
-bindGeometryInstance_get_lod_max_distance
+-- | The material overlay for the whole geometry.
+--   			If a material is assigned to this property, it will be rendered on top of any other active material for all the surfaces.
+bindGeometryInstance_get_material_overlay :: MethodBind
+bindGeometryInstance_get_material_overlay
   = unsafePerformIO $
       withCString "GeometryInstance" $
         \ clsNamePtr ->
-          withCString "get_lod_max_distance" $
+          withCString "get_material_overlay" $
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The GeometryInstance's max LOD distance.
---   			__Note:__ This property currently has no effect.
-get_lod_max_distance ::
-                       (GeometryInstance :< cls, Object :< cls) => cls -> IO Float
-get_lod_max_distance cls
+-- | The material overlay for the whole geometry.
+--   			If a material is assigned to this property, it will be rendered on top of any other active material for all the surfaces.
+get_material_overlay ::
+                       (GeometryInstance :< cls, Object :< cls) => cls -> IO Material
+get_material_overlay cls
   = withVariantArray []
       (\ (arrPtr, len) ->
-         godot_method_bind_call bindGeometryInstance_get_lod_max_distance
+         godot_method_bind_call bindGeometryInstance_get_material_overlay
            (upcast cls)
            arrPtr
            len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
-instance NodeMethod GeometryInstance "get_lod_max_distance" '[]
-           (IO Float)
+instance NodeMethod GeometryInstance "get_material_overlay" '[]
+           (IO Material)
          where
-        nodeMethod = Godot.Core.GeometryInstance.get_lod_max_distance
-
-{-# NOINLINE bindGeometryInstance_get_lod_max_hysteresis #-}
-
--- | The GeometryInstance's max LOD margin.
---   			__Note:__ This property currently has no effect.
-bindGeometryInstance_get_lod_max_hysteresis :: MethodBind
-bindGeometryInstance_get_lod_max_hysteresis
-  = unsafePerformIO $
-      withCString "GeometryInstance" $
-        \ clsNamePtr ->
-          withCString "get_lod_max_hysteresis" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | The GeometryInstance's max LOD margin.
---   			__Note:__ This property currently has no effect.
-get_lod_max_hysteresis ::
-                         (GeometryInstance :< cls, Object :< cls) => cls -> IO Float
-get_lod_max_hysteresis cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindGeometryInstance_get_lod_max_hysteresis
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod GeometryInstance "get_lod_max_hysteresis" '[]
-           (IO Float)
-         where
-        nodeMethod = Godot.Core.GeometryInstance.get_lod_max_hysteresis
-
-{-# NOINLINE bindGeometryInstance_get_lod_min_distance #-}
-
--- | The GeometryInstance's min LOD distance.
---   			__Note:__ This property currently has no effect.
-bindGeometryInstance_get_lod_min_distance :: MethodBind
-bindGeometryInstance_get_lod_min_distance
-  = unsafePerformIO $
-      withCString "GeometryInstance" $
-        \ clsNamePtr ->
-          withCString "get_lod_min_distance" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | The GeometryInstance's min LOD distance.
---   			__Note:__ This property currently has no effect.
-get_lod_min_distance ::
-                       (GeometryInstance :< cls, Object :< cls) => cls -> IO Float
-get_lod_min_distance cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindGeometryInstance_get_lod_min_distance
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod GeometryInstance "get_lod_min_distance" '[]
-           (IO Float)
-         where
-        nodeMethod = Godot.Core.GeometryInstance.get_lod_min_distance
-
-{-# NOINLINE bindGeometryInstance_get_lod_min_hysteresis #-}
-
--- | The GeometryInstance's min LOD margin.
---   			__Note:__ This property currently has no effect.
-bindGeometryInstance_get_lod_min_hysteresis :: MethodBind
-bindGeometryInstance_get_lod_min_hysteresis
-  = unsafePerformIO $
-      withCString "GeometryInstance" $
-        \ clsNamePtr ->
-          withCString "get_lod_min_hysteresis" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | The GeometryInstance's min LOD margin.
---   			__Note:__ This property currently has no effect.
-get_lod_min_hysteresis ::
-                         (GeometryInstance :< cls, Object :< cls) => cls -> IO Float
-get_lod_min_hysteresis cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindGeometryInstance_get_lod_min_hysteresis
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod GeometryInstance "get_lod_min_hysteresis" '[]
-           (IO Float)
-         where
-        nodeMethod = Godot.Core.GeometryInstance.get_lod_min_hysteresis
+        nodeMethod = Godot.Core.GeometryInstance.get_material_overlay
 
 {-# NOINLINE bindGeometryInstance_get_material_override #-}
 
@@ -674,27 +542,28 @@ instance NodeMethod GeometryInstance "set_lightmap_scale" '[Int]
          where
         nodeMethod = Godot.Core.GeometryInstance.set_lightmap_scale
 
-{-# NOINLINE bindGeometryInstance_set_lod_max_distance #-}
+{-# NOINLINE bindGeometryInstance_set_material_overlay #-}
 
--- | The GeometryInstance's max LOD distance.
---   			__Note:__ This property currently has no effect.
-bindGeometryInstance_set_lod_max_distance :: MethodBind
-bindGeometryInstance_set_lod_max_distance
+-- | The material overlay for the whole geometry.
+--   			If a material is assigned to this property, it will be rendered on top of any other active material for all the surfaces.
+bindGeometryInstance_set_material_overlay :: MethodBind
+bindGeometryInstance_set_material_overlay
   = unsafePerformIO $
       withCString "GeometryInstance" $
         \ clsNamePtr ->
-          withCString "set_lod_max_distance" $
+          withCString "set_material_overlay" $
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The GeometryInstance's max LOD distance.
---   			__Note:__ This property currently has no effect.
-set_lod_max_distance ::
-                       (GeometryInstance :< cls, Object :< cls) => cls -> Float -> IO ()
-set_lod_max_distance cls arg1
+-- | The material overlay for the whole geometry.
+--   			If a material is assigned to this property, it will be rendered on top of any other active material for all the surfaces.
+set_material_overlay ::
+                       (GeometryInstance :< cls, Object :< cls) =>
+                       cls -> Material -> IO ()
+set_material_overlay cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
-         godot_method_bind_call bindGeometryInstance_set_lod_max_distance
+         godot_method_bind_call bindGeometryInstance_set_material_overlay
            (upcast cls)
            arrPtr
            len
@@ -703,116 +572,11 @@ set_lod_max_distance cls arg1
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod GeometryInstance "set_lod_max_distance"
-           '[Float]
+instance NodeMethod GeometryInstance "set_material_overlay"
+           '[Material]
            (IO ())
          where
-        nodeMethod = Godot.Core.GeometryInstance.set_lod_max_distance
-
-{-# NOINLINE bindGeometryInstance_set_lod_max_hysteresis #-}
-
--- | The GeometryInstance's max LOD margin.
---   			__Note:__ This property currently has no effect.
-bindGeometryInstance_set_lod_max_hysteresis :: MethodBind
-bindGeometryInstance_set_lod_max_hysteresis
-  = unsafePerformIO $
-      withCString "GeometryInstance" $
-        \ clsNamePtr ->
-          withCString "set_lod_max_hysteresis" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | The GeometryInstance's max LOD margin.
---   			__Note:__ This property currently has no effect.
-set_lod_max_hysteresis ::
-                         (GeometryInstance :< cls, Object :< cls) => cls -> Float -> IO ()
-set_lod_max_hysteresis cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindGeometryInstance_set_lod_max_hysteresis
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod GeometryInstance "set_lod_max_hysteresis"
-           '[Float]
-           (IO ())
-         where
-        nodeMethod = Godot.Core.GeometryInstance.set_lod_max_hysteresis
-
-{-# NOINLINE bindGeometryInstance_set_lod_min_distance #-}
-
--- | The GeometryInstance's min LOD distance.
---   			__Note:__ This property currently has no effect.
-bindGeometryInstance_set_lod_min_distance :: MethodBind
-bindGeometryInstance_set_lod_min_distance
-  = unsafePerformIO $
-      withCString "GeometryInstance" $
-        \ clsNamePtr ->
-          withCString "set_lod_min_distance" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | The GeometryInstance's min LOD distance.
---   			__Note:__ This property currently has no effect.
-set_lod_min_distance ::
-                       (GeometryInstance :< cls, Object :< cls) => cls -> Float -> IO ()
-set_lod_min_distance cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindGeometryInstance_set_lod_min_distance
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod GeometryInstance "set_lod_min_distance"
-           '[Float]
-           (IO ())
-         where
-        nodeMethod = Godot.Core.GeometryInstance.set_lod_min_distance
-
-{-# NOINLINE bindGeometryInstance_set_lod_min_hysteresis #-}
-
--- | The GeometryInstance's min LOD margin.
---   			__Note:__ This property currently has no effect.
-bindGeometryInstance_set_lod_min_hysteresis :: MethodBind
-bindGeometryInstance_set_lod_min_hysteresis
-  = unsafePerformIO $
-      withCString "GeometryInstance" $
-        \ clsNamePtr ->
-          withCString "set_lod_min_hysteresis" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | The GeometryInstance's min LOD margin.
---   			__Note:__ This property currently has no effect.
-set_lod_min_hysteresis ::
-                         (GeometryInstance :< cls, Object :< cls) => cls -> Float -> IO ()
-set_lod_min_hysteresis cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindGeometryInstance_set_lod_min_hysteresis
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod GeometryInstance "set_lod_min_hysteresis"
-           '[Float]
-           (IO ())
-         where
-        nodeMethod = Godot.Core.GeometryInstance.set_lod_min_hysteresis
+        nodeMethod = Godot.Core.GeometryInstance.set_material_overlay
 
 {-# NOINLINE bindGeometryInstance_set_material_override #-}
 

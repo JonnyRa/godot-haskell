@@ -2,10 +2,14 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.JavaScript
-       (Godot.Core.JavaScript.create_callback,
+       (Godot.Core.JavaScript.sig_pwa_update_available,
+        Godot.Core.JavaScript.create_callback,
         Godot.Core.JavaScript.create_object,
         Godot.Core.JavaScript.download_buffer, Godot.Core.JavaScript.eval,
-        Godot.Core.JavaScript.get_interface)
+        Godot.Core.JavaScript.force_fs_sync,
+        Godot.Core.JavaScript.get_interface,
+        Godot.Core.JavaScript.pwa_needs_update,
+        Godot.Core.JavaScript.pwa_update)
        where
 import Data.Coerce
 import Foreign.C
@@ -18,6 +22,14 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Object()
+
+-- | Emitted when an update for this progressive web app has been detected but is waiting to be activated because a previous version is active. See @method pwa_update@ to force the update to take place immediately.
+sig_pwa_update_available ::
+                         Godot.Internal.Dispatch.Signal JavaScript
+sig_pwa_update_available
+  = Godot.Internal.Dispatch.Signal "pwa_update_available"
+
+instance NodeSignal JavaScript "pwa_update_available" '[]
 
 {-# NOINLINE bindJavaScript_create_callback #-}
 
@@ -150,6 +162,36 @@ instance NodeMethod JavaScript "eval" '[GodotString, Maybe Bool]
          where
         nodeMethod = Godot.Core.JavaScript.eval
 
+{-# NOINLINE bindJavaScript_force_fs_sync #-}
+
+-- | Force synchronization of the persistent file system (when enabled).
+--   				__Note:__ This is only useful for modules or extensions that can't use @File@ to write files.
+bindJavaScript_force_fs_sync :: MethodBind
+bindJavaScript_force_fs_sync
+  = unsafePerformIO $
+      withCString "JavaScript" $
+        \ clsNamePtr ->
+          withCString "force_fs_sync" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Force synchronization of the persistent file system (when enabled).
+--   				__Note:__ This is only useful for modules or extensions that can't use @File@ to write files.
+force_fs_sync :: (JavaScript :< cls, Object :< cls) => cls -> IO ()
+force_fs_sync cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindJavaScript_force_fs_sync (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod JavaScript "force_fs_sync" '[] (IO ()) where
+        nodeMethod = Godot.Core.JavaScript.force_fs_sync
+
 {-# NOINLINE bindJavaScript_get_interface #-}
 
 -- | Returns an interface to a JavaScript object that can be used by scripts. The @interface@ must be a valid property of the JavaScript @window@. The callback must accept a single @Array@ argument, which will contain the JavaScript @arguments@. See @JavaScriptObject@ for usage.
@@ -178,3 +220,67 @@ instance NodeMethod JavaScript "get_interface" '[GodotString]
            (IO JavaScriptObject)
          where
         nodeMethod = Godot.Core.JavaScript.get_interface
+
+{-# NOINLINE bindJavaScript_pwa_needs_update #-}
+
+-- | Returns @true@ if a new version of the progressive web app is waiting to be activated.
+--   				__Note:__ Only relevant when exported as a Progressive Web App.
+bindJavaScript_pwa_needs_update :: MethodBind
+bindJavaScript_pwa_needs_update
+  = unsafePerformIO $
+      withCString "JavaScript" $
+        \ clsNamePtr ->
+          withCString "pwa_needs_update" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if a new version of the progressive web app is waiting to be activated.
+--   				__Note:__ Only relevant when exported as a Progressive Web App.
+pwa_needs_update ::
+                   (JavaScript :< cls, Object :< cls) => cls -> IO Bool
+pwa_needs_update cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindJavaScript_pwa_needs_update (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod JavaScript "pwa_needs_update" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.JavaScript.pwa_needs_update
+
+{-# NOINLINE bindJavaScript_pwa_update #-}
+
+-- | Performs the live update of the progressive web app. Forcing the new version to be installed and the page to be reloaded.
+--   				__Note:__ Your application will be __reloaded in all browser tabs__.
+--   				__Note:__ Only relevant when exported as a Progressive Web App and @method pwa_needs_update@ returns @true@.
+bindJavaScript_pwa_update :: MethodBind
+bindJavaScript_pwa_update
+  = unsafePerformIO $
+      withCString "JavaScript" $
+        \ clsNamePtr ->
+          withCString "pwa_update" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Performs the live update of the progressive web app. Forcing the new version to be installed and the page to be reloaded.
+--   				__Note:__ Your application will be __reloaded in all browser tabs__.
+--   				__Note:__ Only relevant when exported as a Progressive Web App and @method pwa_needs_update@ returns @true@.
+pwa_update :: (JavaScript :< cls, Object :< cls) => cls -> IO Int
+pwa_update cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindJavaScript_pwa_update (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod JavaScript "pwa_update" '[] (IO Int) where
+        nodeMethod = Godot.Core.JavaScript.pwa_update

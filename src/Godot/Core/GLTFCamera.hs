@@ -4,10 +4,13 @@
 module Godot.Core.GLTFCamera
        (Godot.Core.GLTFCamera.get_fov_size,
         Godot.Core.GLTFCamera.get_perspective,
-        Godot.Core.GLTFCamera.get_zfar, Godot.Core.GLTFCamera.get_znear,
+        Godot.Core.GLTFCamera.get_size_mag, Godot.Core.GLTFCamera.get_zfar,
+        Godot.Core.GLTFCamera.get_znear,
         Godot.Core.GLTFCamera.set_fov_size,
         Godot.Core.GLTFCamera.set_perspective,
-        Godot.Core.GLTFCamera.set_zfar, Godot.Core.GLTFCamera.set_znear)
+        Godot.Core.GLTFCamera.set_size_mag, Godot.Core.GLTFCamera.set_zfar,
+        Godot.Core.GLTFCamera.set_znear,
+        Godot.Core.GLTFCamera.to_dictionary, Godot.Core.GLTFCamera.to_node)
        where
 import Data.Coerce
 import Foreign.C
@@ -28,6 +31,10 @@ instance NodeProperty GLTFCamera "fov_size" Float 'False where
 instance NodeProperty GLTFCamera "perspective" Bool 'False where
         nodeProperty
           = (get_perspective, wrapDroppingSetter set_perspective, Nothing)
+
+instance NodeProperty GLTFCamera "size_mag" Float 'False where
+        nodeProperty
+          = (get_size_mag, wrapDroppingSetter set_size_mag, Nothing)
 
 instance NodeProperty GLTFCamera "zfar" Float 'False where
         nodeProperty = (get_zfar, wrapDroppingSetter set_zfar, Nothing)
@@ -89,6 +96,33 @@ get_perspective cls
 instance NodeMethod GLTFCamera "get_perspective" '[] (IO Bool)
          where
         nodeMethod = Godot.Core.GLTFCamera.get_perspective
+
+{-# NOINLINE bindGLTFCamera_get_size_mag #-}
+
+bindGLTFCamera_get_size_mag :: MethodBind
+bindGLTFCamera_get_size_mag
+  = unsafePerformIO $
+      withCString "GLTFCamera" $
+        \ clsNamePtr ->
+          withCString "get_size_mag" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_size_mag ::
+               (GLTFCamera :< cls, Object :< cls) => cls -> IO Float
+get_size_mag cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFCamera_get_size_mag (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFCamera "get_size_mag" '[] (IO Float) where
+        nodeMethod = Godot.Core.GLTFCamera.get_size_mag
 
 {-# NOINLINE bindGLTFCamera_get_zfar #-}
 
@@ -196,6 +230,34 @@ instance NodeMethod GLTFCamera "set_perspective" '[Bool] (IO ())
          where
         nodeMethod = Godot.Core.GLTFCamera.set_perspective
 
+{-# NOINLINE bindGLTFCamera_set_size_mag #-}
+
+bindGLTFCamera_set_size_mag :: MethodBind
+bindGLTFCamera_set_size_mag
+  = unsafePerformIO $
+      withCString "GLTFCamera" $
+        \ clsNamePtr ->
+          withCString "set_size_mag" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_size_mag ::
+               (GLTFCamera :< cls, Object :< cls) => cls -> Float -> IO ()
+set_size_mag cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFCamera_set_size_mag (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFCamera "set_size_mag" '[Float] (IO ())
+         where
+        nodeMethod = Godot.Core.GLTFCamera.set_size_mag
+
 {-# NOINLINE bindGLTFCamera_set_zfar #-}
 
 bindGLTFCamera_set_zfar :: MethodBind
@@ -247,3 +309,53 @@ set_znear cls arg1
 
 instance NodeMethod GLTFCamera "set_znear" '[Float] (IO ()) where
         nodeMethod = Godot.Core.GLTFCamera.set_znear
+
+{-# NOINLINE bindGLTFCamera_to_dictionary #-}
+
+bindGLTFCamera_to_dictionary :: MethodBind
+bindGLTFCamera_to_dictionary
+  = unsafePerformIO $
+      withCString "GLTFCamera" $
+        \ clsNamePtr ->
+          withCString "to_dictionary" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+to_dictionary ::
+                (GLTFCamera :< cls, Object :< cls) => cls -> IO Dictionary
+to_dictionary cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFCamera_to_dictionary (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFCamera "to_dictionary" '[] (IO Dictionary)
+         where
+        nodeMethod = Godot.Core.GLTFCamera.to_dictionary
+
+{-# NOINLINE bindGLTFCamera_to_node #-}
+
+bindGLTFCamera_to_node :: MethodBind
+bindGLTFCamera_to_node
+  = unsafePerformIO $
+      withCString "GLTFCamera" $
+        \ clsNamePtr ->
+          withCString "to_node" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+to_node :: (GLTFCamera :< cls, Object :< cls) => cls -> IO Camera
+to_node cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFCamera_to_node (upcast cls) arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod GLTFCamera "to_node" '[] (IO Camera) where
+        nodeMethod = Godot.Core.GLTFCamera.to_node

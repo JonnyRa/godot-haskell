@@ -2,19 +2,22 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.GLTFNode
-       (Godot.Core.GLTFNode.get_camera, Godot.Core.GLTFNode.get_children,
+       (Godot.Core.GLTFNode.get_additional_data,
+        Godot.Core.GLTFNode.get_camera, Godot.Core.GLTFNode.get_children,
         Godot.Core.GLTFNode.get_height, Godot.Core.GLTFNode.get_joint,
         Godot.Core.GLTFNode.get_light, Godot.Core.GLTFNode.get_mesh,
         Godot.Core.GLTFNode.get_parent, Godot.Core.GLTFNode.get_rotation,
         Godot.Core.GLTFNode.get_scale, Godot.Core.GLTFNode.get_skeleton,
         Godot.Core.GLTFNode.get_skin, Godot.Core.GLTFNode.get_translation,
-        Godot.Core.GLTFNode.get_xform, Godot.Core.GLTFNode.set_camera,
-        Godot.Core.GLTFNode.set_children, Godot.Core.GLTFNode.set_height,
-        Godot.Core.GLTFNode.set_joint, Godot.Core.GLTFNode.set_light,
-        Godot.Core.GLTFNode.set_mesh, Godot.Core.GLTFNode.set_parent,
-        Godot.Core.GLTFNode.set_rotation, Godot.Core.GLTFNode.set_scale,
-        Godot.Core.GLTFNode.set_skeleton, Godot.Core.GLTFNode.set_skin,
-        Godot.Core.GLTFNode.set_translation, Godot.Core.GLTFNode.set_xform)
+        Godot.Core.GLTFNode.get_xform,
+        Godot.Core.GLTFNode.set_additional_data,
+        Godot.Core.GLTFNode.set_camera, Godot.Core.GLTFNode.set_children,
+        Godot.Core.GLTFNode.set_height, Godot.Core.GLTFNode.set_joint,
+        Godot.Core.GLTFNode.set_light, Godot.Core.GLTFNode.set_mesh,
+        Godot.Core.GLTFNode.set_parent, Godot.Core.GLTFNode.set_rotation,
+        Godot.Core.GLTFNode.set_scale, Godot.Core.GLTFNode.set_skeleton,
+        Godot.Core.GLTFNode.set_skin, Godot.Core.GLTFNode.set_translation,
+        Godot.Core.GLTFNode.set_xform)
        where
 import Data.Coerce
 import Foreign.C
@@ -70,6 +73,34 @@ instance NodeProperty GLTFNode "translation" Vector3 'False where
 
 instance NodeProperty GLTFNode "xform" Transform 'False where
         nodeProperty = (get_xform, wrapDroppingSetter set_xform, Nothing)
+
+{-# NOINLINE bindGLTFNode_get_additional_data #-}
+
+bindGLTFNode_get_additional_data :: MethodBind
+bindGLTFNode_get_additional_data
+  = unsafePerformIO $
+      withCString "GLTFNode" $
+        \ clsNamePtr ->
+          withCString "get_additional_data" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_additional_data ::
+                      (GLTFNode :< cls, Object :< cls) =>
+                      cls -> GodotString -> IO GodotVariant
+get_additional_data cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFNode_get_additional_data
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> return var)
+
+instance NodeMethod GLTFNode "get_additional_data" '[GodotString]
+           (IO GodotVariant)
+         where
+        nodeMethod = Godot.Core.GLTFNode.get_additional_data
 
 {-# NOINLINE bindGLTFNode_get_camera #-}
 
@@ -404,6 +435,38 @@ get_xform cls
 
 instance NodeMethod GLTFNode "get_xform" '[] (IO Transform) where
         nodeMethod = Godot.Core.GLTFNode.get_xform
+
+{-# NOINLINE bindGLTFNode_set_additional_data #-}
+
+bindGLTFNode_set_additional_data :: MethodBind
+bindGLTFNode_set_additional_data
+  = unsafePerformIO $
+      withCString "GLTFNode" $
+        \ clsNamePtr ->
+          withCString "set_additional_data" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_additional_data ::
+                      (GLTFNode :< cls, Object :< cls) =>
+                      cls -> GodotString -> GodotVariant -> IO ()
+set_additional_data cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFNode_set_additional_data
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFNode "set_additional_data"
+           '[GodotString, GodotVariant]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GLTFNode.set_additional_data
 
 {-# NOINLINE bindGLTFNode_set_camera #-}
 

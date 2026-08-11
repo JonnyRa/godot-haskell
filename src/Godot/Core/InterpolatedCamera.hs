@@ -2,10 +2,14 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.InterpolatedCamera
-       (Godot.Core.InterpolatedCamera.get_speed,
+       (Godot.Core.InterpolatedCamera._INTERPOLATED_CAMERA_PROCESS_IDLE,
+        Godot.Core.InterpolatedCamera._INTERPOLATED_CAMERA_PROCESS_PHYSICS,
+        Godot.Core.InterpolatedCamera.get_process_mode,
+        Godot.Core.InterpolatedCamera.get_speed,
         Godot.Core.InterpolatedCamera.get_target_path,
         Godot.Core.InterpolatedCamera.is_interpolation_enabled,
         Godot.Core.InterpolatedCamera.set_interpolation_enabled,
+        Godot.Core.InterpolatedCamera.set_process_mode,
         Godot.Core.InterpolatedCamera.set_speed,
         Godot.Core.InterpolatedCamera.set_target,
         Godot.Core.InterpolatedCamera.set_target_path)
@@ -22,11 +26,22 @@ import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Camera()
 
+_INTERPOLATED_CAMERA_PROCESS_IDLE :: Int
+_INTERPOLATED_CAMERA_PROCESS_IDLE = 1
+
+_INTERPOLATED_CAMERA_PROCESS_PHYSICS :: Int
+_INTERPOLATED_CAMERA_PROCESS_PHYSICS = 0
+
 instance NodeProperty InterpolatedCamera "enabled" Bool 'False
          where
         nodeProperty
           = (is_interpolation_enabled,
              wrapDroppingSetter set_interpolation_enabled, Nothing)
+
+instance NodeProperty InterpolatedCamera "process_mode" Int 'False
+         where
+        nodeProperty
+          = (get_process_mode, wrapDroppingSetter set_process_mode, Nothing)
 
 instance NodeProperty InterpolatedCamera "speed" Float 'False where
         nodeProperty = (get_speed, wrapDroppingSetter set_speed, Nothing)
@@ -35,6 +50,38 @@ instance NodeProperty InterpolatedCamera "target" NodePath 'False
          where
         nodeProperty
           = (get_target_path, wrapDroppingSetter set_target_path, Nothing)
+
+{-# NOINLINE bindInterpolatedCamera_get_process_mode #-}
+
+-- | The camera's process callback. See @enum InterpolatedCameraProcessMode@.
+bindInterpolatedCamera_get_process_mode :: MethodBind
+bindInterpolatedCamera_get_process_mode
+  = unsafePerformIO $
+      withCString "InterpolatedCamera" $
+        \ clsNamePtr ->
+          withCString "get_process_mode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The camera's process callback. See @enum InterpolatedCameraProcessMode@.
+get_process_mode ::
+                   (InterpolatedCamera :< cls, Object :< cls) => cls -> IO Int
+get_process_mode cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInterpolatedCamera_get_process_mode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InterpolatedCamera "get_process_mode" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.InterpolatedCamera.get_process_mode
 
 {-# NOINLINE bindInterpolatedCamera_get_speed #-}
 
@@ -167,6 +214,38 @@ instance NodeMethod InterpolatedCamera "set_interpolation_enabled"
          where
         nodeMethod
           = Godot.Core.InterpolatedCamera.set_interpolation_enabled
+
+{-# NOINLINE bindInterpolatedCamera_set_process_mode #-}
+
+-- | The camera's process callback. See @enum InterpolatedCameraProcessMode@.
+bindInterpolatedCamera_set_process_mode :: MethodBind
+bindInterpolatedCamera_set_process_mode
+  = unsafePerformIO $
+      withCString "InterpolatedCamera" $
+        \ clsNamePtr ->
+          withCString "set_process_mode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The camera's process callback. See @enum InterpolatedCameraProcessMode@.
+set_process_mode ::
+                   (InterpolatedCamera :< cls, Object :< cls) => cls -> Int -> IO ()
+set_process_mode cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInterpolatedCamera_set_process_mode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InterpolatedCamera "set_process_mode" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.InterpolatedCamera.set_process_mode
 
 {-# NOINLINE bindInterpolatedCamera_set_speed #-}
 

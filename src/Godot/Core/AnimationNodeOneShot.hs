@@ -72,6 +72,11 @@ instance NodeProperty AnimationNodeOneShot "fadeout_time" Float
         nodeProperty
           = (get_fadeout_time, wrapDroppingSetter set_fadeout_time, Nothing)
 
+instance NodeProperty AnimationNodeOneShot "mix_mode" Int 'False
+         where
+        nodeProperty
+          = (get_mix_mode, wrapDroppingSetter set_mix_mode, Nothing)
+
 instance NodeProperty AnimationNodeOneShot "sync" Bool 'False where
         nodeProperty
           = (is_using_sync, wrapDroppingSetter set_use_sync, Nothing)

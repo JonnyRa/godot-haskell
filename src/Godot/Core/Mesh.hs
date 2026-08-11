@@ -26,6 +26,7 @@ module Godot.Core.Mesh
         Godot.Core.Mesh._PRIMITIVE_TRIANGLE_FAN,
         Godot.Core.Mesh._ARRAY_FORMAT_NORMAL,
         Godot.Core.Mesh._ARRAY_TEX_UV2,
+        Godot.Core.Mesh._ARRAY_FLAG_USE_VERTEX_CACHE_OPTIMIZATION,
         Godot.Core.Mesh._ARRAY_COMPRESS_DEFAULT,
         Godot.Core.Mesh._ARRAY_FORMAT_BONES,
         Godot.Core.Mesh._ARRAY_COMPRESS_COLOR,
@@ -141,6 +142,9 @@ _ARRAY_FORMAT_NORMAL = 2
 
 _ARRAY_TEX_UV2 :: Int
 _ARRAY_TEX_UV2 = 5
+
+_ARRAY_FLAG_USE_VERTEX_CACHE_OPTIMIZATION :: Int
+_ARRAY_FLAG_USE_VERTEX_CACHE_OPTIMIZATION = 4194304
 
 _ARRAY_COMPRESS_DEFAULT :: Int
 _ARRAY_COMPRESS_DEFAULT = 2194432
@@ -288,7 +292,7 @@ instance NodeMethod Mesh "create_trimesh_shape" '[] (IO Shape)
 
 {-# NOINLINE bindMesh_generate_triangle_mesh #-}
 
--- | Generate a @TriangleMesh@ from the mesh.
+-- | Generate a @TriangleMesh@ from the mesh. Considers only surfaces using one of these primitive types: @PRIMITIVE_TRIANGLES@, @PRIMITIVE_TRIANGLE_STRIP@, or @PRIMITIVE_TRIANGLE_FAN@.
 bindMesh_generate_triangle_mesh :: MethodBind
 bindMesh_generate_triangle_mesh
   = unsafePerformIO $
@@ -298,7 +302,7 @@ bindMesh_generate_triangle_mesh
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Generate a @TriangleMesh@ from the mesh.
+-- | Generate a @TriangleMesh@ from the mesh. Considers only surfaces using one of these primitive types: @PRIMITIVE_TRIANGLES@, @PRIMITIVE_TRIANGLE_STRIP@, or @PRIMITIVE_TRIANGLE_FAN@.
 generate_triangle_mesh ::
                          (Mesh :< cls, Object :< cls) => cls -> IO TriangleMesh
 generate_triangle_mesh cls

@@ -2,9 +2,13 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.InputEventScreenTouch
-       (Godot.Core.InputEventScreenTouch.is_pressed,
+       (Godot.Core.InputEventScreenTouch.is_canceled,
+        Godot.Core.InputEventScreenTouch.is_pressed,
         Godot.Core.InputEventScreenTouch.get_index,
         Godot.Core.InputEventScreenTouch.get_position,
+        Godot.Core.InputEventScreenTouch.is_double_tap,
+        Godot.Core.InputEventScreenTouch.set_canceled,
+        Godot.Core.InputEventScreenTouch.set_double_tap,
         Godot.Core.InputEventScreenTouch.set_index,
         Godot.Core.InputEventScreenTouch.set_position,
         Godot.Core.InputEventScreenTouch.set_pressed)
@@ -20,6 +24,49 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.InputEvent()
+
+{-# NOINLINE bindInputEventScreenTouch_is_canceled #-}
+
+-- | If @true@, the touch event has been canceled.
+bindInputEventScreenTouch_is_canceled :: MethodBind
+bindInputEventScreenTouch_is_canceled
+  = unsafePerformIO $
+      withCString "InputEventScreenTouch" $
+        \ clsNamePtr ->
+          withCString "is_canceled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the touch event has been canceled.
+is_canceled ::
+              (InputEventScreenTouch :< cls, Object :< cls) => cls -> IO Bool
+is_canceled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputEventScreenTouch_is_canceled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventScreenTouch "is_canceled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.InputEventScreenTouch.is_canceled
+
+instance NodeProperty InputEventScreenTouch "canceled" Bool 'False
+         where
+        nodeProperty
+          = (is_canceled, wrapDroppingSetter set_canceled, Nothing)
+
+instance NodeProperty InputEventScreenTouch "double_tap" Bool
+           'False
+         where
+        nodeProperty
+          = (is_double_tap, wrapDroppingSetter set_double_tap, Nothing)
 
 instance NodeProperty InputEventScreenTouch "index" Int 'False
          where
@@ -130,6 +177,104 @@ instance NodeMethod InputEventScreenTouch "get_position" '[]
            (IO Vector2)
          where
         nodeMethod = Godot.Core.InputEventScreenTouch.get_position
+
+{-# NOINLINE bindInputEventScreenTouch_is_double_tap #-}
+
+-- | If @true@, the touch's state is a double tap.
+bindInputEventScreenTouch_is_double_tap :: MethodBind
+bindInputEventScreenTouch_is_double_tap
+  = unsafePerformIO $
+      withCString "InputEventScreenTouch" $
+        \ clsNamePtr ->
+          withCString "is_double_tap" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the touch's state is a double tap.
+is_double_tap ::
+                (InputEventScreenTouch :< cls, Object :< cls) => cls -> IO Bool
+is_double_tap cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputEventScreenTouch_is_double_tap
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventScreenTouch "is_double_tap" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.InputEventScreenTouch.is_double_tap
+
+{-# NOINLINE bindInputEventScreenTouch_set_canceled #-}
+
+-- | If @true@, the touch event has been canceled.
+bindInputEventScreenTouch_set_canceled :: MethodBind
+bindInputEventScreenTouch_set_canceled
+  = unsafePerformIO $
+      withCString "InputEventScreenTouch" $
+        \ clsNamePtr ->
+          withCString "set_canceled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the touch event has been canceled.
+set_canceled ::
+               (InputEventScreenTouch :< cls, Object :< cls) =>
+               cls -> Bool -> IO ()
+set_canceled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputEventScreenTouch_set_canceled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventScreenTouch "set_canceled" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.InputEventScreenTouch.set_canceled
+
+{-# NOINLINE bindInputEventScreenTouch_set_double_tap #-}
+
+-- | If @true@, the touch's state is a double tap.
+bindInputEventScreenTouch_set_double_tap :: MethodBind
+bindInputEventScreenTouch_set_double_tap
+  = unsafePerformIO $
+      withCString "InputEventScreenTouch" $
+        \ clsNamePtr ->
+          withCString "set_double_tap" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the touch's state is a double tap.
+set_double_tap ::
+                 (InputEventScreenTouch :< cls, Object :< cls) =>
+                 cls -> Bool -> IO ()
+set_double_tap cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputEventScreenTouch_set_double_tap
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventScreenTouch "set_double_tap" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.InputEventScreenTouch.set_double_tap
 
 {-# NOINLINE bindInputEventScreenTouch_set_index #-}
 

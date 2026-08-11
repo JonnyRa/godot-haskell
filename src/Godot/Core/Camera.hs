@@ -10,7 +10,8 @@ module Godot.Core.Camera
         Godot.Core.Camera._KEEP_WIDTH,
         Godot.Core.Camera._DOPPLER_TRACKING_IDLE_STEP,
         Godot.Core.Camera._PROJECTION_PERSPECTIVE,
-        Godot.Core.Camera.clear_current, Godot.Core.Camera.get_camera_rid,
+        Godot.Core.Camera.clear_current, Godot.Core.Camera.get_affect_lod,
+        Godot.Core.Camera.get_camera_rid,
         Godot.Core.Camera.get_camera_transform,
         Godot.Core.Camera.get_cull_mask,
         Godot.Core.Camera.get_cull_mask_bit,
@@ -29,7 +30,7 @@ module Godot.Core.Camera
         Godot.Core.Camera.project_position,
         Godot.Core.Camera.project_ray_normal,
         Godot.Core.Camera.project_ray_origin,
-        Godot.Core.Camera.set_cull_mask,
+        Godot.Core.Camera.set_affect_lod, Godot.Core.Camera.set_cull_mask,
         Godot.Core.Camera.set_cull_mask_bit, Godot.Core.Camera.set_current,
         Godot.Core.Camera.set_doppler_tracking,
         Godot.Core.Camera.set_environment, Godot.Core.Camera.set_fov,
@@ -78,6 +79,10 @@ _DOPPLER_TRACKING_IDLE_STEP = 1
 
 _PROJECTION_PERSPECTIVE :: Int
 _PROJECTION_PERSPECTIVE = 0
+
+instance NodeProperty Camera "affect_lod" Bool 'False where
+        nodeProperty
+          = (get_affect_lod, wrapDroppingSetter set_affect_lod, Nothing)
 
 instance NodeProperty Camera "cull_mask" Int 'False where
         nodeProperty
@@ -158,6 +163,38 @@ clear_current cls arg1
 instance NodeMethod Camera "clear_current" '[Maybe Bool] (IO ())
          where
         nodeMethod = Godot.Core.Camera.clear_current
+
+{-# NOINLINE bindCamera_get_affect_lod #-}
+
+-- | If @true@, the camera will be used to calculate the level of detail in @LOD@ nodes.
+--   			Objects further from the camera will select lower levels of detail than those closer to the camera.
+--   			__Note:__ This property has no effect if @projection@ is set to @PROJECTION_ORTHOGONAL@.
+bindCamera_get_affect_lod :: MethodBind
+bindCamera_get_affect_lod
+  = unsafePerformIO $
+      withCString "Camera" $
+        \ clsNamePtr ->
+          withCString "get_affect_lod" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the camera will be used to calculate the level of detail in @LOD@ nodes.
+--   			Objects further from the camera will select lower levels of detail than those closer to the camera.
+--   			__Note:__ This property has no effect if @projection@ is set to @PROJECTION_ORTHOGONAL@.
+get_affect_lod :: (Camera :< cls, Object :< cls) => cls -> IO Bool
+get_affect_lod cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCamera_get_affect_lod (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Camera "get_affect_lod" '[] (IO Bool) where
+        nodeMethod = Godot.Core.Camera.get_affect_lod
 
 {-# NOINLINE bindCamera_get_camera_rid #-}
 
@@ -400,6 +437,7 @@ instance NodeMethod Camera "get_frustum" '[] (IO Array) where
 {-# NOINLINE bindCamera_get_frustum_offset #-}
 
 -- | The camera's frustum offset. This can be changed from the default to create "tilted frustum" effects such as @url=https://zdoom.org/wiki/Y-shearing@Y-shearing@/url@.
+--   			__Note:__ Only effective if @projection@ is @PROJECTION_FRUSTUM@.
 bindCamera_get_frustum_offset :: MethodBind
 bindCamera_get_frustum_offset
   = unsafePerformIO $
@@ -410,6 +448,7 @@ bindCamera_get_frustum_offset
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The camera's frustum offset. This can be changed from the default to create "tilted frustum" effects such as @url=https://zdoom.org/wiki/Y-shearing@Y-shearing@/url@.
+--   			__Note:__ Only effective if @projection@ is @PROJECTION_FRUSTUM@.
 get_frustum_offset ::
                      (Camera :< cls, Object :< cls) => cls -> IO Vector2
 get_frustum_offset cls
@@ -514,7 +553,7 @@ instance NodeMethod Camera "get_projection" '[] (IO Int) where
 
 {-# NOINLINE bindCamera_get_size #-}
 
--- | The camera's size measured as 1/2 the width or height. Only applicable in orthogonal mode. Since @keep_aspect@ locks on axis, @size@ sets the other axis' size length.
+-- | The camera's size in meters measured as the diameter of the width or height, depending on @keep_aspect@. Only applicable in orthogonal and frustum modes.
 bindCamera_get_size :: MethodBind
 bindCamera_get_size
   = unsafePerformIO $
@@ -524,7 +563,7 @@ bindCamera_get_size
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The camera's size measured as 1/2 the width or height. Only applicable in orthogonal mode. Since @keep_aspect@ locks on axis, @size@ sets the other axis' size length.
+-- | The camera's size in meters measured as the diameter of the width or height, depending on @keep_aspect@. Only applicable in orthogonal and frustum modes.
 get_size :: (Camera :< cls, Object :< cls) => cls -> IO Float
 get_size cls
   = withVariantArray []
@@ -620,6 +659,7 @@ instance NodeMethod Camera "get_znear" '[] (IO Float) where
 {-# NOINLINE bindCamera_is_current #-}
 
 -- | If @true@, the ancestor @Viewport@ is currently using this camera.
+--   			If multiple cameras are in the scene, one will always be made current. For example, if two @Camera@ nodes are present in the scene and only one is current, setting one camera's @current@ to @false@ will cause the other camera to be made current.
 bindCamera_is_current :: MethodBind
 bindCamera_is_current
   = unsafePerformIO $
@@ -630,6 +670,7 @@ bindCamera_is_current
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the ancestor @Viewport@ is currently using this camera.
+--   			If multiple cameras are in the scene, one will always be made current. For example, if two @Camera@ nodes are present in the scene and only one is current, setting one camera's @current@ to @false@ will cause the other camera to be made current.
 is_current :: (Camera :< cls, Object :< cls) => cls -> IO Bool
 is_current cls
   = withVariantArray []
@@ -770,7 +811,7 @@ instance NodeMethod Camera "project_position" '[Vector2, Float]
 
 {-# NOINLINE bindCamera_project_ray_normal #-}
 
--- | Returns a normal vector in world space, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
+-- | Returns a normal vector in world space, that is the result of projecting a point on the @Viewport@ rectangle by the inverse camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
 bindCamera_project_ray_normal :: MethodBind
 bindCamera_project_ray_normal
   = unsafePerformIO $
@@ -780,7 +821,7 @@ bindCamera_project_ray_normal
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a normal vector in world space, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
+-- | Returns a normal vector in world space, that is the result of projecting a point on the @Viewport@ rectangle by the inverse camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
 project_ray_normal ::
                      (Camera :< cls, Object :< cls) => cls -> Vector2 -> IO Vector3
 project_ray_normal cls arg1
@@ -801,7 +842,7 @@ instance NodeMethod Camera "project_ray_normal" '[Vector2]
 
 {-# NOINLINE bindCamera_project_ray_origin #-}
 
--- | Returns a 3D position in world space, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
+-- | Returns a 3D position in world space, that is the result of projecting a point on the @Viewport@ rectangle by the inverse camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
 bindCamera_project_ray_origin :: MethodBind
 bindCamera_project_ray_origin
   = unsafePerformIO $
@@ -811,7 +852,7 @@ bindCamera_project_ray_origin
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a 3D position in world space, that is the result of projecting a point on the @Viewport@ rectangle by the camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
+-- | Returns a 3D position in world space, that is the result of projecting a point on the @Viewport@ rectangle by the inverse camera projection. This is useful for casting rays in the form of (origin, normal) for object intersection or picking.
 project_ray_origin ::
                      (Camera :< cls, Object :< cls) => cls -> Vector2 -> IO Vector3
 project_ray_origin cls arg1
@@ -829,6 +870,39 @@ instance NodeMethod Camera "project_ray_origin" '[Vector2]
            (IO Vector3)
          where
         nodeMethod = Godot.Core.Camera.project_ray_origin
+
+{-# NOINLINE bindCamera_set_affect_lod #-}
+
+-- | If @true@, the camera will be used to calculate the level of detail in @LOD@ nodes.
+--   			Objects further from the camera will select lower levels of detail than those closer to the camera.
+--   			__Note:__ This property has no effect if @projection@ is set to @PROJECTION_ORTHOGONAL@.
+bindCamera_set_affect_lod :: MethodBind
+bindCamera_set_affect_lod
+  = unsafePerformIO $
+      withCString "Camera" $
+        \ clsNamePtr ->
+          withCString "set_affect_lod" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the camera will be used to calculate the level of detail in @LOD@ nodes.
+--   			Objects further from the camera will select lower levels of detail than those closer to the camera.
+--   			__Note:__ This property has no effect if @projection@ is set to @PROJECTION_ORTHOGONAL@.
+set_affect_lod ::
+                 (Camera :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_affect_lod cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCamera_set_affect_lod (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Camera "set_affect_lod" '[Bool] (IO ()) where
+        nodeMethod = Godot.Core.Camera.set_affect_lod
 
 {-# NOINLINE bindCamera_set_cull_mask #-}
 
@@ -891,6 +965,7 @@ instance NodeMethod Camera "set_cull_mask_bit" '[Int, Bool] (IO ())
 {-# NOINLINE bindCamera_set_current #-}
 
 -- | If @true@, the ancestor @Viewport@ is currently using this camera.
+--   			If multiple cameras are in the scene, one will always be made current. For example, if two @Camera@ nodes are present in the scene and only one is current, setting one camera's @current@ to @false@ will cause the other camera to be made current.
 bindCamera_set_current :: MethodBind
 bindCamera_set_current
   = unsafePerformIO $
@@ -901,6 +976,7 @@ bindCamera_set_current
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the ancestor @Viewport@ is currently using this camera.
+--   			If multiple cameras are in the scene, one will always be made current. For example, if two @Camera@ nodes are present in the scene and only one is current, setting one camera's @current@ to @false@ will cause the other camera to be made current.
 set_current ::
               (Camera :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_current cls arg1
@@ -1016,7 +1092,7 @@ instance NodeMethod Camera "set_fov" '[Float] (IO ()) where
 
 {-# NOINLINE bindCamera_set_frustum #-}
 
--- | Sets the camera projection to frustum mode (see @PROJECTION_FRUSTUM@), by specifying a @size@, an @offset@, and the @z_near@ and @z_far@ clip planes in world space units.
+-- | Sets the camera projection to frustum mode (see @PROJECTION_FRUSTUM@), by specifying a @size@, an @offset@, and the @z_near@ and @z_far@ clip planes in world space units. See also @frustum_offset@.
 bindCamera_set_frustum :: MethodBind
 bindCamera_set_frustum
   = unsafePerformIO $
@@ -1026,7 +1102,7 @@ bindCamera_set_frustum
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the camera projection to frustum mode (see @PROJECTION_FRUSTUM@), by specifying a @size@, an @offset@, and the @z_near@ and @z_far@ clip planes in world space units.
+-- | Sets the camera projection to frustum mode (see @PROJECTION_FRUSTUM@), by specifying a @size@, an @offset@, and the @z_near@ and @z_far@ clip planes in world space units. See also @frustum_offset@.
 set_frustum ::
               (Camera :< cls, Object :< cls) =>
               cls -> Float -> Vector2 -> Float -> Float -> IO ()
@@ -1050,6 +1126,7 @@ instance NodeMethod Camera "set_frustum"
 {-# NOINLINE bindCamera_set_frustum_offset #-}
 
 -- | The camera's frustum offset. This can be changed from the default to create "tilted frustum" effects such as @url=https://zdoom.org/wiki/Y-shearing@Y-shearing@/url@.
+--   			__Note:__ Only effective if @projection@ is @PROJECTION_FRUSTUM@.
 bindCamera_set_frustum_offset :: MethodBind
 bindCamera_set_frustum_offset
   = unsafePerformIO $
@@ -1060,6 +1137,7 @@ bindCamera_set_frustum_offset
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The camera's frustum offset. This can be changed from the default to create "tilted frustum" effects such as @url=https://zdoom.org/wiki/Y-shearing@Y-shearing@/url@.
+--   			__Note:__ Only effective if @projection@ is @PROJECTION_FRUSTUM@.
 set_frustum_offset ::
                      (Camera :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_frustum_offset cls arg1
@@ -1230,7 +1308,7 @@ instance NodeMethod Camera "set_projection" '[Int] (IO ()) where
 
 {-# NOINLINE bindCamera_set_size #-}
 
--- | The camera's size measured as 1/2 the width or height. Only applicable in orthogonal mode. Since @keep_aspect@ locks on axis, @size@ sets the other axis' size length.
+-- | The camera's size in meters measured as the diameter of the width or height, depending on @keep_aspect@. Only applicable in orthogonal and frustum modes.
 bindCamera_set_size :: MethodBind
 bindCamera_set_size
   = unsafePerformIO $
@@ -1240,7 +1318,7 @@ bindCamera_set_size
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The camera's size measured as 1/2 the width or height. Only applicable in orthogonal mode. Since @keep_aspect@ locks on axis, @size@ sets the other axis' size length.
+-- | The camera's size in meters measured as the diameter of the width or height, depending on @keep_aspect@. Only applicable in orthogonal and frustum modes.
 set_size :: (Camera :< cls, Object :< cls) => cls -> Float -> IO ()
 set_size cls arg1
   = withVariantArray [toVariant arg1]

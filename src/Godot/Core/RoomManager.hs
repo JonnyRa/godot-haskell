@@ -13,6 +13,7 @@ module Godot.Core.RoomManager
         Godot.Core.RoomManager.get_portal_depth_limit,
         Godot.Core.RoomManager.get_preview_camera_path,
         Godot.Core.RoomManager.get_pvs_mode,
+        Godot.Core.RoomManager.get_roaming_expansion_margin,
         Godot.Core.RoomManager.get_room_simplify,
         Godot.Core.RoomManager.get_roomlist_path,
         Godot.Core.RoomManager.get_show_margins,
@@ -29,6 +30,7 @@ module Godot.Core.RoomManager
         Godot.Core.RoomManager.set_portal_depth_limit,
         Godot.Core.RoomManager.set_preview_camera_path,
         Godot.Core.RoomManager.set_pvs_mode,
+        Godot.Core.RoomManager.set_roaming_expansion_margin,
         Godot.Core.RoomManager.set_room_simplify,
         Godot.Core.RoomManager.set_roomlist_path,
         Godot.Core.RoomManager.set_show_margins,
@@ -102,6 +104,13 @@ instance NodeProperty RoomManager "preview_camera" NodePath 'False
 instance NodeProperty RoomManager "pvs_mode" Int 'False where
         nodeProperty
           = (get_pvs_mode, wrapDroppingSetter set_pvs_mode, Nothing)
+
+instance NodeProperty RoomManager "roaming_expansion_margin" Float
+           'False
+         where
+        nodeProperty
+          = (get_roaming_expansion_margin,
+             wrapDroppingSetter set_roaming_expansion_margin, Nothing)
 
 instance NodeProperty RoomManager "room_simplify" Float 'False
          where
@@ -335,7 +344,7 @@ instance NodeMethod RoomManager "get_portal_depth_limit" '[]
 
 {-# NOINLINE bindRoomManager_get_preview_camera_path #-}
 
--- | Portal culling normally operates using the current @Camera@ / @Camera@s, however for debugging purposes within the editor, you can use this setting to override this behaviour and force it to use a particular camera to get a better idea of what the occlusion culling is doing.
+-- | Portal culling normally operates using the current @Camera@ / @Camera@s, however for debugging purposes within the editor, you can use this setting to override this behavior and force it to use a particular camera to get a better idea of what the occlusion culling is doing.
 bindRoomManager_get_preview_camera_path :: MethodBind
 bindRoomManager_get_preview_camera_path
   = unsafePerformIO $
@@ -345,7 +354,7 @@ bindRoomManager_get_preview_camera_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Portal culling normally operates using the current @Camera@ / @Camera@s, however for debugging purposes within the editor, you can use this setting to override this behaviour and force it to use a particular camera to get a better idea of what the occlusion culling is doing.
+-- | Portal culling normally operates using the current @Camera@ / @Camera@s, however for debugging purposes within the editor, you can use this setting to override this behavior and force it to use a particular camera to get a better idea of what the occlusion culling is doing.
 get_preview_camera_path ::
                           (RoomManager :< cls, Object :< cls) => cls -> IO NodePath
 get_preview_camera_path cls
@@ -395,6 +404,42 @@ get_pvs_mode cls
 
 instance NodeMethod RoomManager "get_pvs_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.RoomManager.get_pvs_mode
+
+{-# NOINLINE bindRoomManager_get_roaming_expansion_margin #-}
+
+-- | In order to reduce processing for roaming objects, an expansion is applied to their AABB as they move. This expanded volume is used to calculate which rooms the roaming object is within. If the object's exact AABB is still within this expanded volume on the next move, there is no need to reprocess the object, which can save considerable CPU.
+--   			The downside is that if the expansion is too much, the object may end up unexpectedly sprawling into neighbouring rooms and showing up where it might otherwise be culled.
+--   			In order to balance roaming performance against culling accuracy, this expansion margin can be customized by the user. It will typically depend on your room and object sizes, and movement speeds. The default value should work reasonably in most circumstances.
+bindRoomManager_get_roaming_expansion_margin :: MethodBind
+bindRoomManager_get_roaming_expansion_margin
+  = unsafePerformIO $
+      withCString "RoomManager" $
+        \ clsNamePtr ->
+          withCString "get_roaming_expansion_margin" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | In order to reduce processing for roaming objects, an expansion is applied to their AABB as they move. This expanded volume is used to calculate which rooms the roaming object is within. If the object's exact AABB is still within this expanded volume on the next move, there is no need to reprocess the object, which can save considerable CPU.
+--   			The downside is that if the expansion is too much, the object may end up unexpectedly sprawling into neighbouring rooms and showing up where it might otherwise be culled.
+--   			In order to balance roaming performance against culling accuracy, this expansion margin can be customized by the user. It will typically depend on your room and object sizes, and movement speeds. The default value should work reasonably in most circumstances.
+get_roaming_expansion_margin ::
+                               (RoomManager :< cls, Object :< cls) => cls -> IO Float
+get_roaming_expansion_margin cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRoomManager_get_roaming_expansion_margin
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RoomManager "get_roaming_expansion_margin" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.RoomManager.get_roaming_expansion_margin
 
 {-# NOINLINE bindRoomManager_get_room_simplify #-}
 
@@ -616,8 +661,9 @@ instance NodeMethod RoomManager "rooms_convert" '[] (IO ()) where
 {-# NOINLINE bindRoomManager_rooms_get_active #-}
 
 -- | Switches the portal culling system on and off.
---   			It is important to note that when portal culling is active, it is responsible for __all__ the 3d culling. Some editor functionality may be more difficult to use, so switching the active flag is intended to be used to make sure your @Room@ / @Portal@ layout works within the editor.
+--   			It is important to note that when portal culling is active, it is responsible for __all__ the 3d culling. Some editor visual debugging helpers may not be available when active, so switching the active flag is intended to be used to ensure your @Room@ / @Portal@ layout works within the editor.
 --   			Switching to @active@ will have no effect when the @room graph@ is unloaded (the rooms have not yet been converted).
+--   			__Note:__ For efficiency, the portal system is designed to work with only the core visual object types. In particular, only nodes derived from @VisualInstance@ are expected to show when the system is active.
 bindRoomManager_rooms_get_active :: MethodBind
 bindRoomManager_rooms_get_active
   = unsafePerformIO $
@@ -628,8 +674,9 @@ bindRoomManager_rooms_get_active
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Switches the portal culling system on and off.
---   			It is important to note that when portal culling is active, it is responsible for __all__ the 3d culling. Some editor functionality may be more difficult to use, so switching the active flag is intended to be used to make sure your @Room@ / @Portal@ layout works within the editor.
+--   			It is important to note that when portal culling is active, it is responsible for __all__ the 3d culling. Some editor visual debugging helpers may not be available when active, so switching the active flag is intended to be used to ensure your @Room@ / @Portal@ layout works within the editor.
 --   			Switching to @active@ will have no effect when the @room graph@ is unloaded (the rooms have not yet been converted).
+--   			__Note:__ For efficiency, the portal system is designed to work with only the core visual object types. In particular, only nodes derived from @VisualInstance@ are expected to show when the system is active.
 rooms_get_active ::
                    (RoomManager :< cls, Object :< cls) => cls -> IO Bool
 rooms_get_active cls
@@ -651,8 +698,9 @@ instance NodeMethod RoomManager "rooms_get_active" '[] (IO Bool)
 {-# NOINLINE bindRoomManager_rooms_set_active #-}
 
 -- | Switches the portal culling system on and off.
---   			It is important to note that when portal culling is active, it is responsible for __all__ the 3d culling. Some editor functionality may be more difficult to use, so switching the active flag is intended to be used to make sure your @Room@ / @Portal@ layout works within the editor.
+--   			It is important to note that when portal culling is active, it is responsible for __all__ the 3d culling. Some editor visual debugging helpers may not be available when active, so switching the active flag is intended to be used to ensure your @Room@ / @Portal@ layout works within the editor.
 --   			Switching to @active@ will have no effect when the @room graph@ is unloaded (the rooms have not yet been converted).
+--   			__Note:__ For efficiency, the portal system is designed to work with only the core visual object types. In particular, only nodes derived from @VisualInstance@ are expected to show when the system is active.
 bindRoomManager_rooms_set_active :: MethodBind
 bindRoomManager_rooms_set_active
   = unsafePerformIO $
@@ -663,8 +711,9 @@ bindRoomManager_rooms_set_active
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Switches the portal culling system on and off.
---   			It is important to note that when portal culling is active, it is responsible for __all__ the 3d culling. Some editor functionality may be more difficult to use, so switching the active flag is intended to be used to make sure your @Room@ / @Portal@ layout works within the editor.
+--   			It is important to note that when portal culling is active, it is responsible for __all__ the 3d culling. Some editor visual debugging helpers may not be available when active, so switching the active flag is intended to be used to ensure your @Room@ / @Portal@ layout works within the editor.
 --   			Switching to @active@ will have no effect when the @room graph@ is unloaded (the rooms have not yet been converted).
+--   			__Note:__ For efficiency, the portal system is designed to work with only the core visual object types. In particular, only nodes derived from @VisualInstance@ are expected to show when the system is active.
 rooms_set_active ::
                    (RoomManager :< cls, Object :< cls) => cls -> Bool -> IO ()
 rooms_set_active cls arg1
@@ -897,7 +946,7 @@ instance NodeMethod RoomManager "set_portal_depth_limit" '[Int]
 
 {-# NOINLINE bindRoomManager_set_preview_camera_path #-}
 
--- | Portal culling normally operates using the current @Camera@ / @Camera@s, however for debugging purposes within the editor, you can use this setting to override this behaviour and force it to use a particular camera to get a better idea of what the occlusion culling is doing.
+-- | Portal culling normally operates using the current @Camera@ / @Camera@s, however for debugging purposes within the editor, you can use this setting to override this behavior and force it to use a particular camera to get a better idea of what the occlusion culling is doing.
 bindRoomManager_set_preview_camera_path :: MethodBind
 bindRoomManager_set_preview_camera_path
   = unsafePerformIO $
@@ -907,7 +956,7 @@ bindRoomManager_set_preview_camera_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Portal culling normally operates using the current @Camera@ / @Camera@s, however for debugging purposes within the editor, you can use this setting to override this behaviour and force it to use a particular camera to get a better idea of what the occlusion culling is doing.
+-- | Portal culling normally operates using the current @Camera@ / @Camera@s, however for debugging purposes within the editor, you can use this setting to override this behavior and force it to use a particular camera to get a better idea of what the occlusion culling is doing.
 set_preview_camera_path ::
                           (RoomManager :< cls, Object :< cls) => cls -> NodePath -> IO ()
 set_preview_camera_path cls arg1
@@ -958,6 +1007,43 @@ set_pvs_mode cls arg1
 
 instance NodeMethod RoomManager "set_pvs_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.RoomManager.set_pvs_mode
+
+{-# NOINLINE bindRoomManager_set_roaming_expansion_margin #-}
+
+-- | In order to reduce processing for roaming objects, an expansion is applied to their AABB as they move. This expanded volume is used to calculate which rooms the roaming object is within. If the object's exact AABB is still within this expanded volume on the next move, there is no need to reprocess the object, which can save considerable CPU.
+--   			The downside is that if the expansion is too much, the object may end up unexpectedly sprawling into neighbouring rooms and showing up where it might otherwise be culled.
+--   			In order to balance roaming performance against culling accuracy, this expansion margin can be customized by the user. It will typically depend on your room and object sizes, and movement speeds. The default value should work reasonably in most circumstances.
+bindRoomManager_set_roaming_expansion_margin :: MethodBind
+bindRoomManager_set_roaming_expansion_margin
+  = unsafePerformIO $
+      withCString "RoomManager" $
+        \ clsNamePtr ->
+          withCString "set_roaming_expansion_margin" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | In order to reduce processing for roaming objects, an expansion is applied to their AABB as they move. This expanded volume is used to calculate which rooms the roaming object is within. If the object's exact AABB is still within this expanded volume on the next move, there is no need to reprocess the object, which can save considerable CPU.
+--   			The downside is that if the expansion is too much, the object may end up unexpectedly sprawling into neighbouring rooms and showing up where it might otherwise be culled.
+--   			In order to balance roaming performance against culling accuracy, this expansion margin can be customized by the user. It will typically depend on your room and object sizes, and movement speeds. The default value should work reasonably in most circumstances.
+set_roaming_expansion_margin ::
+                               (RoomManager :< cls, Object :< cls) => cls -> Float -> IO ()
+set_roaming_expansion_margin cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRoomManager_set_roaming_expansion_margin
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RoomManager "set_roaming_expansion_margin"
+           '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.RoomManager.set_roaming_expansion_margin
 
 {-# NOINLINE bindRoomManager_set_room_simplify #-}
 

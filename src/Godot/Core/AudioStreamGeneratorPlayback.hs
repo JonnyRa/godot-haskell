@@ -94,7 +94,7 @@ instance NodeMethod AudioStreamGeneratorPlayback "clear_buffer" '[]
 {-# NOINLINE bindAudioStreamGeneratorPlayback_get_frames_available
              #-}
 
--- | Returns the number of audio data frames left to play. If this returned number reaches @0@, the audio will stop playing until frames are added again. Therefore, make sure your script can always generate and push new audio frames fast enough to avoid audio cracking.
+-- | Returns the number of frames that can be pushed to the audio sample data buffer without overflowing it. If the result is @0@, the buffer is full.
 bindAudioStreamGeneratorPlayback_get_frames_available :: MethodBind
 bindAudioStreamGeneratorPlayback_get_frames_available
   = unsafePerformIO $
@@ -104,7 +104,7 @@ bindAudioStreamGeneratorPlayback_get_frames_available
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the number of audio data frames left to play. If this returned number reaches @0@, the audio will stop playing until frames are added again. Therefore, make sure your script can always generate and push new audio frames fast enough to avoid audio cracking.
+-- | Returns the number of frames that can be pushed to the audio sample data buffer without overflowing it. If the result is @0@, the buffer is full.
 get_frames_available ::
                        (AudioStreamGeneratorPlayback :< cls, Object :< cls) =>
                        cls -> IO Int

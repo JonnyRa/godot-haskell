@@ -2,8 +2,8 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.Bone2D
-       (Godot.Core.Bone2D.apply_rest,
-        Godot.Core.Bone2D.get_default_length,
+       (Godot.Core.Bone2D._order_changed_in_parent,
+        Godot.Core.Bone2D.apply_rest, Godot.Core.Bone2D.get_default_length,
         Godot.Core.Bone2D.get_index_in_skeleton,
         Godot.Core.Bone2D.get_rest, Godot.Core.Bone2D.get_skeleton_rest,
         Godot.Core.Bone2D.set_default_length, Godot.Core.Bone2D.set_rest)
@@ -28,9 +28,38 @@ instance NodeProperty Bone2D "default_length" Float 'False where
 instance NodeProperty Bone2D "rest" Transform2d 'False where
         nodeProperty = (get_rest, wrapDroppingSetter set_rest, Nothing)
 
+{-# NOINLINE bindBone2D__order_changed_in_parent #-}
+
+bindBone2D__order_changed_in_parent :: MethodBind
+bindBone2D__order_changed_in_parent
+  = unsafePerformIO $
+      withCString "Bone2D" $
+        \ clsNamePtr ->
+          withCString "_order_changed_in_parent" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_order_changed_in_parent ::
+                           (Bone2D :< cls, Object :< cls) => cls -> IO ()
+_order_changed_in_parent cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindBone2D__order_changed_in_parent
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Bone2D "_order_changed_in_parent" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.Bone2D._order_changed_in_parent
+
 {-# NOINLINE bindBone2D_apply_rest #-}
 
--- | Stores the node's current transforms in @rest@.
+-- | Resets the bone to the rest pose. This is equivalent to setting @Node2D.transform@ to @rest@.
 bindBone2D_apply_rest :: MethodBind
 bindBone2D_apply_rest
   = unsafePerformIO $
@@ -40,7 +69,7 @@ bindBone2D_apply_rest
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Stores the node's current transforms in @rest@.
+-- | Resets the bone to the rest pose. This is equivalent to setting @Node2D.transform@ to @rest@.
 apply_rest :: (Bone2D :< cls, Object :< cls) => cls -> IO ()
 apply_rest cls
   = withVariantArray []

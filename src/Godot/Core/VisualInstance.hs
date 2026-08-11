@@ -8,10 +8,14 @@ module Godot.Core.VisualInstance
         Godot.Core.VisualInstance.get_instance,
         Godot.Core.VisualInstance.get_layer_mask,
         Godot.Core.VisualInstance.get_layer_mask_bit,
+        Godot.Core.VisualInstance.get_sorting_offset,
         Godot.Core.VisualInstance.get_transformed_aabb,
+        Godot.Core.VisualInstance.is_sorting_use_aabb_center,
         Godot.Core.VisualInstance.set_base,
         Godot.Core.VisualInstance.set_layer_mask,
-        Godot.Core.VisualInstance.set_layer_mask_bit)
+        Godot.Core.VisualInstance.set_layer_mask_bit,
+        Godot.Core.VisualInstance.set_sorting_offset,
+        Godot.Core.VisualInstance.set_sorting_use_aabb_center)
        where
 import Data.Coerce
 import Foreign.C
@@ -28,6 +32,19 @@ import Godot.Core.CullInstance()
 instance NodeProperty VisualInstance "layers" Int 'False where
         nodeProperty
           = (get_layer_mask, wrapDroppingSetter set_layer_mask, Nothing)
+
+instance NodeProperty VisualInstance "sorting_offset" Float 'False
+         where
+        nodeProperty
+          = (get_sorting_offset, wrapDroppingSetter set_sorting_offset,
+             Nothing)
+
+instance NodeProperty VisualInstance "sorting_use_aabb_center" Bool
+           'False
+         where
+        nodeProperty
+          = (is_sorting_use_aabb_center,
+             wrapDroppingSetter set_sorting_use_aabb_center, Nothing)
 
 {-# NOINLINE bindVisualInstance__get_visual_instance_rid #-}
 
@@ -211,6 +228,38 @@ instance NodeMethod VisualInstance "get_layer_mask_bit" '[Int]
          where
         nodeMethod = Godot.Core.VisualInstance.get_layer_mask_bit
 
+{-# NOINLINE bindVisualInstance_get_sorting_offset #-}
+
+-- | The sorting offset used by this @VisualInstance@. Adjusting it to a higher value will make the @VisualInstance@ reliably draw on top of other @VisualInstance@s that are otherwise positioned at the same spot.
+bindVisualInstance_get_sorting_offset :: MethodBind
+bindVisualInstance_get_sorting_offset
+  = unsafePerformIO $
+      withCString "VisualInstance" $
+        \ clsNamePtr ->
+          withCString "get_sorting_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The sorting offset used by this @VisualInstance@. Adjusting it to a higher value will make the @VisualInstance@ reliably draw on top of other @VisualInstance@s that are otherwise positioned at the same spot.
+get_sorting_offset ::
+                     (VisualInstance :< cls, Object :< cls) => cls -> IO Float
+get_sorting_offset cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualInstance_get_sorting_offset
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualInstance "get_sorting_offset" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.VisualInstance.get_sorting_offset
+
 {-# NOINLINE bindVisualInstance_get_transformed_aabb #-}
 
 -- | Returns the transformed @AABB@ (also known as the bounding box) for this @VisualInstance@.
@@ -244,6 +293,41 @@ instance NodeMethod VisualInstance "get_transformed_aabb" '[]
            (IO Aabb)
          where
         nodeMethod = Godot.Core.VisualInstance.get_transformed_aabb
+
+{-# NOINLINE bindVisualInstance_is_sorting_use_aabb_center #-}
+
+-- | If @true@, the object is sorted based on the @AABB@ center. Sorted based on the global position otherwise.
+--   			The @AABB@ center based sorting is generally more accurate for 3D models. The position based sorting instead allows to better control the drawing order when working with @Particles@ and @CPUParticles@.
+bindVisualInstance_is_sorting_use_aabb_center :: MethodBind
+bindVisualInstance_is_sorting_use_aabb_center
+  = unsafePerformIO $
+      withCString "VisualInstance" $
+        \ clsNamePtr ->
+          withCString "is_sorting_use_aabb_center" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the object is sorted based on the @AABB@ center. Sorted based on the global position otherwise.
+--   			The @AABB@ center based sorting is generally more accurate for 3D models. The position based sorting instead allows to better control the drawing order when working with @Particles@ and @CPUParticles@.
+is_sorting_use_aabb_center ::
+                             (VisualInstance :< cls, Object :< cls) => cls -> IO Bool
+is_sorting_use_aabb_center cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualInstance_is_sorting_use_aabb_center
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualInstance "is_sorting_use_aabb_center" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.VisualInstance.is_sorting_use_aabb_center
 
 {-# NOINLINE bindVisualInstance_set_base #-}
 
@@ -340,3 +424,71 @@ instance NodeMethod VisualInstance "set_layer_mask_bit"
            (IO ())
          where
         nodeMethod = Godot.Core.VisualInstance.set_layer_mask_bit
+
+{-# NOINLINE bindVisualInstance_set_sorting_offset #-}
+
+-- | The sorting offset used by this @VisualInstance@. Adjusting it to a higher value will make the @VisualInstance@ reliably draw on top of other @VisualInstance@s that are otherwise positioned at the same spot.
+bindVisualInstance_set_sorting_offset :: MethodBind
+bindVisualInstance_set_sorting_offset
+  = unsafePerformIO $
+      withCString "VisualInstance" $
+        \ clsNamePtr ->
+          withCString "set_sorting_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The sorting offset used by this @VisualInstance@. Adjusting it to a higher value will make the @VisualInstance@ reliably draw on top of other @VisualInstance@s that are otherwise positioned at the same spot.
+set_sorting_offset ::
+                     (VisualInstance :< cls, Object :< cls) => cls -> Float -> IO ()
+set_sorting_offset cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualInstance_set_sorting_offset
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualInstance "set_sorting_offset" '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualInstance.set_sorting_offset
+
+{-# NOINLINE bindVisualInstance_set_sorting_use_aabb_center #-}
+
+-- | If @true@, the object is sorted based on the @AABB@ center. Sorted based on the global position otherwise.
+--   			The @AABB@ center based sorting is generally more accurate for 3D models. The position based sorting instead allows to better control the drawing order when working with @Particles@ and @CPUParticles@.
+bindVisualInstance_set_sorting_use_aabb_center :: MethodBind
+bindVisualInstance_set_sorting_use_aabb_center
+  = unsafePerformIO $
+      withCString "VisualInstance" $
+        \ clsNamePtr ->
+          withCString "set_sorting_use_aabb_center" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the object is sorted based on the @AABB@ center. Sorted based on the global position otherwise.
+--   			The @AABB@ center based sorting is generally more accurate for 3D models. The position based sorting instead allows to better control the drawing order when working with @Particles@ and @CPUParticles@.
+set_sorting_use_aabb_center ::
+                              (VisualInstance :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_sorting_use_aabb_center cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualInstance_set_sorting_use_aabb_center
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualInstance "set_sorting_use_aabb_center"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualInstance.set_sorting_use_aabb_center

@@ -2,7 +2,11 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.WebXRInterface
-       (Godot.Core.WebXRInterface.sig_reference_space_reset,
+       (Godot.Core.WebXRInterface._TARGET_RAY_MODE_TRACKED_POINTER,
+        Godot.Core.WebXRInterface._TARGET_RAY_MODE_SCREEN,
+        Godot.Core.WebXRInterface._TARGET_RAY_MODE_UNKNOWN,
+        Godot.Core.WebXRInterface._TARGET_RAY_MODE_GAZE,
+        Godot.Core.WebXRInterface.sig_reference_space_reset,
         Godot.Core.WebXRInterface.sig_select,
         Godot.Core.WebXRInterface.sig_selectend,
         Godot.Core.WebXRInterface.sig_selectstart,
@@ -16,17 +20,20 @@ module Godot.Core.WebXRInterface
         Godot.Core.WebXRInterface.sig_visibility_state_changed,
         Godot.Core.WebXRInterface.get_bounds_geometry,
         Godot.Core.WebXRInterface.get_controller,
+        Godot.Core.WebXRInterface.get_controller_target_ray_mode,
         Godot.Core.WebXRInterface.get_optional_features,
         Godot.Core.WebXRInterface.get_reference_space_type,
         Godot.Core.WebXRInterface.get_requested_reference_space_types,
         Godot.Core.WebXRInterface.get_required_features,
         Godot.Core.WebXRInterface.get_session_mode,
         Godot.Core.WebXRInterface.get_visibility_state,
+        Godot.Core.WebXRInterface.get_xr_standard_mapping,
         Godot.Core.WebXRInterface.is_session_supported,
         Godot.Core.WebXRInterface.set_optional_features,
         Godot.Core.WebXRInterface.set_requested_reference_space_types,
         Godot.Core.WebXRInterface.set_required_features,
-        Godot.Core.WebXRInterface.set_session_mode)
+        Godot.Core.WebXRInterface.set_session_mode,
+        Godot.Core.WebXRInterface.set_xr_standard_mapping)
        where
 import Data.Coerce
 import Foreign.C
@@ -39,6 +46,18 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.ARVRInterface()
+
+_TARGET_RAY_MODE_TRACKED_POINTER :: Int
+_TARGET_RAY_MODE_TRACKED_POINTER = 2
+
+_TARGET_RAY_MODE_SCREEN :: Int
+_TARGET_RAY_MODE_SCREEN = 3
+
+_TARGET_RAY_MODE_UNKNOWN :: Int
+_TARGET_RAY_MODE_UNKNOWN = 0
+
+_TARGET_RAY_MODE_GAZE :: Int
+_TARGET_RAY_MODE_GAZE = 1
 
 sig_reference_space_reset ::
                           Godot.Internal.Dispatch.Signal WebXRInterface
@@ -158,6 +177,13 @@ instance NodeProperty WebXRInterface "visibility_state" GodotString
          where
         nodeProperty = (get_visibility_state, (), Nothing)
 
+instance NodeProperty WebXRInterface "xr_standard_mapping" Bool
+           'False
+         where
+        nodeProperty
+          = (get_xr_standard_mapping,
+             wrapDroppingSetter set_xr_standard_mapping, Nothing)
+
 {-# NOINLINE bindWebXRInterface_get_bounds_geometry #-}
 
 bindWebXRInterface_get_bounds_geometry :: MethodBind
@@ -216,6 +242,39 @@ instance NodeMethod WebXRInterface "get_controller" '[Int]
            (IO ARVRPositionalTracker)
          where
         nodeMethod = Godot.Core.WebXRInterface.get_controller
+
+{-# NOINLINE bindWebXRInterface_get_controller_target_ray_mode #-}
+
+bindWebXRInterface_get_controller_target_ray_mode :: MethodBind
+bindWebXRInterface_get_controller_target_ray_mode
+  = unsafePerformIO $
+      withCString "WebXRInterface" $
+        \ clsNamePtr ->
+          withCString "get_controller_target_ray_mode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_controller_target_ray_mode ::
+                                 (WebXRInterface :< cls, Object :< cls) => cls -> Int -> IO Int
+get_controller_target_ray_mode cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindWebXRInterface_get_controller_target_ray_mode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod WebXRInterface "get_controller_target_ray_mode"
+           '[Int]
+           (IO Int)
+         where
+        nodeMethod
+          = Godot.Core.WebXRInterface.get_controller_target_ray_mode
 
 {-# NOINLINE bindWebXRInterface_get_optional_features #-}
 
@@ -404,6 +463,36 @@ instance NodeMethod WebXRInterface "get_visibility_state" '[]
          where
         nodeMethod = Godot.Core.WebXRInterface.get_visibility_state
 
+{-# NOINLINE bindWebXRInterface_get_xr_standard_mapping #-}
+
+bindWebXRInterface_get_xr_standard_mapping :: MethodBind
+bindWebXRInterface_get_xr_standard_mapping
+  = unsafePerformIO $
+      withCString "WebXRInterface" $
+        \ clsNamePtr ->
+          withCString "get_xr_standard_mapping" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_xr_standard_mapping ::
+                          (WebXRInterface :< cls, Object :< cls) => cls -> IO Bool
+get_xr_standard_mapping cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindWebXRInterface_get_xr_standard_mapping
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod WebXRInterface "get_xr_standard_mapping" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.WebXRInterface.get_xr_standard_mapping
+
 {-# NOINLINE bindWebXRInterface_is_session_supported #-}
 
 bindWebXRInterface_is_session_supported :: MethodBind
@@ -568,3 +657,34 @@ instance NodeMethod WebXRInterface "set_session_mode"
            (IO ())
          where
         nodeMethod = Godot.Core.WebXRInterface.set_session_mode
+
+{-# NOINLINE bindWebXRInterface_set_xr_standard_mapping #-}
+
+bindWebXRInterface_set_xr_standard_mapping :: MethodBind
+bindWebXRInterface_set_xr_standard_mapping
+  = unsafePerformIO $
+      withCString "WebXRInterface" $
+        \ clsNamePtr ->
+          withCString "set_xr_standard_mapping" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_xr_standard_mapping ::
+                          (WebXRInterface :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_xr_standard_mapping cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindWebXRInterface_set_xr_standard_mapping
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod WebXRInterface "set_xr_standard_mapping"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.WebXRInterface.set_xr_standard_mapping

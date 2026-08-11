@@ -397,7 +397,8 @@ instance NodeMethod Camera2D "get_anchor_mode" '[] (IO Int) where
 
 {-# NOINLINE bindCamera2D_get_camera_position #-}
 
--- | Returns the camera position.
+-- | Returns the camera's @position@ (the tracked point the camera attempts to follow), relative to the origin.
+--   				__Note:__ The returned value is not the same as @Node2D.position@ or @Node2D.global_position@, as it is affected by the @drag@ properties.
 bindCamera2D_get_camera_position :: MethodBind
 bindCamera2D_get_camera_position
   = unsafePerformIO $
@@ -407,7 +408,8 @@ bindCamera2D_get_camera_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the camera position.
+-- | Returns the camera's @position@ (the tracked point the camera attempts to follow), relative to the origin.
+--   				__Note:__ The returned value is not the same as @Node2D.position@ or @Node2D.global_position@, as it is affected by the @drag@ properties.
 get_camera_position ::
                       (Camera2D :< cls, Object :< cls) => cls -> IO Vector2
 get_camera_position cls
@@ -429,6 +431,7 @@ instance NodeMethod Camera2D "get_camera_position" '[] (IO Vector2)
 {-# NOINLINE bindCamera2D_get_camera_screen_center #-}
 
 -- | Returns the location of the @Camera2D@'s screen-center, relative to the origin.
+--   				__Note:__ The real @position@ of the camera may be different, see @method get_camera_position@.
 bindCamera2D_get_camera_screen_center :: MethodBind
 bindCamera2D_get_camera_screen_center
   = unsafePerformIO $
@@ -439,6 +442,7 @@ bindCamera2D_get_camera_screen_center
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the location of the @Camera2D@'s screen-center, relative to the origin.
+--   				__Note:__ The real @position@ of the camera may be different, see @method get_camera_position@.
 get_camera_screen_center ::
                            (Camera2D :< cls, Object :< cls) => cls -> IO Vector2
 get_camera_screen_center cls
@@ -842,7 +846,7 @@ instance NodeMethod Camera2D "is_limit_drawing_enabled" '[]
 {-# NOINLINE bindCamera2D_is_limit_smoothing_enabled #-}
 
 -- | If @true@, the camera smoothly stops when reaches its limits.
---   			This has no effect if smoothing is disabled.
+--   			This property has no effect if @smoothing_enabled@ is @false@.
 --   			__Note:__ To immediately update the camera's position to be within limits without smoothing, even with this setting enabled, invoke @method reset_smoothing@.
 bindCamera2D_is_limit_smoothing_enabled :: MethodBind
 bindCamera2D_is_limit_smoothing_enabled
@@ -854,7 +858,7 @@ bindCamera2D_is_limit_smoothing_enabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the camera smoothly stops when reaches its limits.
---   			This has no effect if smoothing is disabled.
+--   			This property has no effect if @smoothing_enabled@ is @false@.
 --   			__Note:__ To immediately update the camera's position to be within limits without smoothing, even with this setting enabled, invoke @method reset_smoothing@.
 is_limit_smoothing_enabled ::
                              (Camera2D :< cls, Object :< cls) => cls -> IO Bool
@@ -909,7 +913,7 @@ instance NodeMethod Camera2D "is_margin_drawing_enabled" '[]
 
 {-# NOINLINE bindCamera2D_is_rotating #-}
 
--- | If @true@, the camera rotates with the target.
+-- | If @true@, the camera view rotates with the target.
 bindCamera2D_is_rotating :: MethodBind
 bindCamera2D_is_rotating
   = unsafePerformIO $
@@ -919,7 +923,7 @@ bindCamera2D_is_rotating
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the camera rotates with the target.
+-- | If @true@, the camera view rotates with the target.
 is_rotating :: (Camera2D :< cls, Object :< cls) => cls -> IO Bool
 is_rotating cls
   = withVariantArray []
@@ -1027,7 +1031,7 @@ instance NodeMethod Camera2D "make_current" '[] (IO ()) where
 {-# NOINLINE bindCamera2D_reset_smoothing #-}
 
 -- | Sets the camera's position immediately to its current smoothing destination.
---   				This has no effect if smoothing is disabled.
+--   				This method has no effect if @smoothing_enabled@ is @false@.
 bindCamera2D_reset_smoothing :: MethodBind
 bindCamera2D_reset_smoothing
   = unsafePerformIO $
@@ -1038,7 +1042,7 @@ bindCamera2D_reset_smoothing
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets the camera's position immediately to its current smoothing destination.
---   				This has no effect if smoothing is disabled.
+--   				This method has no effect if @smoothing_enabled@ is @false@.
 reset_smoothing :: (Camera2D :< cls, Object :< cls) => cls -> IO ()
 reset_smoothing cls
   = withVariantArray []
@@ -1333,7 +1337,7 @@ instance NodeMethod Camera2D "set_limit_drawing_enabled" '[Bool]
 {-# NOINLINE bindCamera2D_set_limit_smoothing_enabled #-}
 
 -- | If @true@, the camera smoothly stops when reaches its limits.
---   			This has no effect if smoothing is disabled.
+--   			This property has no effect if @smoothing_enabled@ is @false@.
 --   			__Note:__ To immediately update the camera's position to be within limits without smoothing, even with this setting enabled, invoke @method reset_smoothing@.
 bindCamera2D_set_limit_smoothing_enabled :: MethodBind
 bindCamera2D_set_limit_smoothing_enabled
@@ -1345,7 +1349,7 @@ bindCamera2D_set_limit_smoothing_enabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the camera smoothly stops when reaches its limits.
---   			This has no effect if smoothing is disabled.
+--   			This property has no effect if @smoothing_enabled@ is @false@.
 --   			__Note:__ To immediately update the camera's position to be within limits without smoothing, even with this setting enabled, invoke @method reset_smoothing@.
 set_limit_smoothing_enabled ::
                               (Camera2D :< cls, Object :< cls) => cls -> Bool -> IO ()
@@ -1458,7 +1462,7 @@ instance NodeMethod Camera2D "set_process_mode" '[Int] (IO ())
 
 {-# NOINLINE bindCamera2D_set_rotating #-}
 
--- | If @true@, the camera rotates with the target.
+-- | If @true@, the camera view rotates with the target.
 bindCamera2D_set_rotating :: MethodBind
 bindCamera2D_set_rotating
   = unsafePerformIO $
@@ -1468,7 +1472,7 @@ bindCamera2D_set_rotating
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the camera rotates with the target.
+-- | If @true@, the camera view rotates with the target.
 set_rotating ::
                (Camera2D :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_rotating cls arg1

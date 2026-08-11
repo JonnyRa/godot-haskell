@@ -6,6 +6,7 @@ module Godot.Core.Particles
         Godot.Core.Particles._DRAW_ORDER_LIFETIME,
         Godot.Core.Particles._DRAW_ORDER_INDEX,
         Godot.Core.Particles._DRAW_ORDER_VIEW_DEPTH,
+        Godot.Core.Particles.sig_finished,
         Godot.Core.Particles.capture_aabb, Godot.Core.Particles.get_amount,
         Godot.Core.Particles.get_draw_order,
         Godot.Core.Particles.get_draw_pass_mesh,
@@ -62,6 +63,13 @@ _DRAW_ORDER_INDEX = 0
 
 _DRAW_ORDER_VIEW_DEPTH :: Int
 _DRAW_ORDER_VIEW_DEPTH = 2
+
+-- | Emitted when all active particles have finished processing. When @one_shot@ is disabled, particles will process continuously, so this is never emitted.
+--   				__Note:__ Due to the particles being computed on the GPU there might be a delay before the signal gets emitted.
+sig_finished :: Godot.Internal.Dispatch.Signal Particles
+sig_finished = Godot.Internal.Dispatch.Signal "finished"
+
+instance NodeSignal Particles "finished" '[]
 
 instance NodeProperty Particles "amount" Int 'False where
         nodeProperty = (get_amount, wrapDroppingSetter set_amount, Nothing)

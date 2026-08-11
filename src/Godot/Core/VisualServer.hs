@@ -11,6 +11,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._INFO_SURFACE_CHANGES_IN_FRAME,
         Godot.Core.VisualServer._VIEWPORT_DEBUG_DRAW_OVERDRAW,
         Godot.Core.VisualServer._VIEWPORT_RENDER_INFO_MATERIAL_CHANGES_IN_FRAME,
+        Godot.Core.VisualServer._MULTIMESH_INTERP_QUALITY_FAST,
         Godot.Core.VisualServer._ARRAY_COMPRESS_TANGENT,
         Godot.Core.VisualServer._INSTANCE_MULTIMESH,
         Godot.Core.VisualServer._VIEWPORT_CLEAR_ALWAYS,
@@ -86,6 +87,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._BLEND_SHAPE_MODE_NORMALIZED,
         Godot.Core.VisualServer._ENV_BG_COLOR_SKY,
         Godot.Core.VisualServer._PRIMITIVE_LINE_LOOP,
+        Godot.Core.VisualServer._CHANGED_PRIORITY_HIGH,
         Godot.Core.VisualServer._LIGHT_PARAM_SPECULAR,
         Godot.Core.VisualServer._VIEWPORT_MSAA_EXT_2X,
         Godot.Core.VisualServer._CANVAS_LIGHT_MODE_SUB,
@@ -93,8 +95,10 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._GLOW_BLEND_MODE_SOFTLIGHT,
         Godot.Core.VisualServer._PRIMITIVE_TRIANGLE_FAN,
         Godot.Core.VisualServer._VIEWPORT_DEBUG_DRAW_UNSHADED,
+        Godot.Core.VisualServer._CHANGED_PRIORITY_ANY,
         Godot.Core.VisualServer._MATERIAL_RENDER_PRIORITY_MIN,
         Godot.Core.VisualServer._LIGHT_OMNI_SHADOW_DETAIL_VERTICAL,
+        Godot.Core.VisualServer._LIGHT_DIRECTIONAL_SHADOW_PARALLEL_3_SPLITS,
         Godot.Core.VisualServer._INSTANCE_FLAG_MAX,
         Godot.Core.VisualServer._MULTIMESH_TRANSFORM_3D,
         Godot.Core.VisualServer._SCENARIO_DEBUG_OVERDRAW,
@@ -115,6 +119,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._LIGHT_PARAM_SPOT_ATTENUATION,
         Godot.Core.VisualServer._REFLECTION_PROBE_UPDATE_ONCE,
         Godot.Core.VisualServer._ARRAY_COMPRESS_DEFAULT,
+        Godot.Core.VisualServer._CHANGED_PRIORITY_LOW,
         Godot.Core.VisualServer._CANVAS_OCCLUDER_POLYGON_CULL_COUNTER_CLOCKWISE,
         Godot.Core.VisualServer._CANVAS_ITEM_Z_MAX,
         Godot.Core.VisualServer._ENV_TONE_MAPPER_LINEAR,
@@ -136,6 +141,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._ARRAY_WEIGHTS_SIZE,
         Godot.Core.VisualServer._SHADOW_CASTING_SETTING_DOUBLE_SIDED,
         Godot.Core.VisualServer._ENV_SSAO_QUALITY_HIGH,
+        Godot.Core.VisualServer._INFO_SHADER_COMPILES_IN_FRAME,
         Godot.Core.VisualServer._INFO_VERTICES_IN_FRAME,
         Godot.Core.VisualServer._INFO_VIDEO_MEM_USED,
         Godot.Core.VisualServer._GLOW_BLEND_MODE_REPLACE,
@@ -147,6 +153,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._TEXTURE_FLAG_CONVERT_TO_LINEAR,
         Godot.Core.VisualServer._PRIMITIVE_MAX,
         Godot.Core.VisualServer._LIGHT_PARAM_CONTACT_SHADOW_SIZE,
+        Godot.Core.VisualServer._MULTIMESH_INTERP_QUALITY_HIGH,
         Godot.Core.VisualServer._INSTANCE_MAX,
         Godot.Core.VisualServer._VIEWPORT_RENDER_INFO_2D_ITEMS_IN_FRAME,
         Godot.Core.VisualServer._ENV_SSAO_BLUR_3x3,
@@ -219,6 +226,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer._ARRAY_FLAG_USE_2D_VERTICES,
         Godot.Core.VisualServer._LIGHT_BAKE_INDIRECT,
         Godot.Core.VisualServer._CANVAS_LIGHT_FILTER_PCF5,
+        Godot.Core.VisualServer._LIGHT_PARAM_SHADOW_FADE_START,
         Godot.Core.VisualServer._LIGHT_DIRECTIONAL,
         Godot.Core.VisualServer._ARRAY_COMPRESS_INDEX,
         Godot.Core.VisualServer._INSTANCE_FLAG_USE_BAKED_LIGHT,
@@ -258,12 +266,14 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.canvas_item_add_triangle_array,
         Godot.Core.VisualServer.canvas_item_clear,
         Godot.Core.VisualServer.canvas_item_create,
+        Godot.Core.VisualServer.canvas_item_reset_physics_interpolation,
         Godot.Core.VisualServer.canvas_item_set_clip,
         Godot.Core.VisualServer.canvas_item_set_copy_to_backbuffer,
         Godot.Core.VisualServer.canvas_item_set_custom_rect,
         Godot.Core.VisualServer.canvas_item_set_distance_field_mode,
         Godot.Core.VisualServer.canvas_item_set_draw_behind_parent,
         Godot.Core.VisualServer.canvas_item_set_draw_index,
+        Godot.Core.VisualServer.canvas_item_set_interpolated,
         Godot.Core.VisualServer.canvas_item_set_light_mask,
         Godot.Core.VisualServer.canvas_item_set_material,
         Godot.Core.VisualServer.canvas_item_set_modulate,
@@ -275,18 +285,24 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.canvas_item_set_visible,
         Godot.Core.VisualServer.canvas_item_set_z_as_relative_to_parent,
         Godot.Core.VisualServer.canvas_item_set_z_index,
+        Godot.Core.VisualServer.canvas_item_transform_physics_interpolation,
         Godot.Core.VisualServer.canvas_light_attach_to_canvas,
         Godot.Core.VisualServer.canvas_light_create,
         Godot.Core.VisualServer.canvas_light_occluder_attach_to_canvas,
         Godot.Core.VisualServer.canvas_light_occluder_create,
+        Godot.Core.VisualServer.canvas_light_occluder_reset_physics_interpolation,
         Godot.Core.VisualServer.canvas_light_occluder_set_enabled,
+        Godot.Core.VisualServer.canvas_light_occluder_set_interpolated,
         Godot.Core.VisualServer.canvas_light_occluder_set_light_mask,
         Godot.Core.VisualServer.canvas_light_occluder_set_polygon,
         Godot.Core.VisualServer.canvas_light_occluder_set_transform,
+        Godot.Core.VisualServer.canvas_light_occluder_transform_physics_interpolation,
+        Godot.Core.VisualServer.canvas_light_reset_physics_interpolation,
         Godot.Core.VisualServer.canvas_light_set_color,
         Godot.Core.VisualServer.canvas_light_set_enabled,
         Godot.Core.VisualServer.canvas_light_set_energy,
         Godot.Core.VisualServer.canvas_light_set_height,
+        Godot.Core.VisualServer.canvas_light_set_interpolated,
         Godot.Core.VisualServer.canvas_light_set_item_cull_mask,
         Godot.Core.VisualServer.canvas_light_set_item_shadow_cull_mask,
         Godot.Core.VisualServer.canvas_light_set_layer_range,
@@ -302,12 +318,15 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.canvas_light_set_texture_offset,
         Godot.Core.VisualServer.canvas_light_set_transform,
         Godot.Core.VisualServer.canvas_light_set_z_range,
+        Godot.Core.VisualServer.canvas_light_transform_physics_interpolation,
         Godot.Core.VisualServer.canvas_occluder_polygon_create,
         Godot.Core.VisualServer.canvas_occluder_polygon_set_cull_mode,
         Godot.Core.VisualServer.canvas_occluder_polygon_set_shape,
         Godot.Core.VisualServer.canvas_occluder_polygon_set_shape_as_lines,
         Godot.Core.VisualServer.canvas_set_item_mirroring,
         Godot.Core.VisualServer.canvas_set_modulate,
+        Godot.Core.VisualServer.debug_canvas_item_get_local_bound,
+        Godot.Core.VisualServer.debug_canvas_item_get_rect,
         Godot.Core.VisualServer.directional_light_create,
         Godot.Core.VisualServer.draw,
         Godot.Core.VisualServer.environment_create,
@@ -382,16 +401,17 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.instance_attach_skeleton,
         Godot.Core.VisualServer.instance_create,
         Godot.Core.VisualServer.instance_create2,
-        Godot.Core.VisualServer.instance_geometry_set_as_instance_lod,
         Godot.Core.VisualServer.instance_geometry_set_cast_shadows_setting,
-        Godot.Core.VisualServer.instance_geometry_set_draw_range,
         Godot.Core.VisualServer.instance_geometry_set_flag,
+        Godot.Core.VisualServer.instance_geometry_set_material_overlay,
         Godot.Core.VisualServer.instance_geometry_set_material_override,
+        Godot.Core.VisualServer.instance_reset_physics_interpolation,
         Godot.Core.VisualServer.instance_set_base,
         Godot.Core.VisualServer.instance_set_blend_shape_weight,
         Godot.Core.VisualServer.instance_set_custom_aabb,
         Godot.Core.VisualServer.instance_set_exterior,
         Godot.Core.VisualServer.instance_set_extra_visibility_margin,
+        Godot.Core.VisualServer.instance_set_interpolated,
         Godot.Core.VisualServer.instance_set_layer_mask,
         Godot.Core.VisualServer.instance_set_scenario,
         Godot.Core.VisualServer.instance_set_surface_material,
@@ -476,12 +496,16 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.multimesh_instance_get_custom_data,
         Godot.Core.VisualServer.multimesh_instance_get_transform,
         Godot.Core.VisualServer.multimesh_instance_get_transform_2d,
+        Godot.Core.VisualServer.multimesh_instance_reset_physics_interpolation,
         Godot.Core.VisualServer.multimesh_instance_set_color,
         Godot.Core.VisualServer.multimesh_instance_set_custom_data,
         Godot.Core.VisualServer.multimesh_instance_set_transform,
         Godot.Core.VisualServer.multimesh_instance_set_transform_2d,
         Godot.Core.VisualServer.multimesh_set_as_bulk_array,
+        Godot.Core.VisualServer.multimesh_set_as_bulk_array_interpolated,
         Godot.Core.VisualServer.multimesh_set_mesh,
+        Godot.Core.VisualServer.multimesh_set_physics_interpolated,
+        Godot.Core.VisualServer.multimesh_set_physics_interpolation_quality,
         Godot.Core.VisualServer.multimesh_set_visible_instances,
         Godot.Core.VisualServer.omni_light_create,
         Godot.Core.VisualServer.particles_create,
@@ -530,6 +554,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.set_debug_generate_wireframes,
         Godot.Core.VisualServer.set_default_clear_color,
         Godot.Core.VisualServer.set_render_loop_enabled,
+        Godot.Core.VisualServer.set_shader_async_hidden_forbidden,
         Godot.Core.VisualServer.set_shader_time_scale,
         Godot.Core.VisualServer.set_use_occlusion_culling,
         Godot.Core.VisualServer.shader_create,
@@ -567,6 +592,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.texture_set_data_partial,
         Godot.Core.VisualServer.texture_set_flags,
         Godot.Core.VisualServer.texture_set_path,
+        Godot.Core.VisualServer.texture_set_proxy,
         Godot.Core.VisualServer.texture_set_shrink_all_x2_on_set_data,
         Godot.Core.VisualServer.texture_set_size_override,
         Godot.Core.VisualServer.textures_keep_original,
@@ -600,6 +626,7 @@ module Godot.Core.VisualServer
         Godot.Core.VisualServer.viewport_set_transparent_background,
         Godot.Core.VisualServer.viewport_set_update_mode,
         Godot.Core.VisualServer.viewport_set_usage,
+        Godot.Core.VisualServer.viewport_set_use_32_bpc_depth,
         Godot.Core.VisualServer.viewport_set_use_arvr,
         Godot.Core.VisualServer.viewport_set_use_debanding,
         Godot.Core.VisualServer.viewport_set_use_fxaa,
@@ -627,7 +654,7 @@ _ARRAY_FLAG_USE_16_BIT_BONES :: Int
 _ARRAY_FLAG_USE_16_BIT_BONES = 524288
 
 _INFO_2D_DRAW_CALLS_IN_FRAME :: Int
-_INFO_2D_DRAW_CALLS_IN_FRAME = 7
+_INFO_2D_DRAW_CALLS_IN_FRAME = 8
 
 _VIEWPORT_UPDATE_ALWAYS :: Int
 _VIEWPORT_UPDATE_ALWAYS = 3
@@ -636,13 +663,16 @@ _ARRAY_FORMAT_INDEX :: Int
 _ARRAY_FORMAT_INDEX = 256
 
 _INFO_SURFACE_CHANGES_IN_FRAME :: Int
-_INFO_SURFACE_CHANGES_IN_FRAME = 4
+_INFO_SURFACE_CHANGES_IN_FRAME = 5
 
 _VIEWPORT_DEBUG_DRAW_OVERDRAW :: Int
 _VIEWPORT_DEBUG_DRAW_OVERDRAW = 2
 
 _VIEWPORT_RENDER_INFO_MATERIAL_CHANGES_IN_FRAME :: Int
 _VIEWPORT_RENDER_INFO_MATERIAL_CHANGES_IN_FRAME = 2
+
+_MULTIMESH_INTERP_QUALITY_FAST :: Int
+_MULTIMESH_INTERP_QUALITY_FAST = 0
 
 _ARRAY_COMPRESS_TANGENT :: Int
 _ARRAY_COMPRESS_TANGENT = 2048
@@ -780,7 +810,7 @@ _NINE_PATCH_STRETCH :: Int
 _NINE_PATCH_STRETCH = 0
 
 _INFO_USAGE_VIDEO_MEM_TOTAL :: Int
-_INFO_USAGE_VIDEO_MEM_TOTAL = 8
+_INFO_USAGE_VIDEO_MEM_TOTAL = 9
 
 _ARRAY_NORMAL :: Int
 _ARRAY_NORMAL = 1
@@ -869,6 +899,9 @@ _ENV_BG_COLOR_SKY = 3
 _PRIMITIVE_LINE_LOOP :: Int
 _PRIMITIVE_LINE_LOOP = 3
 
+_CHANGED_PRIORITY_HIGH :: Int
+_CHANGED_PRIORITY_HIGH = 2
+
 _LIGHT_PARAM_SPECULAR :: Int
 _LIGHT_PARAM_SPECULAR = 3
 
@@ -890,11 +923,17 @@ _PRIMITIVE_TRIANGLE_FAN = 6
 _VIEWPORT_DEBUG_DRAW_UNSHADED :: Int
 _VIEWPORT_DEBUG_DRAW_UNSHADED = 1
 
+_CHANGED_PRIORITY_ANY :: Int
+_CHANGED_PRIORITY_ANY = 0
+
 _MATERIAL_RENDER_PRIORITY_MIN :: Int
 _MATERIAL_RENDER_PRIORITY_MIN = -128
 
 _LIGHT_OMNI_SHADOW_DETAIL_VERTICAL :: Int
 _LIGHT_OMNI_SHADOW_DETAIL_VERTICAL = 0
+
+_LIGHT_DIRECTIONAL_SHADOW_PARALLEL_3_SPLITS :: Int
+_LIGHT_DIRECTIONAL_SHADOW_PARALLEL_3_SPLITS = 2
 
 _INSTANCE_FLAG_MAX :: Int
 _INSTANCE_FLAG_MAX = 2
@@ -939,7 +978,7 @@ _LIGHT_SPOT :: Int
 _LIGHT_SPOT = 2
 
 _LIGHT_DIRECTIONAL_SHADOW_PARALLEL_4_SPLITS :: Int
-_LIGHT_DIRECTIONAL_SHADOW_PARALLEL_4_SPLITS = 2
+_LIGHT_DIRECTIONAL_SHADOW_PARALLEL_4_SPLITS = 3
 
 _INSTANCE_PARTICLES :: Int
 _INSTANCE_PARTICLES = 4
@@ -955,6 +994,9 @@ _REFLECTION_PROBE_UPDATE_ONCE = 0
 
 _ARRAY_COMPRESS_DEFAULT :: Int
 _ARRAY_COMPRESS_DEFAULT = 2194432
+
+_CHANGED_PRIORITY_LOW :: Int
+_CHANGED_PRIORITY_LOW = 1
 
 _CANVAS_OCCLUDER_POLYGON_CULL_COUNTER_CLOCKWISE :: Int
 _CANVAS_OCCLUDER_POLYGON_CULL_COUNTER_CLOCKWISE = 2
@@ -981,7 +1023,7 @@ _LIGHT_OMNI :: Int
 _LIGHT_OMNI = 1
 
 _INFO_2D_ITEMS_IN_FRAME :: Int
-_INFO_2D_ITEMS_IN_FRAME = 6
+_INFO_2D_ITEMS_IN_FRAME = 7
 
 _ENV_BG_MAX :: Int
 _ENV_BG_MAX = 7
@@ -990,7 +1032,7 @@ _INSTANCE_REFLECTION_PROBE :: Int
 _INSTANCE_REFLECTION_PROBE = 6
 
 _INFO_TEXTURE_MEM_USED :: Int
-_INFO_TEXTURE_MEM_USED = 10
+_INFO_TEXTURE_MEM_USED = 11
 
 _INSTANCE_NONE :: Int
 _INSTANCE_NONE = 0
@@ -1019,11 +1061,14 @@ _SHADOW_CASTING_SETTING_DOUBLE_SIDED = 2
 _ENV_SSAO_QUALITY_HIGH :: Int
 _ENV_SSAO_QUALITY_HIGH = 2
 
+_INFO_SHADER_COMPILES_IN_FRAME :: Int
+_INFO_SHADER_COMPILES_IN_FRAME = 4
+
 _INFO_VERTICES_IN_FRAME :: Int
 _INFO_VERTICES_IN_FRAME = 1
 
 _INFO_VIDEO_MEM_USED :: Int
-_INFO_VIDEO_MEM_USED = 9
+_INFO_VIDEO_MEM_USED = 10
 
 _GLOW_BLEND_MODE_REPLACE :: Int
 _GLOW_BLEND_MODE_REPLACE = 3
@@ -1052,6 +1097,9 @@ _PRIMITIVE_MAX = 7
 _LIGHT_PARAM_CONTACT_SHADOW_SIZE :: Int
 _LIGHT_PARAM_CONTACT_SHADOW_SIZE = 8
 
+_MULTIMESH_INTERP_QUALITY_HIGH :: Int
+_MULTIMESH_INTERP_QUALITY_HIGH = 1
+
 _INSTANCE_MAX :: Int
 _INSTANCE_MAX = 9
 
@@ -1065,7 +1113,7 @@ _ARRAY_WEIGHTS :: Int
 _ARRAY_WEIGHTS = 7
 
 _LIGHT_PARAM_MAX :: Int
-_LIGHT_PARAM_MAX = 16
+_LIGHT_PARAM_MAX = 17
 
 _CUBEMAP_BOTTOM :: Int
 _CUBEMAP_BOTTOM = 2
@@ -1116,7 +1164,7 @@ _ENV_SSAO_BLUR_1x1 :: Int
 _ENV_SSAO_BLUR_1x1 = 1
 
 _INFO_DRAW_CALLS_IN_FRAME :: Int
-_INFO_DRAW_CALLS_IN_FRAME = 5
+_INFO_DRAW_CALLS_IN_FRAME = 6
 
 _ENV_BG_COLOR :: Int
 _ENV_BG_COLOR = 1
@@ -1173,7 +1221,7 @@ _TEXTURE_FLAG_USED_FOR_STREAMING :: Int
 _TEXTURE_FLAG_USED_FOR_STREAMING = 2048
 
 _INFO_VERTEX_MEM_USED :: Int
-_INFO_VERTEX_MEM_USED = 11
+_INFO_VERTEX_MEM_USED = 12
 
 _TEXTURE_FLAG_MIRRORED_REPEAT :: Int
 _TEXTURE_FLAG_MIRRORED_REPEAT = 32
@@ -1267,6 +1315,9 @@ _LIGHT_BAKE_INDIRECT = 1
 
 _CANVAS_LIGHT_FILTER_PCF5 :: Int
 _CANVAS_LIGHT_FILTER_PCF5 = 2
+
+_LIGHT_PARAM_SHADOW_FADE_START :: Int
+_LIGHT_PARAM_SHADOW_FADE_START = 16
 
 _LIGHT_DIRECTIONAL :: Int
 _LIGHT_DIRECTIONAL = 0
@@ -2375,6 +2426,47 @@ instance NodeMethod VisualServer "canvas_item_create" '[] (IO Rid)
          where
         nodeMethod = Godot.Core.VisualServer.canvas_item_create
 
+{-# NOINLINE bindVisualServer_canvas_item_reset_physics_interpolation
+             #-}
+
+-- | Prevents physics interpolation for the current physics tick.
+--   				This is useful when moving a canvas item to a new location, to give an instantaneous change rather than interpolation from the previous location.
+bindVisualServer_canvas_item_reset_physics_interpolation ::
+                                                         MethodBind
+bindVisualServer_canvas_item_reset_physics_interpolation
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "canvas_item_reset_physics_interpolation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Prevents physics interpolation for the current physics tick.
+--   				This is useful when moving a canvas item to a new location, to give an instantaneous change rather than interpolation from the previous location.
+canvas_item_reset_physics_interpolation ::
+                                          (VisualServer :< cls, Object :< cls) =>
+                                          cls -> Rid -> IO ()
+canvas_item_reset_physics_interpolation cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_canvas_item_reset_physics_interpolation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "canvas_item_reset_physics_interpolation"
+           '[Rid]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.canvas_item_reset_physics_interpolation
+
 {-# NOINLINE bindVisualServer_canvas_item_set_clip #-}
 
 -- | Sets clipping for the @CanvasItem@.
@@ -2590,6 +2682,40 @@ instance NodeMethod VisualServer "canvas_item_set_draw_index"
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.canvas_item_set_draw_index
+
+{-# NOINLINE bindVisualServer_canvas_item_set_interpolated #-}
+
+-- | Turns on and off physics interpolation for the canvas item.
+bindVisualServer_canvas_item_set_interpolated :: MethodBind
+bindVisualServer_canvas_item_set_interpolated
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "canvas_item_set_interpolated" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Turns on and off physics interpolation for the canvas item.
+canvas_item_set_interpolated ::
+                               (VisualServer :< cls, Object :< cls) => cls -> Rid -> Bool -> IO ()
+canvas_item_set_interpolated cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_canvas_item_set_interpolated
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "canvas_item_set_interpolated"
+           '[Rid, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.canvas_item_set_interpolated
 
 {-# NOINLINE bindVisualServer_canvas_item_set_light_mask #-}
 
@@ -2974,6 +3100,49 @@ instance NodeMethod VisualServer "canvas_item_set_z_index"
          where
         nodeMethod = Godot.Core.VisualServer.canvas_item_set_z_index
 
+{-# NOINLINE bindVisualServer_canvas_item_transform_physics_interpolation
+             #-}
+
+-- | Transforms both the current and previous stored transform for a canvas item.
+--   				This allows transforming a canvas item without creating a "glitch" in the interpolation.
+--   				This is particularly useful for large worlds utilising a shifting origin.
+bindVisualServer_canvas_item_transform_physics_interpolation ::
+                                                             MethodBind
+bindVisualServer_canvas_item_transform_physics_interpolation
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "canvas_item_transform_physics_interpolation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Transforms both the current and previous stored transform for a canvas item.
+--   				This allows transforming a canvas item without creating a "glitch" in the interpolation.
+--   				This is particularly useful for large worlds utilising a shifting origin.
+canvas_item_transform_physics_interpolation ::
+                                              (VisualServer :< cls, Object :< cls) =>
+                                              cls -> Rid -> Transform2d -> IO ()
+canvas_item_transform_physics_interpolation cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_canvas_item_transform_physics_interpolation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "canvas_item_transform_physics_interpolation"
+           '[Rid, Transform2d]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.canvas_item_transform_physics_interpolation
+
 {-# NOINLINE bindVisualServer_canvas_light_attach_to_canvas #-}
 
 -- | Attaches the canvas light to the canvas. Removes it from its previous canvas.
@@ -3115,6 +3284,47 @@ instance NodeMethod VisualServer "canvas_light_occluder_create" '[]
          where
         nodeMethod = Godot.Core.VisualServer.canvas_light_occluder_create
 
+{-# NOINLINE bindVisualServer_canvas_light_occluder_reset_physics_interpolation
+             #-}
+
+-- | Prevents physics interpolation for the current physics tick.
+--   				This is useful when moving an occluder to a new location, to give an instantaneous change rather than interpolation from the previous location.
+bindVisualServer_canvas_light_occluder_reset_physics_interpolation ::
+                                                                   MethodBind
+bindVisualServer_canvas_light_occluder_reset_physics_interpolation
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "canvas_light_occluder_reset_physics_interpolation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Prevents physics interpolation for the current physics tick.
+--   				This is useful when moving an occluder to a new location, to give an instantaneous change rather than interpolation from the previous location.
+canvas_light_occluder_reset_physics_interpolation ::
+                                                    (VisualServer :< cls, Object :< cls) =>
+                                                    cls -> Rid -> IO ()
+canvas_light_occluder_reset_physics_interpolation cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_canvas_light_occluder_reset_physics_interpolation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "canvas_light_occluder_reset_physics_interpolation"
+           '[Rid]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.canvas_light_occluder_reset_physics_interpolation
+
 {-# NOINLINE bindVisualServer_canvas_light_occluder_set_enabled #-}
 
 -- | Enables or disables light occluder.
@@ -3151,6 +3361,45 @@ instance NodeMethod VisualServer
          where
         nodeMethod
           = Godot.Core.VisualServer.canvas_light_occluder_set_enabled
+
+{-# NOINLINE bindVisualServer_canvas_light_occluder_set_interpolated
+             #-}
+
+-- | Turns on and off physics interpolation for the occluder.
+bindVisualServer_canvas_light_occluder_set_interpolated ::
+                                                        MethodBind
+bindVisualServer_canvas_light_occluder_set_interpolated
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "canvas_light_occluder_set_interpolated" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Turns on and off physics interpolation for the occluder.
+canvas_light_occluder_set_interpolated ::
+                                         (VisualServer :< cls, Object :< cls) =>
+                                         cls -> Rid -> Bool -> IO ()
+canvas_light_occluder_set_interpolated cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_canvas_light_occluder_set_interpolated
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "canvas_light_occluder_set_interpolated"
+           '[Rid, Bool]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.canvas_light_occluder_set_interpolated
 
 {-# NOINLINE bindVisualServer_canvas_light_occluder_set_light_mask
              #-}
@@ -3264,6 +3513,91 @@ instance NodeMethod VisualServer
          where
         nodeMethod
           = Godot.Core.VisualServer.canvas_light_occluder_set_transform
+
+{-# NOINLINE bindVisualServer_canvas_light_occluder_transform_physics_interpolation
+             #-}
+
+-- | Transforms both the current and previous stored transform for an occluder.
+--   				This allows transforming an occluder without creating a "glitch" in the interpolation.
+--   				This is particularly useful for large worlds utilising a shifting origin.
+bindVisualServer_canvas_light_occluder_transform_physics_interpolation ::
+                                                                       MethodBind
+bindVisualServer_canvas_light_occluder_transform_physics_interpolation
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "canvas_light_occluder_transform_physics_interpolation"
+            $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Transforms both the current and previous stored transform for an occluder.
+--   				This allows transforming an occluder without creating a "glitch" in the interpolation.
+--   				This is particularly useful for large worlds utilising a shifting origin.
+canvas_light_occluder_transform_physics_interpolation ::
+                                                        (VisualServer :< cls, Object :< cls) =>
+                                                        cls -> Rid -> Transform2d -> IO ()
+canvas_light_occluder_transform_physics_interpolation cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_canvas_light_occluder_transform_physics_interpolation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "canvas_light_occluder_transform_physics_interpolation"
+           '[Rid, Transform2d]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.canvas_light_occluder_transform_physics_interpolation
+
+{-# NOINLINE bindVisualServer_canvas_light_reset_physics_interpolation
+             #-}
+
+-- | Prevents physics interpolation for the current physics tick.
+--   				This is useful when moving a light to a new location, to give an instantaneous change rather than interpolation from the previous location.
+bindVisualServer_canvas_light_reset_physics_interpolation ::
+                                                          MethodBind
+bindVisualServer_canvas_light_reset_physics_interpolation
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "canvas_light_reset_physics_interpolation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Prevents physics interpolation for the current physics tick.
+--   				This is useful when moving a light to a new location, to give an instantaneous change rather than interpolation from the previous location.
+canvas_light_reset_physics_interpolation ::
+                                           (VisualServer :< cls, Object :< cls) =>
+                                           cls -> Rid -> IO ()
+canvas_light_reset_physics_interpolation cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_canvas_light_reset_physics_interpolation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "canvas_light_reset_physics_interpolation"
+           '[Rid]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.canvas_light_reset_physics_interpolation
 
 {-# NOINLINE bindVisualServer_canvas_light_set_color #-}
 
@@ -3399,6 +3733,40 @@ instance NodeMethod VisualServer "canvas_light_set_height"
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.canvas_light_set_height
+
+{-# NOINLINE bindVisualServer_canvas_light_set_interpolated #-}
+
+-- | Turns on and off physics interpolation for the light.
+bindVisualServer_canvas_light_set_interpolated :: MethodBind
+bindVisualServer_canvas_light_set_interpolated
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "canvas_light_set_interpolated" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Turns on and off physics interpolation for the light.
+canvas_light_set_interpolated ::
+                                (VisualServer :< cls, Object :< cls) => cls -> Rid -> Bool -> IO ()
+canvas_light_set_interpolated cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_canvas_light_set_interpolated
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "canvas_light_set_interpolated"
+           '[Rid, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.canvas_light_set_interpolated
 
 {-# NOINLINE bindVisualServer_canvas_light_set_item_cull_mask #-}
 
@@ -3930,6 +4298,49 @@ instance NodeMethod VisualServer "canvas_light_set_z_range"
          where
         nodeMethod = Godot.Core.VisualServer.canvas_light_set_z_range
 
+{-# NOINLINE bindVisualServer_canvas_light_transform_physics_interpolation
+             #-}
+
+-- | Transforms both the current and previous stored transform for a light.
+--   				This allows transforming a light without creating a "glitch" in the interpolation.
+--   				This is particularly useful for large worlds utilising a shifting origin.
+bindVisualServer_canvas_light_transform_physics_interpolation ::
+                                                              MethodBind
+bindVisualServer_canvas_light_transform_physics_interpolation
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "canvas_light_transform_physics_interpolation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Transforms both the current and previous stored transform for a light.
+--   				This allows transforming a light without creating a "glitch" in the interpolation.
+--   				This is particularly useful for large worlds utilising a shifting origin.
+canvas_light_transform_physics_interpolation ::
+                                               (VisualServer :< cls, Object :< cls) =>
+                                               cls -> Rid -> Transform2d -> IO ()
+canvas_light_transform_physics_interpolation cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_canvas_light_transform_physics_interpolation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "canvas_light_transform_physics_interpolation"
+           '[Rid, Transform2d]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.canvas_light_transform_physics_interpolation
+
 {-# NOINLINE bindVisualServer_canvas_occluder_polygon_create #-}
 
 -- | Creates a new light occluder polygon and adds it to the VisualServer. It can be accessed with the RID that is returned. This RID will be used in all @canvas_occluder_polygon_*@ VisualServer functions.
@@ -4148,6 +4559,79 @@ instance NodeMethod VisualServer "canvas_set_modulate"
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.canvas_set_modulate
+
+{-# NOINLINE bindVisualServer_debug_canvas_item_get_local_bound #-}
+
+-- | Returns the bounding rectangle for a canvas item and its descendants in local space, as calculated by the renderer. This bound is used internally for culling.
+--   				__Warning:__ This function is intended for debugging in the editor, and will pass through and return a zero @Rect2@ in exported projects.
+bindVisualServer_debug_canvas_item_get_local_bound :: MethodBind
+bindVisualServer_debug_canvas_item_get_local_bound
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "debug_canvas_item_get_local_bound" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the bounding rectangle for a canvas item and its descendants in local space, as calculated by the renderer. This bound is used internally for culling.
+--   				__Warning:__ This function is intended for debugging in the editor, and will pass through and return a zero @Rect2@ in exported projects.
+debug_canvas_item_get_local_bound ::
+                                    (VisualServer :< cls, Object :< cls) => cls -> Rid -> IO Rect2
+debug_canvas_item_get_local_bound cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_debug_canvas_item_get_local_bound
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "debug_canvas_item_get_local_bound"
+           '[Rid]
+           (IO Rect2)
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.debug_canvas_item_get_local_bound
+
+{-# NOINLINE bindVisualServer_debug_canvas_item_get_rect #-}
+
+-- | Returns the bounding rectangle for a canvas item in local space, as calculated by the renderer. This bound is used internally for culling.
+--   				__Warning:__ This function is intended for debugging in the editor, and will pass through and return a zero @Rect2@ in exported projects.
+bindVisualServer_debug_canvas_item_get_rect :: MethodBind
+bindVisualServer_debug_canvas_item_get_rect
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "debug_canvas_item_get_rect" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the bounding rectangle for a canvas item in local space, as calculated by the renderer. This bound is used internally for culling.
+--   				__Warning:__ This function is intended for debugging in the editor, and will pass through and return a zero @Rect2@ in exported projects.
+debug_canvas_item_get_rect ::
+                             (VisualServer :< cls, Object :< cls) => cls -> Rid -> IO Rect2
+debug_canvas_item_get_rect cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualServer_debug_canvas_item_get_rect
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "debug_canvas_item_get_rect"
+           '[Rid]
+           (IO Rect2)
+         where
+        nodeMethod = Godot.Core.VisualServer.debug_canvas_item_get_rect
 
 {-# NOINLINE bindVisualServer_directional_light_create #-}
 
@@ -4665,13 +5149,14 @@ environment_set_glow ::
                            Bool ->
                              Int ->
                                Float ->
-                                 Float -> Float -> Int -> Float -> Float -> Float -> Bool -> IO ()
+                                 Float ->
+                                   Float -> Int -> Float -> Float -> Float -> Bool -> Bool -> IO ()
 environment_set_glow cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
-  arg9 arg10 arg11
+  arg9 arg10 arg11 arg12
   = withVariantArray
       [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4,
        toVariant arg5, toVariant arg6, toVariant arg7, toVariant arg8,
-       toVariant arg9, toVariant arg10, toVariant arg11]
+       toVariant arg9, toVariant arg10, toVariant arg11, toVariant arg12]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVisualServer_environment_set_glow
            (upcast cls)
@@ -4684,7 +5169,7 @@ environment_set_glow cls arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8
 
 instance NodeMethod VisualServer "environment_set_glow"
            '[Rid, Bool, Int, Float, Float, Float, Int, Float, Float, Float,
-             Bool]
+             Bool, Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.environment_set_glow
@@ -5010,7 +5495,22 @@ instance NodeMethod VisualServer "force_sync" '[] (IO ()) where
 
 {-# NOINLINE bindVisualServer_free_rid #-}
 
--- | Tries to free an object in the VisualServer.
+-- | Destroys an object created by the VisualServer. If the @RID@ passed is not one created by the server that created it (e.g. VisualServer, PhysicsServer, etc.), an error will be sent to the console.
+--   				__Note:__ After freeing the object, the RID now has a reference to invalid memory. It is not safe to use or free an invalid RID. Before using the RID again, make sure to assign it to @RID()@ or any other valid RID.
+--   				
+--   @
+--   
+--   				var r: RID = VisualServer.get_test_cube()
+--   				VisualServer.free_rid(r)
+--   				print("ID: ", r.get_id())   # It is not safe to access or free an invalid RID
+--   				r = RID()                   # Reset the RID so it is safe to use again.
+--   				print("ID: ", r.get_id())
+--   
+--   				# Output:
+--   				# ID: 157     # Freed RID has invalid data
+--   				# ID: 0       # RID has been properly reset
+--   				
+--   @
 bindVisualServer_free_rid :: MethodBind
 bindVisualServer_free_rid
   = unsafePerformIO $
@@ -5020,7 +5520,22 @@ bindVisualServer_free_rid
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Tries to free an object in the VisualServer.
+-- | Destroys an object created by the VisualServer. If the @RID@ passed is not one created by the server that created it (e.g. VisualServer, PhysicsServer, etc.), an error will be sent to the console.
+--   				__Note:__ After freeing the object, the RID now has a reference to invalid memory. It is not safe to use or free an invalid RID. Before using the RID again, make sure to assign it to @RID()@ or any other valid RID.
+--   				
+--   @
+--   
+--   				var r: RID = VisualServer.get_test_cube()
+--   				VisualServer.free_rid(r)
+--   				print("ID: ", r.get_id())   # It is not safe to access or free an invalid RID
+--   				r = RID()                   # Reset the RID so it is safe to use again.
+--   				print("ID: ", r.get_id())
+--   
+--   				# Output:
+--   				# ID: 157     # Freed RID has invalid data
+--   				# ID: 0       # RID has been properly reset
+--   				
+--   @
 free_rid ::
            (VisualServer :< cls, Object :< cls) => cls -> Rid -> IO ()
 free_rid cls arg1
@@ -5988,6 +6503,7 @@ instance NodeMethod VisualServer "gi_probe_set_to_cell_xform"
 {-# NOINLINE bindVisualServer_has_changed #-}
 
 -- | Returns @true@ if changes have been made to the VisualServer's data. @method draw@ is usually called if this happens.
+--   				As changes are registered as either high or low priority (e.g. dynamic shaders), this function takes an optional argument to query either low or high priority changes, or any changes.
 bindVisualServer_has_changed :: MethodBind
 bindVisualServer_has_changed
   = unsafePerformIO $
@@ -5998,10 +6514,11 @@ bindVisualServer_has_changed
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ if changes have been made to the VisualServer's data. @method draw@ is usually called if this happens.
+--   				As changes are registered as either high or low priority (e.g. dynamic shaders), this function takes an optional argument to query either low or high priority changes, or any changes.
 has_changed ::
-              (VisualServer :< cls, Object :< cls) => cls -> IO Bool
-has_changed cls
-  = withVariantArray []
+              (VisualServer :< cls, Object :< cls) => cls -> Maybe Int -> IO Bool
+has_changed cls arg1
+  = withVariantArray [maybe (VariantInt (0)) toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindVisualServer_has_changed (upcast cls)
            arrPtr
@@ -6011,7 +6528,9 @@ has_changed cls
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod VisualServer "has_changed" '[] (IO Bool) where
+instance NodeMethod VisualServer "has_changed" '[Maybe Int]
+           (IO Bool)
+         where
         nodeMethod = Godot.Core.VisualServer.has_changed
 
 {-# NOINLINE bindVisualServer_has_feature #-}
@@ -6671,45 +7190,6 @@ instance NodeMethod VisualServer "instance_create2" '[Rid, Rid]
          where
         nodeMethod = Godot.Core.VisualServer.instance_create2
 
-{-# NOINLINE bindVisualServer_instance_geometry_set_as_instance_lod
-             #-}
-
--- | Not implemented in Godot 3.x.
-bindVisualServer_instance_geometry_set_as_instance_lod ::
-                                                       MethodBind
-bindVisualServer_instance_geometry_set_as_instance_lod
-  = unsafePerformIO $
-      withCString "VisualServer" $
-        \ clsNamePtr ->
-          withCString "instance_geometry_set_as_instance_lod" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | Not implemented in Godot 3.x.
-instance_geometry_set_as_instance_lod ::
-                                        (VisualServer :< cls, Object :< cls) =>
-                                        cls -> Rid -> Rid -> IO ()
-instance_geometry_set_as_instance_lod cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call
-           bindVisualServer_instance_geometry_set_as_instance_lod
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod VisualServer
-           "instance_geometry_set_as_instance_lod"
-           '[Rid, Rid]
-           (IO ())
-         where
-        nodeMethod
-          = Godot.Core.VisualServer.instance_geometry_set_as_instance_lod
-
 {-# NOINLINE bindVisualServer_instance_geometry_set_cast_shadows_setting
              #-}
 
@@ -6749,44 +7229,6 @@ instance NodeMethod VisualServer
         nodeMethod
           = Godot.Core.VisualServer.instance_geometry_set_cast_shadows_setting
 
-{-# NOINLINE bindVisualServer_instance_geometry_set_draw_range #-}
-
--- | Not implemented in Godot 3.x.
-bindVisualServer_instance_geometry_set_draw_range :: MethodBind
-bindVisualServer_instance_geometry_set_draw_range
-  = unsafePerformIO $
-      withCString "VisualServer" $
-        \ clsNamePtr ->
-          withCString "instance_geometry_set_draw_range" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | Not implemented in Godot 3.x.
-instance_geometry_set_draw_range ::
-                                   (VisualServer :< cls, Object :< cls) =>
-                                   cls -> Rid -> Float -> Float -> Float -> Float -> IO ()
-instance_geometry_set_draw_range cls arg1 arg2 arg3 arg4 arg5
-  = withVariantArray
-      [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4,
-       toVariant arg5]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call
-           bindVisualServer_instance_geometry_set_draw_range
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod VisualServer "instance_geometry_set_draw_range"
-           '[Rid, Float, Float, Float, Float]
-           (IO ())
-         where
-        nodeMethod
-          = Godot.Core.VisualServer.instance_geometry_set_draw_range
-
 {-# NOINLINE bindVisualServer_instance_geometry_set_flag #-}
 
 -- | Sets the flag for a given @enum InstanceFlags@. See @enum InstanceFlags@ for more details.
@@ -6820,6 +7262,45 @@ instance NodeMethod VisualServer "instance_geometry_set_flag"
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.instance_geometry_set_flag
+
+{-# NOINLINE bindVisualServer_instance_geometry_set_material_overlay
+             #-}
+
+-- | Sets a material that will be rendered for all surfaces on top of active materials for the mesh associated with this instance. Equivalent to @GeometryInstance.material_overlay@.
+bindVisualServer_instance_geometry_set_material_overlay ::
+                                                        MethodBind
+bindVisualServer_instance_geometry_set_material_overlay
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "instance_geometry_set_material_overlay" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets a material that will be rendered for all surfaces on top of active materials for the mesh associated with this instance. Equivalent to @GeometryInstance.material_overlay@.
+instance_geometry_set_material_overlay ::
+                                         (VisualServer :< cls, Object :< cls) =>
+                                         cls -> Rid -> Rid -> IO ()
+instance_geometry_set_material_overlay cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_instance_geometry_set_material_overlay
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "instance_geometry_set_material_overlay"
+           '[Rid, Rid]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.instance_geometry_set_material_overlay
 
 {-# NOINLINE bindVisualServer_instance_geometry_set_material_override
              #-}
@@ -6859,6 +7340,45 @@ instance NodeMethod VisualServer
          where
         nodeMethod
           = Godot.Core.VisualServer.instance_geometry_set_material_override
+
+{-# NOINLINE bindVisualServer_instance_reset_physics_interpolation
+             #-}
+
+-- | Prevents physics interpolation for the current physics tick.
+--   				This is useful when moving an instance to a new location, to give an instantaneous change rather than interpolation from the previous location.
+bindVisualServer_instance_reset_physics_interpolation :: MethodBind
+bindVisualServer_instance_reset_physics_interpolation
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "instance_reset_physics_interpolation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Prevents physics interpolation for the current physics tick.
+--   				This is useful when moving an instance to a new location, to give an instantaneous change rather than interpolation from the previous location.
+instance_reset_physics_interpolation ::
+                                       (VisualServer :< cls, Object :< cls) => cls -> Rid -> IO ()
+instance_reset_physics_interpolation cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_instance_reset_physics_interpolation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "instance_reset_physics_interpolation"
+           '[Rid]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.instance_reset_physics_interpolation
 
 {-# NOINLINE bindVisualServer_instance_set_base #-}
 
@@ -7031,6 +7551,39 @@ instance NodeMethod VisualServer
          where
         nodeMethod
           = Godot.Core.VisualServer.instance_set_extra_visibility_margin
+
+{-# NOINLINE bindVisualServer_instance_set_interpolated #-}
+
+-- | Turns on and off physics interpolation for the instance.
+bindVisualServer_instance_set_interpolated :: MethodBind
+bindVisualServer_instance_set_interpolated
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "instance_set_interpolated" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Turns on and off physics interpolation for the instance.
+instance_set_interpolated ::
+                            (VisualServer :< cls, Object :< cls) => cls -> Rid -> Bool -> IO ()
+instance_set_interpolated cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualServer_instance_set_interpolated
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "instance_set_interpolated"
+           '[Rid, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.instance_set_interpolated
 
 {-# NOINLINE bindVisualServer_instance_set_layer_mask #-}
 
@@ -8451,7 +9004,7 @@ instance NodeMethod VisualServer "material_get_param"
 
 {-# NOINLINE bindVisualServer_material_get_param_default #-}
 
--- | Returns the default value for the param if available. Otherwise returns an empty @Variant@.
+-- | Returns the default value for the param if available. Returns @null@ otherwise.
 bindVisualServer_material_get_param_default :: MethodBind
 bindVisualServer_material_get_param_default
   = unsafePerformIO $
@@ -8461,7 +9014,7 @@ bindVisualServer_material_get_param_default
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the default value for the param if available. Otherwise returns an empty @Variant@.
+-- | Returns the default value for the param if available. Returns @null@ otherwise.
 material_get_param_default ::
                              (VisualServer :< cls, Object :< cls) =>
                              cls -> Rid -> GodotString -> IO GodotVariant
@@ -9910,6 +10463,47 @@ instance NodeMethod VisualServer
         nodeMethod
           = Godot.Core.VisualServer.multimesh_instance_get_transform_2d
 
+{-# NOINLINE bindVisualServer_multimesh_instance_reset_physics_interpolation
+             #-}
+
+-- | Prevents physics interpolation for the specified instance during the current physics tick.
+--   				This is useful when moving an instance to a new location, to give an instantaneous change rather than interpolation from the previous location.
+bindVisualServer_multimesh_instance_reset_physics_interpolation ::
+                                                                MethodBind
+bindVisualServer_multimesh_instance_reset_physics_interpolation
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "multimesh_instance_reset_physics_interpolation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Prevents physics interpolation for the specified instance during the current physics tick.
+--   				This is useful when moving an instance to a new location, to give an instantaneous change rather than interpolation from the previous location.
+multimesh_instance_reset_physics_interpolation ::
+                                                 (VisualServer :< cls, Object :< cls) =>
+                                                 cls -> Rid -> Int -> IO ()
+multimesh_instance_reset_physics_interpolation cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_multimesh_instance_reset_physics_interpolation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "multimesh_instance_reset_physics_interpolation"
+           '[Rid, Int]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.multimesh_instance_reset_physics_interpolation
+
 {-# NOINLINE bindVisualServer_multimesh_instance_set_color #-}
 
 -- | Sets the color by which this instance will be modulated. Equivalent to @method MultiMesh.set_instance_color@.
@@ -10099,6 +10693,47 @@ instance NodeMethod VisualServer "multimesh_set_as_bulk_array"
          where
         nodeMethod = Godot.Core.VisualServer.multimesh_set_as_bulk_array
 
+{-# NOINLINE bindVisualServer_multimesh_set_as_bulk_array_interpolated
+             #-}
+
+-- | Alternative version of @method multimesh_set_as_bulk_array@ for use with physics interpolation.
+--   				Takes both an array of current data and an array of data for the previous physics tick.
+bindVisualServer_multimesh_set_as_bulk_array_interpolated ::
+                                                          MethodBind
+bindVisualServer_multimesh_set_as_bulk_array_interpolated
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "multimesh_set_as_bulk_array_interpolated" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Alternative version of @method multimesh_set_as_bulk_array@ for use with physics interpolation.
+--   				Takes both an array of current data and an array of data for the previous physics tick.
+multimesh_set_as_bulk_array_interpolated ::
+                                           (VisualServer :< cls, Object :< cls) =>
+                                           cls -> Rid -> PoolRealArray -> PoolRealArray -> IO ()
+multimesh_set_as_bulk_array_interpolated cls arg1 arg2 arg3
+  = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_multimesh_set_as_bulk_array_interpolated
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "multimesh_set_as_bulk_array_interpolated"
+           '[Rid, PoolRealArray, PoolRealArray]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.multimesh_set_as_bulk_array_interpolated
+
 {-# NOINLINE bindVisualServer_multimesh_set_mesh #-}
 
 -- | Sets the mesh to be drawn by the multimesh. Equivalent to @MultiMesh.mesh@.
@@ -10130,6 +10765,85 @@ instance NodeMethod VisualServer "multimesh_set_mesh" '[Rid, Rid]
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.multimesh_set_mesh
+
+{-# NOINLINE bindVisualServer_multimesh_set_physics_interpolated
+             #-}
+
+-- | Turns on and off physics interpolation for the @MultiMesh@.
+bindVisualServer_multimesh_set_physics_interpolated :: MethodBind
+bindVisualServer_multimesh_set_physics_interpolated
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "multimesh_set_physics_interpolated" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Turns on and off physics interpolation for the @MultiMesh@.
+multimesh_set_physics_interpolated ::
+                                     (VisualServer :< cls, Object :< cls) =>
+                                     cls -> Rid -> Bool -> IO ()
+multimesh_set_physics_interpolated cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_multimesh_set_physics_interpolated
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "multimesh_set_physics_interpolated"
+           '[Rid, Bool]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.multimesh_set_physics_interpolated
+
+{-# NOINLINE bindVisualServer_multimesh_set_physics_interpolation_quality
+             #-}
+
+-- | Sets the physics interpolation quality for the @MultiMesh@.
+--   				A value of @0@ gives fast but low quality interpolation, a value of @1@ gives slower but higher quality interpolation.
+bindVisualServer_multimesh_set_physics_interpolation_quality ::
+                                                             MethodBind
+bindVisualServer_multimesh_set_physics_interpolation_quality
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "multimesh_set_physics_interpolation_quality" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the physics interpolation quality for the @MultiMesh@.
+--   				A value of @0@ gives fast but low quality interpolation, a value of @1@ gives slower but higher quality interpolation.
+multimesh_set_physics_interpolation_quality ::
+                                              (VisualServer :< cls, Object :< cls) =>
+                                              cls -> Rid -> Int -> IO ()
+multimesh_set_physics_interpolation_quality cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_multimesh_set_physics_interpolation_quality
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "multimesh_set_physics_interpolation_quality"
+           '[Rid, Int]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.multimesh_set_physics_interpolation_quality
 
 {-# NOINLINE bindVisualServer_multimesh_set_visible_instances #-}
 
@@ -11809,6 +12523,46 @@ instance NodeMethod VisualServer "set_render_loop_enabled" '[Bool]
          where
         nodeMethod = Godot.Core.VisualServer.set_render_loop_enabled
 
+{-# NOINLINE bindVisualServer_set_shader_async_hidden_forbidden #-}
+
+-- | If asynchronous shader compilation is enabled, this controls whether @Material3D.ASYNC_MODE_HIDDEN@ is obeyed.
+--   				For instance, you may want to enable this temporarily before taking a screenshot. This ensures everything is visible even if shaders with async mode @i@hidden@/i@ are not ready yet.
+--   				Reflection probes use this internally to ensure they capture everything regardless the shaders are ready or not.
+bindVisualServer_set_shader_async_hidden_forbidden :: MethodBind
+bindVisualServer_set_shader_async_hidden_forbidden
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "set_shader_async_hidden_forbidden" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If asynchronous shader compilation is enabled, this controls whether @Material3D.ASYNC_MODE_HIDDEN@ is obeyed.
+--   				For instance, you may want to enable this temporarily before taking a screenshot. This ensures everything is visible even if shaders with async mode @i@hidden@/i@ are not ready yet.
+--   				Reflection probes use this internally to ensure they capture everything regardless the shaders are ready or not.
+set_shader_async_hidden_forbidden ::
+                                    (VisualServer :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_shader_async_hidden_forbidden cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_set_shader_async_hidden_forbidden
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer
+           "set_shader_async_hidden_forbidden"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.VisualServer.set_shader_async_hidden_forbidden
+
 {-# NOINLINE bindVisualServer_set_shader_time_scale #-}
 
 -- | Sets the scale to apply to the passage of time for the shaders' @TIME@ builtin.
@@ -13039,6 +13793,74 @@ instance NodeMethod VisualServer "texture_set_path"
          where
         nodeMethod = Godot.Core.VisualServer.texture_set_path
 
+{-# NOINLINE bindVisualServer_texture_set_proxy #-}
+
+-- | Creates an update link between two textures, similar to how @ViewportTexture@s operate. When the base texture is the texture of a @Viewport@, every time the viewport renders a new frame, the proxy texture automatically receives an update.
+--   				For example, this code links a generic @ImageTexture@ to the texture output of the @Viewport@ using the VisualServer API:
+--   				
+--   @
+--   
+--   				func _ready():
+--   				    var viewport_rid = get_viewport().get_viewport_rid()
+--   				    var viewport_texture_rid = VisualServer.viewport_get_texture(viewport_rid)
+--   
+--   				    var proxy_texture = ImageTexture.new()
+--   				    var viewport_texture_image_data = VisualServer.texture_get_data(viewport_texture_rid)
+--   
+--   				    proxy_texture.create_from_image(viewport_texture_image_data)
+--   				    var proxy_texture_rid = proxy_texture.get_rid()
+--   				    VisualServer.texture_set_proxy(proxy_texture_rid, viewport_texture_rid)
+--   
+--   				    $TextureRect.texture = proxy_texture
+--   				
+--   @
+bindVisualServer_texture_set_proxy :: MethodBind
+bindVisualServer_texture_set_proxy
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "texture_set_proxy" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Creates an update link between two textures, similar to how @ViewportTexture@s operate. When the base texture is the texture of a @Viewport@, every time the viewport renders a new frame, the proxy texture automatically receives an update.
+--   				For example, this code links a generic @ImageTexture@ to the texture output of the @Viewport@ using the VisualServer API:
+--   				
+--   @
+--   
+--   				func _ready():
+--   				    var viewport_rid = get_viewport().get_viewport_rid()
+--   				    var viewport_texture_rid = VisualServer.viewport_get_texture(viewport_rid)
+--   
+--   				    var proxy_texture = ImageTexture.new()
+--   				    var viewport_texture_image_data = VisualServer.texture_get_data(viewport_texture_rid)
+--   
+--   				    proxy_texture.create_from_image(viewport_texture_image_data)
+--   				    var proxy_texture_rid = proxy_texture.get_rid()
+--   				    VisualServer.texture_set_proxy(proxy_texture_rid, viewport_texture_rid)
+--   
+--   				    $TextureRect.texture = proxy_texture
+--   				
+--   @
+texture_set_proxy ::
+                    (VisualServer :< cls, Object :< cls) => cls -> Rid -> Rid -> IO ()
+texture_set_proxy cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisualServer_texture_set_proxy
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "texture_set_proxy" '[Rid, Rid]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.texture_set_proxy
+
 {-# NOINLINE bindVisualServer_texture_set_shrink_all_x2_on_set_data
              #-}
 
@@ -13223,7 +14045,7 @@ instance NodeMethod VisualServer "viewport_attach_canvas"
 --   				
 --   @
 --   
---   				Using this can result in significant optimization, especially on lower-end devices. However, it comes at the cost of having to manage your viewports manually. For a further optimization see, @method viewport_set_render_direct_to_screen@.
+--   				Using this can result in significant optimization, especially on lower-end devices. However, it comes at the cost of having to manage your viewports manually. For further optimization, see @method viewport_set_render_direct_to_screen@.
 bindVisualServer_viewport_attach_to_screen :: MethodBind
 bindVisualServer_viewport_attach_to_screen
   = unsafePerformIO $
@@ -13244,7 +14066,7 @@ bindVisualServer_viewport_attach_to_screen
 --   				
 --   @
 --   
---   				Using this can result in significant optimization, especially on lower-end devices. However, it comes at the cost of having to manage your viewports manually. For a further optimization see, @method viewport_set_render_direct_to_screen@.
+--   				Using this can result in significant optimization, especially on lower-end devices. However, it comes at the cost of having to manage your viewports manually. For further optimization, see @method viewport_set_render_direct_to_screen@.
 viewport_attach_to_screen ::
                             (VisualServer :< cls, Object :< cls) =>
                             cls -> Rid -> Maybe Rect2 -> Maybe Int -> IO ()
@@ -13711,7 +14533,8 @@ instance NodeMethod VisualServer
 
 {-# NOINLINE bindVisualServer_viewport_set_hdr #-}
 
--- | If @true@, the viewport renders to hdr.
+-- | If @true@, the viewport renders to high dynamic range (HDR) instead of standard dynamic range (SDR). See also @method viewport_set_use_32_bpc_depth@.
+--   				__Note:__ Only available on the GLES3 backend.
 bindVisualServer_viewport_set_hdr :: MethodBind
 bindVisualServer_viewport_set_hdr
   = unsafePerformIO $
@@ -13721,7 +14544,8 @@ bindVisualServer_viewport_set_hdr
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the viewport renders to hdr.
+-- | If @true@, the viewport renders to high dynamic range (HDR) instead of standard dynamic range (SDR). See also @method viewport_set_use_32_bpc_depth@.
+--   				__Note:__ Only available on the GLES3 backend.
 viewport_set_hdr ::
                    (VisualServer :< cls, Object :< cls) => cls -> Rid -> Bool -> IO ()
 viewport_set_hdr cls arg1 arg2
@@ -14190,6 +15014,42 @@ instance NodeMethod VisualServer "viewport_set_usage" '[Rid, Int]
            (IO ())
          where
         nodeMethod = Godot.Core.VisualServer.viewport_set_usage
+
+{-# NOINLINE bindVisualServer_viewport_set_use_32_bpc_depth #-}
+
+-- | If @true@, allocates the viewport's framebuffer with full floating-point precision (32-bit) instead of half floating-point precision (16-bit). Only effective if @method viewport_set_use_32_bpc_depth@ is used on the same @Viewport@ to set HDR to @true@.
+--   				__Note:__ Only available on the GLES3 backend.
+bindVisualServer_viewport_set_use_32_bpc_depth :: MethodBind
+bindVisualServer_viewport_set_use_32_bpc_depth
+  = unsafePerformIO $
+      withCString "VisualServer" $
+        \ clsNamePtr ->
+          withCString "viewport_set_use_32_bpc_depth" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, allocates the viewport's framebuffer with full floating-point precision (32-bit) instead of half floating-point precision (16-bit). Only effective if @method viewport_set_use_32_bpc_depth@ is used on the same @Viewport@ to set HDR to @true@.
+--   				__Note:__ Only available on the GLES3 backend.
+viewport_set_use_32_bpc_depth ::
+                                (VisualServer :< cls, Object :< cls) => cls -> Rid -> Bool -> IO ()
+viewport_set_use_32_bpc_depth cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindVisualServer_viewport_set_use_32_bpc_depth
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisualServer "viewport_set_use_32_bpc_depth"
+           '[Rid, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisualServer.viewport_set_use_32_bpc_depth
 
 {-# NOINLINE bindVisualServer_viewport_set_use_arvr #-}
 

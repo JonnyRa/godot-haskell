@@ -334,8 +334,7 @@ instance NodeMethod Physics2DDirectSpaceState "intersect_ray"
 
 {-# NOINLINE bindPhysics2DDirectSpaceState_intersect_shape #-}
 
--- | Checks the intersections of a shape, given through a @Physics2DShapeQueryParameters@ object, against the space.
---   				__Note:__ This method does not take into account the @motion@ property of the object. The intersected shapes are returned in an array containing dictionaries with the following fields:
+-- | Checks the intersections of a shape, given through a @Physics2DShapeQueryParameters@ object, against the space. The intersected shapes are returned in an array containing dictionaries with the following fields:
 --   				@collider@: The colliding object.
 --   				@collider_id@: The colliding object's ID.
 --   				@metadata@: The intersecting shape's metadata. This metadata is different from @method Object.get_meta@, and is set with @method Physics2DServer.shape_set_data@.
@@ -351,8 +350,7 @@ bindPhysics2DDirectSpaceState_intersect_shape
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Checks the intersections of a shape, given through a @Physics2DShapeQueryParameters@ object, against the space.
---   				__Note:__ This method does not take into account the @motion@ property of the object. The intersected shapes are returned in an array containing dictionaries with the following fields:
+-- | Checks the intersections of a shape, given through a @Physics2DShapeQueryParameters@ object, against the space. The intersected shapes are returned in an array containing dictionaries with the following fields:
 --   				@collider@: The colliding object.
 --   				@collider_id@: The colliding object's ID.
 --   				@metadata@: The intersecting shape's metadata. This metadata is different from @method Object.get_meta@, and is set with @method Physics2DServer.shape_set_data@.

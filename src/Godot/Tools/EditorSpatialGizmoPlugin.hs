@@ -47,7 +47,7 @@ bindEditorSpatialGizmoPlugin_add_material
 -- | Adds a new material to the internal material list for the plugin. It can then be accessed with @method get_material@. Should not be overridden.
 add_material ::
                (EditorSpatialGizmoPlugin :< cls, Object :< cls) =>
-               cls -> GodotString -> SpatialMaterial -> IO ()
+               cls -> GodotString -> Material3D -> IO ()
 add_material cls arg1 arg2
   = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
@@ -61,7 +61,7 @@ add_material cls arg1 arg2
                \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmoPlugin "add_material"
-           '[GodotString, SpatialMaterial]
+           '[GodotString, Material3D]
            (IO ())
          where
         nodeMethod = Godot.Tools.EditorSpatialGizmoPlugin.add_material
@@ -366,8 +366,7 @@ bindEditorSpatialGizmoPlugin_get_material
 -- | Gets material from the internal list of materials. If an @EditorSpatialGizmo@ is provided, it will try to get the corresponding variant (selected and/or editable).
 get_material ::
                (EditorSpatialGizmoPlugin :< cls, Object :< cls) =>
-               cls ->
-                 GodotString -> Maybe EditorSpatialGizmo -> IO SpatialMaterial
+               cls -> GodotString -> Maybe EditorSpatialGizmo -> IO Material3D
 get_material cls arg1 arg2
   = withVariantArray
       [toVariant arg1, maybe VariantNil toVariant arg2]
@@ -380,7 +379,7 @@ get_material cls arg1 arg2
 
 instance NodeMethod EditorSpatialGizmoPlugin "get_material"
            '[GodotString, Maybe EditorSpatialGizmo]
-           (IO SpatialMaterial)
+           (IO Material3D)
          where
         nodeMethod = Godot.Tools.EditorSpatialGizmoPlugin.get_material
 

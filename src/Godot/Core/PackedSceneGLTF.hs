@@ -67,12 +67,13 @@ import_gltf_scene ::
                     (PackedSceneGLTF :< cls, Object :< cls) =>
                     cls ->
                       GodotString ->
-                        Maybe Int -> Maybe Float -> Maybe GLTFState -> IO Node
-import_gltf_scene cls arg1 arg2 arg3 arg4
+                        Maybe Int -> Maybe Float -> Maybe Int -> Maybe GLTFState -> IO Node
+import_gltf_scene cls arg1 arg2 arg3 arg4 arg5
   = withVariantArray
       [toVariant arg1, maybe (VariantInt (0)) toVariant arg2,
        maybe (VariantReal (1000)) toVariant arg3,
-       maybe VariantNil toVariant arg4]
+       maybe (VariantInt (2194432)) toVariant arg4,
+       maybe VariantNil toVariant arg5]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPackedSceneGLTF_import_gltf_scene
            (upcast cls)
@@ -81,7 +82,7 @@ import_gltf_scene cls arg1 arg2 arg3 arg4
            >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
 
 instance NodeMethod PackedSceneGLTF "import_gltf_scene"
-           '[GodotString, Maybe Int, Maybe Float, Maybe GLTFState]
+           '[GodotString, Maybe Int, Maybe Float, Maybe Int, Maybe GLTFState]
            (IO Node)
          where
         nodeMethod = Godot.Core.PackedSceneGLTF.import_gltf_scene
@@ -100,12 +101,14 @@ bindPackedSceneGLTF_pack_gltf
 pack_gltf ::
             (PackedSceneGLTF :< cls, Object :< cls) =>
             cls ->
-              GodotString -> Maybe Int -> Maybe Float -> Maybe GLTFState -> IO ()
-pack_gltf cls arg1 arg2 arg3 arg4
+              GodotString ->
+                Maybe Int -> Maybe Float -> Maybe Int -> Maybe GLTFState -> IO ()
+pack_gltf cls arg1 arg2 arg3 arg4 arg5
   = withVariantArray
       [toVariant arg1, maybe (VariantInt (0)) toVariant arg2,
        maybe (VariantReal (1000)) toVariant arg3,
-       maybe VariantNil toVariant arg4]
+       maybe (VariantInt (2194432)) toVariant arg4,
+       maybe VariantNil toVariant arg5]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindPackedSceneGLTF_pack_gltf (upcast cls)
            arrPtr
@@ -116,7 +119,7 @@ pack_gltf cls arg1 arg2 arg3 arg4
                \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod PackedSceneGLTF "pack_gltf"
-           '[GodotString, Maybe Int, Maybe Float, Maybe GLTFState]
+           '[GodotString, Maybe Int, Maybe Float, Maybe Int, Maybe GLTFState]
            (IO ())
          where
         nodeMethod = Godot.Core.PackedSceneGLTF.pack_gltf

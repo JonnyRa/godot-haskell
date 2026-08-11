@@ -53,7 +53,7 @@ import Godot.Core.Object()
 --   			
 --   @
 --   
---   			See @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@Running code in the editor@/url@ in the documentation for more information.
+--   			See @url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html@Running code in the editor@/url@ in the documentation for more information.
 --   			__Note:__ To detect whether the script is run from an editor @i@build@/i@ (e.g. when pressing @F5@), use @method OS.has_feature@ with the @"editor"@ argument instead. @OS.has_feature("editor")@ will evaluate to @true@ both when the code is running in the editor and when running the project from the editor, but it will evaluate to @false@ when the code is run from an exported project.
 bindEngine_is_editor_hint :: MethodBind
 bindEngine_is_editor_hint
@@ -75,7 +75,7 @@ bindEngine_is_editor_hint
 --   			
 --   @
 --   
---   			See @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@Running code in the editor@/url@ in the documentation for more information.
+--   			See @url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html@Running code in the editor@/url@ in the documentation for more information.
 --   			__Note:__ To detect whether the script is run from an editor @i@build@/i@ (e.g. when pressing @F5@), use @method OS.has_feature@ with the @"editor"@ argument instead. @OS.has_feature("editor")@ will evaluate to @true@ both when the code is running in the editor and when running the project from the editor, but it will evaluate to @false@ when the code is run from an exported project.
 is_editor_hint :: (Engine :< cls, Object :< cls) => cls -> IO Bool
 is_editor_hint cls
@@ -105,7 +105,7 @@ instance NodeMethod Engine "is_editor_hint" '[] (IO Bool) where
 --   			
 --   @
 --   
---   			See @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@Running code in the editor@/url@ in the documentation for more information.
+--   			See @url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html@Running code in the editor@/url@ in the documentation for more information.
 --   			__Note:__ To detect whether the script is run from an editor @i@build@/i@ (e.g. when pressing @F5@), use @method OS.has_feature@ with the @"editor"@ argument instead. @OS.has_feature("editor")@ will evaluate to @true@ both when the code is running in the editor and when running the project from the editor, but it will evaluate to @false@ when the code is run from an exported project.
 bindEngine_set_editor_hint :: MethodBind
 bindEngine_set_editor_hint
@@ -127,7 +127,7 @@ bindEngine_set_editor_hint
 --   			
 --   @
 --   
---   			See @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@Running code in the editor@/url@ in the documentation for more information.
+--   			See @url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html@Running code in the editor@/url@ in the documentation for more information.
 --   			__Note:__ To detect whether the script is run from an editor @i@build@/i@ (e.g. when pressing @F5@), use @method OS.has_feature@ with the @"editor"@ argument instead. @OS.has_feature("editor")@ will evaluate to @true@ both when the code is running in the editor and when running the project from the editor, but it will evaluate to @false@ when the code is run from an exported project.
 set_editor_hint ::
                   (Engine :< cls, Object :< cls) => cls -> Bool -> IO ()
@@ -436,7 +436,7 @@ instance NodeProperty Engine "target_fps" Int 'False where
 
 {-# NOINLINE bindEngine_get_time_scale #-}
 
--- | Controls how fast or slow the in-game clock ticks versus the real life one. It defaults to 1.0. A value of 2.0 means the game moves twice as fast as real life, whilst a value of 0.5 means the game moves at half the regular speed.
+-- | Controls how fast or slow the in-game clock ticks versus the real life one. It defaults to 1.0. A value of 2.0 means the game moves twice as fast as real life, whilst a value of 0.5 means the game moves at half the regular speed. This also affects @Timer@ and @SceneTreeTimer@ (see @method SceneTree.create_timer@ for how to control this).
 bindEngine_get_time_scale :: MethodBind
 bindEngine_get_time_scale
   = unsafePerformIO $
@@ -446,7 +446,7 @@ bindEngine_get_time_scale
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Controls how fast or slow the in-game clock ticks versus the real life one. It defaults to 1.0. A value of 2.0 means the game moves twice as fast as real life, whilst a value of 0.5 means the game moves at half the regular speed.
+-- | Controls how fast or slow the in-game clock ticks versus the real life one. It defaults to 1.0. A value of 2.0 means the game moves twice as fast as real life, whilst a value of 0.5 means the game moves at half the regular speed. This also affects @Timer@ and @SceneTreeTimer@ (see @method SceneTree.create_timer@ for how to control this).
 get_time_scale :: (Engine :< cls, Object :< cls) => cls -> IO Float
 get_time_scale cls
   = withVariantArray []
@@ -464,7 +464,7 @@ instance NodeMethod Engine "get_time_scale" '[] (IO Float) where
 
 {-# NOINLINE bindEngine_set_time_scale #-}
 
--- | Controls how fast or slow the in-game clock ticks versus the real life one. It defaults to 1.0. A value of 2.0 means the game moves twice as fast as real life, whilst a value of 0.5 means the game moves at half the regular speed.
+-- | Controls how fast or slow the in-game clock ticks versus the real life one. It defaults to 1.0. A value of 2.0 means the game moves twice as fast as real life, whilst a value of 0.5 means the game moves at half the regular speed. This also affects @Timer@ and @SceneTreeTimer@ (see @method SceneTree.create_timer@ for how to control this).
 bindEngine_set_time_scale :: MethodBind
 bindEngine_set_time_scale
   = unsafePerformIO $
@@ -474,7 +474,7 @@ bindEngine_set_time_scale
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Controls how fast or slow the in-game clock ticks versus the real life one. It defaults to 1.0. A value of 2.0 means the game moves twice as fast as real life, whilst a value of 0.5 means the game moves at half the regular speed.
+-- | Controls how fast or slow the in-game clock ticks versus the real life one. It defaults to 1.0. A value of 2.0 means the game moves twice as fast as real life, whilst a value of 0.5 means the game moves at half the regular speed. This also affects @Timer@ and @SceneTreeTimer@ (see @method SceneTree.create_timer@ for how to control this).
 set_time_scale ::
                  (Engine :< cls, Object :< cls) => cls -> Float -> IO ()
 set_time_scale cls arg1

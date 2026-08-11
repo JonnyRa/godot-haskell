@@ -119,6 +119,8 @@ module Godot.Core.Control
         Godot.Core.Control.get_scale, Godot.Core.Control.get_size,
         Godot.Core.Control.get_stretch_ratio,
         Godot.Core.Control.get_stylebox, Godot.Core.Control.get_theme,
+        Godot.Core.Control.get_theme_default_font,
+        Godot.Core.Control.get_theme_type_variation,
         Godot.Core.Control.get_tooltip,
         Godot.Core.Control.get_v_grow_direction,
         Godot.Core.Control.get_v_size_flags,
@@ -134,8 +136,16 @@ module Godot.Core.Control
         Godot.Core.Control.has_stylebox,
         Godot.Core.Control.has_stylebox_override,
         Godot.Core.Control.is_clipping_contents,
+        Godot.Core.Control.is_drag_successful,
         Godot.Core.Control.minimum_size_changed,
-        Godot.Core.Control.release_focus, Godot.Core.Control.set_anchor,
+        Godot.Core.Control.release_focus,
+        Godot.Core.Control.remove_color_override,
+        Godot.Core.Control.remove_constant_override,
+        Godot.Core.Control.remove_font_override,
+        Godot.Core.Control.remove_icon_override,
+        Godot.Core.Control.remove_shader_override,
+        Godot.Core.Control.remove_stylebox_override,
+        Godot.Core.Control.set_anchor,
         Godot.Core.Control.set_anchor_and_margin,
         Godot.Core.Control.set_anchors_and_margins_preset,
         Godot.Core.Control.set_anchors_preset,
@@ -159,6 +169,7 @@ module Godot.Core.Control
         Godot.Core.Control.set_rotation_degrees,
         Godot.Core.Control.set_scale, Godot.Core.Control.set_size,
         Godot.Core.Control.set_stretch_ratio, Godot.Core.Control.set_theme,
+        Godot.Core.Control.set_theme_type_variation,
         Godot.Core.Control.set_tooltip,
         Godot.Core.Control.set_v_grow_direction,
         Godot.Core.Control.set_v_size_flags, Godot.Core.Control.show_modal,
@@ -362,13 +373,13 @@ _CURSOR_VSPLIT = 14
 _FOCUS_NONE :: Int
 _FOCUS_NONE = 0
 
--- | Emitted when the node gains keyboard focus.
+-- | Emitted when the node gains focus.
 sig_focus_entered :: Godot.Internal.Dispatch.Signal Control
 sig_focus_entered = Godot.Internal.Dispatch.Signal "focus_entered"
 
 instance NodeSignal Control "focus_entered" '[]
 
--- | Emitted when the node loses keyboard focus.
+-- | Emitted when the node loses focus.
 sig_focus_exited :: Godot.Internal.Dispatch.Signal Control
 sig_focus_exited = Godot.Internal.Dispatch.Signal "focus_exited"
 
@@ -600,6 +611,13 @@ instance NodeProperty Control "size_flags_vertical" Int 'False
 instance NodeProperty Control "theme" Theme 'False where
         nodeProperty = (get_theme, wrapDroppingSetter set_theme, Nothing)
 
+instance NodeProperty Control "theme_type_variation" GodotString
+           'False
+         where
+        nodeProperty
+          = (get_theme_type_variation,
+             wrapDroppingSetter set_theme_type_variation, Nothing)
+
 {-# NOINLINE bindControl__clips_input #-}
 
 -- | Virtual method to be implemented by the user. Returns whether @method _gui_input@ should not be called for children controls outside this control's rectangle. Input will be clipped to the Rect of this @Control@. Similar to @rect_clip_content@, but doesn't affect visibility.
@@ -633,6 +651,7 @@ instance NodeMethod Control "_clips_input" '[] (IO Bool) where
 
 -- | Virtual method to be implemented by the user. Returns the minimum size for this control. Alternative to @rect_min_size@ for controlling minimum size via code. The actual minimum size will be the max value of these two (in each axis separately).
 --   				If not overridden, defaults to @Vector2.ZERO@.
+--   				__Note:__ This method will not be called when the script is attached to a @Control@ node that already overrides its minimum size (e.g. @Label@, @Button@, @PanelContainer@ etc.). It can only be used with most basic GUI nodes, like @Control@, @Container@, @Panel@ etc.
 bindControl__get_minimum_size :: MethodBind
 bindControl__get_minimum_size
   = unsafePerformIO $
@@ -644,6 +663,7 @@ bindControl__get_minimum_size
 
 -- | Virtual method to be implemented by the user. Returns the minimum size for this control. Alternative to @rect_min_size@ for controlling minimum size via code. The actual minimum size will be the max value of these two (in each axis separately).
 --   				If not overridden, defaults to @Vector2.ZERO@.
+--   				__Note:__ This method will not be called when the script is attached to a @Control@ node that already overrides its minimum size (e.g. @Label@, @Button@, @PanelContainer@ etc.). It can only be used with most basic GUI nodes, like @Control@, @Container@, @Panel@ etc.
 _get_minimum_size ::
                     (Control :< cls, Object :< cls) => cls -> IO Vector2
 _get_minimum_size cls
@@ -1112,8 +1132,8 @@ instance NodeMethod Control "accept_event" '[] (IO ()) where
 
 {-# NOINLINE bindControl_add_color_override #-}
 
--- | Creates a local override for a theme @Color@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override cannot be removed, but it can be overridden with the corresponding default value.
---   				See also @method get_color@.
+-- | Creates a local override for a theme @Color@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				See also @method get_color@, @method remove_color_override@.
 --   				__Example of overriding a label's color and resetting it later:__
 --   				
 --   @
@@ -1133,8 +1153,8 @@ bindControl_add_color_override
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Creates a local override for a theme @Color@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override cannot be removed, but it can be overridden with the corresponding default value.
---   				See also @method get_color@.
+-- | Creates a local override for a theme @Color@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				See also @method get_color@, @method remove_color_override@.
 --   				__Example of overriding a label's color and resetting it later:__
 --   				
 --   @
@@ -1167,8 +1187,8 @@ instance NodeMethod Control "add_color_override"
 
 {-# NOINLINE bindControl_add_constant_override #-}
 
--- | Creates a local override for a theme constant with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override cannot be removed, but it can be overridden with the corresponding default value.
---   				See also @method get_constant@.
+-- | Creates a local override for a theme constant with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				See also @method get_constant@, @method remove_constant_override@.
 bindControl_add_constant_override :: MethodBind
 bindControl_add_constant_override
   = unsafePerformIO $
@@ -1178,8 +1198,8 @@ bindControl_add_constant_override
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Creates a local override for a theme constant with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override cannot be removed, but it can be overridden with the corresponding default value.
---   				See also @method get_constant@.
+-- | Creates a local override for a theme constant with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				See also @method get_constant@, @method remove_constant_override@.
 add_constant_override ::
                         (Control :< cls, Object :< cls) =>
                         cls -> GodotString -> Int -> IO ()
@@ -1203,7 +1223,8 @@ instance NodeMethod Control "add_constant_override"
 
 {-# NOINLINE bindControl_add_font_override #-}
 
--- | Creates a local override for a theme @Font@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override can be removed by assigning it a @null@ value.
+-- | Creates a local override for a theme @Font@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				__Note:__ An override can be removed by assigning it a @null@ value. This behavior is deprecated and will be removed in 4.0, use @method remove_font_override@ instead.
 --   				See also @method get_font@.
 bindControl_add_font_override :: MethodBind
 bindControl_add_font_override
@@ -1214,7 +1235,8 @@ bindControl_add_font_override
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Creates a local override for a theme @Font@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override can be removed by assigning it a @null@ value.
+-- | Creates a local override for a theme @Font@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				__Note:__ An override can be removed by assigning it a @null@ value. This behavior is deprecated and will be removed in 4.0, use @method remove_font_override@ instead.
 --   				See also @method get_font@.
 add_font_override ::
                     (Control :< cls, Object :< cls) =>
@@ -1238,7 +1260,8 @@ instance NodeMethod Control "add_font_override"
 
 {-# NOINLINE bindControl_add_icon_override #-}
 
--- | Creates a local override for a theme icon with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override can be removed by assigning it a @null@ value.
+-- | Creates a local override for a theme icon with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				__Note:__ An override can be removed by assigning it a @null@ value. This behavior is deprecated and will be removed in 4.0, use @method remove_icon_override@ instead.
 --   				See also @method get_icon@.
 bindControl_add_icon_override :: MethodBind
 bindControl_add_icon_override
@@ -1249,7 +1272,8 @@ bindControl_add_icon_override
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Creates a local override for a theme icon with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override can be removed by assigning it a @null@ value.
+-- | Creates a local override for a theme icon with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				__Note:__ An override can be removed by assigning it a @null@ value. This behavior is deprecated and will be removed in 4.0, use @method remove_icon_override@ instead.
 --   				See also @method get_icon@.
 add_icon_override ::
                     (Control :< cls, Object :< cls) =>
@@ -1273,7 +1297,8 @@ instance NodeMethod Control "add_icon_override"
 
 {-# NOINLINE bindControl_add_shader_override #-}
 
--- | Creates a local override for a theme shader with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override can be removed by assigning it a @null@ value.
+-- | Creates a local override for a theme shader with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				__Note:__ An override can be removed by assigning it a @null@ value. This behavior is deprecated and will be removed in 4.0, use @method remove_shader_override@ instead.
 bindControl_add_shader_override :: MethodBind
 bindControl_add_shader_override
   = unsafePerformIO $
@@ -1283,7 +1308,8 @@ bindControl_add_shader_override
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Creates a local override for a theme shader with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override can be removed by assigning it a @null@ value.
+-- | Creates a local override for a theme shader with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				__Note:__ An override can be removed by assigning it a @null@ value. This behavior is deprecated and will be removed in 4.0, use @method remove_shader_override@ instead.
 add_shader_override ::
                       (Control :< cls, Object :< cls) =>
                       cls -> GodotString -> Shader -> IO ()
@@ -1306,7 +1332,8 @@ instance NodeMethod Control "add_shader_override"
 
 {-# NOINLINE bindControl_add_stylebox_override #-}
 
--- | Creates a local override for a theme @StyleBox@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override can be removed by assigning it a @null@ value.
+-- | Creates a local override for a theme @StyleBox@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				__Note:__ An override can be removed by assigning it a @null@ value. This behavior is deprecated and will be removed in 4.0, use @method remove_stylebox_override@ instead.
 --   				See also @method get_stylebox@.
 --   				__Example of modifying a property in a StyleBox by duplicating it:__
 --   				
@@ -1332,7 +1359,8 @@ bindControl_add_stylebox_override
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Creates a local override for a theme @StyleBox@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control. An override can be removed by assigning it a @null@ value.
+-- | Creates a local override for a theme @StyleBox@ with the specified @name@. Local overrides always take precedence when fetching theme items for the control.
+--   				__Note:__ An override can be removed by assigning it a @null@ value. This behavior is deprecated and will be removed in 4.0, use @method remove_stylebox_override@ instead.
 --   				See also @method get_stylebox@.
 --   				__Example of modifying a property in a StyleBox by duplicating it:__
 --   				
@@ -1622,7 +1650,7 @@ instance NodeMethod Control "get_begin" '[] (IO Vector2) where
 
 {-# NOINLINE bindControl_get_color #-}
 
--- | Returns a @Color@ from the first matching @Theme@ in the tree if that @Theme@ has a color item with the specified @name@ and @theme_type@. If @theme_type@ is omitted the class name of the current control is used as the type. If the type is a class name its parent classes are also checked, in order of inheritance.
+-- | Returns a @Color@ from the first matching @Theme@ in the tree if that @Theme@ has a color item with the specified @name@ and @theme_type@. If @theme_type@ is omitted the class name of the current control is used as the type, or @theme_type_variation@ if it is defined. If the type is a class name its parent classes are also checked, in order of inheritance.
 --   				For the current control its local overrides are considered first (see @method add_color_override@), then its assigned @theme@. After the current control, each parent control and its assigned @theme@ are considered; controls without a @theme@ assigned are skipped. If no matching @Theme@ is found in the tree, a custom project @Theme@ (see @ProjectSettings.gui/theme/custom@) and the default @Theme@ are used.
 --   				
 --   @
@@ -1643,7 +1671,7 @@ bindControl_get_color
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a @Color@ from the first matching @Theme@ in the tree if that @Theme@ has a color item with the specified @name@ and @theme_type@. If @theme_type@ is omitted the class name of the current control is used as the type. If the type is a class name its parent classes are also checked, in order of inheritance.
+-- | Returns a @Color@ from the first matching @Theme@ in the tree if that @Theme@ has a color item with the specified @name@ and @theme_type@. If @theme_type@ is omitted the class name of the current control is used as the type, or @theme_type_variation@ if it is defined. If the type is a class name its parent classes are also checked, in order of inheritance.
 --   				For the current control its local overrides are considered first (see @method add_color_override@), then its assigned @theme@. After the current control, each parent control and its assigned @theme@ are considered; controls without a @theme@ assigned are skipped. If no matching @Theme@ is found in the tree, a custom project @Theme@ (see @ProjectSettings.gui/theme/custom@) and the default @Theme@ are used.
 --   				
 --   @
@@ -1915,7 +1943,7 @@ instance NodeMethod Control "get_end" '[] (IO Vector2) where
 
 {-# NOINLINE bindControl_get_focus_mode #-}
 
--- | The focus access mode for the control (None, Click or All). Only one Control can be focused at the same time, and it will receive keyboard signals.
+-- | The focus access mode for the control (None, Click or All). Only one Control can be focused at the same time, and it will receive keyboard, gamepad, and mouse signals.
 bindControl_get_focus_mode :: MethodBind
 bindControl_get_focus_mode
   = unsafePerformIO $
@@ -1925,7 +1953,7 @@ bindControl_get_focus_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The focus access mode for the control (None, Click or All). Only one Control can be focused at the same time, and it will receive keyboard signals.
+-- | The focus access mode for the control (None, Click or All). Only one Control can be focused at the same time, and it will receive keyboard, gamepad, and mouse signals.
 get_focus_mode :: (Control :< cls, Object :< cls) => cls -> IO Int
 get_focus_mode cls
   = withVariantArray []
@@ -1974,7 +2002,7 @@ instance NodeMethod Control "get_focus_neighbour" '[Int]
 
 {-# NOINLINE bindControl_get_focus_next #-}
 
--- | Tells Godot which node it should give keyboard focus to if the user presses Tab on a keyboard by default. You can change the key by editing the @ui_focus_next@ input action.
+-- | Tells Godot which node it should give focus to if the user presses @kbd@Tab@/kbd@ on a keyboard by default. You can change the key by editing the @ui_focus_next@ input action.
 --   			If this property is not set, Godot will select a "best guess" based on surrounding nodes in the scene tree.
 bindControl_get_focus_next :: MethodBind
 bindControl_get_focus_next
@@ -1985,7 +2013,7 @@ bindControl_get_focus_next
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Tells Godot which node it should give keyboard focus to if the user presses Tab on a keyboard by default. You can change the key by editing the @ui_focus_next@ input action.
+-- | Tells Godot which node it should give focus to if the user presses @kbd@Tab@/kbd@ on a keyboard by default. You can change the key by editing the @ui_focus_next@ input action.
 --   			If this property is not set, Godot will select a "best guess" based on surrounding nodes in the scene tree.
 get_focus_next ::
                  (Control :< cls, Object :< cls) => cls -> IO NodePath
@@ -2006,7 +2034,7 @@ instance NodeMethod Control "get_focus_next" '[] (IO NodePath)
 
 {-# NOINLINE bindControl_get_focus_owner #-}
 
--- | Returns the control that has the keyboard focus or @null@ if none.
+-- | Returns the control that has focus or @null@ if none.
 bindControl_get_focus_owner :: MethodBind
 bindControl_get_focus_owner
   = unsafePerformIO $
@@ -2016,7 +2044,7 @@ bindControl_get_focus_owner
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the control that has the keyboard focus or @null@ if none.
+-- | Returns the control that has focus or @null@ if none.
 get_focus_owner ::
                   (Control :< cls, Object :< cls) => cls -> IO Control
 get_focus_owner cls
@@ -2033,7 +2061,7 @@ instance NodeMethod Control "get_focus_owner" '[] (IO Control)
 
 {-# NOINLINE bindControl_get_focus_previous #-}
 
--- | Tells Godot which node it should give keyboard focus to if the user presses Shift+Tab on a keyboard by default. You can change the key by editing the @ui_focus_prev@ input action.
+-- | Tells Godot which node it should give focus to if the user presses @kbd@Shift + Tab@/kbd@ on a keyboard by default. You can change the key by editing the @ui_focus_prev@ input action.
 --   			If this property is not set, Godot will select a "best guess" based on surrounding nodes in the scene tree.
 bindControl_get_focus_previous :: MethodBind
 bindControl_get_focus_previous
@@ -2044,7 +2072,7 @@ bindControl_get_focus_previous
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Tells Godot which node it should give keyboard focus to if the user presses Shift+Tab on a keyboard by default. You can change the key by editing the @ui_focus_prev@ input action.
+-- | Tells Godot which node it should give focus to if the user presses @kbd@Shift + Tab@/kbd@ on a keyboard by default. You can change the key by editing the @ui_focus_prev@ input action.
 --   			If this property is not set, Godot will select a "best guess" based on surrounding nodes in the scene tree.
 get_focus_previous ::
                      (Control :< cls, Object :< cls) => cls -> IO NodePath
@@ -2568,7 +2596,7 @@ instance NodeMethod Control "get_rotation_degrees" '[] (IO Float)
 {-# NOINLINE bindControl_get_scale #-}
 
 -- | The node's scale, relative to its @rect_size@. Change this property to scale the node around its @rect_pivot_offset@. The Control's @hint_tooltip@ will also scale according to this value.
---   			__Note:__ This property is mainly intended to be used for animation purposes. Text inside the Control will look pixelated or blurry when the Control is scaled. To support multiple resolutions in your project, use an appropriate viewport stretch mode as described in the @url=https://docs.godotengine.org/en/3.4/tutorials/rendering/multiple_resolutions.html@documentation@/url@ instead of scaling Controls individually.
+--   			__Note:__ This property is mainly intended to be used for animation purposes. Text inside the Control will look pixelated or blurry when the Control is scaled. To support multiple resolutions in your project, use an appropriate viewport stretch mode as described in the @url=$DOCS_URL/tutorials/rendering/multiple_resolutions.html@documentation@/url@ instead of scaling Controls individually.
 --   			__Note:__ If the Control node is a child of a @Container@ node, the scale will be reset to @Vector2(1, 1)@ when the scene is instanced. To set the Control's scale when it's instanced, wait for one frame using @yield(get_tree(), "idle_frame")@ then set its @rect_scale@ property.
 bindControl_get_scale :: MethodBind
 bindControl_get_scale
@@ -2580,7 +2608,7 @@ bindControl_get_scale
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The node's scale, relative to its @rect_size@. Change this property to scale the node around its @rect_pivot_offset@. The Control's @hint_tooltip@ will also scale according to this value.
---   			__Note:__ This property is mainly intended to be used for animation purposes. Text inside the Control will look pixelated or blurry when the Control is scaled. To support multiple resolutions in your project, use an appropriate viewport stretch mode as described in the @url=https://docs.godotengine.org/en/3.4/tutorials/rendering/multiple_resolutions.html@documentation@/url@ instead of scaling Controls individually.
+--   			__Note:__ This property is mainly intended to be used for animation purposes. Text inside the Control will look pixelated or blurry when the Control is scaled. To support multiple resolutions in your project, use an appropriate viewport stretch mode as described in the @url=$DOCS_URL/tutorials/rendering/multiple_resolutions.html@documentation@/url@ instead of scaling Controls individually.
 --   			__Note:__ If the Control node is a child of a @Container@ node, the scale will be reset to @Vector2(1, 1)@ when the scene is instanced. To set the Control's scale when it's instanced, wait for one frame using @yield(get_tree(), "idle_frame")@ then set its @rect_scale@ property.
 get_scale :: (Control :< cls, Object :< cls) => cls -> IO Vector2
 get_scale cls
@@ -2707,6 +2735,74 @@ get_theme cls
 
 instance NodeMethod Control "get_theme" '[] (IO Theme) where
         nodeMethod = Godot.Core.Control.get_theme
+
+{-# NOINLINE bindControl_get_theme_default_font #-}
+
+-- | Returns the default font from the first matching @Theme@ in the tree if that @Theme@ has a valid @Theme.default_font@ value.
+--   				See @method get_color@ for details.
+bindControl_get_theme_default_font :: MethodBind
+bindControl_get_theme_default_font
+  = unsafePerformIO $
+      withCString "Control" $
+        \ clsNamePtr ->
+          withCString "get_theme_default_font" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the default font from the first matching @Theme@ in the tree if that @Theme@ has a valid @Theme.default_font@ value.
+--   				See @method get_color@ for details.
+get_theme_default_font ::
+                         (Control :< cls, Object :< cls) => cls -> IO Font
+get_theme_default_font cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindControl_get_theme_default_font
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod Control "get_theme_default_font" '[] (IO Font)
+         where
+        nodeMethod = Godot.Core.Control.get_theme_default_font
+
+{-# NOINLINE bindControl_get_theme_type_variation #-}
+
+-- | The name of a theme type variation used by this @Control@ to look up its own theme items. When empty, the class name of the node is used (e.g. @Button@ for the @Button@ control), as well as the class names of all parent classes (in order of inheritance).
+--   			When set, this property gives the highest priority to the type of the specified name. This type can in turn extend another type, forming a dependency chain. See @method Theme.set_type_variation@. If the theme item cannot be found using this type or its base types, lookup falls back on the class names.
+--   			__Note:__ To look up @Control@'s own items use various @get_*@ methods without specifying @theme_type@.
+--   			__Note:__ Theme items are looked for in the tree order, from branch to root, where each @Control@ node is checked for its @theme@ property. The earliest match against any type/class name is returned. The project-level Theme and the default Theme are checked last.
+bindControl_get_theme_type_variation :: MethodBind
+bindControl_get_theme_type_variation
+  = unsafePerformIO $
+      withCString "Control" $
+        \ clsNamePtr ->
+          withCString "get_theme_type_variation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The name of a theme type variation used by this @Control@ to look up its own theme items. When empty, the class name of the node is used (e.g. @Button@ for the @Button@ control), as well as the class names of all parent classes (in order of inheritance).
+--   			When set, this property gives the highest priority to the type of the specified name. This type can in turn extend another type, forming a dependency chain. See @method Theme.set_type_variation@. If the theme item cannot be found using this type or its base types, lookup falls back on the class names.
+--   			__Note:__ To look up @Control@'s own items use various @get_*@ methods without specifying @theme_type@.
+--   			__Note:__ Theme items are looked for in the tree order, from branch to root, where each @Control@ node is checked for its @theme@ property. The earliest match against any type/class name is returned. The project-level Theme and the default Theme are checked last.
+get_theme_type_variation ::
+                           (Control :< cls, Object :< cls) => cls -> IO GodotString
+get_theme_type_variation cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindControl_get_theme_type_variation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Control "get_theme_type_variation" '[]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.Control.get_theme_type_variation
 
 {-# NOINLINE bindControl_get_tooltip #-}
 
@@ -2844,6 +2940,7 @@ instance NodeMethod Control "grab_click_focus" '[] (IO ()) where
 {-# NOINLINE bindControl_grab_focus #-}
 
 -- | Steal the focus from another control and become the focused control (see @focus_mode@).
+--   				__Note__: Using this method together with @method Object.call_deferred@ makes it more reliable, especially when called inside @method Node._ready@.
 bindControl_grab_focus :: MethodBind
 bindControl_grab_focus
   = unsafePerformIO $
@@ -2854,6 +2951,7 @@ bindControl_grab_focus
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Steal the focus from another control and become the focused control (see @focus_mode@).
+--   				__Note__: Using this method together with @method Object.call_deferred@ makes it more reliable, especially when called inside @method Node._ready@.
 grab_focus :: (Control :< cls, Object :< cls) => cls -> IO ()
 grab_focus cls
   = withVariantArray []
@@ -3331,6 +3429,38 @@ instance NodeMethod Control "is_clipping_contents" '[] (IO Bool)
          where
         nodeMethod = Godot.Core.Control.is_clipping_contents
 
+{-# NOINLINE bindControl_is_drag_successful #-}
+
+-- | Returns @true@ if a drag operation is successful. Alternative to @method Viewport.gui_is_drag_successful@.
+--   				Best used with @Node.NOTIFICATION_DRAG_END@.
+bindControl_is_drag_successful :: MethodBind
+bindControl_is_drag_successful
+  = unsafePerformIO $
+      withCString "Control" $
+        \ clsNamePtr ->
+          withCString "is_drag_successful" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if a drag operation is successful. Alternative to @method Viewport.gui_is_drag_successful@.
+--   				Best used with @Node.NOTIFICATION_DRAG_END@.
+is_drag_successful ::
+                     (Control :< cls, Object :< cls) => cls -> IO Bool
+is_drag_successful cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindControl_is_drag_successful (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Control "is_drag_successful" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.Control.is_drag_successful
+
 {-# NOINLINE bindControl_minimum_size_changed #-}
 
 -- | Invalidates the size cache in this node and in parent nodes up to toplevel. Intended to be used with @method get_minimum_size@ when the return value is changed. Setting @rect_min_size@ directly calls this method automatically.
@@ -3364,7 +3494,7 @@ instance NodeMethod Control "minimum_size_changed" '[] (IO ())
 
 {-# NOINLINE bindControl_release_focus #-}
 
--- | Give up the focus. No other control will be able to receive keyboard input.
+-- | Give up the focus. No other control will be able to receive keyboard or gamepad input.
 bindControl_release_focus :: MethodBind
 bindControl_release_focus
   = unsafePerformIO $
@@ -3374,7 +3504,7 @@ bindControl_release_focus
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Give up the focus. No other control will be able to receive keyboard input.
+-- | Give up the focus. No other control will be able to receive keyboard or gamepad input.
 release_focus :: (Control :< cls, Object :< cls) => cls -> IO ()
 release_focus cls
   = withVariantArray []
@@ -3389,6 +3519,200 @@ release_focus cls
 
 instance NodeMethod Control "release_focus" '[] (IO ()) where
         nodeMethod = Godot.Core.Control.release_focus
+
+{-# NOINLINE bindControl_remove_color_override #-}
+
+-- | Removes a theme override for a @Color@ with the given @name@.
+bindControl_remove_color_override :: MethodBind
+bindControl_remove_color_override
+  = unsafePerformIO $
+      withCString "Control" $
+        \ clsNamePtr ->
+          withCString "remove_color_override" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes a theme override for a @Color@ with the given @name@.
+remove_color_override ::
+                        (Control :< cls, Object :< cls) => cls -> GodotString -> IO ()
+remove_color_override cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindControl_remove_color_override
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Control "remove_color_override" '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Control.remove_color_override
+
+{-# NOINLINE bindControl_remove_constant_override #-}
+
+-- | Removes a theme override for a constant with the given @name@.
+bindControl_remove_constant_override :: MethodBind
+bindControl_remove_constant_override
+  = unsafePerformIO $
+      withCString "Control" $
+        \ clsNamePtr ->
+          withCString "remove_constant_override" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes a theme override for a constant with the given @name@.
+remove_constant_override ::
+                           (Control :< cls, Object :< cls) => cls -> GodotString -> IO ()
+remove_constant_override cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindControl_remove_constant_override
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Control "remove_constant_override"
+           '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Control.remove_constant_override
+
+{-# NOINLINE bindControl_remove_font_override #-}
+
+-- | Removes a theme override for a @Font@ with the given @name@.
+bindControl_remove_font_override :: MethodBind
+bindControl_remove_font_override
+  = unsafePerformIO $
+      withCString "Control" $
+        \ clsNamePtr ->
+          withCString "remove_font_override" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes a theme override for a @Font@ with the given @name@.
+remove_font_override ::
+                       (Control :< cls, Object :< cls) => cls -> GodotString -> IO ()
+remove_font_override cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindControl_remove_font_override
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Control "remove_font_override" '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Control.remove_font_override
+
+{-# NOINLINE bindControl_remove_icon_override #-}
+
+-- | Removes a theme override for an icon with the given @name@.
+bindControl_remove_icon_override :: MethodBind
+bindControl_remove_icon_override
+  = unsafePerformIO $
+      withCString "Control" $
+        \ clsNamePtr ->
+          withCString "remove_icon_override" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes a theme override for an icon with the given @name@.
+remove_icon_override ::
+                       (Control :< cls, Object :< cls) => cls -> GodotString -> IO ()
+remove_icon_override cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindControl_remove_icon_override
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Control "remove_icon_override" '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Control.remove_icon_override
+
+{-# NOINLINE bindControl_remove_shader_override #-}
+
+-- | Removes a theme override for a shader with the given @name@.
+bindControl_remove_shader_override :: MethodBind
+bindControl_remove_shader_override
+  = unsafePerformIO $
+      withCString "Control" $
+        \ clsNamePtr ->
+          withCString "remove_shader_override" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes a theme override for a shader with the given @name@.
+remove_shader_override ::
+                         (Control :< cls, Object :< cls) => cls -> GodotString -> IO ()
+remove_shader_override cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindControl_remove_shader_override
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Control "remove_shader_override" '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Control.remove_shader_override
+
+{-# NOINLINE bindControl_remove_stylebox_override #-}
+
+-- | Removes a theme override for a @StyleBox@ with the given @name@.
+bindControl_remove_stylebox_override :: MethodBind
+bindControl_remove_stylebox_override
+  = unsafePerformIO $
+      withCString "Control" $
+        \ clsNamePtr ->
+          withCString "remove_stylebox_override" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Removes a theme override for a @StyleBox@ with the given @name@.
+remove_stylebox_override ::
+                           (Control :< cls, Object :< cls) => cls -> GodotString -> IO ()
+remove_stylebox_override cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindControl_remove_stylebox_override
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Control "remove_stylebox_override"
+           '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Control.remove_stylebox_override
 
 {-# NOINLINE bindControl_set_anchor #-}
 
@@ -3826,7 +4150,7 @@ instance NodeMethod Control "set_end" '[Vector2] (IO ()) where
 
 {-# NOINLINE bindControl_set_focus_mode #-}
 
--- | The focus access mode for the control (None, Click or All). Only one Control can be focused at the same time, and it will receive keyboard signals.
+-- | The focus access mode for the control (None, Click or All). Only one Control can be focused at the same time, and it will receive keyboard, gamepad, and mouse signals.
 bindControl_set_focus_mode :: MethodBind
 bindControl_set_focus_mode
   = unsafePerformIO $
@@ -3836,7 +4160,7 @@ bindControl_set_focus_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The focus access mode for the control (None, Click or All). Only one Control can be focused at the same time, and it will receive keyboard signals.
+-- | The focus access mode for the control (None, Click or All). Only one Control can be focused at the same time, and it will receive keyboard, gamepad, and mouse signals.
 set_focus_mode ::
                  (Control :< cls, Object :< cls) => cls -> Int -> IO ()
 set_focus_mode cls arg1
@@ -3886,7 +4210,7 @@ instance NodeMethod Control "set_focus_neighbour" '[Int, NodePath]
 
 {-# NOINLINE bindControl_set_focus_next #-}
 
--- | Tells Godot which node it should give keyboard focus to if the user presses Tab on a keyboard by default. You can change the key by editing the @ui_focus_next@ input action.
+-- | Tells Godot which node it should give focus to if the user presses @kbd@Tab@/kbd@ on a keyboard by default. You can change the key by editing the @ui_focus_next@ input action.
 --   			If this property is not set, Godot will select a "best guess" based on surrounding nodes in the scene tree.
 bindControl_set_focus_next :: MethodBind
 bindControl_set_focus_next
@@ -3897,7 +4221,7 @@ bindControl_set_focus_next
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Tells Godot which node it should give keyboard focus to if the user presses Tab on a keyboard by default. You can change the key by editing the @ui_focus_next@ input action.
+-- | Tells Godot which node it should give focus to if the user presses @kbd@Tab@/kbd@ on a keyboard by default. You can change the key by editing the @ui_focus_next@ input action.
 --   			If this property is not set, Godot will select a "best guess" based on surrounding nodes in the scene tree.
 set_focus_next ::
                  (Control :< cls, Object :< cls) => cls -> NodePath -> IO ()
@@ -3918,7 +4242,7 @@ instance NodeMethod Control "set_focus_next" '[NodePath] (IO ())
 
 {-# NOINLINE bindControl_set_focus_previous #-}
 
--- | Tells Godot which node it should give keyboard focus to if the user presses Shift+Tab on a keyboard by default. You can change the key by editing the @ui_focus_prev@ input action.
+-- | Tells Godot which node it should give focus to if the user presses @kbd@Shift + Tab@/kbd@ on a keyboard by default. You can change the key by editing the @ui_focus_prev@ input action.
 --   			If this property is not set, Godot will select a "best guess" based on surrounding nodes in the scene tree.
 bindControl_set_focus_previous :: MethodBind
 bindControl_set_focus_previous
@@ -3929,7 +4253,7 @@ bindControl_set_focus_previous
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Tells Godot which node it should give keyboard focus to if the user presses Shift+Tab on a keyboard by default. You can change the key by editing the @ui_focus_prev@ input action.
+-- | Tells Godot which node it should give focus to if the user presses @kbd@Shift + Tab@/kbd@ on a keyboard by default. You can change the key by editing the @ui_focus_prev@ input action.
 --   			If this property is not set, Godot will select a "best guess" based on surrounding nodes in the scene tree.
 set_focus_previous ::
                      (Control :< cls, Object :< cls) => cls -> NodePath -> IO ()
@@ -4302,7 +4626,7 @@ instance NodeMethod Control "set_rotation_degrees" '[Float] (IO ())
 {-# NOINLINE bindControl_set_scale #-}
 
 -- | The node's scale, relative to its @rect_size@. Change this property to scale the node around its @rect_pivot_offset@. The Control's @hint_tooltip@ will also scale according to this value.
---   			__Note:__ This property is mainly intended to be used for animation purposes. Text inside the Control will look pixelated or blurry when the Control is scaled. To support multiple resolutions in your project, use an appropriate viewport stretch mode as described in the @url=https://docs.godotengine.org/en/3.4/tutorials/rendering/multiple_resolutions.html@documentation@/url@ instead of scaling Controls individually.
+--   			__Note:__ This property is mainly intended to be used for animation purposes. Text inside the Control will look pixelated or blurry when the Control is scaled. To support multiple resolutions in your project, use an appropriate viewport stretch mode as described in the @url=$DOCS_URL/tutorials/rendering/multiple_resolutions.html@documentation@/url@ instead of scaling Controls individually.
 --   			__Note:__ If the Control node is a child of a @Container@ node, the scale will be reset to @Vector2(1, 1)@ when the scene is instanced. To set the Control's scale when it's instanced, wait for one frame using @yield(get_tree(), "idle_frame")@ then set its @rect_scale@ property.
 bindControl_set_scale :: MethodBind
 bindControl_set_scale
@@ -4314,7 +4638,7 @@ bindControl_set_scale
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The node's scale, relative to its @rect_size@. Change this property to scale the node around its @rect_pivot_offset@. The Control's @hint_tooltip@ will also scale according to this value.
---   			__Note:__ This property is mainly intended to be used for animation purposes. Text inside the Control will look pixelated or blurry when the Control is scaled. To support multiple resolutions in your project, use an appropriate viewport stretch mode as described in the @url=https://docs.godotengine.org/en/3.4/tutorials/rendering/multiple_resolutions.html@documentation@/url@ instead of scaling Controls individually.
+--   			__Note:__ This property is mainly intended to be used for animation purposes. Text inside the Control will look pixelated or blurry when the Control is scaled. To support multiple resolutions in your project, use an appropriate viewport stretch mode as described in the @url=$DOCS_URL/tutorials/rendering/multiple_resolutions.html@documentation@/url@ instead of scaling Controls individually.
 --   			__Note:__ If the Control node is a child of a @Container@ node, the scale will be reset to @Vector2(1, 1)@ when the scene is instanced. To set the Control's scale when it's instanced, wait for one frame using @yield(get_tree(), "idle_frame")@ then set its @rect_scale@ property.
 set_scale ::
             (Control :< cls, Object :< cls) => cls -> Vector2 -> IO ()
@@ -4421,6 +4745,45 @@ set_theme cls arg1
 
 instance NodeMethod Control "set_theme" '[Theme] (IO ()) where
         nodeMethod = Godot.Core.Control.set_theme
+
+{-# NOINLINE bindControl_set_theme_type_variation #-}
+
+-- | The name of a theme type variation used by this @Control@ to look up its own theme items. When empty, the class name of the node is used (e.g. @Button@ for the @Button@ control), as well as the class names of all parent classes (in order of inheritance).
+--   			When set, this property gives the highest priority to the type of the specified name. This type can in turn extend another type, forming a dependency chain. See @method Theme.set_type_variation@. If the theme item cannot be found using this type or its base types, lookup falls back on the class names.
+--   			__Note:__ To look up @Control@'s own items use various @get_*@ methods without specifying @theme_type@.
+--   			__Note:__ Theme items are looked for in the tree order, from branch to root, where each @Control@ node is checked for its @theme@ property. The earliest match against any type/class name is returned. The project-level Theme and the default Theme are checked last.
+bindControl_set_theme_type_variation :: MethodBind
+bindControl_set_theme_type_variation
+  = unsafePerformIO $
+      withCString "Control" $
+        \ clsNamePtr ->
+          withCString "set_theme_type_variation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The name of a theme type variation used by this @Control@ to look up its own theme items. When empty, the class name of the node is used (e.g. @Button@ for the @Button@ control), as well as the class names of all parent classes (in order of inheritance).
+--   			When set, this property gives the highest priority to the type of the specified name. This type can in turn extend another type, forming a dependency chain. See @method Theme.set_type_variation@. If the theme item cannot be found using this type or its base types, lookup falls back on the class names.
+--   			__Note:__ To look up @Control@'s own items use various @get_*@ methods without specifying @theme_type@.
+--   			__Note:__ Theme items are looked for in the tree order, from branch to root, where each @Control@ node is checked for its @theme@ property. The earliest match against any type/class name is returned. The project-level Theme and the default Theme are checked last.
+set_theme_type_variation ::
+                           (Control :< cls, Object :< cls) => cls -> GodotString -> IO ()
+set_theme_type_variation cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindControl_set_theme_type_variation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Control "set_theme_type_variation"
+           '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Control.set_theme_type_variation
 
 {-# NOINLINE bindControl_set_tooltip #-}
 

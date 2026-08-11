@@ -2,7 +2,8 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.PrimitiveMesh
-       (Godot.Core.PrimitiveMesh._update,
+       (Godot.Core.PrimitiveMesh._request_update,
+        Godot.Core.PrimitiveMesh._update,
         Godot.Core.PrimitiveMesh.get_custom_aabb,
         Godot.Core.PrimitiveMesh.get_flip_faces,
         Godot.Core.PrimitiveMesh.get_material,
@@ -35,6 +36,35 @@ instance NodeProperty PrimitiveMesh "material" Material 'False
          where
         nodeProperty
           = (get_material, wrapDroppingSetter set_material, Nothing)
+
+{-# NOINLINE bindPrimitiveMesh__request_update #-}
+
+bindPrimitiveMesh__request_update :: MethodBind
+bindPrimitiveMesh__request_update
+  = unsafePerformIO $
+      withCString "PrimitiveMesh" $
+        \ clsNamePtr ->
+          withCString "_request_update" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_request_update ::
+                  (PrimitiveMesh :< cls, Object :< cls) => cls -> IO ()
+_request_update cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPrimitiveMesh__request_update
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod PrimitiveMesh "_request_update" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.PrimitiveMesh._request_update
 
 {-# NOINLINE bindPrimitiveMesh__update #-}
 
@@ -96,7 +126,7 @@ instance NodeMethod PrimitiveMesh "get_custom_aabb" '[] (IO Aabb)
 {-# NOINLINE bindPrimitiveMesh_get_flip_faces #-}
 
 -- | If set, the order of the vertices in each triangle are reversed resulting in the backside of the mesh being drawn.
---   			This gives the same result as using @SpatialMaterial.CULL_BACK@ in @SpatialMaterial.params_cull_mode@.
+--   			This gives the same result as using @Material3D.CULL_BACK@ in @Material3D.params_cull_mode@.
 bindPrimitiveMesh_get_flip_faces :: MethodBind
 bindPrimitiveMesh_get_flip_faces
   = unsafePerformIO $
@@ -107,7 +137,7 @@ bindPrimitiveMesh_get_flip_faces
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If set, the order of the vertices in each triangle are reversed resulting in the backside of the mesh being drawn.
---   			This gives the same result as using @SpatialMaterial.CULL_BACK@ in @SpatialMaterial.params_cull_mode@.
+--   			This gives the same result as using @Material3D.CULL_BACK@ in @Material3D.params_cull_mode@.
 get_flip_faces ::
                  (PrimitiveMesh :< cls, Object :< cls) => cls -> IO Bool
 get_flip_faces cls
@@ -234,7 +264,7 @@ instance NodeMethod PrimitiveMesh "set_custom_aabb" '[Aabb] (IO ())
 {-# NOINLINE bindPrimitiveMesh_set_flip_faces #-}
 
 -- | If set, the order of the vertices in each triangle are reversed resulting in the backside of the mesh being drawn.
---   			This gives the same result as using @SpatialMaterial.CULL_BACK@ in @SpatialMaterial.params_cull_mode@.
+--   			This gives the same result as using @Material3D.CULL_BACK@ in @Material3D.params_cull_mode@.
 bindPrimitiveMesh_set_flip_faces :: MethodBind
 bindPrimitiveMesh_set_flip_faces
   = unsafePerformIO $
@@ -245,7 +275,7 @@ bindPrimitiveMesh_set_flip_faces
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If set, the order of the vertices in each triangle are reversed resulting in the backside of the mesh being drawn.
---   			This gives the same result as using @SpatialMaterial.CULL_BACK@ in @SpatialMaterial.params_cull_mode@.
+--   			This gives the same result as using @Material3D.CULL_BACK@ in @Material3D.params_cull_mode@.
 set_flip_faces ::
                  (PrimitiveMesh :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_flip_faces cls arg1

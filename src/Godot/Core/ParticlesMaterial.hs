@@ -27,6 +27,7 @@ module Godot.Core.ParticlesMaterial
         Godot.Core.ParticlesMaterial._PARAM_ANIM_OFFSET,
         Godot.Core.ParticlesMaterial._PARAM_ANGLE,
         Godot.Core.ParticlesMaterial.get_color,
+        Godot.Core.ParticlesMaterial.get_color_initial_ramp,
         Godot.Core.ParticlesMaterial.get_color_ramp,
         Godot.Core.ParticlesMaterial.get_direction,
         Godot.Core.ParticlesMaterial.get_emission_box_extents,
@@ -52,6 +53,7 @@ module Godot.Core.ParticlesMaterial
         Godot.Core.ParticlesMaterial.get_trail_divisor,
         Godot.Core.ParticlesMaterial.get_trail_size_modifier,
         Godot.Core.ParticlesMaterial.set_color,
+        Godot.Core.ParticlesMaterial.set_color_initial_ramp,
         Godot.Core.ParticlesMaterial.set_color_ramp,
         Godot.Core.ParticlesMaterial.set_direction,
         Godot.Core.ParticlesMaterial.set_emission_box_extents,
@@ -244,6 +246,14 @@ instance NodeProperty ParticlesMaterial "anim_speed_random" Float
 
 instance NodeProperty ParticlesMaterial "color" Color 'False where
         nodeProperty = (get_color, wrapDroppingSetter set_color, Nothing)
+
+instance NodeProperty ParticlesMaterial "color_initial_ramp"
+           GradientTexture
+           'False
+         where
+        nodeProperty
+          = (get_color_initial_ramp,
+             wrapDroppingSetter set_color_initial_ramp, Nothing)
 
 instance NodeProperty ParticlesMaterial "color_ramp" Texture 'False
          where
@@ -568,7 +578,8 @@ instance NodeProperty ParticlesMaterial "trail_size_modifier"
 
 {-# NOINLINE bindParticlesMaterial_get_color #-}
 
--- | Each particle's initial color. If the @Particles2D@'s @texture@ is defined, it will be multiplied by this color. To have particle display color in a @SpatialMaterial@ make sure to set @SpatialMaterial.vertex_color_use_as_albedo@ to @true@.
+-- | Each particle's initial color. If the @Particles2D@'s or @Particles@'s @texture@ is defined, it will be multiplied by this color.
+--   			__Note:__ @color@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color@ will have no visible effect.
 bindParticlesMaterial_get_color :: MethodBind
 bindParticlesMaterial_get_color
   = unsafePerformIO $
@@ -578,7 +589,8 @@ bindParticlesMaterial_get_color
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Each particle's initial color. If the @Particles2D@'s @texture@ is defined, it will be multiplied by this color. To have particle display color in a @SpatialMaterial@ make sure to set @SpatialMaterial.vertex_color_use_as_albedo@ to @true@.
+-- | Each particle's initial color. If the @Particles2D@'s or @Particles@'s @texture@ is defined, it will be multiplied by this color.
+--   			__Note:__ @color@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color@ will have no visible effect.
 get_color ::
             (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Color
 get_color cls
@@ -596,9 +608,41 @@ instance NodeMethod ParticlesMaterial "get_color" '[] (IO Color)
          where
         nodeMethod = Godot.Core.ParticlesMaterial.get_color
 
+{-# NOINLINE bindParticlesMaterial_get_color_initial_ramp #-}
+
+-- | Each particle's initial color will vary along this @GradientTexture@ (multiplied with @color@).
+--   			__Note:__ @color_initial_ramp@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color_initial_ramp@ will have no visible effect.
+bindParticlesMaterial_get_color_initial_ramp :: MethodBind
+bindParticlesMaterial_get_color_initial_ramp
+  = unsafePerformIO $
+      withCString "ParticlesMaterial" $
+        \ clsNamePtr ->
+          withCString "get_color_initial_ramp" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Each particle's initial color will vary along this @GradientTexture@ (multiplied with @color@).
+--   			__Note:__ @color_initial_ramp@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color_initial_ramp@ will have no visible effect.
+get_color_initial_ramp ::
+                         (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Texture
+get_color_initial_ramp cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindParticlesMaterial_get_color_initial_ramp
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod ParticlesMaterial "get_color_initial_ramp" '[]
+           (IO Texture)
+         where
+        nodeMethod = Godot.Core.ParticlesMaterial.get_color_initial_ramp
+
 {-# NOINLINE bindParticlesMaterial_get_color_ramp #-}
 
 -- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
+--   			__Note:__ @color_ramp@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color_ramp@ will have no visible effect.
 bindParticlesMaterial_get_color_ramp :: MethodBind
 bindParticlesMaterial_get_color_ramp
   = unsafePerformIO $
@@ -609,6 +653,7 @@ bindParticlesMaterial_get_color_ramp
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
+--   			__Note:__ @color_ramp@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color_ramp@ will have no visible effect.
 get_color_ramp ::
                  (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Texture
 get_color_ramp cls
@@ -694,6 +739,7 @@ instance NodeMethod ParticlesMaterial "get_emission_box_extents"
 {-# NOINLINE bindParticlesMaterial_get_emission_color_texture #-}
 
 -- | Particle color will be modulated by color determined by sampling this texture at the same point as the @emission_point_texture@.
+--   			__Note:__ @emission_color_texture@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @emission_color_texture@ will have no visible effect.
 bindParticlesMaterial_get_emission_color_texture :: MethodBind
 bindParticlesMaterial_get_emission_color_texture
   = unsafePerformIO $
@@ -704,6 +750,7 @@ bindParticlesMaterial_get_emission_color_texture
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Particle color will be modulated by color determined by sampling this texture at the same point as the @emission_point_texture@.
+--   			__Note:__ @emission_color_texture@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @emission_color_texture@ will have no visible effect.
 get_emission_color_texture ::
                              (ParticlesMaterial :< cls, Object :< cls) => cls -> IO Texture
 get_emission_color_texture cls
@@ -1370,7 +1417,8 @@ instance NodeMethod ParticlesMaterial "get_trail_size_modifier" '[]
 
 {-# NOINLINE bindParticlesMaterial_set_color #-}
 
--- | Each particle's initial color. If the @Particles2D@'s @texture@ is defined, it will be multiplied by this color. To have particle display color in a @SpatialMaterial@ make sure to set @SpatialMaterial.vertex_color_use_as_albedo@ to @true@.
+-- | Each particle's initial color. If the @Particles2D@'s or @Particles@'s @texture@ is defined, it will be multiplied by this color.
+--   			__Note:__ @color@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color@ will have no visible effect.
 bindParticlesMaterial_set_color :: MethodBind
 bindParticlesMaterial_set_color
   = unsafePerformIO $
@@ -1380,7 +1428,8 @@ bindParticlesMaterial_set_color
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Each particle's initial color. If the @Particles2D@'s @texture@ is defined, it will be multiplied by this color. To have particle display color in a @SpatialMaterial@ make sure to set @SpatialMaterial.vertex_color_use_as_albedo@ to @true@.
+-- | Each particle's initial color. If the @Particles2D@'s or @Particles@'s @texture@ is defined, it will be multiplied by this color.
+--   			__Note:__ @color@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color@ will have no visible effect.
 set_color ::
             (ParticlesMaterial :< cls, Object :< cls) => cls -> Color -> IO ()
 set_color cls arg1
@@ -1398,9 +1447,46 @@ instance NodeMethod ParticlesMaterial "set_color" '[Color] (IO ())
          where
         nodeMethod = Godot.Core.ParticlesMaterial.set_color
 
+{-# NOINLINE bindParticlesMaterial_set_color_initial_ramp #-}
+
+-- | Each particle's initial color will vary along this @GradientTexture@ (multiplied with @color@).
+--   			__Note:__ @color_initial_ramp@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color_initial_ramp@ will have no visible effect.
+bindParticlesMaterial_set_color_initial_ramp :: MethodBind
+bindParticlesMaterial_set_color_initial_ramp
+  = unsafePerformIO $
+      withCString "ParticlesMaterial" $
+        \ clsNamePtr ->
+          withCString "set_color_initial_ramp" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Each particle's initial color will vary along this @GradientTexture@ (multiplied with @color@).
+--   			__Note:__ @color_initial_ramp@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color_initial_ramp@ will have no visible effect.
+set_color_initial_ramp ::
+                         (ParticlesMaterial :< cls, Object :< cls) =>
+                         cls -> Texture -> IO ()
+set_color_initial_ramp cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindParticlesMaterial_set_color_initial_ramp
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ParticlesMaterial "set_color_initial_ramp"
+           '[Texture]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.ParticlesMaterial.set_color_initial_ramp
+
 {-# NOINLINE bindParticlesMaterial_set_color_ramp #-}
 
 -- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
+--   			__Note:__ @color_ramp@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color_ramp@ will have no visible effect.
 bindParticlesMaterial_set_color_ramp :: MethodBind
 bindParticlesMaterial_set_color_ramp
   = unsafePerformIO $
@@ -1411,6 +1497,7 @@ bindParticlesMaterial_set_color_ramp
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Each particle's color will vary along this @GradientTexture@ over its lifetime (multiplied with @color@).
+--   			__Note:__ @color_ramp@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @color_ramp@ will have no visible effect.
 set_color_ramp ::
                  (ParticlesMaterial :< cls, Object :< cls) =>
                  cls -> Texture -> IO ()
@@ -1502,6 +1589,7 @@ instance NodeMethod ParticlesMaterial "set_emission_box_extents"
 {-# NOINLINE bindParticlesMaterial_set_emission_color_texture #-}
 
 -- | Particle color will be modulated by color determined by sampling this texture at the same point as the @emission_point_texture@.
+--   			__Note:__ @emission_color_texture@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @emission_color_texture@ will have no visible effect.
 bindParticlesMaterial_set_emission_color_texture :: MethodBind
 bindParticlesMaterial_set_emission_color_texture
   = unsafePerformIO $
@@ -1512,6 +1600,7 @@ bindParticlesMaterial_set_emission_color_texture
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Particle color will be modulated by color determined by sampling this texture at the same point as the @emission_point_texture@.
+--   			__Note:__ @emission_color_texture@ multiplies the particle mesh's vertex colors. To have a visible effect on a @Material3D@, @Material3D.vertex_color_use_as_albedo@ @i@must@/i@ be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function. Otherwise, @emission_color_texture@ will have no visible effect.
 set_emission_color_texture ::
                              (ParticlesMaterial :< cls, Object :< cls) =>
                              cls -> Texture -> IO ()

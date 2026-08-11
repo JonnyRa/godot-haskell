@@ -14,7 +14,9 @@ module Godot.Core.MeshInstance
         Godot.Core.MeshInstance.get_skin,
         Godot.Core.MeshInstance.get_surface_material,
         Godot.Core.MeshInstance.get_surface_material_count,
+        Godot.Core.MeshInstance.is_mergeable_with,
         Godot.Core.MeshInstance.is_software_skinning_transform_normals_enabled,
+        Godot.Core.MeshInstance.merge_meshes,
         Godot.Core.MeshInstance.set_mesh,
         Godot.Core.MeshInstance.set_skeleton_path,
         Godot.Core.MeshInstance.set_skin,
@@ -363,7 +365,8 @@ instance NodeMethod MeshInstance "get_skin" '[] (IO Skin) where
 
 {-# NOINLINE bindMeshInstance_get_surface_material #-}
 
--- | Returns the @Material@ for a surface of the @Mesh@ resource.
+-- | Returns the override @Material@ for a surface of the @Mesh@ resource.
+--   				__Note:__ This function only returns @i@override@/i@ materials associated with this @MeshInstance@. Consider using @method get_active_material@ or @method Mesh.surface_get_material@ to get materials associated with the @Mesh@ resource.
 bindMeshInstance_get_surface_material :: MethodBind
 bindMeshInstance_get_surface_material
   = unsafePerformIO $
@@ -373,7 +376,8 @@ bindMeshInstance_get_surface_material
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the @Material@ for a surface of the @Mesh@ resource.
+-- | Returns the override @Material@ for a surface of the @Mesh@ resource.
+--   				__Note:__ This function only returns @i@override@/i@ materials associated with this @MeshInstance@. Consider using @method get_active_material@ or @method Mesh.surface_get_material@ to get materials associated with the @Mesh@ resource.
 get_surface_material ::
                        (MeshInstance :< cls, Object :< cls) => cls -> Int -> IO Material
 get_surface_material cls arg1
@@ -392,7 +396,7 @@ instance NodeMethod MeshInstance "get_surface_material" '[Int]
 
 {-# NOINLINE bindMeshInstance_get_surface_material_count #-}
 
--- | Returns the number of surface materials.
+-- | Returns the number of surface override materials.
 bindMeshInstance_get_surface_material_count :: MethodBind
 bindMeshInstance_get_surface_material_count
   = unsafePerformIO $
@@ -402,7 +406,7 @@ bindMeshInstance_get_surface_material_count
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the number of surface materials.
+-- | Returns the number of surface override materials.
 get_surface_material_count ::
                              (MeshInstance :< cls, Object :< cls) => cls -> IO Int
 get_surface_material_count cls
@@ -421,6 +425,43 @@ instance NodeMethod MeshInstance "get_surface_material_count" '[]
            (IO Int)
          where
         nodeMethod = Godot.Core.MeshInstance.get_surface_material_count
+
+{-# NOINLINE bindMeshInstance_is_mergeable_with #-}
+
+-- | Returns @true@ if this @MeshInstance@ can be merged with the specified @other_mesh_instance@, using the @method MeshInstance.merge_meshes@ function.
+--   				In order to be mergeable, properties of the @MeshInstance@ must match, and each surface must match, in terms of material, attributes and vertex format.
+bindMeshInstance_is_mergeable_with :: MethodBind
+bindMeshInstance_is_mergeable_with
+  = unsafePerformIO $
+      withCString "MeshInstance" $
+        \ clsNamePtr ->
+          withCString "is_mergeable_with" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if this @MeshInstance@ can be merged with the specified @other_mesh_instance@, using the @method MeshInstance.merge_meshes@ function.
+--   				In order to be mergeable, properties of the @MeshInstance@ must match, and each surface must match, in terms of material, attributes and vertex format.
+is_mergeable_with ::
+                    (MeshInstance :< cls, Object :< cls) =>
+                    cls -> Node -> Maybe Bool -> IO Bool
+is_mergeable_with cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindMeshInstance_is_mergeable_with
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MeshInstance "is_mergeable_with"
+           '[Node, Maybe Bool]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.MeshInstance.is_mergeable_with
 
 {-# NOINLINE bindMeshInstance_is_software_skinning_transform_normals_enabled
              #-}
@@ -462,6 +503,52 @@ instance NodeMethod MeshInstance
          where
         nodeMethod
           = Godot.Core.MeshInstance.is_software_skinning_transform_normals_enabled
+
+{-# NOINLINE bindMeshInstance_merge_meshes #-}
+
+-- | This function can merge together the data from several source @MeshInstance@s into a single destination @MeshInstance@ (the MeshInstance the function is called from). This is primarily useful for improving performance by reducing the number of drawcalls and @Node@s.
+--   				Merging should only be attempted for simple meshes that do not contain animation.
+--   				The final vertices can either be returned in global space, or in local space relative to the destination @MeshInstance@ global transform (the destination Node must be inside the @SceneTree@ for local space to work).
+--   				The function will make a final check for compatibility between the @MeshInstance@s by default, this should always be used unless you have previously checked for compatibility using @method MeshInstance.is_mergeable_with@. If the compatibility check is omitted and the meshes are merged, you may see rendering errors.
+--   				__Note:__ The requirements for similarity between meshes are quite stringent. They can be checked using the @method MeshInstance.is_mergeable_with@ function prior to calling @method MeshInstance.merge_meshes@.
+--   				Also note that any initial data in the destination @MeshInstance@ data will be discarded.
+bindMeshInstance_merge_meshes :: MethodBind
+bindMeshInstance_merge_meshes
+  = unsafePerformIO $
+      withCString "MeshInstance" $
+        \ clsNamePtr ->
+          withCString "merge_meshes" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | This function can merge together the data from several source @MeshInstance@s into a single destination @MeshInstance@ (the MeshInstance the function is called from). This is primarily useful for improving performance by reducing the number of drawcalls and @Node@s.
+--   				Merging should only be attempted for simple meshes that do not contain animation.
+--   				The final vertices can either be returned in global space, or in local space relative to the destination @MeshInstance@ global transform (the destination Node must be inside the @SceneTree@ for local space to work).
+--   				The function will make a final check for compatibility between the @MeshInstance@s by default, this should always be used unless you have previously checked for compatibility using @method MeshInstance.is_mergeable_with@. If the compatibility check is omitted and the meshes are merged, you may see rendering errors.
+--   				__Note:__ The requirements for similarity between meshes are quite stringent. They can be checked using the @method MeshInstance.is_mergeable_with@ function prior to calling @method MeshInstance.merge_meshes@.
+--   				Also note that any initial data in the destination @MeshInstance@ data will be discarded.
+merge_meshes ::
+               (MeshInstance :< cls, Object :< cls) =>
+               cls -> Array -> Maybe Bool -> Maybe Bool -> Maybe Bool -> IO Bool
+merge_meshes cls arg1 arg2 arg3 arg4
+  = withVariantArray
+      [toVariant arg1, maybe (VariantBool False) toVariant arg2,
+       maybe (VariantBool True) toVariant arg3,
+       maybe (VariantBool False) toVariant arg4]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindMeshInstance_merge_meshes (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MeshInstance "merge_meshes"
+           '[Array, Maybe Bool, Maybe Bool, Maybe Bool]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.MeshInstance.merge_meshes
 
 {-# NOINLINE bindMeshInstance_set_mesh #-}
 
@@ -596,7 +683,7 @@ instance NodeMethod MeshInstance
 
 {-# NOINLINE bindMeshInstance_set_surface_material #-}
 
--- | Sets the @Material@ for a surface of the @Mesh@ resource.
+-- | Sets the override @Material@ for the specified surface of the @Mesh@ resource. This material is associated with this @MeshInstance@ rather than with the @Mesh@ resource.
 bindMeshInstance_set_surface_material :: MethodBind
 bindMeshInstance_set_surface_material
   = unsafePerformIO $
@@ -606,7 +693,7 @@ bindMeshInstance_set_surface_material
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the @Material@ for a surface of the @Mesh@ resource.
+-- | Sets the override @Material@ for the specified surface of the @Mesh@ resource. This material is associated with this @MeshInstance@ rather than with the @Mesh@ resource.
 set_surface_material ::
                        (MeshInstance :< cls, Object :< cls) =>
                        cls -> Int -> Material -> IO ()

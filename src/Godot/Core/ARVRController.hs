@@ -277,7 +277,7 @@ instance NodeMethod ARVRController "get_mesh" '[] (IO Mesh) where
 
 {-# NOINLINE bindARVRController_get_rumble #-}
 
--- | The degree to which the controller vibrates. Ranges from @0.0@ to @1.0@ with precision @.01@. If changed, updates @ARVRPositionalTracker.rumble@ accordingly.
+-- | The degree to which the controller vibrates. Ranges from @0.0@ to @1.0@. If changed, updates @ARVRPositionalTracker.rumble@ accordingly.
 --   			This is a useful property to animate if you want the controller to vibrate for a limited duration.
 bindARVRController_get_rumble :: MethodBind
 bindARVRController_get_rumble
@@ -288,7 +288,7 @@ bindARVRController_get_rumble
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The degree to which the controller vibrates. Ranges from @0.0@ to @1.0@ with precision @.01@. If changed, updates @ARVRPositionalTracker.rumble@ accordingly.
+-- | The degree to which the controller vibrates. Ranges from @0.0@ to @1.0@. If changed, updates @ARVRPositionalTracker.rumble@ accordingly.
 --   			This is a useful property to animate if you want the controller to vibrate for a limited duration.
 get_rumble ::
              (ARVRController :< cls, Object :< cls) => cls -> IO Float
@@ -379,7 +379,7 @@ instance NodeMethod ARVRController "set_controller_id" '[Int]
 
 {-# NOINLINE bindARVRController_set_rumble #-}
 
--- | The degree to which the controller vibrates. Ranges from @0.0@ to @1.0@ with precision @.01@. If changed, updates @ARVRPositionalTracker.rumble@ accordingly.
+-- | The degree to which the controller vibrates. Ranges from @0.0@ to @1.0@. If changed, updates @ARVRPositionalTracker.rumble@ accordingly.
 --   			This is a useful property to animate if you want the controller to vibrate for a limited duration.
 bindARVRController_set_rumble :: MethodBind
 bindARVRController_set_rumble
@@ -390,7 +390,7 @@ bindARVRController_set_rumble
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The degree to which the controller vibrates. Ranges from @0.0@ to @1.0@ with precision @.01@. If changed, updates @ARVRPositionalTracker.rumble@ accordingly.
+-- | The degree to which the controller vibrates. Ranges from @0.0@ to @1.0@. If changed, updates @ARVRPositionalTracker.rumble@ accordingly.
 --   			This is a useful property to animate if you want the controller to vibrate for a limited duration.
 set_rumble ::
              (ARVRController :< cls, Object :< cls) => cls -> Float -> IO ()

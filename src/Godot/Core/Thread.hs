@@ -5,7 +5,8 @@ module Godot.Core.Thread
        (Godot.Core.Thread._PRIORITY_NORMAL,
         Godot.Core.Thread._PRIORITY_LOW, Godot.Core.Thread._PRIORITY_HIGH,
         Godot.Core.Thread.get_id, Godot.Core.Thread.is_active,
-        Godot.Core.Thread.start, Godot.Core.Thread.wait_to_finish)
+        Godot.Core.Thread.is_alive, Godot.Core.Thread.start,
+        Godot.Core.Thread.wait_to_finish)
        where
 import Data.Coerce
 import Foreign.C
@@ -79,6 +80,34 @@ is_active cls
 
 instance NodeMethod Thread "is_active" '[] (IO Bool) where
         nodeMethod = Godot.Core.Thread.is_active
+
+{-# NOINLINE bindThread_is_alive #-}
+
+-- | Returns @true@ if this @Thread@ is currently running. This is useful for determining if @method wait_to_finish@ can be called without blocking the calling thread.
+--   				To check if a @Thread@ is joinable, use @method is_active@.
+bindThread_is_alive :: MethodBind
+bindThread_is_alive
+  = unsafePerformIO $
+      withCString "_Thread" $
+        \ clsNamePtr ->
+          withCString "is_alive" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if this @Thread@ is currently running. This is useful for determining if @method wait_to_finish@ can be called without blocking the calling thread.
+--   				To check if a @Thread@ is joinable, use @method is_active@.
+is_alive :: (Thread :< cls, Object :< cls) => cls -> IO Bool
+is_alive cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindThread_is_alive (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Thread "is_alive" '[] (IO Bool) where
+        nodeMethod = Godot.Core.Thread.is_alive
 
 {-# NOINLINE bindThread_start #-}
 

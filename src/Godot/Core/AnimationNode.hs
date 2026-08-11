@@ -283,7 +283,7 @@ instance NodeMethod AnimationNode "blend_node"
 
 {-# NOINLINE bindAnimationNode_get_caption #-}
 
--- | Gets the text caption for this node (used by some editors).
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to override the text caption for this node.
 bindAnimationNode_get_caption :: MethodBind
 bindAnimationNode_get_caption
   = unsafePerformIO $
@@ -293,7 +293,7 @@ bindAnimationNode_get_caption
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the text caption for this node (used by some editors).
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to override the text caption for this node.
 get_caption ::
               (AnimationNode :< cls, Object :< cls) => cls -> IO GodotString
 get_caption cls
@@ -314,7 +314,7 @@ instance NodeMethod AnimationNode "get_caption" '[]
 
 {-# NOINLINE bindAnimationNode_get_child_by_name #-}
 
--- | Gets a child node by index (used by editors inheriting from @AnimationRootNode@).
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to return a child node by its @name@.
 bindAnimationNode_get_child_by_name :: MethodBind
 bindAnimationNode_get_child_by_name
   = unsafePerformIO $
@@ -324,7 +324,7 @@ bindAnimationNode_get_child_by_name
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets a child node by index (used by editors inheriting from @AnimationRootNode@).
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to return a child node by its @name@.
 get_child_by_name ::
                     (AnimationNode :< cls, Object :< cls) =>
                     cls -> GodotString -> IO Object
@@ -345,7 +345,7 @@ instance NodeMethod AnimationNode "get_child_by_name"
 
 {-# NOINLINE bindAnimationNode_get_child_nodes #-}
 
--- | Gets all children nodes in order as a @name: node@ dictionary. Only useful when inheriting @AnimationRootNode@.
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to return all children nodes in order as a @name: node@ dictionary.
 bindAnimationNode_get_child_nodes :: MethodBind
 bindAnimationNode_get_child_nodes
   = unsafePerformIO $
@@ -355,7 +355,7 @@ bindAnimationNode_get_child_nodes
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets all children nodes in order as a @name: node@ dictionary. Only useful when inheriting @AnimationRootNode@.
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to return all children nodes in order as a @name: node@ dictionary.
 get_child_nodes ::
                   (AnimationNode :< cls, Object :< cls) => cls -> IO Dictionary
 get_child_nodes cls
@@ -470,7 +470,7 @@ instance NodeMethod AnimationNode "get_parameter" '[GodotString]
 
 {-# NOINLINE bindAnimationNode_get_parameter_default_value #-}
 
--- | Gets the default value of a parameter. Parameters are custom local memory used for your nodes, given a resource can be reused in multiple trees.
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to return the default value of parameter "@name@". Parameters are custom local memory used for your nodes, given a resource can be reused in multiple trees.
 bindAnimationNode_get_parameter_default_value :: MethodBind
 bindAnimationNode_get_parameter_default_value
   = unsafePerformIO $
@@ -480,7 +480,7 @@ bindAnimationNode_get_parameter_default_value
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the default value of a parameter. Parameters are custom local memory used for your nodes, given a resource can be reused in multiple trees.
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to return the default value of parameter "@name@". Parameters are custom local memory used for your nodes, given a resource can be reused in multiple trees.
 get_parameter_default_value ::
                               (AnimationNode :< cls, Object :< cls) =>
                               cls -> GodotString -> IO GodotVariant
@@ -502,7 +502,7 @@ instance NodeMethod AnimationNode "get_parameter_default_value"
 
 {-# NOINLINE bindAnimationNode_get_parameter_list #-}
 
--- | Gets the property information for parameter. Parameters are custom local memory used for your nodes, given a resource can be reused in multiple trees. Format is similar to @method Object.get_property_list@.
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to return a list of the properties on this node. Parameters are custom local memory used for your nodes, given a resource can be reused in multiple trees. Format is similar to @method Object.get_property_list@.
 bindAnimationNode_get_parameter_list :: MethodBind
 bindAnimationNode_get_parameter_list
   = unsafePerformIO $
@@ -512,7 +512,7 @@ bindAnimationNode_get_parameter_list
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the property information for parameter. Parameters are custom local memory used for your nodes, given a resource can be reused in multiple trees. Format is similar to @method Object.get_property_list@.
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to return a list of the properties on this node. Parameters are custom local memory used for your nodes, given a resource can be reused in multiple trees. Format is similar to @method Object.get_property_list@.
 get_parameter_list ::
                      (AnimationNode :< cls, Object :< cls) => cls -> IO Array
 get_parameter_list cls
@@ -534,7 +534,7 @@ instance NodeMethod AnimationNode "get_parameter_list" '[]
 
 {-# NOINLINE bindAnimationNode_has_filter #-}
 
--- | Returns @true@ whether you want the blend tree editor to display filter editing on this node.
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to return whether the blend tree editor should display filter editing on this node.
 bindAnimationNode_has_filter :: MethodBind
 bindAnimationNode_has_filter
   = unsafePerformIO $
@@ -544,9 +544,9 @@ bindAnimationNode_has_filter
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ whether you want the blend tree editor to display filter editing on this node.
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to return whether the blend tree editor should display filter editing on this node.
 has_filter ::
-             (AnimationNode :< cls, Object :< cls) => cls -> IO GodotString
+             (AnimationNode :< cls, Object :< cls) => cls -> IO Bool
 has_filter cls
   = withVariantArray []
       (\ (arrPtr, len) ->
@@ -558,8 +558,7 @@ has_filter cls
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod AnimationNode "has_filter" '[] (IO GodotString)
-         where
+instance NodeMethod AnimationNode "has_filter" '[] (IO Bool) where
         nodeMethod = Godot.Core.AnimationNode.has_filter
 
 {-# NOINLINE bindAnimationNode_is_filter_enabled #-}
@@ -627,7 +626,7 @@ instance NodeMethod AnimationNode "is_path_filtered" '[NodePath]
 
 {-# NOINLINE bindAnimationNode_process #-}
 
--- | User-defined callback called when a custom node is processed. The @time@ parameter is a relative delta, unless @seek@ is @true@, in which case it is absolute.
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to run some code when this node is processed. The @time@ parameter is a relative delta, unless @seek@ is @true@, in which case it is absolute.
 --   				Here, call the @method blend_input@, @method blend_node@ or @method blend_animation@ functions. You can also use @method get_parameter@ and @method set_parameter@ to modify local memory.
 --   				This function should return the time left for the current animation to finish (if unsure, pass the value from the main blend being called).
 bindAnimationNode_process :: MethodBind
@@ -639,7 +638,7 @@ bindAnimationNode_process
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | User-defined callback called when a custom node is processed. The @time@ parameter is a relative delta, unless @seek@ is @true@, in which case it is absolute.
+-- | When inheriting from @AnimationRootNode@, implement this virtual method to run some code when this node is processed. The @time@ parameter is a relative delta, unless @seek@ is @true@, in which case it is absolute.
 --   				Here, call the @method blend_input@, @method blend_node@ or @method blend_animation@ functions. You can also use @method get_parameter@ and @method set_parameter@ to modify local memory.
 --   				This function should return the time left for the current animation to finish (if unsure, pass the value from the main blend being called).
 process ::

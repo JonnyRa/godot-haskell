@@ -19,6 +19,7 @@ module Godot.Core.OptionButton
         Godot.Core.OptionButton.get_item_index,
         Godot.Core.OptionButton.get_item_metadata,
         Godot.Core.OptionButton.get_item_text,
+        Godot.Core.OptionButton.get_item_tooltip,
         Godot.Core.OptionButton.get_popup,
         Godot.Core.OptionButton.get_selected,
         Godot.Core.OptionButton.get_selected_id,
@@ -30,7 +31,8 @@ module Godot.Core.OptionButton
         Godot.Core.OptionButton.set_item_icon,
         Godot.Core.OptionButton.set_item_id,
         Godot.Core.OptionButton.set_item_metadata,
-        Godot.Core.OptionButton.set_item_text)
+        Godot.Core.OptionButton.set_item_text,
+        Godot.Core.OptionButton.set_item_tooltip)
        where
 import Data.Coerce
 import Foreign.C
@@ -506,6 +508,39 @@ instance NodeMethod OptionButton "get_item_text" '[Int]
          where
         nodeMethod = Godot.Core.OptionButton.get_item_text
 
+{-# NOINLINE bindOptionButton_get_item_tooltip #-}
+
+-- | Returns the tooltip of the item at index @idx@.
+bindOptionButton_get_item_tooltip :: MethodBind
+bindOptionButton_get_item_tooltip
+  = unsafePerformIO $
+      withCString "OptionButton" $
+        \ clsNamePtr ->
+          withCString "get_item_tooltip" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the tooltip of the item at index @idx@.
+get_item_tooltip ::
+                   (OptionButton :< cls, Object :< cls) =>
+                   cls -> Int -> IO GodotString
+get_item_tooltip cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOptionButton_get_item_tooltip
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OptionButton "get_item_tooltip" '[Int]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.OptionButton.get_item_tooltip
+
 {-# NOINLINE bindOptionButton_get_popup #-}
 
 -- | Returns the @PopupMenu@ contained in this button.
@@ -566,7 +601,7 @@ instance NodeMethod OptionButton "get_selected" '[] (IO Int) where
 
 {-# NOINLINE bindOptionButton_get_selected_id #-}
 
--- | Returns the ID of the selected item, or @0@ if no item is selected.
+-- | Returns the ID of the selected item, or @-1@ if no item is selected.
 bindOptionButton_get_selected_id :: MethodBind
 bindOptionButton_get_selected_id
   = unsafePerformIO $
@@ -576,7 +611,7 @@ bindOptionButton_get_selected_id
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the ID of the selected item, or @0@ if no item is selected.
+-- | Returns the ID of the selected item, or @-1@ if no item is selected.
 get_selected_id ::
                   (OptionButton :< cls, Object :< cls) => cls -> IO Int
 get_selected_id cls
@@ -688,6 +723,7 @@ instance NodeMethod OptionButton "remove_item" '[Int] (IO ()) where
 {-# NOINLINE bindOptionButton_select #-}
 
 -- | Selects an item by index and makes it the current item. This will work even if the item is disabled.
+--   				Passing @-1@ as the index deselects any currently selected item.
 bindOptionButton_select :: MethodBind
 bindOptionButton_select
   = unsafePerformIO $
@@ -698,6 +734,7 @@ bindOptionButton_select
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Selects an item by index and makes it the current item. This will work even if the item is disabled.
+--   				Passing @-1@ as the index deselects any currently selected item.
 select ::
          (OptionButton :< cls, Object :< cls) => cls -> Int -> IO ()
 select cls arg1
@@ -875,3 +912,37 @@ instance NodeMethod OptionButton "set_item_text"
            (IO ())
          where
         nodeMethod = Godot.Core.OptionButton.set_item_text
+
+{-# NOINLINE bindOptionButton_set_item_tooltip #-}
+
+-- | Sets the tooltip of the item at index @idx@.
+bindOptionButton_set_item_tooltip :: MethodBind
+bindOptionButton_set_item_tooltip
+  = unsafePerformIO $
+      withCString "OptionButton" $
+        \ clsNamePtr ->
+          withCString "set_item_tooltip" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the tooltip of the item at index @idx@.
+set_item_tooltip ::
+                   (OptionButton :< cls, Object :< cls) =>
+                   cls -> Int -> GodotString -> IO ()
+set_item_tooltip cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOptionButton_set_item_tooltip
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OptionButton "set_item_tooltip"
+           '[Int, GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.OptionButton.set_item_tooltip

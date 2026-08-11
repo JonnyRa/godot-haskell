@@ -88,6 +88,13 @@ instance NodeProperty AudioServer "bus_count" Int 'False where
         nodeProperty
           = (get_bus_count, wrapDroppingSetter set_bus_count, Nothing)
 
+instance NodeProperty AudioServer "capture_device" GodotString
+           'False
+         where
+        nodeProperty
+          = (capture_get_device, wrapDroppingSetter capture_set_device,
+             Nothing)
+
 instance NodeProperty AudioServer "device" GodotString 'False where
         nodeProperty = (get_device, wrapDroppingSetter set_device, Nothing)
 
@@ -163,7 +170,8 @@ instance NodeMethod AudioServer "add_bus_effect"
 
 {-# NOINLINE bindAudioServer_capture_get_device #-}
 
--- | Name of the current device for audio input (see @method capture_get_device_list@). The value @"Default"@ means that the system-wide default audio input is currently used.
+-- | Name of the current device for audio input (see @method capture_get_device_list@). On systems with multiple audio inputs (such as analog, USB and HDMI audio), this can be used to select the audio input device. The value @"Default"@ will record audio on the system-wide default audio input. If an invalid device name is set, the value will be reverted back to @"Default"@.
+--   			__Note:__ @ProjectSettings.audio/enable_audio_input@ must be @true@ for audio input to work. See also that setting's description for caveats related to permissions and operating system privacy settings.
 bindAudioServer_capture_get_device :: MethodBind
 bindAudioServer_capture_get_device
   = unsafePerformIO $
@@ -173,7 +181,8 @@ bindAudioServer_capture_get_device
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Name of the current device for audio input (see @method capture_get_device_list@). The value @"Default"@ means that the system-wide default audio input is currently used.
+-- | Name of the current device for audio input (see @method capture_get_device_list@). On systems with multiple audio inputs (such as analog, USB and HDMI audio), this can be used to select the audio input device. The value @"Default"@ will record audio on the system-wide default audio input. If an invalid device name is set, the value will be reverted back to @"Default"@.
+--   			__Note:__ @ProjectSettings.audio/enable_audio_input@ must be @true@ for audio input to work. See also that setting's description for caveats related to permissions and operating system privacy settings.
 capture_get_device ::
                      (AudioServer :< cls, Object :< cls) => cls -> IO GodotString
 capture_get_device cls
@@ -196,6 +205,7 @@ instance NodeMethod AudioServer "capture_get_device" '[]
 {-# NOINLINE bindAudioServer_capture_get_device_list #-}
 
 -- | Returns the names of all audio input devices detected on the system.
+--   				__Note:__ @ProjectSettings.audio/enable_audio_input@ must be @true@ for audio input to work. See also that setting's description for caveats related to permissions and operating system privacy settings.
 bindAudioServer_capture_get_device_list :: MethodBind
 bindAudioServer_capture_get_device_list
   = unsafePerformIO $
@@ -206,6 +216,7 @@ bindAudioServer_capture_get_device_list
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns the names of all audio input devices detected on the system.
+--   				__Note:__ @ProjectSettings.audio/enable_audio_input@ must be @true@ for audio input to work. See also that setting's description for caveats related to permissions and operating system privacy settings.
 capture_get_device_list ::
                           (AudioServer :< cls, Object :< cls) => cls -> IO Array
 capture_get_device_list cls
@@ -227,7 +238,8 @@ instance NodeMethod AudioServer "capture_get_device_list" '[]
 
 {-# NOINLINE bindAudioServer_capture_set_device #-}
 
--- | Sets which audio input device is used for audio capture. On systems with multiple audio inputs (such as analog and USB), this can be used to select the audio input device. Setting the value @"Default"@ will record audio from the system-wide default audio input. If an invalid device name is set, the value will be reverted back to @"Default"@.
+-- | Name of the current device for audio input (see @method capture_get_device_list@). On systems with multiple audio inputs (such as analog, USB and HDMI audio), this can be used to select the audio input device. The value @"Default"@ will record audio on the system-wide default audio input. If an invalid device name is set, the value will be reverted back to @"Default"@.
+--   			__Note:__ @ProjectSettings.audio/enable_audio_input@ must be @true@ for audio input to work. See also that setting's description for caveats related to permissions and operating system privacy settings.
 bindAudioServer_capture_set_device :: MethodBind
 bindAudioServer_capture_set_device
   = unsafePerformIO $
@@ -237,7 +249,8 @@ bindAudioServer_capture_set_device
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets which audio input device is used for audio capture. On systems with multiple audio inputs (such as analog and USB), this can be used to select the audio input device. Setting the value @"Default"@ will record audio from the system-wide default audio input. If an invalid device name is set, the value will be reverted back to @"Default"@.
+-- | Name of the current device for audio input (see @method capture_get_device_list@). On systems with multiple audio inputs (such as analog, USB and HDMI audio), this can be used to select the audio input device. The value @"Default"@ will record audio on the system-wide default audio input. If an invalid device name is set, the value will be reverted back to @"Default"@.
+--   			__Note:__ @ProjectSettings.audio/enable_audio_input@ must be @true@ for audio input to work. See also that setting's description for caveats related to permissions and operating system privacy settings.
 capture_set_device ::
                      (AudioServer :< cls, Object :< cls) => cls -> GodotString -> IO ()
 capture_set_device cls arg1
@@ -756,7 +769,7 @@ instance NodeMethod AudioServer "get_mix_rate" '[] (IO Float) where
 
 {-# NOINLINE bindAudioServer_get_output_latency #-}
 
--- | Returns the audio driver's output latency.
+-- | Returns the audio driver's output latency. This can be expensive, it is not recommended to call this every frame.
 bindAudioServer_get_output_latency :: MethodBind
 bindAudioServer_get_output_latency
   = unsafePerformIO $
@@ -766,7 +779,7 @@ bindAudioServer_get_output_latency
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the audio driver's output latency.
+-- | Returns the audio driver's output latency. This can be expensive, it is not recommended to call this every frame.
 get_output_latency ::
                      (AudioServer :< cls, Object :< cls) => cls -> IO Float
 get_output_latency cls

@@ -2,7 +2,8 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.Translation
-       (Godot.Core.Translation._get_messages,
+       (Godot.Core.Translation._get_message,
+        Godot.Core.Translation._get_messages,
         Godot.Core.Translation._set_messages,
         Godot.Core.Translation.add_message,
         Godot.Core.Translation.erase_message,
@@ -31,6 +32,38 @@ instance NodeProperty Translation "messages" PoolStringArray 'False
          where
         nodeProperty
           = (_get_messages, wrapDroppingSetter _set_messages, Nothing)
+
+{-# NOINLINE bindTranslation__get_message #-}
+
+-- | Virtual method to override @method get_message@.
+bindTranslation__get_message :: MethodBind
+bindTranslation__get_message
+  = unsafePerformIO $
+      withCString "Translation" $
+        \ clsNamePtr ->
+          withCString "_get_message" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Virtual method to override @method get_message@.
+_get_message ::
+               (Translation :< cls, Object :< cls) =>
+               cls -> GodotString -> IO GodotString
+_get_message cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTranslation__get_message (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Translation "_get_message" '[GodotString]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.Translation._get_message
 
 {-# NOINLINE bindTranslation__get_messages #-}
 

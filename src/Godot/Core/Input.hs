@@ -4,7 +4,9 @@
 module Godot.Core.Input
        (Godot.Core.Input._CURSOR_MOVE, Godot.Core.Input._CURSOR_ARROW,
         Godot.Core.Input._CURSOR_IBEAM, Godot.Core.Input._CURSOR_HSPLIT,
-        Godot.Core.Input._CURSOR_DRAG, Godot.Core.Input._CURSOR_BUSY,
+        Godot.Core.Input._CURSOR_DRAG,
+        Godot.Core.Input._MOUSE_MODE_CONFINED_HIDDEN,
+        Godot.Core.Input._CURSOR_BUSY,
         Godot.Core.Input._MOUSE_MODE_CONFINED,
         Godot.Core.Input._CURSOR_CROSS, Godot.Core.Input._CURSOR_WAIT,
         Godot.Core.Input._CURSOR_BDIAGSIZE, Godot.Core.Input._CURSOR_HELP,
@@ -19,6 +21,7 @@ module Godot.Core.Input
         Godot.Core.Input.sig_joy_connection_changed,
         Godot.Core.Input.action_press, Godot.Core.Input.action_release,
         Godot.Core.Input.add_joy_mapping,
+        Godot.Core.Input.flush_buffered_events,
         Godot.Core.Input.get_accelerometer,
         Godot.Core.Input.get_action_raw_strength,
         Godot.Core.Input.get_action_strength, Godot.Core.Input.get_axis,
@@ -43,13 +46,18 @@ module Godot.Core.Input
         Godot.Core.Input.is_joy_button_pressed,
         Godot.Core.Input.is_joy_known, Godot.Core.Input.is_key_pressed,
         Godot.Core.Input.is_mouse_button_pressed,
+        Godot.Core.Input.is_physical_key_pressed,
+        Godot.Core.Input.is_using_accumulated_input,
         Godot.Core.Input.joy_connection_changed,
         Godot.Core.Input.parse_input_event,
         Godot.Core.Input.remove_joy_mapping,
+        Godot.Core.Input.set_accelerometer,
         Godot.Core.Input.set_custom_mouse_cursor,
         Godot.Core.Input.set_default_cursor_shape,
-        Godot.Core.Input.set_mouse_mode,
+        Godot.Core.Input.set_gravity, Godot.Core.Input.set_gyroscope,
+        Godot.Core.Input.set_magnetometer, Godot.Core.Input.set_mouse_mode,
         Godot.Core.Input.set_use_accumulated_input,
+        Godot.Core.Input.should_ignore_device,
         Godot.Core.Input.start_joy_vibration,
         Godot.Core.Input.stop_joy_vibration,
         Godot.Core.Input.vibrate_handheld,
@@ -81,6 +89,9 @@ _CURSOR_HSPLIT = 15
 
 _CURSOR_DRAG :: Int
 _CURSOR_DRAG = 6
+
+_MOUSE_MODE_CONFINED_HIDDEN :: Int
+_MOUSE_MODE_CONFINED_HIDDEN = 4
 
 _CURSOR_BUSY :: Int
 _CURSOR_BUSY = 5
@@ -136,6 +147,16 @@ sig_joy_connection_changed
   = Godot.Internal.Dispatch.Signal "joy_connection_changed"
 
 instance NodeSignal Input "joy_connection_changed" '[Int, Bool]
+
+instance NodeProperty Input "mouse_mode" Int 'False where
+        nodeProperty
+          = (get_mouse_mode, wrapDroppingSetter set_mouse_mode, Nothing)
+
+instance NodeProperty Input "use_accumulated_input" Bool 'False
+         where
+        nodeProperty
+          = (is_using_accumulated_input,
+             wrapDroppingSetter set_use_accumulated_input, Nothing)
 
 {-# NOINLINE bindInput_action_press #-}
 
@@ -237,6 +258,37 @@ instance NodeMethod Input "add_joy_mapping"
          where
         nodeMethod = Godot.Core.Input.add_joy_mapping
 
+{-# NOINLINE bindInput_flush_buffered_events #-}
+
+-- | Sends all input events which are in the current buffer to the game loop. These events may have been buffered as a result of accumulated input (@use_accumulated_input@) or agile input flushing (@ProjectSettings.input_devices/buffering/agile_event_flushing@).
+--   				The engine will already do this itself at key execution points (at least once per frame). However, this can be useful in advanced cases where you want precise control over the timing of event handling.
+bindInput_flush_buffered_events :: MethodBind
+bindInput_flush_buffered_events
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "flush_buffered_events" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sends all input events which are in the current buffer to the game loop. These events may have been buffered as a result of accumulated input (@use_accumulated_input@) or agile input flushing (@ProjectSettings.input_devices/buffering/agile_event_flushing@).
+--   				The engine will already do this itself at key execution points (at least once per frame). However, this can be useful in advanced cases where you want precise control over the timing of event handling.
+flush_buffered_events ::
+                        (Input :< cls, Object :< cls) => cls -> IO ()
+flush_buffered_events cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_flush_buffered_events (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "flush_buffered_events" '[] (IO ()) where
+        nodeMethod = Godot.Core.Input.flush_buffered_events
+
 {-# NOINLINE bindInput_get_accelerometer #-}
 
 -- | Returns the acceleration of the device's accelerometer sensor, if the device has one. Otherwise, the method returns @Vector3.ZERO@.
@@ -274,7 +326,7 @@ instance NodeMethod Input "get_accelerometer" '[] (IO Vector3)
 {-# NOINLINE bindInput_get_action_raw_strength #-}
 
 -- | Returns a value between 0 and 1 representing the raw intensity of the given action, ignoring the action's deadzone. In most cases, you should use @method get_action_strength@ instead.
---   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				If @exact@ is @false@, it ignores additional input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 bindInput_get_action_raw_strength :: MethodBind
 bindInput_get_action_raw_strength
   = unsafePerformIO $
@@ -285,7 +337,7 @@ bindInput_get_action_raw_strength
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns a value between 0 and 1 representing the raw intensity of the given action, ignoring the action's deadzone. In most cases, you should use @method get_action_strength@ instead.
---   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				If @exact@ is @false@, it ignores additional input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 get_action_raw_strength ::
                           (Input :< cls, Object :< cls) =>
                           cls -> GodotString -> Maybe Bool -> IO Float
@@ -311,7 +363,7 @@ instance NodeMethod Input "get_action_raw_strength"
 {-# NOINLINE bindInput_get_action_strength #-}
 
 -- | Returns a value between 0 and 1 representing the intensity of the given action. In a joypad, for example, the further away the axis (analog sticks or L2, R2 triggers) is from the dead zone, the closer the value will be to 1. If the action is mapped to a control that has no axis as the keyboard, the value returned will be 0 or 1.
---   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				If @exact@ is @false@, it ignores additional input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 bindInput_get_action_strength :: MethodBind
 bindInput_get_action_strength
   = unsafePerformIO $
@@ -322,7 +374,7 @@ bindInput_get_action_strength
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns a value between 0 and 1 representing the intensity of the given action. In a joypad, for example, the further away the axis (analog sticks or L2, R2 triggers) is from the dead zone, the closer the value will be to 1. If the action is mapped to a control that has no axis as the keyboard, the value returned will be 0 or 1.
---   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				If @exact@ is @false@, it ignores additional input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
 get_action_strength ::
                       (Input :< cls, Object :< cls) =>
                       cls -> GodotString -> Maybe Bool -> IO Float
@@ -654,7 +706,7 @@ instance NodeMethod Input "get_joy_button_string" '[Int]
 
 {-# NOINLINE bindInput_get_joy_guid #-}
 
--- | Returns a SDL2-compatible device GUID on platforms that use gamepad remapping. Returns @"Default Gamepad"@ otherwise.
+-- | Returns a SDL2-compatible device GUID on platforms that use gamepad remapping, e.g. @030000004c050000c405000000010000@. Returns @"Default Gamepad"@ otherwise. Godot uses the @url=https://github.com/gabomdq/SDL_GameControllerDB@SDL2 game controller database@/url@ to determine gamepad names and mappings based on this GUID.
 bindInput_get_joy_guid :: MethodBind
 bindInput_get_joy_guid
   = unsafePerformIO $
@@ -664,7 +716,7 @@ bindInput_get_joy_guid
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns a SDL2-compatible device GUID on platforms that use gamepad remapping. Returns @"Default Gamepad"@ otherwise.
+-- | Returns a SDL2-compatible device GUID on platforms that use gamepad remapping, e.g. @030000004c050000c405000000010000@. Returns @"Default Gamepad"@ otherwise. Godot uses the @url=https://github.com/gabomdq/SDL_GameControllerDB@SDL2 game controller database@/url@ to determine gamepad names and mappings based on this GUID.
 get_joy_guid ::
                (Input :< cls, Object :< cls) => cls -> Int -> IO GodotString
 get_joy_guid cls arg1
@@ -683,7 +735,7 @@ instance NodeMethod Input "get_joy_guid" '[Int] (IO GodotString)
 
 {-# NOINLINE bindInput_get_joy_name #-}
 
--- | Returns the name of the joypad at the specified device index.
+-- | Returns the name of the joypad at the specified device index, e.g. @PS4 Controller@. Godot uses the @url=https://github.com/gabomdq/SDL_GameControllerDB@SDL2 game controller database@/url@ to determine gamepad names.
 bindInput_get_joy_name :: MethodBind
 bindInput_get_joy_name
   = unsafePerformIO $
@@ -693,7 +745,7 @@ bindInput_get_joy_name
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the name of the joypad at the specified device index.
+-- | Returns the name of the joypad at the specified device index, e.g. @PS4 Controller@. Godot uses the @url=https://github.com/gabomdq/SDL_GameControllerDB@SDL2 game controller database@/url@ to determine gamepad names.
 get_joy_name ::
                (Input :< cls, Object :< cls) => cls -> Int -> IO GodotString
 get_joy_name cls arg1
@@ -776,7 +828,7 @@ instance NodeMethod Input "get_joy_vibration_strength" '[Int]
 
 {-# NOINLINE bindInput_get_last_mouse_speed #-}
 
--- | Returns the mouse speed for the last time the cursor was moved, and this until the next frame where the mouse moves. This means that even if the mouse is not moving, this function will still return the value of the last motion.
+-- | Returns the last mouse speed. To provide a precise and jitter-free speed, mouse speed is only calculated every 0.1s. Therefore, mouse speed will lag mouse movements.
 bindInput_get_last_mouse_speed :: MethodBind
 bindInput_get_last_mouse_speed
   = unsafePerformIO $
@@ -786,7 +838,7 @@ bindInput_get_last_mouse_speed
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the mouse speed for the last time the cursor was moved, and this until the next frame where the mouse moves. This means that even if the mouse is not moving, this function will still return the value of the last motion.
+-- | Returns the last mouse speed. To provide a precise and jitter-free speed, mouse speed is only calculated every 0.1s. Therefore, mouse speed will lag mouse movements.
 get_last_mouse_speed ::
                        (Input :< cls, Object :< cls) => cls -> IO Vector2
 get_last_mouse_speed cls
@@ -867,7 +919,7 @@ instance NodeMethod Input "get_mouse_button_mask" '[] (IO Int)
 
 {-# NOINLINE bindInput_get_mouse_mode #-}
 
--- | Returns the mouse mode. See the constants for more information.
+-- | Controls the mouse mode. See @enum MouseMode@ for more information.
 bindInput_get_mouse_mode :: MethodBind
 bindInput_get_mouse_mode
   = unsafePerformIO $
@@ -877,7 +929,7 @@ bindInput_get_mouse_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the mouse mode. See the constants for more information.
+-- | Controls the mouse mode. See @enum MouseMode@ for more information.
 get_mouse_mode :: (Input :< cls, Object :< cls) => cls -> IO Int
 get_mouse_mode cls
   = withVariantArray []
@@ -934,10 +986,11 @@ instance NodeMethod Input "get_vector"
 
 {-# NOINLINE bindInput_is_action_just_pressed #-}
 
--- | Returns @true@ when the user starts pressing the action event, meaning it's @true@ only on the frame that the user pressed down the button.
+-- | Returns @true@ when the user has @i@started@/i@ pressing the action event in the current frame or physics tick. It will only return @true@ on the frame or tick that the user pressed down the button.
 --   				This is useful for code that needs to run only once when an action is pressed, instead of every frame while it's pressed.
---   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
---   				__Note:__ Due to keyboard ghosting, @method is_action_just_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
+--   				If @exact@ is @false@, it ignores additional input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Returning @true@ does not imply that the action is @i@still@/i@ pressed. An action can be pressed and released again rapidly, and @true@ will still be returned so as not to miss input.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_just_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 bindInput_is_action_just_pressed :: MethodBind
 bindInput_is_action_just_pressed
   = unsafePerformIO $
@@ -947,10 +1000,11 @@ bindInput_is_action_just_pressed
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ when the user starts pressing the action event, meaning it's @true@ only on the frame that the user pressed down the button.
+-- | Returns @true@ when the user has @i@started@/i@ pressing the action event in the current frame or physics tick. It will only return @true@ on the frame or tick that the user pressed down the button.
 --   				This is useful for code that needs to run only once when an action is pressed, instead of every frame while it's pressed.
---   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
---   				__Note:__ Due to keyboard ghosting, @method is_action_just_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
+--   				If @exact@ is @false@, it ignores additional input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Returning @true@ does not imply that the action is @i@still@/i@ pressed. An action can be pressed and released again rapidly, and @true@ will still be returned so as not to miss input.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_just_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 is_action_just_pressed ::
                          (Input :< cls, Object :< cls) =>
                          cls -> GodotString -> Maybe Bool -> IO Bool
@@ -975,8 +1029,9 @@ instance NodeMethod Input "is_action_just_pressed"
 
 {-# NOINLINE bindInput_is_action_just_released #-}
 
--- | Returns @true@ when the user stops pressing the action event, meaning it's @true@ only on the frame that the user released the button.
---   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+-- | Returns @true@ when the user @i@stops@/i@ pressing the action event in the current frame or physics tick. It will only return @true@ on the frame or tick that the user releases the button.
+--   				If @exact@ is @false@, it ignores additional input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Returning @true@ does not imply that the action is @i@still@/i@ not pressed. An action can be released and pressed again rapidly, and @true@ will still be returned so as not to miss input.
 bindInput_is_action_just_released :: MethodBind
 bindInput_is_action_just_released
   = unsafePerformIO $
@@ -986,8 +1041,9 @@ bindInput_is_action_just_released
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ when the user stops pressing the action event, meaning it's @true@ only on the frame that the user released the button.
---   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+-- | Returns @true@ when the user @i@stops@/i@ pressing the action event in the current frame or physics tick. It will only return @true@ on the frame or tick that the user releases the button.
+--   				If @exact@ is @false@, it ignores additional input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Returning @true@ does not imply that the action is @i@still@/i@ not pressed. An action can be released and pressed again rapidly, and @true@ will still be returned so as not to miss input.
 is_action_just_released ::
                           (Input :< cls, Object :< cls) =>
                           cls -> GodotString -> Maybe Bool -> IO Bool
@@ -1013,8 +1069,8 @@ instance NodeMethod Input "is_action_just_released"
 {-# NOINLINE bindInput_is_action_pressed #-}
 
 -- | Returns @true@ if you are pressing the action event. Note that if an action has multiple buttons assigned and more than one of them is pressed, releasing one button will release the action, even if some other button assigned to this action is still pressed.
---   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
---   				__Note:__ Due to keyboard ghosting, @method is_action_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
+--   				If @exact@ is @false@, it ignores additional input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 bindInput_is_action_pressed :: MethodBind
 bindInput_is_action_pressed
   = unsafePerformIO $
@@ -1025,8 +1081,8 @@ bindInput_is_action_pressed
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Returns @true@ if you are pressing the action event. Note that if an action has multiple buttons assigned and more than one of them is pressed, releasing one button will release the action, even if some other button assigned to this action is still pressed.
---   				If @exact@ is @false@, it ignores the input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
---   				__Note:__ Due to keyboard ghosting, @method is_action_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
+--   				If @exact@ is @false@, it ignores additional input modifiers for @InputEventKey@ and @InputEventMouseButton@ events, and the direction for @InputEventJoypadMotion@ events.
+--   				__Note:__ Due to keyboard ghosting, @method is_action_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 is_action_pressed ::
                     (Input :< cls, Object :< cls) =>
                     cls -> GodotString -> Maybe Bool -> IO Bool
@@ -1111,7 +1167,7 @@ instance NodeMethod Input "is_joy_known" '[Int] (IO Bool) where
 
 -- | Returns @true@ if you are pressing the key in the current keyboard layout. You can pass a @enum KeyList@ constant.
 --   				@method is_key_pressed@ is only recommended over @method is_physical_key_pressed@ in non-game applications. This ensures that shortcut keys behave as expected depending on the user's keyboard layout, as keyboard shortcuts are generally dependent on the keyboard layout in non-game applications. If in doubt, use @method is_physical_key_pressed@.
---   				__Note:__ Due to keyboard ghosting, @method is_key_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
+--   				__Note:__ Due to keyboard ghosting, @method is_key_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 bindInput_is_key_pressed :: MethodBind
 bindInput_is_key_pressed
   = unsafePerformIO $
@@ -1123,7 +1179,7 @@ bindInput_is_key_pressed
 
 -- | Returns @true@ if you are pressing the key in the current keyboard layout. You can pass a @enum KeyList@ constant.
 --   				@method is_key_pressed@ is only recommended over @method is_physical_key_pressed@ in non-game applications. This ensures that shortcut keys behave as expected depending on the user's keyboard layout, as keyboard shortcuts are generally dependent on the keyboard layout in non-game applications. If in doubt, use @method is_physical_key_pressed@.
---   				__Note:__ Due to keyboard ghosting, @method is_key_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=https://docs.godotengine.org/en/3.4/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
+--   				__Note:__ Due to keyboard ghosting, @method is_key_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
 is_key_pressed ::
                  (Input :< cls, Object :< cls) => cls -> Int -> IO Bool
 is_key_pressed cls arg1
@@ -1170,6 +1226,78 @@ instance NodeMethod Input "is_mouse_button_pressed" '[Int]
            (IO Bool)
          where
         nodeMethod = Godot.Core.Input.is_mouse_button_pressed
+
+{-# NOINLINE bindInput_is_physical_key_pressed #-}
+
+-- | Returns @true@ if you are pressing the key in the physical location on the 101/102-key US QWERTY keyboard. You can pass a @enum KeyList@ constant.
+--   				@method is_physical_key_pressed@ is recommended over @method is_key_pressed@ for in-game actions, as it will make W/A/S/D layouts work regardless of the user's keyboard layout. @method is_physical_key_pressed@ will also ensure that the top row number keys work on any keyboard layout. If in doubt, use @method is_physical_key_pressed@.
+--   				__Note:__ Due to keyboard ghosting, @method is_physical_key_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
+bindInput_is_physical_key_pressed :: MethodBind
+bindInput_is_physical_key_pressed
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "is_physical_key_pressed" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if you are pressing the key in the physical location on the 101/102-key US QWERTY keyboard. You can pass a @enum KeyList@ constant.
+--   				@method is_physical_key_pressed@ is recommended over @method is_key_pressed@ for in-game actions, as it will make W/A/S/D layouts work regardless of the user's keyboard layout. @method is_physical_key_pressed@ will also ensure that the top row number keys work on any keyboard layout. If in doubt, use @method is_physical_key_pressed@.
+--   				__Note:__ Due to keyboard ghosting, @method is_physical_key_pressed@ may return @false@ even if one of the action's keys is pressed. See @url=$DOCS_URL/tutorials/inputs/input_examples.html#keyboard-events@Input examples@/url@ in the documentation for more information.
+is_physical_key_pressed ::
+                          (Input :< cls, Object :< cls) => cls -> Int -> IO Bool
+is_physical_key_pressed cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_is_physical_key_pressed
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "is_physical_key_pressed" '[Int]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.Input.is_physical_key_pressed
+
+{-# NOINLINE bindInput_is_using_accumulated_input #-}
+
+-- | If @true@, similar input events sent by the operating system are accumulated. When input accumulation is enabled, all input events generated during a frame will be merged and emitted when the frame is done rendering. Therefore, this limits the number of input method calls per second to the rendering FPS.
+--   			Input accumulation can be disabled to get slightly more precise/reactive input at the cost of increased CPU usage. In applications where drawing freehand lines is required, input accumulation should generally be disabled while the user is drawing the line to get results that closely follow the actual input.
+--   			__Note:__ Input accumulation is @i@enabled@/i@ by default. It is recommended to keep it enabled for games which don't require very reactive input, as this will decrease CPU usage.
+bindInput_is_using_accumulated_input :: MethodBind
+bindInput_is_using_accumulated_input
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "is_using_accumulated_input" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, similar input events sent by the operating system are accumulated. When input accumulation is enabled, all input events generated during a frame will be merged and emitted when the frame is done rendering. Therefore, this limits the number of input method calls per second to the rendering FPS.
+--   			Input accumulation can be disabled to get slightly more precise/reactive input at the cost of increased CPU usage. In applications where drawing freehand lines is required, input accumulation should generally be disabled while the user is drawing the line to get results that closely follow the actual input.
+--   			__Note:__ Input accumulation is @i@enabled@/i@ by default. It is recommended to keep it enabled for games which don't require very reactive input, as this will decrease CPU usage.
+is_using_accumulated_input ::
+                             (Input :< cls, Object :< cls) => cls -> IO Bool
+is_using_accumulated_input cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_is_using_accumulated_input
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "is_using_accumulated_input" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.Input.is_using_accumulated_input
 
 {-# NOINLINE bindInput_joy_connection_changed #-}
 
@@ -1289,13 +1417,46 @@ instance NodeMethod Input "remove_joy_mapping" '[GodotString]
          where
         nodeMethod = Godot.Core.Input.remove_joy_mapping
 
+{-# NOINLINE bindInput_set_accelerometer #-}
+
+-- | Sets the acceleration value of the accelerometer sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC.
+--   				__Note:__ This value can be immediately overwritten by the hardware sensor value on Android and iOS.
+bindInput_set_accelerometer :: MethodBind
+bindInput_set_accelerometer
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "set_accelerometer" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the acceleration value of the accelerometer sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC.
+--   				__Note:__ This value can be immediately overwritten by the hardware sensor value on Android and iOS.
+set_accelerometer ::
+                    (Input :< cls, Object :< cls) => cls -> Vector3 -> IO ()
+set_accelerometer cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_set_accelerometer (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "set_accelerometer" '[Vector3] (IO ())
+         where
+        nodeMethod = Godot.Core.Input.set_accelerometer
+
 {-# NOINLINE bindInput_set_custom_mouse_cursor #-}
 
 -- | Sets a custom mouse cursor image, which is only visible inside the game window. The hotspot can also be specified. Passing @null@ to the image parameter resets to the system cursor. See @enum CursorShape@ for the list of shapes.
---   				@image@'s size must be lower than 256×256.
+--   				@image@'s size must be lower than or equal to 256×256. To avoid rendering issues, sizes lower than or equal to 128×128 are recommended.
 --   				@hotspot@ must be within @image@'s size.
 --   				__Note:__ @AnimatedTexture@s aren't supported as custom mouse cursors. If using an @AnimatedTexture@, only the first frame will be displayed.
 --   				__Note:__ Only images imported with the __Lossless__, __Lossy__ or __Uncompressed__ compression modes are supported. The __Video RAM__ compression mode can't be used for custom cursors.
+--   				__Note:__ On the web platform, the maximum allowed cursor image size is 128×128. Cursor images larger than 32×32 will also only be displayed if the mouse cursor image is entirely located within the page for @url=https://chromestatus.com/feature/5825971391299584@security reasons@/url@.
 bindInput_set_custom_mouse_cursor :: MethodBind
 bindInput_set_custom_mouse_cursor
   = unsafePerformIO $
@@ -1306,10 +1467,11 @@ bindInput_set_custom_mouse_cursor
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets a custom mouse cursor image, which is only visible inside the game window. The hotspot can also be specified. Passing @null@ to the image parameter resets to the system cursor. See @enum CursorShape@ for the list of shapes.
---   				@image@'s size must be lower than 256×256.
+--   				@image@'s size must be lower than or equal to 256×256. To avoid rendering issues, sizes lower than or equal to 128×128 are recommended.
 --   				@hotspot@ must be within @image@'s size.
 --   				__Note:__ @AnimatedTexture@s aren't supported as custom mouse cursors. If using an @AnimatedTexture@, only the first frame will be displayed.
 --   				__Note:__ Only images imported with the __Lossless__, __Lossy__ or __Uncompressed__ compression modes are supported. The __Video RAM__ compression mode can't be used for custom cursors.
+--   				__Note:__ On the web platform, the maximum allowed cursor image size is 128×128. Cursor images larger than 32×32 will also only be displayed if the mouse cursor image is entirely located within the page for @url=https://chromestatus.com/feature/5825971391299584@security reasons@/url@.
 set_custom_mouse_cursor ::
                           (Input :< cls, Object :< cls) =>
                           cls -> Resource -> Maybe Int -> Maybe Vector2 -> IO ()
@@ -1369,9 +1531,101 @@ instance NodeMethod Input "set_default_cursor_shape" '[Maybe Int]
          where
         nodeMethod = Godot.Core.Input.set_default_cursor_shape
 
+{-# NOINLINE bindInput_set_gravity #-}
+
+-- | Sets the gravity value of the accelerometer sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC.
+--   				__Note:__ This value can be immediately overwritten by the hardware sensor value on Android and iOS.
+bindInput_set_gravity :: MethodBind
+bindInput_set_gravity
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "set_gravity" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the gravity value of the accelerometer sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC.
+--   				__Note:__ This value can be immediately overwritten by the hardware sensor value on Android and iOS.
+set_gravity ::
+              (Input :< cls, Object :< cls) => cls -> Vector3 -> IO ()
+set_gravity cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_set_gravity (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "set_gravity" '[Vector3] (IO ()) where
+        nodeMethod = Godot.Core.Input.set_gravity
+
+{-# NOINLINE bindInput_set_gyroscope #-}
+
+-- | Sets the value of the rotation rate of the gyroscope sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC.
+--   				__Note:__ This value can be immediately overwritten by the hardware sensor value on Android and iOS.
+bindInput_set_gyroscope :: MethodBind
+bindInput_set_gyroscope
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "set_gyroscope" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the value of the rotation rate of the gyroscope sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC.
+--   				__Note:__ This value can be immediately overwritten by the hardware sensor value on Android and iOS.
+set_gyroscope ::
+                (Input :< cls, Object :< cls) => cls -> Vector3 -> IO ()
+set_gyroscope cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_set_gyroscope (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "set_gyroscope" '[Vector3] (IO ()) where
+        nodeMethod = Godot.Core.Input.set_gyroscope
+
+{-# NOINLINE bindInput_set_magnetometer #-}
+
+-- | Sets the value of the magnetic field of the magnetometer sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC.
+--   				__Note:__ This value can be immediately overwritten by the hardware sensor value on Android and iOS.
+bindInput_set_magnetometer :: MethodBind
+bindInput_set_magnetometer
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "set_magnetometer" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the value of the magnetic field of the magnetometer sensor. Can be used for debugging on devices without a hardware sensor, for example in an editor on a PC.
+--   				__Note:__ This value can be immediately overwritten by the hardware sensor value on Android and iOS.
+set_magnetometer ::
+                   (Input :< cls, Object :< cls) => cls -> Vector3 -> IO ()
+set_magnetometer cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_set_magnetometer (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "set_magnetometer" '[Vector3] (IO ())
+         where
+        nodeMethod = Godot.Core.Input.set_magnetometer
+
 {-# NOINLINE bindInput_set_mouse_mode #-}
 
--- | Sets the mouse mode. See the constants for more information.
+-- | Controls the mouse mode. See @enum MouseMode@ for more information.
 bindInput_set_mouse_mode :: MethodBind
 bindInput_set_mouse_mode
   = unsafePerformIO $
@@ -1381,7 +1635,7 @@ bindInput_set_mouse_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the mouse mode. See the constants for more information.
+-- | Controls the mouse mode. See @enum MouseMode@ for more information.
 set_mouse_mode ::
                  (Input :< cls, Object :< cls) => cls -> Int -> IO ()
 set_mouse_mode cls arg1
@@ -1399,8 +1653,9 @@ instance NodeMethod Input "set_mouse_mode" '[Int] (IO ()) where
 
 {-# NOINLINE bindInput_set_use_accumulated_input #-}
 
--- | Enables or disables the accumulation of similar input events sent by the operating system. When input accumulation is enabled, all input events generated during a frame will be merged and emitted when the frame is done rendering. Therefore, this limits the number of input method calls per second to the rendering FPS.
---   				Input accumulation is enabled by default. It can be disabled to get slightly more precise/reactive input at the cost of increased CPU usage. In applications where drawing freehand lines is required, input accumulation should generally be disabled while the user is drawing the line to get results that closely follow the actual input.
+-- | If @true@, similar input events sent by the operating system are accumulated. When input accumulation is enabled, all input events generated during a frame will be merged and emitted when the frame is done rendering. Therefore, this limits the number of input method calls per second to the rendering FPS.
+--   			Input accumulation can be disabled to get slightly more precise/reactive input at the cost of increased CPU usage. In applications where drawing freehand lines is required, input accumulation should generally be disabled while the user is drawing the line to get results that closely follow the actual input.
+--   			__Note:__ Input accumulation is @i@enabled@/i@ by default. It is recommended to keep it enabled for games which don't require very reactive input, as this will decrease CPU usage.
 bindInput_set_use_accumulated_input :: MethodBind
 bindInput_set_use_accumulated_input
   = unsafePerformIO $
@@ -1410,8 +1665,9 @@ bindInput_set_use_accumulated_input
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Enables or disables the accumulation of similar input events sent by the operating system. When input accumulation is enabled, all input events generated during a frame will be merged and emitted when the frame is done rendering. Therefore, this limits the number of input method calls per second to the rendering FPS.
---   				Input accumulation is enabled by default. It can be disabled to get slightly more precise/reactive input at the cost of increased CPU usage. In applications where drawing freehand lines is required, input accumulation should generally be disabled while the user is drawing the line to get results that closely follow the actual input.
+-- | If @true@, similar input events sent by the operating system are accumulated. When input accumulation is enabled, all input events generated during a frame will be merged and emitted when the frame is done rendering. Therefore, this limits the number of input method calls per second to the rendering FPS.
+--   			Input accumulation can be disabled to get slightly more precise/reactive input at the cost of increased CPU usage. In applications where drawing freehand lines is required, input accumulation should generally be disabled while the user is drawing the line to get results that closely follow the actual input.
+--   			__Note:__ Input accumulation is @i@enabled@/i@ by default. It is recommended to keep it enabled for games which don't require very reactive input, as this will decrease CPU usage.
 set_use_accumulated_input ::
                             (Input :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_use_accumulated_input cls arg1
@@ -1431,9 +1687,42 @@ instance NodeMethod Input "set_use_accumulated_input" '[Bool]
          where
         nodeMethod = Godot.Core.Input.set_use_accumulated_input
 
+{-# NOINLINE bindInput_should_ignore_device #-}
+
+-- | Queries whether an input device should be ignored or not. Devices can be ignored by setting the environment variable @SDL_GAMECONTROLLER_IGNORE_DEVICES@. Read the @url=https://wiki.libsdl.org/SDL2@SDL documentation@/url@ for more information.
+--   				__Note:__ Some 3rd party tools can contribute to the list of ignored devices. For example, @i@SteamInput@/i@ creates virtual devices from physical devices for remapping purposes. To avoid handling the same input device twice, the original device is added to the ignore list.
+bindInput_should_ignore_device :: MethodBind
+bindInput_should_ignore_device
+  = unsafePerformIO $
+      withCString "Input" $
+        \ clsNamePtr ->
+          withCString "should_ignore_device" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Queries whether an input device should be ignored or not. Devices can be ignored by setting the environment variable @SDL_GAMECONTROLLER_IGNORE_DEVICES@. Read the @url=https://wiki.libsdl.org/SDL2@SDL documentation@/url@ for more information.
+--   				__Note:__ Some 3rd party tools can contribute to the list of ignored devices. For example, @i@SteamInput@/i@ creates virtual devices from physical devices for remapping purposes. To avoid handling the same input device twice, the original device is added to the ignore list.
+should_ignore_device ::
+                       (Input :< cls, Object :< cls) => cls -> Int -> Int -> IO Bool
+should_ignore_device cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInput_should_ignore_device (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Input "should_ignore_device" '[Int, Int]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.Input.should_ignore_device
+
 {-# NOINLINE bindInput_start_joy_vibration #-}
 
--- | Starts to vibrate the joypad. Joypads usually come with two rumble motors, a strong and a weak one. @weak_magnitude@ is the strength of the weak motor (between 0 and 1) and @strong_magnitude@ is the strength of the strong motor (between 0 and 1). @duration@ is the duration of the effect in seconds (a duration of 0 will try to play the vibration indefinitely).
+-- | Starts to vibrate the joypad. Joypads usually come with two rumble motors, a strong and a weak one. @weak_magnitude@ is the strength of the weak motor (between 0 and 1) and @strong_magnitude@ is the strength of the strong motor (between 0 and 1). @duration@ is the duration of the effect in seconds (a duration of 0 will try to play the vibration indefinitely). The vibration can be stopped early by calling @method stop_joy_vibration@.
 --   				__Note:__ Not every hardware is compatible with long effect durations; it is recommended to restart an effect if it has to be played for more than a few seconds.
 bindInput_start_joy_vibration :: MethodBind
 bindInput_start_joy_vibration
@@ -1444,7 +1733,7 @@ bindInput_start_joy_vibration
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Starts to vibrate the joypad. Joypads usually come with two rumble motors, a strong and a weak one. @weak_magnitude@ is the strength of the weak motor (between 0 and 1) and @strong_magnitude@ is the strength of the strong motor (between 0 and 1). @duration@ is the duration of the effect in seconds (a duration of 0 will try to play the vibration indefinitely).
+-- | Starts to vibrate the joypad. Joypads usually come with two rumble motors, a strong and a weak one. @weak_magnitude@ is the strength of the weak motor (between 0 and 1) and @strong_magnitude@ is the strength of the strong motor (between 0 and 1). @duration@ is the duration of the effect in seconds (a duration of 0 will try to play the vibration indefinitely). The vibration can be stopped early by calling @method stop_joy_vibration@.
 --   				__Note:__ Not every hardware is compatible with long effect durations; it is recommended to restart an effect if it has to be played for more than a few seconds.
 start_joy_vibration ::
                       (Input :< cls, Object :< cls) =>
@@ -1470,7 +1759,7 @@ instance NodeMethod Input "start_joy_vibration"
 
 {-# NOINLINE bindInput_stop_joy_vibration #-}
 
--- | Stops the vibration of the joypad.
+-- | Stops the vibration of the joypad started with @method start_joy_vibration@.
 bindInput_stop_joy_vibration :: MethodBind
 bindInput_stop_joy_vibration
   = unsafePerformIO $
@@ -1480,7 +1769,7 @@ bindInput_stop_joy_vibration
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Stops the vibration of the joypad.
+-- | Stops the vibration of the joypad started with @method start_joy_vibration@.
 stop_joy_vibration ::
                      (Input :< cls, Object :< cls) => cls -> Int -> IO ()
 stop_joy_vibration cls arg1
@@ -1499,8 +1788,11 @@ instance NodeMethod Input "stop_joy_vibration" '[Int] (IO ()) where
 
 {-# NOINLINE bindInput_vibrate_handheld #-}
 
--- | Vibrate Android and iOS devices.
---   				__Note:__ It needs @VIBRATE@ permission for Android at export settings. iOS does not support duration.
+-- | Vibrate the handheld device for the specified duration in milliseconds.
+--   				__Note:__ This method is implemented on Android, iOS, and HTML5. It has no effect on other platforms.
+--   				__Note:__ For Android, @method vibrate_handheld@ requires enabling the @VIBRATE@ permission in the export preset. Otherwise, @method vibrate_handheld@ will have no effect.
+--   				__Note:__ For iOS, specifying the duration is only supported in iOS 13 and later.
+--   				__Note:__ Some web browsers such as Safari and Firefox for Android do not support @method vibrate_handheld@.
 bindInput_vibrate_handheld :: MethodBind
 bindInput_vibrate_handheld
   = unsafePerformIO $
@@ -1510,8 +1802,11 @@ bindInput_vibrate_handheld
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Vibrate Android and iOS devices.
---   				__Note:__ It needs @VIBRATE@ permission for Android at export settings. iOS does not support duration.
+-- | Vibrate the handheld device for the specified duration in milliseconds.
+--   				__Note:__ This method is implemented on Android, iOS, and HTML5. It has no effect on other platforms.
+--   				__Note:__ For Android, @method vibrate_handheld@ requires enabling the @VIBRATE@ permission in the export preset. Otherwise, @method vibrate_handheld@ will have no effect.
+--   				__Note:__ For iOS, specifying the duration is only supported in iOS 13 and later.
+--   				__Note:__ Some web browsers such as Safari and Firefox for Android do not support @method vibrate_handheld@.
 vibrate_handheld ::
                    (Input :< cls, Object :< cls) => cls -> Maybe Int -> IO ()
 vibrate_handheld cls arg1

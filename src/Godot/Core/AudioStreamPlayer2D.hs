@@ -10,6 +10,7 @@ module Godot.Core.AudioStreamPlayer2D
         Godot.Core.AudioStreamPlayer2D.get_attenuation,
         Godot.Core.AudioStreamPlayer2D.get_bus,
         Godot.Core.AudioStreamPlayer2D.get_max_distance,
+        Godot.Core.AudioStreamPlayer2D.get_panning_strength,
         Godot.Core.AudioStreamPlayer2D.get_pitch_scale,
         Godot.Core.AudioStreamPlayer2D.get_playback_position,
         Godot.Core.AudioStreamPlayer2D.get_stream,
@@ -25,6 +26,7 @@ module Godot.Core.AudioStreamPlayer2D
         Godot.Core.AudioStreamPlayer2D.set_autoplay,
         Godot.Core.AudioStreamPlayer2D.set_bus,
         Godot.Core.AudioStreamPlayer2D.set_max_distance,
+        Godot.Core.AudioStreamPlayer2D.set_panning_strength,
         Godot.Core.AudioStreamPlayer2D.set_pitch_scale,
         Godot.Core.AudioStreamPlayer2D.set_stream,
         Godot.Core.AudioStreamPlayer2D.set_stream_paused,
@@ -74,6 +76,13 @@ instance NodeProperty AudioStreamPlayer2D "max_distance" Float
          where
         nodeProperty
           = (get_max_distance, wrapDroppingSetter set_max_distance, Nothing)
+
+instance NodeProperty AudioStreamPlayer2D "panning_strength" Float
+           'False
+         where
+        nodeProperty
+          = (get_panning_strength, wrapDroppingSetter set_panning_strength,
+             Nothing)
 
 instance NodeProperty AudioStreamPlayer2D "pitch_scale" Float
            'False
@@ -261,6 +270,7 @@ instance NodeMethod AudioStreamPlayer2D "get_attenuation" '[]
 {-# NOINLINE bindAudioStreamPlayer2D_get_bus #-}
 
 -- | Bus on which this audio is playing.
+--   			__Note:__ When setting this property, keep in mind that no validation is performed to see if the given name matches an existing bus. This is because audio bus layouts might be loaded after this property is set. If this given name can't be resolved at runtime, it will fall back to @"Master"@.
 bindAudioStreamPlayer2D_get_bus :: MethodBind
 bindAudioStreamPlayer2D_get_bus
   = unsafePerformIO $
@@ -271,6 +281,7 @@ bindAudioStreamPlayer2D_get_bus
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Bus on which this audio is playing.
+--   			__Note:__ When setting this property, keep in mind that no validation is performed to see if the given name matches an existing bus. This is because audio bus layouts might be loaded after this property is set. If this given name can't be resolved at runtime, it will fall back to @"Master"@.
 get_bus ::
           (AudioStreamPlayer2D :< cls, Object :< cls) =>
           cls -> IO GodotString
@@ -321,6 +332,38 @@ instance NodeMethod AudioStreamPlayer2D "get_max_distance" '[]
            (IO Float)
          where
         nodeMethod = Godot.Core.AudioStreamPlayer2D.get_max_distance
+
+{-# NOINLINE bindAudioStreamPlayer2D_get_panning_strength #-}
+
+-- | Scales the panning strength for this node by multiplying the base @ProjectSettings.audio/2d_panning_strength@ with this factor. Higher values will pan audio from left to right more dramatically than lower values.
+bindAudioStreamPlayer2D_get_panning_strength :: MethodBind
+bindAudioStreamPlayer2D_get_panning_strength
+  = unsafePerformIO $
+      withCString "AudioStreamPlayer2D" $
+        \ clsNamePtr ->
+          withCString "get_panning_strength" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Scales the panning strength for this node by multiplying the base @ProjectSettings.audio/2d_panning_strength@ with this factor. Higher values will pan audio from left to right more dramatically than lower values.
+get_panning_strength ::
+                       (AudioStreamPlayer2D :< cls, Object :< cls) => cls -> IO Float
+get_panning_strength cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindAudioStreamPlayer2D_get_panning_strength
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod AudioStreamPlayer2D "get_panning_strength" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.AudioStreamPlayer2D.get_panning_strength
 
 {-# NOINLINE bindAudioStreamPlayer2D_get_pitch_scale #-}
 
@@ -737,6 +780,7 @@ instance NodeMethod AudioStreamPlayer2D "set_autoplay" '[Bool]
 {-# NOINLINE bindAudioStreamPlayer2D_set_bus #-}
 
 -- | Bus on which this audio is playing.
+--   			__Note:__ When setting this property, keep in mind that no validation is performed to see if the given name matches an existing bus. This is because audio bus layouts might be loaded after this property is set. If this given name can't be resolved at runtime, it will fall back to @"Master"@.
 bindAudioStreamPlayer2D_set_bus :: MethodBind
 bindAudioStreamPlayer2D_set_bus
   = unsafePerformIO $
@@ -747,6 +791,7 @@ bindAudioStreamPlayer2D_set_bus
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Bus on which this audio is playing.
+--   			__Note:__ When setting this property, keep in mind that no validation is performed to see if the given name matches an existing bus. This is because audio bus layouts might be loaded after this property is set. If this given name can't be resolved at runtime, it will fall back to @"Master"@.
 set_bus ::
           (AudioStreamPlayer2D :< cls, Object :< cls) =>
           cls -> GodotString -> IO ()
@@ -798,6 +843,40 @@ instance NodeMethod AudioStreamPlayer2D "set_max_distance" '[Float]
            (IO ())
          where
         nodeMethod = Godot.Core.AudioStreamPlayer2D.set_max_distance
+
+{-# NOINLINE bindAudioStreamPlayer2D_set_panning_strength #-}
+
+-- | Scales the panning strength for this node by multiplying the base @ProjectSettings.audio/2d_panning_strength@ with this factor. Higher values will pan audio from left to right more dramatically than lower values.
+bindAudioStreamPlayer2D_set_panning_strength :: MethodBind
+bindAudioStreamPlayer2D_set_panning_strength
+  = unsafePerformIO $
+      withCString "AudioStreamPlayer2D" $
+        \ clsNamePtr ->
+          withCString "set_panning_strength" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Scales the panning strength for this node by multiplying the base @ProjectSettings.audio/2d_panning_strength@ with this factor. Higher values will pan audio from left to right more dramatically than lower values.
+set_panning_strength ::
+                       (AudioStreamPlayer2D :< cls, Object :< cls) =>
+                       cls -> Float -> IO ()
+set_panning_strength cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindAudioStreamPlayer2D_set_panning_strength
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod AudioStreamPlayer2D "set_panning_strength"
+           '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.AudioStreamPlayer2D.set_panning_strength
 
 {-# NOINLINE bindAudioStreamPlayer2D_set_pitch_scale #-}
 

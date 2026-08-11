@@ -58,7 +58,7 @@ instance NodeMethod OccluderShapeSphere "get_spheres" '[]
 
 {-# NOINLINE bindOccluderShapeSphere_set_sphere_position #-}
 
--- | Sets an individual sphere's position.
+-- | Sets an individual sphere's position. Primarily for use by the editor.
 bindOccluderShapeSphere_set_sphere_position :: MethodBind
 bindOccluderShapeSphere_set_sphere_position
   = unsafePerformIO $
@@ -68,7 +68,7 @@ bindOccluderShapeSphere_set_sphere_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets an individual sphere's position.
+-- | Sets an individual sphere's position. Primarily for use by the editor.
 set_sphere_position ::
                       (OccluderShapeSphere :< cls, Object :< cls) =>
                       cls -> Int -> Vector3 -> IO ()
@@ -92,7 +92,7 @@ instance NodeMethod OccluderShapeSphere "set_sphere_position"
 
 {-# NOINLINE bindOccluderShapeSphere_set_sphere_radius #-}
 
--- | Sets an individual sphere's radius.
+-- | Sets an individual sphere's radius. Primarily for use by the editor.
 bindOccluderShapeSphere_set_sphere_radius :: MethodBind
 bindOccluderShapeSphere_set_sphere_radius
   = unsafePerformIO $
@@ -102,7 +102,7 @@ bindOccluderShapeSphere_set_sphere_radius
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets an individual sphere's radius.
+-- | Sets an individual sphere's radius. Primarily for use by the editor.
 set_sphere_radius ::
                     (OccluderShapeSphere :< cls, Object :< cls) =>
                     cls -> Int -> Float -> IO ()

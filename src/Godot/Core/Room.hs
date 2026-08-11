@@ -126,6 +126,7 @@ instance NodeMethod Room "get_use_default_simplify" '[] (IO Bool)
 {-# NOINLINE bindRoom_set_point #-}
 
 -- | Sets individual points. Primarily for use by the editor.
+--   				__Note:__ This function will not resize the point array. Set @points@ to set the number of points.
 bindRoom_set_point :: MethodBind
 bindRoom_set_point
   = unsafePerformIO $
@@ -136,6 +137,7 @@ bindRoom_set_point
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets individual points. Primarily for use by the editor.
+--   				__Note:__ This function will not resize the point array. Set @points@ to set the number of points.
 set_point ::
             (Room :< cls, Object :< cls) => cls -> Int -> Vector3 -> IO ()
 set_point cls arg1 arg2

@@ -361,8 +361,8 @@ instance NodeMethod File "get_8" '[] (IO Int) where
 
 {-# NOINLINE bindFile_get_as_text #-}
 
--- | Returns the whole file as a @String@.
---   				Text is interpreted as being UTF-8 encoded.
+-- | Returns the whole file as a @String@. Text is interpreted as being UTF-8 encoded.
+--   				If @skip_cr@ is @true@, carriage return characters (@\r@, CR) will be ignored when parsing the UTF-8, so that only line feed characters (@\n@, LF) represent a new line (Unix convention).
 bindFile_get_as_text :: MethodBind
 bindFile_get_as_text
   = unsafePerformIO $
@@ -372,12 +372,12 @@ bindFile_get_as_text
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the whole file as a @String@.
---   				Text is interpreted as being UTF-8 encoded.
+-- | Returns the whole file as a @String@. Text is interpreted as being UTF-8 encoded.
+--   				If @skip_cr@ is @true@, carriage return characters (@\r@, CR) will be ignored when parsing the UTF-8, so that only line feed characters (@\n@, LF) represent a new line (Unix convention).
 get_as_text ::
-              (File :< cls, Object :< cls) => cls -> IO GodotString
-get_as_text cls
-  = withVariantArray []
+              (File :< cls, Object :< cls) => cls -> Maybe Bool -> IO GodotString
+get_as_text cls arg1
+  = withVariantArray [maybe (VariantBool True) toVariant arg1]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindFile_get_as_text (upcast cls) arrPtr len
            >>=
@@ -385,7 +385,9 @@ get_as_text cls
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod File "get_as_text" '[] (IO GodotString) where
+instance NodeMethod File "get_as_text" '[Maybe Bool]
+           (IO GodotString)
+         where
         nodeMethod = Godot.Core.File.get_as_text
 
 {-# NOINLINE bindFile_get_buffer #-}

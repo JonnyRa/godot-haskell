@@ -269,7 +269,7 @@ instance NodeMethod EditorFeatureProfile "load_from_file"
 
 {-# NOINLINE bindEditorFeatureProfile_save_to_file #-}
 
--- | Saves the editor feature profile to a file in JSON format. It can then be imported using the feature profile manager's __Import__ button or the @method load_from_file@ button.
+-- | Saves the editor feature profile to a file in JSON format. It can then be imported using the feature profile manager's __Import__ button or the @method load_from_file@ method.
 bindEditorFeatureProfile_save_to_file :: MethodBind
 bindEditorFeatureProfile_save_to_file
   = unsafePerformIO $
@@ -279,7 +279,7 @@ bindEditorFeatureProfile_save_to_file
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Saves the editor feature profile to a file in JSON format. It can then be imported using the feature profile manager's __Import__ button or the @method load_from_file@ button.
+-- | Saves the editor feature profile to a file in JSON format. It can then be imported using the feature profile manager's __Import__ button or the @method load_from_file@ method.
 save_to_file ::
                (EditorFeatureProfile :< cls, Object :< cls) =>
                cls -> GodotString -> IO Int

@@ -146,7 +146,8 @@ instance NodeMethod OmniLight "get_shadow_detail" '[] (IO Int)
 
 {-# NOINLINE bindOmniLight_get_shadow_mode #-}
 
--- | See @enum ShadowMode@.
+-- | The shadow rendering mode to use for this @OmniLight@. See @enum ShadowMode@.
+--   			__Note:__ In GLES2, @SHADOW_CUBE@ is only supported on GPUs that feature support for depth cubemaps. Old GPUs such as the Radeon HD 4000 series don't support cubemap shadows and will fall back to dual paraboloid shadows as a result.
 bindOmniLight_get_shadow_mode :: MethodBind
 bindOmniLight_get_shadow_mode
   = unsafePerformIO $
@@ -156,7 +157,8 @@ bindOmniLight_get_shadow_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | See @enum ShadowMode@.
+-- | The shadow rendering mode to use for this @OmniLight@. See @enum ShadowMode@.
+--   			__Note:__ In GLES2, @SHADOW_CUBE@ is only supported on GPUs that feature support for depth cubemaps. Old GPUs such as the Radeon HD 4000 series don't support cubemap shadows and will fall back to dual paraboloid shadows as a result.
 get_shadow_mode ::
                   (OmniLight :< cls, Object :< cls) => cls -> IO Int
 get_shadow_mode cls
@@ -205,7 +207,8 @@ instance NodeMethod OmniLight "set_shadow_detail" '[Int] (IO ())
 
 {-# NOINLINE bindOmniLight_set_shadow_mode #-}
 
--- | See @enum ShadowMode@.
+-- | The shadow rendering mode to use for this @OmniLight@. See @enum ShadowMode@.
+--   			__Note:__ In GLES2, @SHADOW_CUBE@ is only supported on GPUs that feature support for depth cubemaps. Old GPUs such as the Radeon HD 4000 series don't support cubemap shadows and will fall back to dual paraboloid shadows as a result.
 bindOmniLight_set_shadow_mode :: MethodBind
 bindOmniLight_set_shadow_mode
   = unsafePerformIO $
@@ -215,7 +218,8 @@ bindOmniLight_set_shadow_mode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | See @enum ShadowMode@.
+-- | The shadow rendering mode to use for this @OmniLight@. See @enum ShadowMode@.
+--   			__Note:__ In GLES2, @SHADOW_CUBE@ is only supported on GPUs that feature support for depth cubemaps. Old GPUs such as the Radeon HD 4000 series don't support cubemap shadows and will fall back to dual paraboloid shadows as a result.
 set_shadow_mode ::
                   (OmniLight :< cls, Object :< cls) => cls -> Int -> IO ()
 set_shadow_mode cls arg1

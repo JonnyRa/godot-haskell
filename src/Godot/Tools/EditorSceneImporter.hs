@@ -4,7 +4,6 @@
 module Godot.Tools.EditorSceneImporter
        (Godot.Tools.EditorSceneImporter._IMPORT_MATERIALS_IN_INSTANCES,
         Godot.Tools.EditorSceneImporter._IMPORT_ANIMATION_FORCE_ALL_TRACKS_IN_ALL_CLIPS,
-        Godot.Tools.EditorSceneImporter._IMPORT_USE_COMPRESSION,
         Godot.Tools.EditorSceneImporter._IMPORT_FAIL_ON_MISSING_DEPENDENCIES,
         Godot.Tools.EditorSceneImporter._IMPORT_ANIMATION,
         Godot.Tools.EditorSceneImporter._IMPORT_SCENE,
@@ -36,9 +35,6 @@ _IMPORT_MATERIALS_IN_INSTANCES = 1024
 
 _IMPORT_ANIMATION_FORCE_ALL_TRACKS_IN_ALL_CLIPS :: Int
 _IMPORT_ANIMATION_FORCE_ALL_TRACKS_IN_ALL_CLIPS = 16
-
-_IMPORT_USE_COMPRESSION :: Int
-_IMPORT_USE_COMPRESSION = 2048
 
 _IMPORT_FAIL_ON_MISSING_DEPENDENCIES :: Int
 _IMPORT_FAIL_ON_MISSING_DEPENDENCIES = 512
@@ -228,9 +224,10 @@ bindEditorSceneImporter_import_scene_from_other_importer
 
 import_scene_from_other_importer ::
                                    (EditorSceneImporter :< cls, Object :< cls) =>
-                                   cls -> GodotString -> Int -> Int -> IO Node
-import_scene_from_other_importer cls arg1 arg2 arg3
-  = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
+                                   cls -> GodotString -> Int -> Int -> Int -> IO Node
+import_scene_from_other_importer cls arg1 arg2 arg3 arg4
+  = withVariantArray
+      [toVariant arg1, toVariant arg2, toVariant arg3, toVariant arg4]
       (\ (arrPtr, len) ->
          godot_method_bind_call
            bindEditorSceneImporter_import_scene_from_other_importer
@@ -241,7 +238,7 @@ import_scene_from_other_importer cls arg1 arg2 arg3
 
 instance NodeMethod EditorSceneImporter
            "import_scene_from_other_importer"
-           '[GodotString, Int, Int]
+           '[GodotString, Int, Int, Int]
            (IO Node)
          where
         nodeMethod

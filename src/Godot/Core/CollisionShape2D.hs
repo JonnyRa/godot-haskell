@@ -171,6 +171,7 @@ instance NodeMethod CollisionShape2D "is_disabled" '[] (IO Bool)
 {-# NOINLINE bindCollisionShape2D_is_one_way_collision_enabled #-}
 
 -- | Sets whether this collision shape should only detect collision on one side (top or bottom).
+--   			__Note:__ This property has no effect if this @CollisionShape2D@ is a child of an @Area2D@ node.
 bindCollisionShape2D_is_one_way_collision_enabled :: MethodBind
 bindCollisionShape2D_is_one_way_collision_enabled
   = unsafePerformIO $
@@ -181,6 +182,7 @@ bindCollisionShape2D_is_one_way_collision_enabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets whether this collision shape should only detect collision on one side (top or bottom).
+--   			__Note:__ This property has no effect if this @CollisionShape2D@ is a child of an @Area2D@ node.
 is_one_way_collision_enabled ::
                                (CollisionShape2D :< cls, Object :< cls) => cls -> IO Bool
 is_one_way_collision_enabled cls
@@ -237,6 +239,7 @@ instance NodeMethod CollisionShape2D "set_disabled" '[Bool] (IO ())
 {-# NOINLINE bindCollisionShape2D_set_one_way_collision #-}
 
 -- | Sets whether this collision shape should only detect collision on one side (top or bottom).
+--   			__Note:__ This property has no effect if this @CollisionShape2D@ is a child of an @Area2D@ node.
 bindCollisionShape2D_set_one_way_collision :: MethodBind
 bindCollisionShape2D_set_one_way_collision
   = unsafePerformIO $
@@ -247,6 +250,7 @@ bindCollisionShape2D_set_one_way_collision
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets whether this collision shape should only detect collision on one side (top or bottom).
+--   			__Note:__ This property has no effect if this @CollisionShape2D@ is a child of an @Area2D@ node.
 set_one_way_collision ::
                         (CollisionShape2D :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_one_way_collision cls arg1

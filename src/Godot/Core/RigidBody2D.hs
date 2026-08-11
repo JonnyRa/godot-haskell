@@ -119,8 +119,19 @@ instance NodeSignal RigidBody2D "body_exited" '[Node]
 -- | Emitted when one of this RigidBody2D's @Shape2D@s collides with another @PhysicsBody2D@ or @TileMap@'s @Shape2D@s. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
 --   				@body_rid@ the @RID@ of the other @PhysicsBody2D@ or @TileSet@'s @CollisionObject2D@ used by the @Physics2DServer@.
 --   				@body@ the @Node@, if it exists in the tree, of the other @PhysicsBody2D@ or @TileMap@.
---   				@body_shape_index@ the index of the @Shape2D@ of the other @PhysicsBody2D@ or @TileMap@ used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @body.shape_owner_get_owner(body_shape_index)@.
---   				@local_shape_index@ the index of the @Shape2D@ of this RigidBody2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@body_shape_index@ the index of the @Shape2D@ of the other @PhysicsBody2D@ or @TileMap@.
+--   				@local_shape_index@ the index of the @Shape2D@ of this RigidBody2D.
+--   				__Example of getting the__ @CollisionShape2D@ __node from the shape index:__
+--   				
+--   @
+--   
+--   				var body_shape_owner = body.shape_find_owner(body_shape_index)
+--   				var body_shape_node = body.shape_owner_get_owner(body_shape_owner)
+--   
+--   				var local_shape_owner = shape_find_owner(local_shape_index)
+--   				var local_shape_node = shape_owner_get_owner(local_shape_owner)
+--   				
+--   @
 sig_body_shape_entered ::
                        Godot.Internal.Dispatch.Signal RigidBody2D
 sig_body_shape_entered
@@ -132,8 +143,9 @@ instance NodeSignal RigidBody2D "body_shape_entered"
 -- | Emitted when the collision between one of this RigidBody2D's @Shape2D@s and another @PhysicsBody2D@ or @TileMap@'s @Shape2D@s ends. Requires @contact_monitor@ to be set to @true@ and @contacts_reported@ to be set high enough to detect all the collisions. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
 --   				@body_rid@ the @RID@ of the other @PhysicsBody2D@ or @TileSet@'s @CollisionObject2D@ used by the @Physics2DServer@.
 --   				@body@ the @Node@, if it exists in the tree, of the other @PhysicsBody2D@ or @TileMap@.
---   				@body_shape_index@ the index of the @Shape2D@ of the other @PhysicsBody2D@ or @TileMap@ used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @body.shape_owner_get_owner(body_shape_index)@.
---   				@local_shape_index@ the index of the @Shape2D@ of this RigidBody2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@body_shape_index@ the index of the @Shape2D@ of the other @PhysicsBody2D@ or @TileMap@.
+--   				@local_shape_index@ the index of the @Shape2D@ of this RigidBody2D.
+--   				See also @signal body_shape_entered@.
 sig_body_shape_exited :: Godot.Internal.Dispatch.Signal RigidBody2D
 sig_body_shape_exited
   = Godot.Internal.Dispatch.Signal "body_shape_exited"
@@ -592,7 +604,7 @@ instance NodeMethod RigidBody2D "apply_torque_impulse" '[Float]
 
 {-# NOINLINE bindRigidBody2D_get_angular_damp #-}
 
--- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__.
+-- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__. If greater than @-1@ it will be added to the default project value.
 --   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 bindRigidBody2D_get_angular_damp :: MethodBind
 bindRigidBody2D_get_angular_damp
@@ -603,7 +615,7 @@ bindRigidBody2D_get_angular_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__.
+-- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__. If greater than @-1@ it will be added to the default project value.
 --   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 get_angular_damp ::
                    (RigidBody2D :< cls, Object :< cls) => cls -> IO Float
@@ -916,7 +928,7 @@ instance NodeMethod RigidBody2D "get_inertia" '[] (IO Float) where
 
 {-# NOINLINE bindRigidBody2D_get_linear_damp #-}
 
--- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__.
+-- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__. If greater than @-1@ it will be added to the default project value.
 --   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 bindRigidBody2D_get_linear_damp :: MethodBind
 bindRigidBody2D_get_linear_damp
@@ -927,7 +939,7 @@ bindRigidBody2D_get_linear_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__.
+-- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__. If greater than @-1@ it will be added to the default project value.
 --   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 get_linear_damp ::
                   (RigidBody2D :< cls, Object :< cls) => cls -> IO Float
@@ -1255,7 +1267,7 @@ instance NodeMethod RigidBody2D "is_using_custom_integrator" '[]
 
 {-# NOINLINE bindRigidBody2D_set_angular_damp #-}
 
--- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__.
+-- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__. If greater than @-1@ it will be added to the default project value.
 --   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 bindRigidBody2D_set_angular_damp :: MethodBind
 bindRigidBody2D_set_angular_damp
@@ -1266,7 +1278,7 @@ bindRigidBody2D_set_angular_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__.
+-- | Damps the body's @angular_velocity@. If @-1@, the body will use the __Default Angular Damp__ defined in __Project > Project Settings > Physics > 2d__. If greater than @-1@ it will be added to the default project value.
 --   			See @ProjectSettings.physics/2d/default_angular_damp@ for more details about damping.
 set_angular_damp ::
                    (RigidBody2D :< cls, Object :< cls) => cls -> Float -> IO ()
@@ -1645,7 +1657,7 @@ instance NodeMethod RigidBody2D "set_inertia" '[Float] (IO ())
 
 {-# NOINLINE bindRigidBody2D_set_linear_damp #-}
 
--- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__.
+-- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__. If greater than @-1@ it will be added to the default project value.
 --   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 bindRigidBody2D_set_linear_damp :: MethodBind
 bindRigidBody2D_set_linear_damp
@@ -1656,7 +1668,7 @@ bindRigidBody2D_set_linear_damp
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__.
+-- | Damps the body's @linear_velocity@. If @-1@, the body will use the __Default Linear Damp__ in __Project > Project Settings > Physics > 2d__. If greater than @-1@ it will be added to the default project value.
 --   			See @ProjectSettings.physics/2d/default_linear_damp@ for more details about damping.
 set_linear_damp ::
                   (RigidBody2D :< cls, Object :< cls) => cls -> Float -> IO ()

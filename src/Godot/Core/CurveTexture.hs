@@ -24,7 +24,7 @@ instance NodeProperty CurveTexture "curve" Curve 'False where
 
 {-# NOINLINE bindCurveTexture_get_width #-}
 
--- | The width of the texture.
+-- | The width of the texture (in pixels). Higher values make it possible to represent high-frequency data better (such as sudden direction changes), at the cost of increased generation time and memory usage.
 bindCurveTexture_get_width :: MethodBind
 bindCurveTexture_get_width
   = unsafePerformIO $
@@ -34,7 +34,7 @@ bindCurveTexture_get_width
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The width of the texture.
+-- | The width of the texture (in pixels). Higher values make it possible to represent high-frequency data better (such as sudden direction changes), at the cost of increased generation time and memory usage.
 get_width :: (CurveTexture :< cls, Object :< cls) => cls -> IO Int
 get_width cls
   = withVariantArray []
@@ -80,7 +80,7 @@ instance NodeMethod CurveTexture "_update" '[] (IO ()) where
 
 {-# NOINLINE bindCurveTexture_get_curve #-}
 
--- | The @curve@ rendered onto the texture.
+-- | The @Curve@ that is rendered onto the texture.
 bindCurveTexture_get_curve :: MethodBind
 bindCurveTexture_get_curve
   = unsafePerformIO $
@@ -90,7 +90,7 @@ bindCurveTexture_get_curve
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The @curve@ rendered onto the texture.
+-- | The @Curve@ that is rendered onto the texture.
 get_curve ::
             (CurveTexture :< cls, Object :< cls) => cls -> IO Curve
 get_curve cls
@@ -106,7 +106,7 @@ instance NodeMethod CurveTexture "get_curve" '[] (IO Curve) where
 
 {-# NOINLINE bindCurveTexture_set_curve #-}
 
--- | The @curve@ rendered onto the texture.
+-- | The @Curve@ that is rendered onto the texture.
 bindCurveTexture_set_curve :: MethodBind
 bindCurveTexture_set_curve
   = unsafePerformIO $
@@ -116,7 +116,7 @@ bindCurveTexture_set_curve
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The @curve@ rendered onto the texture.
+-- | The @Curve@ that is rendered onto the texture.
 set_curve ::
             (CurveTexture :< cls, Object :< cls) => cls -> Curve -> IO ()
 set_curve cls arg1
@@ -135,7 +135,7 @@ instance NodeMethod CurveTexture "set_curve" '[Curve] (IO ()) where
 
 {-# NOINLINE bindCurveTexture_set_width #-}
 
--- | The width of the texture.
+-- | The width of the texture (in pixels). Higher values make it possible to represent high-frequency data better (such as sudden direction changes), at the cost of increased generation time and memory usage.
 bindCurveTexture_set_width :: MethodBind
 bindCurveTexture_set_width
   = unsafePerformIO $
@@ -145,7 +145,7 @@ bindCurveTexture_set_width
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The width of the texture.
+-- | The width of the texture (in pixels). Higher values make it possible to represent high-frequency data better (such as sudden direction changes), at the cost of increased generation time and memory usage.
 set_width ::
             (CurveTexture :< cls, Object :< cls) => cls -> Int -> IO ()
 set_width cls arg1

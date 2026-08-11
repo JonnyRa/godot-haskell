@@ -10,7 +10,9 @@ module Godot.Core.GraphNode
         Godot.Core.GraphNode.sig_offset_changed,
         Godot.Core.GraphNode.sig_raise_request,
         Godot.Core.GraphNode.sig_resize_request,
+        Godot.Core.GraphNode.sig_selected,
         Godot.Core.GraphNode.sig_slot_updated,
+        Godot.Core.GraphNode.sig_unselected,
         Godot.Core.GraphNode._gui_input,
         Godot.Core.GraphNode.clear_all_slots,
         Godot.Core.GraphNode.clear_slot,
@@ -100,11 +102,23 @@ sig_resize_request
 
 instance NodeSignal GraphNode "resize_request" '[Vector2]
 
+-- | Emitted when the GraphNode is selected.
+sig_selected :: Godot.Internal.Dispatch.Signal GraphNode
+sig_selected = Godot.Internal.Dispatch.Signal "selected"
+
+instance NodeSignal GraphNode "selected" '[]
+
 -- | Emitted when any GraphNode's slot is updated.
 sig_slot_updated :: Godot.Internal.Dispatch.Signal GraphNode
 sig_slot_updated = Godot.Internal.Dispatch.Signal "slot_updated"
 
 instance NodeSignal GraphNode "slot_updated" '[Int]
+
+-- | Emitted when the GraphNode is unselected.
+sig_unselected :: Godot.Internal.Dispatch.Signal GraphNode
+sig_unselected = Godot.Internal.Dispatch.Signal "unselected"
+
+instance NodeSignal GraphNode "unselected" '[]
 
 instance NodeProperty GraphNode "comment" Bool 'False where
         nodeProperty

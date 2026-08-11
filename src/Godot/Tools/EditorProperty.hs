@@ -8,16 +8,19 @@ module Godot.Tools.EditorProperty
         Godot.Tools.EditorProperty.sig_property_checked,
         Godot.Tools.EditorProperty.sig_property_keyed,
         Godot.Tools.EditorProperty.sig_property_keyed_with_value,
+        Godot.Tools.EditorProperty.sig_property_pinned,
         Godot.Tools.EditorProperty.sig_resource_selected,
         Godot.Tools.EditorProperty.sig_selected,
         Godot.Tools.EditorProperty._focusable_focused,
         Godot.Tools.EditorProperty._gui_input,
+        Godot.Tools.EditorProperty._menu_option,
+        Godot.Tools.EditorProperty._unhandled_key_input,
+        Godot.Tools.EditorProperty._update_revert_and_pin_status,
         Godot.Tools.EditorProperty.add_focusable,
         Godot.Tools.EditorProperty.emit_changed,
         Godot.Tools.EditorProperty.get_edited_object,
         Godot.Tools.EditorProperty.get_edited_property,
         Godot.Tools.EditorProperty.get_label,
-        Godot.Tools.EditorProperty.get_tooltip_text,
         Godot.Tools.EditorProperty.is_checkable,
         Godot.Tools.EditorProperty.is_checked,
         Godot.Tools.EditorProperty.is_draw_red,
@@ -69,7 +72,7 @@ sig_property_changed
   = Godot.Internal.Dispatch.Signal "property_changed"
 
 instance NodeSignal EditorProperty "property_changed"
-           '[GodotString, GodotVariant]
+           '[GodotString, GodotVariant, GodotString, Bool]
 
 -- | Emitted when a property was checked. Used internally.
 sig_property_checked ::
@@ -78,7 +81,7 @@ sig_property_checked
   = Godot.Internal.Dispatch.Signal "property_checked"
 
 instance NodeSignal EditorProperty "property_checked"
-           '[GodotString, GodotString]
+           '[GodotString, Bool]
 
 -- | Emit it if you want to add this value as an animation key (check for keying being enabled first).
 sig_property_keyed :: Godot.Internal.Dispatch.Signal EditorProperty
@@ -95,6 +98,16 @@ sig_property_keyed_with_value
 
 instance NodeSignal EditorProperty "property_keyed_with_value"
            '[GodotString, GodotVariant]
+
+-- | Emit it if you want to mark (or unmark) the value of a property for being saved regardless of being equal to the default value.
+--   				The default value is the one the property will get when the node is just instantiated and can come from an ancestor scene in the inheritance/instancing chain, a script or a builtin class.
+sig_property_pinned ::
+                    Godot.Internal.Dispatch.Signal EditorProperty
+sig_property_pinned
+  = Godot.Internal.Dispatch.Signal "property_pinned"
+
+instance NodeSignal EditorProperty "property_pinned"
+           '[GodotString, Bool]
 
 -- | If you want a sub-resource to be edited, emit this signal with the resource.
 sig_resource_selected ::
@@ -193,6 +206,99 @@ instance NodeMethod EditorProperty "_gui_input" '[InputEvent]
            (IO ())
          where
         nodeMethod = Godot.Tools.EditorProperty._gui_input
+
+{-# NOINLINE bindEditorProperty__menu_option #-}
+
+bindEditorProperty__menu_option :: MethodBind
+bindEditorProperty__menu_option
+  = unsafePerformIO $
+      withCString "EditorProperty" $
+        \ clsNamePtr ->
+          withCString "_menu_option" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_menu_option ::
+               (EditorProperty :< cls, Object :< cls) => cls -> Int -> IO ()
+_menu_option cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEditorProperty__menu_option (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorProperty "_menu_option" '[Int] (IO ())
+         where
+        nodeMethod = Godot.Tools.EditorProperty._menu_option
+
+{-# NOINLINE bindEditorProperty__unhandled_key_input #-}
+
+bindEditorProperty__unhandled_key_input :: MethodBind
+bindEditorProperty__unhandled_key_input
+  = unsafePerformIO $
+      withCString "EditorProperty" $
+        \ clsNamePtr ->
+          withCString "_unhandled_key_input" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_unhandled_key_input ::
+                       (EditorProperty :< cls, Object :< cls) =>
+                       cls -> InputEvent -> IO ()
+_unhandled_key_input cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEditorProperty__unhandled_key_input
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorProperty "_unhandled_key_input"
+           '[InputEvent]
+           (IO ())
+         where
+        nodeMethod = Godot.Tools.EditorProperty._unhandled_key_input
+
+{-# NOINLINE bindEditorProperty__update_revert_and_pin_status #-}
+
+bindEditorProperty__update_revert_and_pin_status :: MethodBind
+bindEditorProperty__update_revert_and_pin_status
+  = unsafePerformIO $
+      withCString "EditorProperty" $
+        \ clsNamePtr ->
+          withCString "_update_revert_and_pin_status" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_update_revert_and_pin_status ::
+                                (EditorProperty :< cls, Object :< cls) => cls -> IO ()
+_update_revert_and_pin_status cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindEditorProperty__update_revert_and_pin_status
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorProperty "_update_revert_and_pin_status"
+           '[]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Tools.EditorProperty._update_revert_and_pin_status
 
 {-# NOINLINE bindEditorProperty_add_focusable #-}
 
@@ -354,38 +460,6 @@ get_label cls
 instance NodeMethod EditorProperty "get_label" '[] (IO GodotString)
          where
         nodeMethod = Godot.Tools.EditorProperty.get_label
-
-{-# NOINLINE bindEditorProperty_get_tooltip_text #-}
-
--- | Must be implemented to provide a custom tooltip to the property editor.
-bindEditorProperty_get_tooltip_text :: MethodBind
-bindEditorProperty_get_tooltip_text
-  = unsafePerformIO $
-      withCString "EditorProperty" $
-        \ clsNamePtr ->
-          withCString "get_tooltip_text" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | Must be implemented to provide a custom tooltip to the property editor.
-get_tooltip_text ::
-                   (EditorProperty :< cls, Object :< cls) => cls -> IO GodotString
-get_tooltip_text cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindEditorProperty_get_tooltip_text
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod EditorProperty "get_tooltip_text" '[]
-           (IO GodotString)
-         where
-        nodeMethod = Godot.Tools.EditorProperty.get_tooltip_text
 
 {-# NOINLINE bindEditorProperty_is_checkable #-}
 

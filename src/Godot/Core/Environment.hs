@@ -103,6 +103,7 @@ module Godot.Core.Environment
         Godot.Core.Environment.is_fog_transmit_enabled,
         Godot.Core.Environment.is_glow_bicubic_upscale_enabled,
         Godot.Core.Environment.is_glow_enabled,
+        Godot.Core.Environment.is_glow_high_quality_enabled,
         Godot.Core.Environment.is_glow_level_enabled,
         Godot.Core.Environment.is_ssao_enabled,
         Godot.Core.Environment.is_ssr_enabled,
@@ -151,6 +152,7 @@ module Godot.Core.Environment
         Godot.Core.Environment.set_glow_hdr_bleed_scale,
         Godot.Core.Environment.set_glow_hdr_bleed_threshold,
         Godot.Core.Environment.set_glow_hdr_luminance_cap,
+        Godot.Core.Environment.set_glow_high_quality,
         Godot.Core.Environment.set_glow_intensity,
         Godot.Core.Environment.set_glow_level,
         Godot.Core.Environment.set_glow_strength,
@@ -622,6 +624,12 @@ instance NodeProperty Environment "glow_hdr_threshold" Float 'False
           = (get_glow_hdr_bleed_threshold,
              wrapDroppingSetter set_glow_hdr_bleed_threshold, Nothing)
 
+instance NodeProperty Environment "glow_high_quality" Bool 'False
+         where
+        nodeProperty
+          = (is_glow_high_quality_enabled,
+             wrapDroppingSetter set_glow_high_quality, Nothing)
+
 instance NodeProperty Environment "glow_intensity" Float 'False
          where
         nodeProperty
@@ -1073,7 +1081,7 @@ instance NodeMethod Environment "get_bg_color" '[] (IO Color) where
 
 {-# NOINLINE bindEnvironment_get_bg_energy #-}
 
--- | The power of the light emitted by the background.
+-- | The power of the light emitted by the background. This affects the sky brightness, the ambient light (if @ambient_light_sky_contribution@ is greater than @0.0@) and specular light from the sky.
 bindEnvironment_get_bg_energy :: MethodBind
 bindEnvironment_get_bg_energy
   = unsafePerformIO $
@@ -1083,7 +1091,7 @@ bindEnvironment_get_bg_energy
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The power of the light emitted by the background.
+-- | The power of the light emitted by the background. This affects the sky brightness, the ambient light (if @ambient_light_sky_contribution@ is greater than @0.0@) and specular light from the sky.
 get_bg_energy ::
                 (Environment :< cls, Object :< cls) => cls -> IO Float
 get_bg_energy cls
@@ -2796,7 +2804,7 @@ instance NodeMethod Environment "get_tonemap_white" '[] (IO Float)
 
 {-# NOINLINE bindEnvironment_get_tonemapper #-}
 
--- | The tonemapping mode to use. Tonemapping is the process that "converts" HDR values to be suitable for rendering on a LDR display. (Godot doesn't support rendering on HDR displays yet.)
+-- | The tonemapping mode to use. Tonemapping is the process that "converts" HDR values to be suitable for rendering on a SDR display. (Godot doesn't support rendering on HDR displays yet.)
 bindEnvironment_get_tonemapper :: MethodBind
 bindEnvironment_get_tonemapper
   = unsafePerformIO $
@@ -2806,7 +2814,7 @@ bindEnvironment_get_tonemapper
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The tonemapping mode to use. Tonemapping is the process that "converts" HDR values to be suitable for rendering on a LDR display. (Godot doesn't support rendering on HDR displays yet.)
+-- | The tonemapping mode to use. Tonemapping is the process that "converts" HDR values to be suitable for rendering on a SDR display. (Godot doesn't support rendering on HDR displays yet.)
 get_tonemapper ::
                  (Environment :< cls, Object :< cls) => cls -> IO Int
 get_tonemapper cls
@@ -3114,6 +3122,38 @@ is_glow_enabled cls
 instance NodeMethod Environment "is_glow_enabled" '[] (IO Bool)
          where
         nodeMethod = Godot.Core.Environment.is_glow_enabled
+
+{-# NOINLINE bindEnvironment_is_glow_high_quality_enabled #-}
+
+-- | Takes more samples during downsample pass of glow. This ensures that single pixels are captured by glow which makes the glow look smoother and more stable during movement. However, it is very expensive and makes the glow post process take twice as long.
+bindEnvironment_is_glow_high_quality_enabled :: MethodBind
+bindEnvironment_is_glow_high_quality_enabled
+  = unsafePerformIO $
+      withCString "Environment" $
+        \ clsNamePtr ->
+          withCString "is_glow_high_quality_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Takes more samples during downsample pass of glow. This ensures that single pixels are captured by glow which makes the glow look smoother and more stable during movement. However, it is very expensive and makes the glow post process take twice as long.
+is_glow_high_quality_enabled ::
+                               (Environment :< cls, Object :< cls) => cls -> IO Bool
+is_glow_high_quality_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEnvironment_is_glow_high_quality_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Environment "is_glow_high_quality_enabled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.Environment.is_glow_high_quality_enabled
 
 {-# NOINLINE bindEnvironment_is_glow_level_enabled #-}
 
@@ -3564,7 +3604,7 @@ instance NodeMethod Environment "set_bg_color" '[Color] (IO ())
 
 {-# NOINLINE bindEnvironment_set_bg_energy #-}
 
--- | The power of the light emitted by the background.
+-- | The power of the light emitted by the background. This affects the sky brightness, the ambient light (if @ambient_light_sky_contribution@ is greater than @0.0@) and specular light from the sky.
 bindEnvironment_set_bg_energy :: MethodBind
 bindEnvironment_set_bg_energy
   = unsafePerformIO $
@@ -3574,7 +3614,7 @@ bindEnvironment_set_bg_energy
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The power of the light emitted by the background.
+-- | The power of the light emitted by the background. This affects the sky brightness, the ambient light (if @ambient_light_sky_contribution@ is greater than @0.0@) and specular light from the sky.
 set_bg_energy ::
                 (Environment :< cls, Object :< cls) => cls -> Float -> IO ()
 set_bg_energy cls arg1
@@ -4652,6 +4692,38 @@ instance NodeMethod Environment "set_glow_hdr_luminance_cap"
          where
         nodeMethod = Godot.Core.Environment.set_glow_hdr_luminance_cap
 
+{-# NOINLINE bindEnvironment_set_glow_high_quality #-}
+
+-- | Takes more samples during downsample pass of glow. This ensures that single pixels are captured by glow which makes the glow look smoother and more stable during movement. However, it is very expensive and makes the glow post process take twice as long.
+bindEnvironment_set_glow_high_quality :: MethodBind
+bindEnvironment_set_glow_high_quality
+  = unsafePerformIO $
+      withCString "Environment" $
+        \ clsNamePtr ->
+          withCString "set_glow_high_quality" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Takes more samples during downsample pass of glow. This ensures that single pixels are captured by glow which makes the glow look smoother and more stable during movement. However, it is very expensive and makes the glow post process take twice as long.
+set_glow_high_quality ::
+                        (Environment :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_glow_high_quality cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEnvironment_set_glow_high_quality
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Environment "set_glow_high_quality" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Environment.set_glow_high_quality
+
 {-# NOINLINE bindEnvironment_set_glow_intensity #-}
 
 -- | The glow intensity. When using the GLES2 renderer, this should be increased to 1.5 to compensate for the lack of HDR rendering.
@@ -5697,7 +5769,7 @@ instance NodeMethod Environment "set_tonemap_white" '[Float]
 
 {-# NOINLINE bindEnvironment_set_tonemapper #-}
 
--- | The tonemapping mode to use. Tonemapping is the process that "converts" HDR values to be suitable for rendering on a LDR display. (Godot doesn't support rendering on HDR displays yet.)
+-- | The tonemapping mode to use. Tonemapping is the process that "converts" HDR values to be suitable for rendering on a SDR display. (Godot doesn't support rendering on HDR displays yet.)
 bindEnvironment_set_tonemapper :: MethodBind
 bindEnvironment_set_tonemapper
   = unsafePerformIO $
@@ -5707,7 +5779,7 @@ bindEnvironment_set_tonemapper
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The tonemapping mode to use. Tonemapping is the process that "converts" HDR values to be suitable for rendering on a LDR display. (Godot doesn't support rendering on HDR displays yet.)
+-- | The tonemapping mode to use. Tonemapping is the process that "converts" HDR values to be suitable for rendering on a SDR display. (Godot doesn't support rendering on HDR displays yet.)
 set_tonemapper ::
                  (Environment :< cls, Object :< cls) => cls -> Int -> IO ()
 set_tonemapper cls arg1

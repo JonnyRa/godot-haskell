@@ -71,7 +71,7 @@ instance NodeMethod BackBufferCopy "get_copy_mode" '[] (IO Int)
 
 {-# NOINLINE bindBackBufferCopy_get_rect #-}
 
--- | The area covered by the BackBufferCopy. Only used if @copy_mode@ is @COPY_MODE_RECT@.
+-- | The area covered by the @BackBufferCopy@. Only used if @copy_mode@ is @COPY_MODE_RECT@.
 bindBackBufferCopy_get_rect :: MethodBind
 bindBackBufferCopy_get_rect
   = unsafePerformIO $
@@ -81,7 +81,7 @@ bindBackBufferCopy_get_rect
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The area covered by the BackBufferCopy. Only used if @copy_mode@ is @COPY_MODE_RECT@.
+-- | The area covered by the @BackBufferCopy@. Only used if @copy_mode@ is @COPY_MODE_RECT@.
 get_rect ::
            (BackBufferCopy :< cls, Object :< cls) => cls -> IO Rect2
 get_rect cls
@@ -131,7 +131,7 @@ instance NodeMethod BackBufferCopy "set_copy_mode" '[Int] (IO ())
 
 {-# NOINLINE bindBackBufferCopy_set_rect #-}
 
--- | The area covered by the BackBufferCopy. Only used if @copy_mode@ is @COPY_MODE_RECT@.
+-- | The area covered by the @BackBufferCopy@. Only used if @copy_mode@ is @COPY_MODE_RECT@.
 bindBackBufferCopy_set_rect :: MethodBind
 bindBackBufferCopy_set_rect
   = unsafePerformIO $
@@ -141,7 +141,7 @@ bindBackBufferCopy_set_rect
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The area covered by the BackBufferCopy. Only used if @copy_mode@ is @COPY_MODE_RECT@.
+-- | The area covered by the @BackBufferCopy@. Only used if @copy_mode@ is @COPY_MODE_RECT@.
 set_rect ::
            (BackBufferCopy :< cls, Object :< cls) => cls -> Rect2 -> IO ()
 set_rect cls arg1

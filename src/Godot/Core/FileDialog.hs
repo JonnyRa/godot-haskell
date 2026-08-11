@@ -38,8 +38,9 @@ module Godot.Core.FileDialog
         Godot.Core.FileDialog.get_current_path,
         Godot.Core.FileDialog.get_filters,
         Godot.Core.FileDialog.get_line_edit,
-        Godot.Core.FileDialog.get_mode, Godot.Core.FileDialog.get_vbox,
-        Godot.Core.FileDialog.invalidate,
+        Godot.Core.FileDialog.get_mode,
+        Godot.Core.FileDialog.get_root_subfolder,
+        Godot.Core.FileDialog.get_vbox, Godot.Core.FileDialog.invalidate,
         Godot.Core.FileDialog.is_mode_overriding_title,
         Godot.Core.FileDialog.is_showing_hidden_files,
         Godot.Core.FileDialog.set_access,
@@ -48,6 +49,7 @@ module Godot.Core.FileDialog
         Godot.Core.FileDialog.set_current_path,
         Godot.Core.FileDialog.set_filters, Godot.Core.FileDialog.set_mode,
         Godot.Core.FileDialog.set_mode_overrides_title,
+        Godot.Core.FileDialog.set_root_subfolder,
         Godot.Core.FileDialog.set_show_hidden_files)
        where
 import Data.Coerce
@@ -136,6 +138,13 @@ instance NodeProperty FileDialog "mode_overrides_title" Bool 'False
         nodeProperty
           = (is_mode_overriding_title,
              wrapDroppingSetter set_mode_overrides_title, Nothing)
+
+instance NodeProperty FileDialog "root_subfolder" GodotString
+           'False
+         where
+        nodeProperty
+          = (get_root_subfolder, wrapDroppingSetter set_root_subfolder,
+             Nothing)
 
 instance NodeProperty FileDialog "show_hidden_files" Bool 'False
          where
@@ -920,6 +929,38 @@ get_mode cls
 instance NodeMethod FileDialog "get_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.FileDialog.get_mode
 
+{-# NOINLINE bindFileDialog_get_root_subfolder #-}
+
+-- | If non-empty, the given sub-folder will be "root" of this @FileDialog@, i.e. user won't be able to go to its parent directory.
+bindFileDialog_get_root_subfolder :: MethodBind
+bindFileDialog_get_root_subfolder
+  = unsafePerformIO $
+      withCString "FileDialog" $
+        \ clsNamePtr ->
+          withCString "get_root_subfolder" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If non-empty, the given sub-folder will be "root" of this @FileDialog@, i.e. user won't be able to go to its parent directory.
+get_root_subfolder ::
+                     (FileDialog :< cls, Object :< cls) => cls -> IO GodotString
+get_root_subfolder cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindFileDialog_get_root_subfolder
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod FileDialog "get_root_subfolder" '[]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.FileDialog.get_root_subfolder
+
 {-# NOINLINE bindFileDialog_get_vbox #-}
 
 -- | Returns the vertical box container of the dialog, custom controls can be added to it.
@@ -1255,6 +1296,38 @@ instance NodeMethod FileDialog "set_mode_overrides_title" '[Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.FileDialog.set_mode_overrides_title
+
+{-# NOINLINE bindFileDialog_set_root_subfolder #-}
+
+-- | If non-empty, the given sub-folder will be "root" of this @FileDialog@, i.e. user won't be able to go to its parent directory.
+bindFileDialog_set_root_subfolder :: MethodBind
+bindFileDialog_set_root_subfolder
+  = unsafePerformIO $
+      withCString "FileDialog" $
+        \ clsNamePtr ->
+          withCString "set_root_subfolder" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If non-empty, the given sub-folder will be "root" of this @FileDialog@, i.e. user won't be able to go to its parent directory.
+set_root_subfolder ::
+                     (FileDialog :< cls, Object :< cls) => cls -> GodotString -> IO ()
+set_root_subfolder cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindFileDialog_set_root_subfolder
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod FileDialog "set_root_subfolder" '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.FileDialog.set_root_subfolder
 
 {-# NOINLINE bindFileDialog_set_show_hidden_files #-}
 

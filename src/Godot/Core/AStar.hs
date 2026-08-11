@@ -97,7 +97,7 @@ instance NodeMethod AStar "_estimate_cost" '[Int, Int] (IO Float)
 
 {-# NOINLINE bindAStar_add_point #-}
 
--- | Adds a new point at the given position with the given identifier. The @id@ must be 0 or larger, and the @weight_scale@ must be 1 or larger.
+-- | Adds a new point at the given position with the given identifier. The @id@ must be 0 or larger, and the @weight_scale@ must be 0.0 or greater.
 --   				The @weight_scale@ is multiplied by the result of @method _compute_cost@ when determining the overall cost of traveling across a segment from a neighboring point to this point. Thus, all else being equal, the algorithm prefers points with lower @weight_scale@s to form a path.
 --   				
 --   @
@@ -117,7 +117,7 @@ bindAStar_add_point
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a new point at the given position with the given identifier. The @id@ must be 0 or larger, and the @weight_scale@ must be 1 or larger.
+-- | Adds a new point at the given position with the given identifier. The @id@ must be 0 or larger, and the @weight_scale@ must be 0.0 or greater.
 --   				The @weight_scale@ is multiplied by the result of @method _compute_cost@ when determining the overall cost of traveling across a segment from a neighboring point to this point. Thus, all else being equal, the algorithm prefers points with lower @weight_scale@s to form a path.
 --   				
 --   @
