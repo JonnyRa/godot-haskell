@@ -14,6 +14,7 @@ installHaskellGenerator(){
 #run this after changing version
 rebuildGodotTypes () {
   cd classgen
+  rm ../src/Godot/Core/* ../src/Godot/Tools/*
   stack build --colour always --file-watch --watch-all --exec  "stack exec godot-haskell-classgen -- ../godot_headers/api.json ../godot_doc_classes.json ../" 2>&1 | tee ../errorLog
   cd -
 }
