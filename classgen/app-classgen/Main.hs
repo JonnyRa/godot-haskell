@@ -23,8 +23,9 @@ import qualified Data.HashSet as HashSet
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Control.Arrow
+import GHC.Stack
 
-main :: IO ()
+main :: HasCallStack => IO ()
 main = do
   args <- getArgs
   when (length args /= 3) $ do
@@ -107,9 +108,11 @@ main = do
     classImports = map (\n -> ImportDecl Nothing (ModuleName Nothing n) False False False Nothing Nothing Nothing)
       [ "Data.Coerce", "Foreign.C", "Godot.Internal.Dispatch", "Godot.Gdnative.Internal"]
 
-writeModule :: FilePath -> Module (Maybe CodeComment) -> IO ()
+writeModule :: HasCallStack => FilePath -> Module (Maybe CodeComment) -> IO ()
 writeModule godotHaskellRootDir mdl@(Module _ (Just (ModuleHead _ (ModuleName Nothing name) _ _)) _ _ _) = do
-  let filepath = godotHaskellRootDir </> "src/" ++ map replaceDot name ++ ".hs"
+  let filepath = (godotHaskellRootDir </> "src/" ++ map replaceDot name ++ ".hs" :: FilePath)
+  putStrLn ("outputting " <> filepath)
+  putStrLn ("module " <> show mdl)
   -- let out = prettyPrint mdl
   let out = uncurry exactPrint (ppWithComments mdl)
   createDirectoryIfMissing True (takeDirectory filepath)
