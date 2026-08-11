@@ -96,7 +96,7 @@ stack new myproject https://raw.githubusercontent.com/SimulaVR/godot-haskell/mas
 
 You will need to regenerate the bindings if you switch Godot versions. At
 present, these are generated for the version that corresponds to the
-godot_headers submodule included here. This was 3.6 at the time of writing.
+godot_headers submodule included here. This was 3.6.2 at the time of writing.
 
 To regenerate bindings:
 
