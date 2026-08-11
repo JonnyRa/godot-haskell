@@ -24,3 +24,17 @@ buildDodgeTheCreeps(){
   GODOTPROJECT=$(stack path --project-root)/examples/dodge-the-creeps/game
   stackBuildWatch myproject --exec "cp $STACKLIBFILE $GODOTPROJECT/lib" "$@"
 }
+
+#this is what stackBuildWatch does
+#stackBuildWatch(){
+#  target=$1
+#  shift 1
+#  stackBuild $target --file-watch --watch-all "$@" 
+#}
+#
+#stackBuild(){
+#  target=$1
+#  shift 1
+#  stack build $target --colour always --fast "$@" 2>&1 | tee errorLog 
+#}
+
