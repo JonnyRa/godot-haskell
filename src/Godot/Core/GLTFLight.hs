@@ -11,7 +11,8 @@ module Godot.Core.GLTFLight
         Godot.Core.GLTFLight.set_inner_cone_angle,
         Godot.Core.GLTFLight.set_intensity,
         Godot.Core.GLTFLight.set_outer_cone_angle,
-        Godot.Core.GLTFLight.set_range, Godot.Core.GLTFLight.set_type)
+        Godot.Core.GLTFLight.set_range, Godot.Core.GLTFLight.set_type,
+        Godot.Core.GLTFLight.to_dictionary, Godot.Core.GLTFLight.to_node)
        where
 import Data.Coerce
 import Foreign.C
@@ -377,3 +378,53 @@ set_type cls arg1
 instance NodeMethod GLTFLight "set_type" '[GodotString] (IO ())
          where
         nodeMethod = Godot.Core.GLTFLight.set_type
+
+{-# NOINLINE bindGLTFLight_to_dictionary #-}
+
+bindGLTFLight_to_dictionary :: MethodBind
+bindGLTFLight_to_dictionary
+  = unsafePerformIO $
+      withCString "GLTFLight" $
+        \ clsNamePtr ->
+          withCString "to_dictionary" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+to_dictionary ::
+                (GLTFLight :< cls, Object :< cls) => cls -> IO Dictionary
+to_dictionary cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFLight_to_dictionary (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GLTFLight "to_dictionary" '[] (IO Dictionary)
+         where
+        nodeMethod = Godot.Core.GLTFLight.to_dictionary
+
+{-# NOINLINE bindGLTFLight_to_node #-}
+
+bindGLTFLight_to_node :: MethodBind
+bindGLTFLight_to_node
+  = unsafePerformIO $
+      withCString "GLTFLight" $
+        \ clsNamePtr ->
+          withCString "to_node" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+to_node :: (GLTFLight :< cls, Object :< cls) => cls -> IO Light
+to_node cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGLTFLight_to_node (upcast cls) arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod GLTFLight "to_node" '[] (IO Light) where
+        nodeMethod = Godot.Core.GLTFLight.to_node

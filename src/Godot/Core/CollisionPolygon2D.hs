@@ -201,6 +201,7 @@ instance NodeMethod CollisionPolygon2D "is_disabled" '[] (IO Bool)
              #-}
 
 -- | If @true@, only edges that face up, relative to @CollisionPolygon2D@'s rotation, will collide with other objects.
+--   			__Note:__ This property has no effect if this @CollisionPolygon2D@ is a child of an @Area2D@ node.
 bindCollisionPolygon2D_is_one_way_collision_enabled :: MethodBind
 bindCollisionPolygon2D_is_one_way_collision_enabled
   = unsafePerformIO $
@@ -211,6 +212,7 @@ bindCollisionPolygon2D_is_one_way_collision_enabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, only edges that face up, relative to @CollisionPolygon2D@'s rotation, will collide with other objects.
+--   			__Note:__ This property has no effect if this @CollisionPolygon2D@ is a child of an @Area2D@ node.
 is_one_way_collision_enabled ::
                                (CollisionPolygon2D :< cls, Object :< cls) => cls -> IO Bool
 is_one_way_collision_enabled cls
@@ -301,6 +303,7 @@ instance NodeMethod CollisionPolygon2D "set_disabled" '[Bool]
 {-# NOINLINE bindCollisionPolygon2D_set_one_way_collision #-}
 
 -- | If @true@, only edges that face up, relative to @CollisionPolygon2D@'s rotation, will collide with other objects.
+--   			__Note:__ This property has no effect if this @CollisionPolygon2D@ is a child of an @Area2D@ node.
 bindCollisionPolygon2D_set_one_way_collision :: MethodBind
 bindCollisionPolygon2D_set_one_way_collision
   = unsafePerformIO $
@@ -311,6 +314,7 @@ bindCollisionPolygon2D_set_one_way_collision
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, only edges that face up, relative to @CollisionPolygon2D@'s rotation, will collide with other objects.
+--   			__Note:__ This property has no effect if this @CollisionPolygon2D@ is a child of an @Area2D@ node.
 set_one_way_collision ::
                         (CollisionPolygon2D :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_one_way_collision cls arg1

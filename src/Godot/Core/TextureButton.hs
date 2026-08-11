@@ -9,6 +9,7 @@ module Godot.Core.TextureButton
         Godot.Core.TextureButton._STRETCH_KEEP,
         Godot.Core.TextureButton._STRETCH_KEEP_CENTERED,
         Godot.Core.TextureButton._STRETCH_KEEP_ASPECT_CENTERED,
+        Godot.Core.TextureButton._texture_changed,
         Godot.Core.TextureButton.get_click_mask,
         Godot.Core.TextureButton.get_disabled_texture,
         Godot.Core.TextureButton.get_expand,
@@ -116,6 +117,35 @@ instance NodeProperty TextureButton "texture_pressed" Texture
         nodeProperty
           = (get_pressed_texture, wrapDroppingSetter set_pressed_texture,
              Nothing)
+
+{-# NOINLINE bindTextureButton__texture_changed #-}
+
+bindTextureButton__texture_changed :: MethodBind
+bindTextureButton__texture_changed
+  = unsafePerformIO $
+      withCString "TextureButton" $
+        \ clsNamePtr ->
+          withCString "_texture_changed" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_texture_changed ::
+                   (TextureButton :< cls, Object :< cls) => cls -> IO ()
+_texture_changed cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTextureButton__texture_changed
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TextureButton "_texture_changed" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.TextureButton._texture_changed
 
 {-# NOINLINE bindTextureButton_get_click_mask #-}
 

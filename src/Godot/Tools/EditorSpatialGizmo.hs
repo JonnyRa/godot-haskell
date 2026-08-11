@@ -196,7 +196,7 @@ bindEditorSpatialGizmo_add_mesh
 add_mesh ::
            (EditorSpatialGizmo :< cls, Object :< cls) =>
            cls ->
-             ArrayMesh ->
+             Mesh ->
                Maybe Bool -> Maybe SkinReference -> Maybe Material -> IO ()
 add_mesh cls arg1 arg2 arg3 arg4
   = withVariantArray
@@ -212,7 +212,7 @@ add_mesh cls arg1 arg2 arg3 arg4
                \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod EditorSpatialGizmo "add_mesh"
-           '[ArrayMesh, Maybe Bool, Maybe SkinReference, Maybe Material]
+           '[Mesh, Maybe Bool, Maybe SkinReference, Maybe Material]
            (IO ())
          where
         nodeMethod = Godot.Tools.EditorSpatialGizmo.add_mesh

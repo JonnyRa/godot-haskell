@@ -177,8 +177,8 @@ instance NodeMethod Line2D "_gradient_changed" '[] (IO ()) where
 
 {-# NOINLINE bindLine2D_add_point #-}
 
--- | Adds a point at the @position@. Appends the point at the end of the line.
---   				If @at_position@ is given, the point is inserted before the point number @at_position@, moving that point (and every point after) after the inserted point. If @at_position@ is not given, or is an illegal value (@at_position < 0@ or @at_position >= @method get_point_count@@), the point will be appended at the end of the point list.
+-- | Adds a point with the specified @position@ relative to the line's own position. Appends the new point at the end of the point list.
+--   				If @index@ is given, the new point is inserted before the existing point identified by index @index@. Every existing point starting from @index@ is shifted further down the list of points. The index must be greater than or equal to @0@ and must not exceed the number of existing points in the line. See @method get_point_count@.
 bindLine2D_add_point :: MethodBind
 bindLine2D_add_point
   = unsafePerformIO $
@@ -188,8 +188,8 @@ bindLine2D_add_point
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a point at the @position@. Appends the point at the end of the line.
---   				If @at_position@ is given, the point is inserted before the point number @at_position@, moving that point (and every point after) after the inserted point. If @at_position@ is not given, or is an illegal value (@at_position < 0@ or @at_position >= @method get_point_count@@), the point will be appended at the end of the point list.
+-- | Adds a point with the specified @position@ relative to the line's own position. Appends the new point at the end of the point list.
+--   				If @index@ is given, the new point is inserted before the existing point identified by index @index@. Every existing point starting from @index@ is shifted further down the list of points. The index must be greater than or equal to @0@ and must not exceed the number of existing points in the line. See @method get_point_count@.
 add_point ::
             (Line2D :< cls, Object :< cls) =>
             cls -> Vector2 -> Maybe Int -> IO ()
@@ -237,8 +237,9 @@ instance NodeMethod Line2D "clear_points" '[] (IO ()) where
 
 {-# NOINLINE bindLine2D_get_antialiased #-}
 
--- | If @true@, the line's border will be anti-aliased.
---   			__Note:__ Line2D is not accelerated by batching when being anti-aliased.
+-- | If @true@, the line's border will attempt to perform antialiasing by drawing thin OpenGL smooth lines on the line's edges.
+--   			__Note:__ Line2D is not accelerated by batching if @antialiased@ is @true@.
+--   			__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent lines and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 bindLine2D_get_antialiased :: MethodBind
 bindLine2D_get_antialiased
   = unsafePerformIO $
@@ -248,8 +249,9 @@ bindLine2D_get_antialiased
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the line's border will be anti-aliased.
---   			__Note:__ Line2D is not accelerated by batching when being anti-aliased.
+-- | If @true@, the line's border will attempt to perform antialiasing by drawing thin OpenGL smooth lines on the line's edges.
+--   			__Note:__ Line2D is not accelerated by batching if @antialiased@ is @true@.
+--   			__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent lines and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 get_antialiased :: (Line2D :< cls, Object :< cls) => cls -> IO Bool
 get_antialiased cls
   = withVariantArray []
@@ -429,7 +431,7 @@ instance NodeMethod Line2D "get_joint_mode" '[] (IO Int) where
 
 {-# NOINLINE bindLine2D_get_point_count #-}
 
--- | Returns the Line2D's amount of points.
+-- | Returns the amount of points in the line.
 bindLine2D_get_point_count :: MethodBind
 bindLine2D_get_point_count
   = unsafePerformIO $
@@ -439,7 +441,7 @@ bindLine2D_get_point_count
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the Line2D's amount of points.
+-- | Returns the amount of points in the line.
 get_point_count :: (Line2D :< cls, Object :< cls) => cls -> IO Int
 get_point_count cls
   = withVariantArray []
@@ -457,7 +459,7 @@ instance NodeMethod Line2D "get_point_count" '[] (IO Int) where
 
 {-# NOINLINE bindLine2D_get_point_position #-}
 
--- | Returns point @i@'s position.
+-- | Returns the position of the point at index @index@.
 bindLine2D_get_point_position :: MethodBind
 bindLine2D_get_point_position
   = unsafePerformIO $
@@ -467,7 +469,7 @@ bindLine2D_get_point_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns point @i@'s position.
+-- | Returns the position of the point at index @index@.
 get_point_position ::
                      (Line2D :< cls, Object :< cls) => cls -> Int -> IO Vector2
 get_point_position cls arg1
@@ -516,7 +518,8 @@ instance NodeMethod Line2D "get_points" '[] (IO PoolVector2Array)
 
 {-# NOINLINE bindLine2D_get_round_precision #-}
 
--- | The smoothness of the rounded joints and caps. This is only used if a cap or joint is set as round.
+-- | The smoothness of the rounded joints and caps. Higher values result in smoother corners, but are more demanding to render and update. This is only used if a cap or joint is set as round.
+--   			__Note:__ The default value is tuned for lines with the default @width@. For thin lines, this value should be reduced to a number between @2@ and @4@ to improve performance.
 bindLine2D_get_round_precision :: MethodBind
 bindLine2D_get_round_precision
   = unsafePerformIO $
@@ -526,7 +529,8 @@ bindLine2D_get_round_precision
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The smoothness of the rounded joints and caps. This is only used if a cap or joint is set as round.
+-- | The smoothness of the rounded joints and caps. Higher values result in smoother corners, but are more demanding to render and update. This is only used if a cap or joint is set as round.
+--   			__Note:__ The default value is tuned for lines with the default @width@. For thin lines, this value should be reduced to a number between @2@ and @4@ to improve performance.
 get_round_precision ::
                       (Line2D :< cls, Object :< cls) => cls -> IO Int
 get_round_precision cls
@@ -545,7 +549,7 @@ instance NodeMethod Line2D "get_round_precision" '[] (IO Int) where
 
 {-# NOINLINE bindLine2D_get_sharp_limit #-}
 
--- | The direction difference in radians between vector points. This value is only used if @joint mode@ is set to @LINE_JOINT_SHARP@.
+-- | The direction difference in radians between vector points. This value is only used if @joint_mode@ is set to @LINE_JOINT_SHARP@.
 bindLine2D_get_sharp_limit :: MethodBind
 bindLine2D_get_sharp_limit
   = unsafePerformIO $
@@ -555,7 +559,7 @@ bindLine2D_get_sharp_limit
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The direction difference in radians between vector points. This value is only used if @joint mode@ is set to @LINE_JOINT_SHARP@.
+-- | The direction difference in radians between vector points. This value is only used if @joint_mode@ is set to @LINE_JOINT_SHARP@.
 get_sharp_limit ::
                   (Line2D :< cls, Object :< cls) => cls -> IO Float
 get_sharp_limit cls
@@ -652,7 +656,7 @@ instance NodeMethod Line2D "get_width" '[] (IO Float) where
 
 {-# NOINLINE bindLine2D_remove_point #-}
 
--- | Removes the point at index @i@ from the line.
+-- | Removes the point at index @index@ from the line.
 bindLine2D_remove_point :: MethodBind
 bindLine2D_remove_point
   = unsafePerformIO $
@@ -662,7 +666,7 @@ bindLine2D_remove_point
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Removes the point at index @i@ from the line.
+-- | Removes the point at index @index@ from the line.
 remove_point ::
                (Line2D :< cls, Object :< cls) => cls -> Int -> IO ()
 remove_point cls arg1
@@ -680,8 +684,9 @@ instance NodeMethod Line2D "remove_point" '[Int] (IO ()) where
 
 {-# NOINLINE bindLine2D_set_antialiased #-}
 
--- | If @true@, the line's border will be anti-aliased.
---   			__Note:__ Line2D is not accelerated by batching when being anti-aliased.
+-- | If @true@, the line's border will attempt to perform antialiasing by drawing thin OpenGL smooth lines on the line's edges.
+--   			__Note:__ Line2D is not accelerated by batching if @antialiased@ is @true@.
+--   			__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent lines and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 bindLine2D_set_antialiased :: MethodBind
 bindLine2D_set_antialiased
   = unsafePerformIO $
@@ -691,8 +696,9 @@ bindLine2D_set_antialiased
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the line's border will be anti-aliased.
---   			__Note:__ Line2D is not accelerated by batching when being anti-aliased.
+-- | If @true@, the line's border will attempt to perform antialiasing by drawing thin OpenGL smooth lines on the line's edges.
+--   			__Note:__ Line2D is not accelerated by batching if @antialiased@ is @true@.
+--   			__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent lines and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 set_antialiased ::
                   (Line2D :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_antialiased cls arg1
@@ -884,7 +890,7 @@ instance NodeMethod Line2D "set_joint_mode" '[Int] (IO ()) where
 
 {-# NOINLINE bindLine2D_set_point_position #-}
 
--- | Overwrites the position in point @i@ with the supplied @position@.
+-- | Overwrites the position of the point at index @index@ with the supplied @position@.
 bindLine2D_set_point_position :: MethodBind
 bindLine2D_set_point_position
   = unsafePerformIO $
@@ -894,7 +900,7 @@ bindLine2D_set_point_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Overwrites the position in point @i@ with the supplied @position@.
+-- | Overwrites the position of the point at index @index@ with the supplied @position@.
 set_point_position ::
                      (Line2D :< cls, Object :< cls) => cls -> Int -> Vector2 -> IO ()
 set_point_position cls arg1 arg2
@@ -944,7 +950,8 @@ instance NodeMethod Line2D "set_points" '[PoolVector2Array] (IO ())
 
 {-# NOINLINE bindLine2D_set_round_precision #-}
 
--- | The smoothness of the rounded joints and caps. This is only used if a cap or joint is set as round.
+-- | The smoothness of the rounded joints and caps. Higher values result in smoother corners, but are more demanding to render and update. This is only used if a cap or joint is set as round.
+--   			__Note:__ The default value is tuned for lines with the default @width@. For thin lines, this value should be reduced to a number between @2@ and @4@ to improve performance.
 bindLine2D_set_round_precision :: MethodBind
 bindLine2D_set_round_precision
   = unsafePerformIO $
@@ -954,7 +961,8 @@ bindLine2D_set_round_precision
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The smoothness of the rounded joints and caps. This is only used if a cap or joint is set as round.
+-- | The smoothness of the rounded joints and caps. Higher values result in smoother corners, but are more demanding to render and update. This is only used if a cap or joint is set as round.
+--   			__Note:__ The default value is tuned for lines with the default @width@. For thin lines, this value should be reduced to a number between @2@ and @4@ to improve performance.
 set_round_precision ::
                       (Line2D :< cls, Object :< cls) => cls -> Int -> IO ()
 set_round_precision cls arg1
@@ -974,7 +982,7 @@ instance NodeMethod Line2D "set_round_precision" '[Int] (IO ())
 
 {-# NOINLINE bindLine2D_set_sharp_limit #-}
 
--- | The direction difference in radians between vector points. This value is only used if @joint mode@ is set to @LINE_JOINT_SHARP@.
+-- | The direction difference in radians between vector points. This value is only used if @joint_mode@ is set to @LINE_JOINT_SHARP@.
 bindLine2D_set_sharp_limit :: MethodBind
 bindLine2D_set_sharp_limit
   = unsafePerformIO $
@@ -984,7 +992,7 @@ bindLine2D_set_sharp_limit
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The direction difference in radians between vector points. This value is only used if @joint mode@ is set to @LINE_JOINT_SHARP@.
+-- | The direction difference in radians between vector points. This value is only used if @joint_mode@ is set to @LINE_JOINT_SHARP@.
 set_sharp_limit ::
                   (Line2D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_sharp_limit cls arg1

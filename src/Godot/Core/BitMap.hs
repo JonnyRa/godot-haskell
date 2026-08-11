@@ -3,12 +3,12 @@
   MultiParamTypeClasses #-}
 module Godot.Core.BitMap
        (Godot.Core.BitMap._get_data, Godot.Core.BitMap._set_data,
-        Godot.Core.BitMap.create,
+        Godot.Core.BitMap.convert_to_image, Godot.Core.BitMap.create,
         Godot.Core.BitMap.create_from_image_alpha,
         Godot.Core.BitMap.get_bit, Godot.Core.BitMap.get_size,
         Godot.Core.BitMap.get_true_bit_count, Godot.Core.BitMap.grow_mask,
-        Godot.Core.BitMap.opaque_to_polygons, Godot.Core.BitMap.set_bit,
-        Godot.Core.BitMap.set_bit_rect)
+        Godot.Core.BitMap.opaque_to_polygons, Godot.Core.BitMap.resize,
+        Godot.Core.BitMap.set_bit, Godot.Core.BitMap.set_bit_rect)
        where
 import Data.Coerce
 import Foreign.C
@@ -73,6 +73,32 @@ _set_data cls arg1
 
 instance NodeMethod BitMap "_set_data" '[Dictionary] (IO ()) where
         nodeMethod = Godot.Core.BitMap._set_data
+
+{-# NOINLINE bindBitMap_convert_to_image #-}
+
+-- | Returns an image of the same size as the bitmap and with a @enum Image.Format@ of type @FORMAT_L8@. @true@ bits of the bitmap are being converted into white pixels, and @false@ bits into black.
+bindBitMap_convert_to_image :: MethodBind
+bindBitMap_convert_to_image
+  = unsafePerformIO $
+      withCString "BitMap" $
+        \ clsNamePtr ->
+          withCString "convert_to_image" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns an image of the same size as the bitmap and with a @enum Image.Format@ of type @FORMAT_L8@. @true@ bits of the bitmap are being converted into white pixels, and @false@ bits into black.
+convert_to_image ::
+                   (BitMap :< cls, Object :< cls) => cls -> IO Image
+convert_to_image cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindBitMap_convert_to_image (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod BitMap "convert_to_image" '[] (IO Image) where
+        nodeMethod = Godot.Core.BitMap.convert_to_image
 
 {-# NOINLINE bindBitMap_create #-}
 
@@ -246,6 +272,9 @@ instance NodeMethod BitMap "grow_mask" '[Int, Rect2] (IO ()) where
 
 {-# NOINLINE bindBitMap_opaque_to_polygons #-}
 
+-- | Generates polygon outlines from the opaque (non-transparent) areas of the @BitMap@ using a Marching Squares algorithm.
+--   				Returns an @Array@ of @PoolVector2Array@, where each @PoolVector2Array@ represents a polygon outline. These outlines can be directly assigned to the @polygon@ property of nodes like @CollisionPolygon2D@ or @OccluderPolygon2D@.
+--   				The @epsilon@ parameter controls polygon simplification. A lower value produces more accurate polygons, but at the cost of increased polygon size and potential performance impact. A higher value simplifies the polygons, reducing their size and improving performance, but with less accuracy.
 bindBitMap_opaque_to_polygons :: MethodBind
 bindBitMap_opaque_to_polygons
   = unsafePerformIO $
@@ -255,6 +284,9 @@ bindBitMap_opaque_to_polygons
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Generates polygon outlines from the opaque (non-transparent) areas of the @BitMap@ using a Marching Squares algorithm.
+--   				Returns an @Array@ of @PoolVector2Array@, where each @PoolVector2Array@ represents a polygon outline. These outlines can be directly assigned to the @polygon@ property of nodes like @CollisionPolygon2D@ or @OccluderPolygon2D@.
+--   				The @epsilon@ parameter controls polygon simplification. A lower value produces more accurate polygons, but at the cost of increased polygon size and potential performance impact. A higher value simplifies the polygons, reducing their size and improving performance, but with less accuracy.
 opaque_to_polygons ::
                      (BitMap :< cls, Object :< cls) =>
                      cls -> Rect2 -> Maybe Float -> IO Array
@@ -275,6 +307,32 @@ instance NodeMethod BitMap "opaque_to_polygons"
            (IO Array)
          where
         nodeMethod = Godot.Core.BitMap.opaque_to_polygons
+
+{-# NOINLINE bindBitMap_resize #-}
+
+-- | Resizes the image to @new_size@.
+bindBitMap_resize :: MethodBind
+bindBitMap_resize
+  = unsafePerformIO $
+      withCString "BitMap" $
+        \ clsNamePtr ->
+          withCString "resize" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Resizes the image to @new_size@.
+resize :: (BitMap :< cls, Object :< cls) => cls -> Vector2 -> IO ()
+resize cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindBitMap_resize (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod BitMap "resize" '[Vector2] (IO ()) where
+        nodeMethod = Godot.Core.BitMap.resize
 
 {-# NOINLINE bindBitMap_set_bit #-}
 

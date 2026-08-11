@@ -14,6 +14,7 @@ installHaskellGenerator(){
 #run this after changing version
 rebuildGodotTypes () {
   cd classgen
+  rm ../src/Godot/Core/* ../src/Godot/Tools/*
   stack build --colour always --file-watch --watch-all --exec  "stack exec godot-haskell-classgen -- ../godot_headers/api.json ../godot_doc_classes.json ../" 2>&1 | tee ../errorLog
   cd -
 }
@@ -23,3 +24,17 @@ buildDodgeTheCreeps(){
   GODOTPROJECT=$(stack path --project-root)/examples/dodge-the-creeps/game
   stackBuildWatch myproject --exec "cp $STACKLIBFILE $GODOTPROJECT/lib" "$@"
 }
+
+#this is what stackBuildWatch does
+#stackBuildWatch(){
+#  target=$1
+#  shift 1
+#  stackBuild $target --file-watch --watch-all "$@" 
+#}
+#
+#stackBuild(){
+#  target=$1
+#  shift 1
+#  stack build $target --colour always --fast "$@" 2>&1 | tee errorLog 
+#}
+

@@ -25,7 +25,7 @@ import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Reference()
 
--- | Emitted whenever the resource changes.
+-- | Emitted when the resource changes, usually when one of its properties is modified. See also @method emit_changed@.
 --   				__Note:__ This signal is not emitted automatically for custom resources, which means that you need to create a setter and emit the signal yourself.
 sig_changed :: Godot.Internal.Dispatch.Signal Resource
 sig_changed = Godot.Internal.Dispatch.Signal "changed"
@@ -49,7 +49,19 @@ instance NodeProperty Resource "resource_path" GodotString 'False
 
 {-# NOINLINE bindResource__setup_local_to_scene #-}
 
--- | Virtual function which can be overridden to customize the behavior value of @method setup_local_to_scene@.
+-- | Override this method to customize the newly duplicated resource created from @method PackedScene.instance@, if the original's @resource_local_to_scene@ is set to @true@.
+--   				__Example:__ Set a random @damage@ value to every local resource from an instantiated scene.
+--   				
+--   @
+--   
+--   				extends Resource
+--   
+--   				var damage = 0
+--   
+--   				func _setup_local_to_scene():
+--   				    damage = rand_range(10, 40)
+--   				
+--   @
 bindResource__setup_local_to_scene :: MethodBind
 bindResource__setup_local_to_scene
   = unsafePerformIO $
@@ -59,7 +71,19 @@ bindResource__setup_local_to_scene
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Virtual function which can be overridden to customize the behavior value of @method setup_local_to_scene@.
+-- | Override this method to customize the newly duplicated resource created from @method PackedScene.instance@, if the original's @resource_local_to_scene@ is set to @true@.
+--   				__Example:__ Set a random @damage@ value to every local resource from an instantiated scene.
+--   				
+--   @
+--   
+--   				extends Resource
+--   
+--   				var damage = 0
+--   
+--   				func _setup_local_to_scene():
+--   				    damage = rand_range(10, 40)
+--   				
+--   @
 _setup_local_to_scene ::
                         (Resource :< cls, Object :< cls) => cls -> IO ()
 _setup_local_to_scene cls
@@ -80,10 +104,9 @@ instance NodeMethod Resource "_setup_local_to_scene" '[] (IO ())
 
 {-# NOINLINE bindResource_duplicate #-}
 
--- | Duplicates the resource, returning a new resource with the exported members copied. __Note:__ To duplicate the resource the constructor is called without arguments. This method will error when the constructor doesn't have default values.
---   				By default, sub-resources are shared between resource copies for efficiency. This can be changed by passing @true@ to the @subresources@ argument which will copy the subresources.
---   				__Note:__ If @subresources@ is @true@, this method will only perform a shallow copy. Nested resources within subresources will not be duplicated and will still be shared.
---   				__Note:__ When duplicating a resource, only @export@ed properties are copied. Other properties will be set to their default value in the new resource.
+-- | Duplicates this resource, returning a new resource with its @export@ed or @PROPERTY_USAGE_STORAGE@ properties copied from the original.
+--   				If @subresources@ is @false@, a shallow copy is returned; nested resources within subresources are not duplicated and are shared from the original resource. If @subresources@ is @true@, a deep copy is returned; nested subresources will be duplicated and are not shared.
+--   				__Note:__ For custom resources, this method will fail if @method Object._init@ has been defined with required parameters.
 bindResource_duplicate :: MethodBind
 bindResource_duplicate
   = unsafePerformIO $
@@ -93,10 +116,9 @@ bindResource_duplicate
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Duplicates the resource, returning a new resource with the exported members copied. __Note:__ To duplicate the resource the constructor is called without arguments. This method will error when the constructor doesn't have default values.
---   				By default, sub-resources are shared between resource copies for efficiency. This can be changed by passing @true@ to the @subresources@ argument which will copy the subresources.
---   				__Note:__ If @subresources@ is @true@, this method will only perform a shallow copy. Nested resources within subresources will not be duplicated and will still be shared.
---   				__Note:__ When duplicating a resource, only @export@ed properties are copied. Other properties will be set to their default value in the new resource.
+-- | Duplicates this resource, returning a new resource with its @export@ed or @PROPERTY_USAGE_STORAGE@ properties copied from the original.
+--   				If @subresources@ is @false@, a shallow copy is returned; nested resources within subresources are not duplicated and are shared from the original resource. If @subresources@ is @true@, a deep copy is returned; nested subresources will be duplicated and are not shared.
+--   				__Note:__ For custom resources, this method will fail if @method Object._init@ has been defined with required parameters.
 duplicate ::
             (Resource :< cls, Object :< cls) =>
             cls -> Maybe Bool -> IO Resource
@@ -114,17 +136,19 @@ instance NodeMethod Resource "duplicate" '[Maybe Bool]
 
 {-# NOINLINE bindResource_emit_changed #-}
 
--- | Emits the @signal changed@ signal.
---   				If external objects which depend on this resource should be updated, this method must be called manually whenever the state of this resource has changed (such as modification of properties).
---   				The method is equivalent to:
+-- | Emits the @signal changed@ signal. This method is called automatically for some built-in resources.
+--   				__Note:__ For custom resources, it's recommended to call this method whenever a meaningful change occurs, such as a modified property. This ensures that custom @Object@s depending on the resource are properly updated.
 --   				
 --   @
 --   
---   				emit_signal("changed")
+--   				var damage setget set_damage
+--   
+--   				func set_damage(new_value):
+--   				    if damage != new_value:
+--   				        damage = new_value
+--   				        emit_changed()
 --   				
 --   @
---   
---   				__Note:__ This method is called automatically for built-in resources.
 bindResource_emit_changed :: MethodBind
 bindResource_emit_changed
   = unsafePerformIO $
@@ -134,17 +158,19 @@ bindResource_emit_changed
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Emits the @signal changed@ signal.
---   				If external objects which depend on this resource should be updated, this method must be called manually whenever the state of this resource has changed (such as modification of properties).
---   				The method is equivalent to:
+-- | Emits the @signal changed@ signal. This method is called automatically for some built-in resources.
+--   				__Note:__ For custom resources, it's recommended to call this method whenever a meaningful change occurs, such as a modified property. This ensures that custom @Object@s depending on the resource are properly updated.
 --   				
 --   @
 --   
---   				emit_signal("changed")
+--   				var damage setget set_damage
+--   
+--   				func set_damage(new_value):
+--   				    if damage != new_value:
+--   				        damage = new_value
+--   				        emit_changed()
 --   				
 --   @
---   
---   				__Note:__ This method is called automatically for built-in resources.
 emit_changed :: (Resource :< cls, Object :< cls) => cls -> IO ()
 emit_changed cls
   = withVariantArray []
@@ -162,7 +188,7 @@ instance NodeMethod Resource "emit_changed" '[] (IO ()) where
 
 {-# NOINLINE bindResource_get_local_scene #-}
 
--- | If @resource_local_to_scene@ is enabled and the resource was loaded from a @PackedScene@ instantiation, returns the local scene where this resource's unique copy is in use. Otherwise, returns @null@.
+-- | If @resource_local_to_scene@ is set to @true@ and the resource has been loaded from a @PackedScene@ instantiation, returns the root @Node@ of the scene where this resource is used. Otherwise, returns @null@.
 bindResource_get_local_scene :: MethodBind
 bindResource_get_local_scene
   = unsafePerformIO $
@@ -172,7 +198,7 @@ bindResource_get_local_scene
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @resource_local_to_scene@ is enabled and the resource was loaded from a @PackedScene@ instantiation, returns the local scene where this resource's unique copy is in use. Otherwise, returns @null@.
+-- | If @resource_local_to_scene@ is set to @true@ and the resource has been loaded from a @PackedScene@ instantiation, returns the root @Node@ of the scene where this resource is used. Otherwise, returns @null@.
 get_local_scene ::
                   (Resource :< cls, Object :< cls) => cls -> IO Node
 get_local_scene cls
@@ -188,7 +214,8 @@ instance NodeMethod Resource "get_local_scene" '[] (IO Node) where
 
 {-# NOINLINE bindResource_get_name #-}
 
--- | The name of the resource. This is an optional identifier. If @resource_name@ is not empty, its value will be displayed to represent the current resource in the editor inspector. For built-in scripts, the @resource_name@ will be displayed as the tab name in the script editor.
+-- | An optional name for this resource. When defined, its value is displayed to represent the resource in the Inspector dock. For built-in scripts, the name is displayed as part of the tab name in the script editor.
+--   			__Note:__ Some resource formats do not support resource names. You can still set the name in the editor or via code, but it will be lost when the resource is reloaded. For example, only built-in scripts can have a resource name, while scripts stored in separate files cannot.
 bindResource_get_name :: MethodBind
 bindResource_get_name
   = unsafePerformIO $
@@ -198,7 +225,8 @@ bindResource_get_name
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The name of the resource. This is an optional identifier. If @resource_name@ is not empty, its value will be displayed to represent the current resource in the editor inspector. For built-in scripts, the @resource_name@ will be displayed as the tab name in the script editor.
+-- | An optional name for this resource. When defined, its value is displayed to represent the resource in the Inspector dock. For built-in scripts, the name is displayed as part of the tab name in the script editor.
+--   			__Note:__ Some resource formats do not support resource names. You can still set the name in the editor or via code, but it will be lost when the resource is reloaded. For example, only built-in scripts can have a resource name, while scripts stored in separate files cannot.
 get_name ::
            (Resource :< cls, Object :< cls) => cls -> IO GodotString
 get_name cls
@@ -216,7 +244,8 @@ instance NodeMethod Resource "get_name" '[] (IO GodotString) where
 
 {-# NOINLINE bindResource_get_path #-}
 
--- | The path to the resource. In case it has its own file, it will return its filepath. If it's tied to the scene, it will return the scene's path, followed by the resource's index.
+-- | The unique path to this resource. If it has been saved to disk, the value will be its filepath. If the resource is exclusively contained within a scene, the value will be the @PackedScene@'s filepath, followed by a unique identifier.
+--   			__Note:__ Setting this property manually may fail if a resource with the same path has already been previously loaded. If necessary, use @method take_over_path@.
 bindResource_get_path :: MethodBind
 bindResource_get_path
   = unsafePerformIO $
@@ -226,7 +255,8 @@ bindResource_get_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The path to the resource. In case it has its own file, it will return its filepath. If it's tied to the scene, it will return the scene's path, followed by the resource's index.
+-- | The unique path to this resource. If it has been saved to disk, the value will be its filepath. If the resource is exclusively contained within a scene, the value will be the @PackedScene@'s filepath, followed by a unique identifier.
+--   			__Note:__ Setting this property manually may fail if a resource with the same path has already been previously loaded. If necessary, use @method take_over_path@.
 get_path ::
            (Resource :< cls, Object :< cls) => cls -> IO GodotString
 get_path cls
@@ -244,7 +274,7 @@ instance NodeMethod Resource "get_path" '[] (IO GodotString) where
 
 {-# NOINLINE bindResource_get_rid #-}
 
--- | Returns the RID of the resource (or an empty RID). Many resources (such as @Texture@, @Mesh@, etc) are high-level abstractions of resources stored in a server, so this function will return the original RID.
+-- | Returns the @RID@ of this resource (or an empty RID). Many resources (such as @Texture@, @Shape@, and so on) are high-level abstractions of resources stored in a specialized server (@VisualServer@, @PhysicsServer@, etc.), so this function will return the original @RID@.
 bindResource_get_rid :: MethodBind
 bindResource_get_rid
   = unsafePerformIO $
@@ -254,7 +284,7 @@ bindResource_get_rid
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the RID of the resource (or an empty RID). Many resources (such as @Texture@, @Mesh@, etc) are high-level abstractions of resources stored in a server, so this function will return the original RID.
+-- | Returns the @RID@ of this resource (or an empty RID). Many resources (such as @Texture@, @Shape@, and so on) are high-level abstractions of resources stored in a specialized server (@VisualServer@, @PhysicsServer@, etc.), so this function will return the original @RID@.
 get_rid :: (Resource :< cls, Object :< cls) => cls -> IO Rid
 get_rid cls
   = withVariantArray []
@@ -270,7 +300,8 @@ instance NodeMethod Resource "get_rid" '[] (IO Rid) where
 
 {-# NOINLINE bindResource_is_local_to_scene #-}
 
--- | If @true@, the resource will be made unique in each instance of its local scene. It can thus be modified in a scene instance without impacting other instances of that same scene.
+-- | If @true@, the resource is duplicated for each instance of all scenes using it. At run-time, the resource can be modified in one scene without affecting other instances (see @method PackedScene.instance@).
+--   			__Note:__ Changing this property at run-time has no effect on already created duplicate resources.
 bindResource_is_local_to_scene :: MethodBind
 bindResource_is_local_to_scene
   = unsafePerformIO $
@@ -280,7 +311,8 @@ bindResource_is_local_to_scene
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the resource will be made unique in each instance of its local scene. It can thus be modified in a scene instance without impacting other instances of that same scene.
+-- | If @true@, the resource is duplicated for each instance of all scenes using it. At run-time, the resource can be modified in one scene without affecting other instances (see @method PackedScene.instance@).
+--   			__Note:__ Changing this property at run-time has no effect on already created duplicate resources.
 is_local_to_scene ::
                     (Resource :< cls, Object :< cls) => cls -> IO Bool
 is_local_to_scene cls
@@ -300,7 +332,8 @@ instance NodeMethod Resource "is_local_to_scene" '[] (IO Bool)
 
 {-# NOINLINE bindResource_set_local_to_scene #-}
 
--- | If @true@, the resource will be made unique in each instance of its local scene. It can thus be modified in a scene instance without impacting other instances of that same scene.
+-- | If @true@, the resource is duplicated for each instance of all scenes using it. At run-time, the resource can be modified in one scene without affecting other instances (see @method PackedScene.instance@).
+--   			__Note:__ Changing this property at run-time has no effect on already created duplicate resources.
 bindResource_set_local_to_scene :: MethodBind
 bindResource_set_local_to_scene
   = unsafePerformIO $
@@ -310,7 +343,8 @@ bindResource_set_local_to_scene
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the resource will be made unique in each instance of its local scene. It can thus be modified in a scene instance without impacting other instances of that same scene.
+-- | If @true@, the resource is duplicated for each instance of all scenes using it. At run-time, the resource can be modified in one scene without affecting other instances (see @method PackedScene.instance@).
+--   			__Note:__ Changing this property at run-time has no effect on already created duplicate resources.
 set_local_to_scene ::
                      (Resource :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_local_to_scene cls arg1
@@ -330,7 +364,8 @@ instance NodeMethod Resource "set_local_to_scene" '[Bool] (IO ())
 
 {-# NOINLINE bindResource_set_name #-}
 
--- | The name of the resource. This is an optional identifier. If @resource_name@ is not empty, its value will be displayed to represent the current resource in the editor inspector. For built-in scripts, the @resource_name@ will be displayed as the tab name in the script editor.
+-- | An optional name for this resource. When defined, its value is displayed to represent the resource in the Inspector dock. For built-in scripts, the name is displayed as part of the tab name in the script editor.
+--   			__Note:__ Some resource formats do not support resource names. You can still set the name in the editor or via code, but it will be lost when the resource is reloaded. For example, only built-in scripts can have a resource name, while scripts stored in separate files cannot.
 bindResource_set_name :: MethodBind
 bindResource_set_name
   = unsafePerformIO $
@@ -340,7 +375,8 @@ bindResource_set_name
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The name of the resource. This is an optional identifier. If @resource_name@ is not empty, its value will be displayed to represent the current resource in the editor inspector. For built-in scripts, the @resource_name@ will be displayed as the tab name in the script editor.
+-- | An optional name for this resource. When defined, its value is displayed to represent the resource in the Inspector dock. For built-in scripts, the name is displayed as part of the tab name in the script editor.
+--   			__Note:__ Some resource formats do not support resource names. You can still set the name in the editor or via code, but it will be lost when the resource is reloaded. For example, only built-in scripts can have a resource name, while scripts stored in separate files cannot.
 set_name ::
            (Resource :< cls, Object :< cls) => cls -> GodotString -> IO ()
 set_name cls arg1
@@ -359,7 +395,8 @@ instance NodeMethod Resource "set_name" '[GodotString] (IO ())
 
 {-# NOINLINE bindResource_set_path #-}
 
--- | The path to the resource. In case it has its own file, it will return its filepath. If it's tied to the scene, it will return the scene's path, followed by the resource's index.
+-- | The unique path to this resource. If it has been saved to disk, the value will be its filepath. If the resource is exclusively contained within a scene, the value will be the @PackedScene@'s filepath, followed by a unique identifier.
+--   			__Note:__ Setting this property manually may fail if a resource with the same path has already been previously loaded. If necessary, use @method take_over_path@.
 bindResource_set_path :: MethodBind
 bindResource_set_path
   = unsafePerformIO $
@@ -369,7 +406,8 @@ bindResource_set_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The path to the resource. In case it has its own file, it will return its filepath. If it's tied to the scene, it will return the scene's path, followed by the resource's index.
+-- | The unique path to this resource. If it has been saved to disk, the value will be its filepath. If the resource is exclusively contained within a scene, the value will be the @PackedScene@'s filepath, followed by a unique identifier.
+--   			__Note:__ Setting this property manually may fail if a resource with the same path has already been previously loaded. If necessary, use @method take_over_path@.
 set_path ::
            (Resource :< cls, Object :< cls) => cls -> GodotString -> IO ()
 set_path cls arg1
@@ -388,8 +426,7 @@ instance NodeMethod Resource "set_path" '[GodotString] (IO ())
 
 {-# NOINLINE bindResource_setup_local_to_scene #-}
 
--- | This method is called when a resource with @resource_local_to_scene@ enabled is loaded from a @PackedScene@ instantiation. Its behavior can be customized by overriding @method _setup_local_to_scene@ from script.
---   				For most resources, this method performs no base logic. @ViewportTexture@ performs custom logic to properly set the proxy texture and flags in the local viewport.
+-- | Calls @method _setup_local_to_scene@. If @resource_local_to_scene@ is set to @true@, this method is automatically called from @method PackedScene.instance@ by the newly duplicated resource within the scene instance.
 bindResource_setup_local_to_scene :: MethodBind
 bindResource_setup_local_to_scene
   = unsafePerformIO $
@@ -399,8 +436,7 @@ bindResource_setup_local_to_scene
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | This method is called when a resource with @resource_local_to_scene@ enabled is loaded from a @PackedScene@ instantiation. Its behavior can be customized by overriding @method _setup_local_to_scene@ from script.
---   				For most resources, this method performs no base logic. @ViewportTexture@ performs custom logic to properly set the proxy texture and flags in the local viewport.
+-- | Calls @method _setup_local_to_scene@. If @resource_local_to_scene@ is set to @true@, this method is automatically called from @method PackedScene.instance@ by the newly duplicated resource within the scene instance.
 setup_local_to_scene ::
                        (Resource :< cls, Object :< cls) => cls -> IO ()
 setup_local_to_scene cls
@@ -421,7 +457,7 @@ instance NodeMethod Resource "setup_local_to_scene" '[] (IO ())
 
 {-# NOINLINE bindResource_take_over_path #-}
 
--- | Sets the path of the resource, potentially overriding an existing cache entry for this path. This differs from setting @resource_path@, as the latter would error out if another resource was already cached for the given path.
+-- | Sets the @resource_path@ to @path@, potentially overriding an existing cache entry for this path. Further attempts to load an overridden resource by path will instead return this resource.
 bindResource_take_over_path :: MethodBind
 bindResource_take_over_path
   = unsafePerformIO $
@@ -431,7 +467,7 @@ bindResource_take_over_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the path of the resource, potentially overriding an existing cache entry for this path. This differs from setting @resource_path@, as the latter would error out if another resource was already cached for the given path.
+-- | Sets the @resource_path@ to @path@, potentially overriding an existing cache entry for this path. Further attempts to load an overridden resource by path will instead return this resource.
 take_over_path ::
                  (Resource :< cls, Object :< cls) => cls -> GodotString -> IO ()
 take_over_path cls arg1

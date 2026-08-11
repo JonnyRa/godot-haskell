@@ -7,8 +7,10 @@ module Godot.Core.VisibilityNotifier
         Godot.Core.VisibilityNotifier.sig_screen_entered,
         Godot.Core.VisibilityNotifier.sig_screen_exited,
         Godot.Core.VisibilityNotifier.get_aabb,
+        Godot.Core.VisibilityNotifier.get_max_distance,
         Godot.Core.VisibilityNotifier.is_on_screen,
-        Godot.Core.VisibilityNotifier.set_aabb)
+        Godot.Core.VisibilityNotifier.set_aabb,
+        Godot.Core.VisibilityNotifier.set_max_distance)
        where
 import Data.Coerce
 import Foreign.C
@@ -55,6 +57,12 @@ instance NodeSignal VisibilityNotifier "screen_exited" '[]
 instance NodeProperty VisibilityNotifier "aabb" Aabb 'False where
         nodeProperty = (get_aabb, wrapDroppingSetter set_aabb, Nothing)
 
+instance NodeProperty VisibilityNotifier "max_distance" Float
+           'False
+         where
+        nodeProperty
+          = (get_max_distance, wrapDroppingSetter set_max_distance, Nothing)
+
 {-# NOINLINE bindVisibilityNotifier_get_aabb #-}
 
 -- | The VisibilityNotifier's bounding box.
@@ -84,6 +92,40 @@ get_aabb cls
 instance NodeMethod VisibilityNotifier "get_aabb" '[] (IO Aabb)
          where
         nodeMethod = Godot.Core.VisibilityNotifier.get_aabb
+
+{-# NOINLINE bindVisibilityNotifier_get_max_distance #-}
+
+-- | In addition to checking whether a node is on screen or within a @Camera@'s view, VisibilityNotifier can also optionally check whether a node is within a specified maximum distance when using a @Camera@ with perspective projection. This is useful for throttling the performance requirements of nodes that are far away.
+--   			__Note:__ This feature will be disabled if set to 0.0.
+bindVisibilityNotifier_get_max_distance :: MethodBind
+bindVisibilityNotifier_get_max_distance
+  = unsafePerformIO $
+      withCString "VisibilityNotifier" $
+        \ clsNamePtr ->
+          withCString "get_max_distance" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | In addition to checking whether a node is on screen or within a @Camera@'s view, VisibilityNotifier can also optionally check whether a node is within a specified maximum distance when using a @Camera@ with perspective projection. This is useful for throttling the performance requirements of nodes that are far away.
+--   			__Note:__ This feature will be disabled if set to 0.0.
+get_max_distance ::
+                   (VisibilityNotifier :< cls, Object :< cls) => cls -> IO Float
+get_max_distance cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisibilityNotifier_get_max_distance
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisibilityNotifier "get_max_distance" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.VisibilityNotifier.get_max_distance
 
 {-# NOINLINE bindVisibilityNotifier_is_on_screen #-}
 
@@ -147,3 +189,37 @@ set_aabb cls arg1
 instance NodeMethod VisibilityNotifier "set_aabb" '[Aabb] (IO ())
          where
         nodeMethod = Godot.Core.VisibilityNotifier.set_aabb
+
+{-# NOINLINE bindVisibilityNotifier_set_max_distance #-}
+
+-- | In addition to checking whether a node is on screen or within a @Camera@'s view, VisibilityNotifier can also optionally check whether a node is within a specified maximum distance when using a @Camera@ with perspective projection. This is useful for throttling the performance requirements of nodes that are far away.
+--   			__Note:__ This feature will be disabled if set to 0.0.
+bindVisibilityNotifier_set_max_distance :: MethodBind
+bindVisibilityNotifier_set_max_distance
+  = unsafePerformIO $
+      withCString "VisibilityNotifier" $
+        \ clsNamePtr ->
+          withCString "set_max_distance" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | In addition to checking whether a node is on screen or within a @Camera@'s view, VisibilityNotifier can also optionally check whether a node is within a specified maximum distance when using a @Camera@ with perspective projection. This is useful for throttling the performance requirements of nodes that are far away.
+--   			__Note:__ This feature will be disabled if set to 0.0.
+set_max_distance ::
+                   (VisibilityNotifier :< cls, Object :< cls) => cls -> Float -> IO ()
+set_max_distance cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVisibilityNotifier_set_max_distance
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VisibilityNotifier "set_max_distance" '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.VisibilityNotifier.set_max_distance

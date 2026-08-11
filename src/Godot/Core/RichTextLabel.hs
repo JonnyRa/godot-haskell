@@ -6,9 +6,11 @@ module Godot.Core.RichTextLabel
         Godot.Core.RichTextLabel._ITEM_RAINBOW,
         Godot.Core.RichTextLabel._ITEM_CUSTOMFX,
         Godot.Core.RichTextLabel._ITEM_META,
+        Godot.Core.RichTextLabel._INLINE_ALIGN_BASELINE,
         Godot.Core.RichTextLabel._ITEM_ALIGN,
         Godot.Core.RichTextLabel._ITEM_TORNADO,
         Godot.Core.RichTextLabel._ITEM_FRAME,
+        Godot.Core.RichTextLabel._INLINE_ALIGN_TOP,
         Godot.Core.RichTextLabel._ALIGN_RIGHT,
         Godot.Core.RichTextLabel._ALIGN_FILL,
         Godot.Core.RichTextLabel._ITEM_STRIKETHROUGH,
@@ -19,11 +21,13 @@ module Godot.Core.RichTextLabel
         Godot.Core.RichTextLabel._ITEM_WAVE,
         Godot.Core.RichTextLabel._ITEM_COLOR,
         Godot.Core.RichTextLabel._ITEM_TEXT,
+        Godot.Core.RichTextLabel._INLINE_ALIGN_CENTER,
         Godot.Core.RichTextLabel._ITEM_IMAGE,
         Godot.Core.RichTextLabel._LIST_NUMBERS,
         Godot.Core.RichTextLabel._LIST_LETTERS,
         Godot.Core.RichTextLabel._ITEM_LIST,
         Godot.Core.RichTextLabel._ITEM_NEWLINE,
+        Godot.Core.RichTextLabel._INLINE_ALIGN_BOTTOM,
         Godot.Core.RichTextLabel._ITEM_INDENT,
         Godot.Core.RichTextLabel._LIST_DOTS,
         Godot.Core.RichTextLabel._ALIGN_LEFT,
@@ -32,16 +36,18 @@ module Godot.Core.RichTextLabel
         Godot.Core.RichTextLabel.sig_meta_hover_ended,
         Godot.Core.RichTextLabel.sig_meta_hover_started,
         Godot.Core.RichTextLabel._gui_input,
+        Godot.Core.RichTextLabel._invalidate_fonts,
         Godot.Core.RichTextLabel._scroll_changed,
         Godot.Core.RichTextLabel.add_image,
         Godot.Core.RichTextLabel.add_text,
         Godot.Core.RichTextLabel.append_bbcode,
-        Godot.Core.RichTextLabel.clear,
+        Godot.Core.RichTextLabel.clear, Godot.Core.RichTextLabel.deselect,
         Godot.Core.RichTextLabel.get_bbcode,
         Godot.Core.RichTextLabel.get_content_height,
         Godot.Core.RichTextLabel.get_effects,
         Godot.Core.RichTextLabel.get_line_count,
         Godot.Core.RichTextLabel.get_percent_visible,
+        Godot.Core.RichTextLabel.get_selected_text,
         Godot.Core.RichTextLabel.get_tab_size,
         Godot.Core.RichTextLabel.get_text,
         Godot.Core.RichTextLabel.get_total_character_count,
@@ -49,6 +55,7 @@ module Godot.Core.RichTextLabel
         Godot.Core.RichTextLabel.get_visible_characters,
         Godot.Core.RichTextLabel.get_visible_line_count,
         Godot.Core.RichTextLabel.install_effect,
+        Godot.Core.RichTextLabel.is_deselect_on_focus_loss_enabled,
         Godot.Core.RichTextLabel.is_fit_content_height_enabled,
         Godot.Core.RichTextLabel.is_meta_underlined,
         Godot.Core.RichTextLabel.is_overriding_selected_font_color,
@@ -77,6 +84,7 @@ module Godot.Core.RichTextLabel
         Godot.Core.RichTextLabel.remove_line,
         Godot.Core.RichTextLabel.scroll_to_line,
         Godot.Core.RichTextLabel.set_bbcode,
+        Godot.Core.RichTextLabel.set_deselect_on_focus_loss_enabled,
         Godot.Core.RichTextLabel.set_effects,
         Godot.Core.RichTextLabel.set_fit_content_height,
         Godot.Core.RichTextLabel.set_meta_underline,
@@ -115,6 +123,9 @@ _ITEM_CUSTOMFX = 18
 _ITEM_META :: Int
 _ITEM_META = 17
 
+_INLINE_ALIGN_BASELINE :: Int
+_INLINE_ALIGN_BASELINE = 2
+
 _ITEM_ALIGN :: Int
 _ITEM_ALIGN = 8
 
@@ -123,6 +134,9 @@ _ITEM_TORNADO = 15
 
 _ITEM_FRAME :: Int
 _ITEM_FRAME = 0
+
+_INLINE_ALIGN_TOP :: Int
+_INLINE_ALIGN_TOP = 0
 
 _ALIGN_RIGHT :: Int
 _ALIGN_RIGHT = 2
@@ -154,6 +168,9 @@ _ITEM_COLOR = 5
 _ITEM_TEXT :: Int
 _ITEM_TEXT = 1
 
+_INLINE_ALIGN_CENTER :: Int
+_INLINE_ALIGN_CENTER = 1
+
 _ITEM_IMAGE :: Int
 _ITEM_IMAGE = 2
 
@@ -168,6 +185,9 @@ _ITEM_LIST = 10
 
 _ITEM_NEWLINE :: Int
 _ITEM_NEWLINE = 3
+
+_INLINE_ALIGN_BOTTOM :: Int
+_INLINE_ALIGN_BOTTOM = 3
 
 _ITEM_INDENT :: Int
 _ITEM_INDENT = 9
@@ -219,6 +239,15 @@ instance NodeProperty RichTextLabel "custom_effects" Array 'False
          where
         nodeProperty
           = (get_effects, wrapDroppingSetter set_effects, Nothing)
+
+instance NodeProperty RichTextLabel
+           "deselect_on_focus_loss_enabled"
+           Bool
+           'False
+         where
+        nodeProperty
+          = (is_deselect_on_focus_loss_enabled,
+             wrapDroppingSetter set_deselect_on_focus_loss_enabled, Nothing)
 
 instance NodeProperty RichTextLabel "fit_content_height" Bool
            'False
@@ -306,6 +335,35 @@ instance NodeMethod RichTextLabel "_gui_input" '[InputEvent]
          where
         nodeMethod = Godot.Core.RichTextLabel._gui_input
 
+{-# NOINLINE bindRichTextLabel__invalidate_fonts #-}
+
+bindRichTextLabel__invalidate_fonts :: MethodBind
+bindRichTextLabel__invalidate_fonts
+  = unsafePerformIO $
+      withCString "RichTextLabel" $
+        \ clsNamePtr ->
+          withCString "_invalidate_fonts" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_invalidate_fonts ::
+                    (RichTextLabel :< cls, Object :< cls) => cls -> IO ()
+_invalidate_fonts cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRichTextLabel__invalidate_fonts
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RichTextLabel "_invalidate_fonts" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.RichTextLabel._invalidate_fonts
+
 {-# NOINLINE bindRichTextLabel__scroll_changed #-}
 
 bindRichTextLabel__scroll_changed :: MethodBind
@@ -353,11 +411,12 @@ bindRichTextLabel_add_image
 --   				If @width@ or @height@ is set to 0, the image size will be adjusted in order to keep the original aspect ratio.
 add_image ::
             (RichTextLabel :< cls, Object :< cls) =>
-            cls -> Texture -> Maybe Int -> Maybe Int -> IO ()
-add_image cls arg1 arg2 arg3
+            cls -> Texture -> Maybe Int -> Maybe Int -> Maybe Int -> IO ()
+add_image cls arg1 arg2 arg3 arg4
   = withVariantArray
       [toVariant arg1, maybe (VariantInt (0)) toVariant arg2,
-       maybe (VariantInt (0)) toVariant arg3]
+       maybe (VariantInt (0)) toVariant arg3,
+       maybe (VariantInt (2)) toVariant arg4]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindRichTextLabel_add_image (upcast cls)
            arrPtr
@@ -368,7 +427,7 @@ add_image cls arg1 arg2 arg3
                \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod RichTextLabel "add_image"
-           '[Texture, Maybe Int, Maybe Int]
+           '[Texture, Maybe Int, Maybe Int, Maybe Int]
            (IO ())
          where
         nodeMethod = Godot.Core.RichTextLabel.add_image
@@ -406,8 +465,9 @@ instance NodeMethod RichTextLabel "add_text" '[GodotString] (IO ())
 
 {-# NOINLINE bindRichTextLabel_append_bbcode #-}
 
--- | Parses @bbcode@ and adds tags to the tag stack as needed. Returns the result of the parsing, @OK@ if successful.
+-- | Parses @bbcode@ and adds tags to the tag stack as needed.
 --   				__Note:__ Using this method, you can't close a tag that was opened in a previous @method append_bbcode@ call. This is done to improve performance, especially when updating large RichTextLabels since rebuilding the whole BBCode every time would be slower. If you absolutely need to close a tag in a future method call, append the @bbcode_text@ instead of using @method append_bbcode@.
+--   				__Note:__ This method internals' can't possibly fail, but an error code is returned for backwards compatibility, which will always be @OK@.
 bindRichTextLabel_append_bbcode :: MethodBind
 bindRichTextLabel_append_bbcode
   = unsafePerformIO $
@@ -417,8 +477,9 @@ bindRichTextLabel_append_bbcode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Parses @bbcode@ and adds tags to the tag stack as needed. Returns the result of the parsing, @OK@ if successful.
+-- | Parses @bbcode@ and adds tags to the tag stack as needed.
 --   				__Note:__ Using this method, you can't close a tag that was opened in a previous @method append_bbcode@ call. This is done to improve performance, especially when updating large RichTextLabels since rebuilding the whole BBCode every time would be slower. If you absolutely need to close a tag in a future method call, append the @bbcode_text@ instead of using @method append_bbcode@.
+--   				__Note:__ This method internals' can't possibly fail, but an error code is returned for backwards compatibility, which will always be @OK@.
 append_bbcode ::
                 (RichTextLabel :< cls, Object :< cls) =>
                 cls -> GodotString -> IO Int
@@ -464,6 +525,34 @@ clear cls
 
 instance NodeMethod RichTextLabel "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.RichTextLabel.clear
+
+{-# NOINLINE bindRichTextLabel_deselect #-}
+
+-- | Clears the current selection.
+bindRichTextLabel_deselect :: MethodBind
+bindRichTextLabel_deselect
+  = unsafePerformIO $
+      withCString "RichTextLabel" $
+        \ clsNamePtr ->
+          withCString "deselect" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Clears the current selection.
+deselect :: (RichTextLabel :< cls, Object :< cls) => cls -> IO ()
+deselect cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRichTextLabel_deselect (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RichTextLabel "deselect" '[] (IO ()) where
+        nodeMethod = Godot.Core.RichTextLabel.deselect
 
 {-# NOINLINE bindRichTextLabel_get_bbcode #-}
 
@@ -624,6 +713,38 @@ instance NodeMethod RichTextLabel "get_percent_visible" '[]
            (IO Float)
          where
         nodeMethod = Godot.Core.RichTextLabel.get_percent_visible
+
+{-# NOINLINE bindRichTextLabel_get_selected_text #-}
+
+-- | Returns the current selection text. Does not include BBCodes.
+bindRichTextLabel_get_selected_text :: MethodBind
+bindRichTextLabel_get_selected_text
+  = unsafePerformIO $
+      withCString "RichTextLabel" $
+        \ clsNamePtr ->
+          withCString "get_selected_text" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the current selection text. Does not include BBCodes.
+get_selected_text ::
+                    (RichTextLabel :< cls, Object :< cls) => cls -> IO GodotString
+get_selected_text cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindRichTextLabel_get_selected_text
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RichTextLabel "get_selected_text" '[]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.RichTextLabel.get_selected_text
 
 {-# NOINLINE bindRichTextLabel_get_tab_size #-}
 
@@ -846,6 +967,43 @@ instance NodeMethod RichTextLabel "install_effect" '[GodotVariant]
            (IO ())
          where
         nodeMethod = Godot.Core.RichTextLabel.install_effect
+
+{-# NOINLINE bindRichTextLabel_is_deselect_on_focus_loss_enabled
+             #-}
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+bindRichTextLabel_is_deselect_on_focus_loss_enabled :: MethodBind
+bindRichTextLabel_is_deselect_on_focus_loss_enabled
+  = unsafePerformIO $
+      withCString "RichTextLabel" $
+        \ clsNamePtr ->
+          withCString "is_deselect_on_focus_loss_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+is_deselect_on_focus_loss_enabled ::
+                                    (RichTextLabel :< cls, Object :< cls) => cls -> IO Bool
+is_deselect_on_focus_loss_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindRichTextLabel_is_deselect_on_focus_loss_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RichTextLabel
+           "is_deselect_on_focus_loss_enabled"
+           '[]
+           (IO Bool)
+         where
+        nodeMethod
+          = Godot.Core.RichTextLabel.is_deselect_on_focus_loss_enabled
 
 {-# NOINLINE bindRichTextLabel_is_fit_content_height_enabled #-}
 
@@ -1110,7 +1268,8 @@ instance NodeMethod RichTextLabel "newline" '[] (IO ()) where
 
 {-# NOINLINE bindRichTextLabel_parse_bbcode #-}
 
--- | The assignment version of @method append_bbcode@. Clears the tag stack and inserts the new content. Returns @OK@ if parses @bbcode@ successfully.
+-- | The assignment version of @method append_bbcode@. Clears the tag stack and inserts the new content.
+--   				__Note:__ This method internals' can't possibly fail, but an error code is returned for backwards compatibility, which will always be @OK@.
 bindRichTextLabel_parse_bbcode :: MethodBind
 bindRichTextLabel_parse_bbcode
   = unsafePerformIO $
@@ -1120,7 +1279,8 @@ bindRichTextLabel_parse_bbcode
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The assignment version of @method append_bbcode@. Clears the tag stack and inserts the new content. Returns @OK@ if parses @bbcode@ successfully.
+-- | The assignment version of @method append_bbcode@. Clears the tag stack and inserts the new content.
+--   				__Note:__ This method internals' can't possibly fail, but an error code is returned for backwards compatibility, which will always be @OK@.
 parse_bbcode ::
                (RichTextLabel :< cls, Object :< cls) =>
                cls -> GodotString -> IO Int
@@ -1741,6 +1901,43 @@ instance NodeMethod RichTextLabel "set_bbcode" '[GodotString]
            (IO ())
          where
         nodeMethod = Godot.Core.RichTextLabel.set_bbcode
+
+{-# NOINLINE bindRichTextLabel_set_deselect_on_focus_loss_enabled
+             #-}
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+bindRichTextLabel_set_deselect_on_focus_loss_enabled :: MethodBind
+bindRichTextLabel_set_deselect_on_focus_loss_enabled
+  = unsafePerformIO $
+      withCString "RichTextLabel" $
+        \ clsNamePtr ->
+          withCString "set_deselect_on_focus_loss_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the selected text will be deselected when focus is lost.
+set_deselect_on_focus_loss_enabled ::
+                                     (RichTextLabel :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_deselect_on_focus_loss_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindRichTextLabel_set_deselect_on_focus_loss_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod RichTextLabel
+           "set_deselect_on_focus_loss_enabled"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.RichTextLabel.set_deselect_on_focus_loss_enabled
 
 {-# NOINLINE bindRichTextLabel_set_effects #-}
 

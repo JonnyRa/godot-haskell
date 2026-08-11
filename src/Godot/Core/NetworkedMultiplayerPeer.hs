@@ -79,7 +79,7 @@ sig_connection_succeeded
 instance NodeSignal NetworkedMultiplayerPeer "connection_succeeded"
            '[]
 
--- | Emitted by the server when a client connects.
+-- | Emitted when a remote peer connects.
 sig_peer_connected ::
                    Godot.Internal.Dispatch.Signal NetworkedMultiplayerPeer
 sig_peer_connected
@@ -88,7 +88,7 @@ sig_peer_connected
 instance NodeSignal NetworkedMultiplayerPeer "peer_connected"
            '[Int]
 
--- | Emitted by the server when a client disconnects.
+-- | Emitted when a remote peer has disconnected.
 sig_peer_disconnected ::
                       Godot.Internal.Dispatch.Signal NetworkedMultiplayerPeer
 sig_peer_disconnected

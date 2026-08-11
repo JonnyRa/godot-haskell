@@ -100,6 +100,8 @@ module Godot.Core.HTTPClient
         Godot.Core.HTTPClient.request, Godot.Core.HTTPClient.request_raw,
         Godot.Core.HTTPClient.set_blocking_mode,
         Godot.Core.HTTPClient.set_connection,
+        Godot.Core.HTTPClient.set_http_proxy,
+        Godot.Core.HTTPClient.set_https_proxy,
         Godot.Core.HTTPClient.set_read_chunk_size)
        where
 import Data.Coerce
@@ -1067,6 +1069,75 @@ instance NodeMethod HTTPClient "set_connection" '[StreamPeer]
            (IO ())
          where
         nodeMethod = Godot.Core.HTTPClient.set_connection
+
+{-# NOINLINE bindHTTPClient_set_http_proxy #-}
+
+-- | Sets the proxy server for HTTP requests.
+--   				The proxy server is unset if @host@ is empty or @port@ is -1.
+bindHTTPClient_set_http_proxy :: MethodBind
+bindHTTPClient_set_http_proxy
+  = unsafePerformIO $
+      withCString "HTTPClient" $
+        \ clsNamePtr ->
+          withCString "set_http_proxy" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the proxy server for HTTP requests.
+--   				The proxy server is unset if @host@ is empty or @port@ is -1.
+set_http_proxy ::
+                 (HTTPClient :< cls, Object :< cls) =>
+                 cls -> GodotString -> Int -> IO ()
+set_http_proxy cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindHTTPClient_set_http_proxy (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod HTTPClient "set_http_proxy" '[GodotString, Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.HTTPClient.set_http_proxy
+
+{-# NOINLINE bindHTTPClient_set_https_proxy #-}
+
+-- | Sets the proxy server for HTTPS requests.
+--   				The proxy server is unset if @host@ is empty or @port@ is -1.
+bindHTTPClient_set_https_proxy :: MethodBind
+bindHTTPClient_set_https_proxy
+  = unsafePerformIO $
+      withCString "HTTPClient" $
+        \ clsNamePtr ->
+          withCString "set_https_proxy" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the proxy server for HTTPS requests.
+--   				The proxy server is unset if @host@ is empty or @port@ is -1.
+set_https_proxy ::
+                  (HTTPClient :< cls, Object :< cls) =>
+                  cls -> GodotString -> Int -> IO ()
+set_https_proxy cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindHTTPClient_set_https_proxy (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod HTTPClient "set_https_proxy"
+           '[GodotString, Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.HTTPClient.set_https_proxy
 
 {-# NOINLINE bindHTTPClient_set_read_chunk_size #-}
 

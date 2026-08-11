@@ -20,9 +20,11 @@ module Godot.Tools.EditorInspector
         Godot.Tools.EditorInspector._property_checked,
         Godot.Tools.EditorInspector._property_keyed,
         Godot.Tools.EditorInspector._property_keyed_with_value,
+        Godot.Tools.EditorInspector._property_pinned,
         Godot.Tools.EditorInspector._property_selected,
         Godot.Tools.EditorInspector._resource_selected,
         Godot.Tools.EditorInspector._vscroll_changed,
+        Godot.Tools.EditorInspector.get_edited_object,
         Godot.Tools.EditorInspector.refresh)
        where
 import Data.Coerce
@@ -456,6 +458,38 @@ instance NodeMethod EditorInspector "_property_keyed_with_value"
          where
         nodeMethod = Godot.Tools.EditorInspector._property_keyed_with_value
 
+{-# NOINLINE bindEditorInspector__property_pinned #-}
+
+bindEditorInspector__property_pinned :: MethodBind
+bindEditorInspector__property_pinned
+  = unsafePerformIO $
+      withCString "EditorInspector" $
+        \ clsNamePtr ->
+          withCString "_property_pinned" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_property_pinned ::
+                   (EditorInspector :< cls, Object :< cls) =>
+                   cls -> GodotString -> Bool -> IO ()
+_property_pinned cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEditorInspector__property_pinned
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorInspector "_property_pinned"
+           '[GodotString, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Tools.EditorInspector._property_pinned
+
 {-# NOINLINE bindEditorInspector__property_selected #-}
 
 bindEditorInspector__property_selected :: MethodBind
@@ -549,6 +583,35 @@ instance NodeMethod EditorInspector "_vscroll_changed" '[Float]
            (IO ())
          where
         nodeMethod = Godot.Tools.EditorInspector._vscroll_changed
+
+{-# NOINLINE bindEditorInspector_get_edited_object #-}
+
+-- | Returns the object currently selected in this inspector.
+bindEditorInspector_get_edited_object :: MethodBind
+bindEditorInspector_get_edited_object
+  = unsafePerformIO $
+      withCString "EditorInspector" $
+        \ clsNamePtr ->
+          withCString "get_edited_object" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the object currently selected in this inspector.
+get_edited_object ::
+                    (EditorInspector :< cls, Object :< cls) => cls -> IO Object
+get_edited_object cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEditorInspector_get_edited_object
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod EditorInspector "get_edited_object" '[]
+           (IO Object)
+         where
+        nodeMethod = Godot.Tools.EditorInspector.get_edited_object
 
 {-# NOINLINE bindEditorInspector_refresh #-}
 

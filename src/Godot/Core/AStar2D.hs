@@ -102,7 +102,7 @@ instance NodeMethod AStar2D "_estimate_cost" '[Int, Int] (IO Float)
 
 {-# NOINLINE bindAStar2D_add_point #-}
 
--- | Adds a new point at the given position with the given identifier. The @id@ must be 0 or larger, and the @weight_scale@ must be 1 or larger.
+-- | Adds a new point at the given position with the given identifier. The @id@ must be 0 or larger, and the @weight_scale@ must be 0.0 or greater.
 --   				The @weight_scale@ is multiplied by the result of @method _compute_cost@ when determining the overall cost of traveling across a segment from a neighboring point to this point. Thus, all else being equal, the algorithm prefers points with lower @weight_scale@s to form a path.
 --   				
 --   @
@@ -122,7 +122,7 @@ bindAStar2D_add_point
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a new point at the given position with the given identifier. The @id@ must be 0 or larger, and the @weight_scale@ must be 1 or larger.
+-- | Adds a new point at the given position with the given identifier. The @id@ must be 0 or larger, and the @weight_scale@ must be 0.0 or greater.
 --   				The @weight_scale@ is multiplied by the result of @method _compute_cost@ when determining the overall cost of traveling across a segment from a neighboring point to this point. Thus, all else being equal, the algorithm prefers points with lower @weight_scale@s to form a path.
 --   				
 --   @
@@ -156,7 +156,7 @@ instance NodeMethod AStar2D "add_point"
 
 {-# NOINLINE bindAStar2D_are_points_connected #-}
 
--- | Returns whether there is a connection/segment between the given points.
+-- | Returns whether there is a connection/segment between the given points. If @bidirectional@ is @false@, returns whether movement from @id@ to @to_id@ is possible through this segment.
 bindAStar2D_are_points_connected :: MethodBind
 bindAStar2D_are_points_connected
   = unsafePerformIO $
@@ -166,11 +166,14 @@ bindAStar2D_are_points_connected
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns whether there is a connection/segment between the given points.
+-- | Returns whether there is a connection/segment between the given points. If @bidirectional@ is @false@, returns whether movement from @id@ to @to_id@ is possible through this segment.
 are_points_connected ::
-                       (AStar2D :< cls, Object :< cls) => cls -> Int -> Int -> IO Bool
-are_points_connected cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
+                       (AStar2D :< cls, Object :< cls) =>
+                       cls -> Int -> Int -> Maybe Bool -> IO Bool
+are_points_connected cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, toVariant arg2,
+       maybe (VariantBool True) toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar2D_are_points_connected
            (upcast cls)
@@ -181,7 +184,8 @@ are_points_connected cls arg1 arg2
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod AStar2D "are_points_connected" '[Int, Int]
+instance NodeMethod AStar2D "are_points_connected"
+           '[Int, Int, Maybe Bool]
            (IO Bool)
          where
         nodeMethod = Godot.Core.AStar2D.are_points_connected
@@ -267,7 +271,7 @@ instance NodeMethod AStar2D "connect_points"
 
 {-# NOINLINE bindAStar2D_disconnect_points #-}
 
--- | Deletes the segment between the given points.
+-- | Deletes the segment between the given points. If @bidirectional@ is @false@, only movement from @id@ to @to_id@ is prevented, and a unidirectional segment possibly remains.
 bindAStar2D_disconnect_points :: MethodBind
 bindAStar2D_disconnect_points
   = unsafePerformIO $
@@ -277,11 +281,14 @@ bindAStar2D_disconnect_points
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Deletes the segment between the given points.
+-- | Deletes the segment between the given points. If @bidirectional@ is @false@, only movement from @id@ to @to_id@ is prevented, and a unidirectional segment possibly remains.
 disconnect_points ::
-                    (AStar2D :< cls, Object :< cls) => cls -> Int -> Int -> IO ()
-disconnect_points cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
+                    (AStar2D :< cls, Object :< cls) =>
+                    cls -> Int -> Int -> Maybe Bool -> IO ()
+disconnect_points cls arg1 arg2 arg3
+  = withVariantArray
+      [toVariant arg1, toVariant arg2,
+       maybe (VariantBool True) toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindAStar2D_disconnect_points (upcast cls)
            arrPtr
@@ -291,7 +298,9 @@ disconnect_points cls arg1 arg2
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod AStar2D "disconnect_points" '[Int, Int] (IO ())
+instance NodeMethod AStar2D "disconnect_points"
+           '[Int, Int, Maybe Bool]
+           (IO ())
          where
         nodeMethod = Godot.Core.AStar2D.disconnect_points
 

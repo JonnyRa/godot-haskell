@@ -2,11 +2,13 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.InputEventMouseButton
-       (Godot.Core.InputEventMouseButton.is_pressed,
+       (Godot.Core.InputEventMouseButton.is_canceled,
+        Godot.Core.InputEventMouseButton.is_pressed,
         Godot.Core.InputEventMouseButton.get_button_index,
         Godot.Core.InputEventMouseButton.get_factor,
         Godot.Core.InputEventMouseButton.is_doubleclick,
         Godot.Core.InputEventMouseButton.set_button_index,
+        Godot.Core.InputEventMouseButton.set_canceled,
         Godot.Core.InputEventMouseButton.set_doubleclick,
         Godot.Core.InputEventMouseButton.set_factor,
         Godot.Core.InputEventMouseButton.set_pressed)
@@ -28,6 +30,43 @@ instance NodeProperty InputEventMouseButton "button_index" Int
          where
         nodeProperty
           = (get_button_index, wrapDroppingSetter set_button_index, Nothing)
+
+{-# NOINLINE bindInputEventMouseButton_is_canceled #-}
+
+-- | If @true@, the mouse button event has been canceled.
+bindInputEventMouseButton_is_canceled :: MethodBind
+bindInputEventMouseButton_is_canceled
+  = unsafePerformIO $
+      withCString "InputEventMouseButton" $
+        \ clsNamePtr ->
+          withCString "is_canceled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the mouse button event has been canceled.
+is_canceled ::
+              (InputEventMouseButton :< cls, Object :< cls) => cls -> IO Bool
+is_canceled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputEventMouseButton_is_canceled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventMouseButton "is_canceled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.InputEventMouseButton.is_canceled
+
+instance NodeProperty InputEventMouseButton "canceled" Bool 'False
+         where
+        nodeProperty
+          = (is_canceled, wrapDroppingSetter set_canceled, Nothing)
 
 instance NodeProperty InputEventMouseButton "doubleclick" Bool
            'False
@@ -204,6 +243,39 @@ instance NodeMethod InputEventMouseButton "set_button_index" '[Int]
            (IO ())
          where
         nodeMethod = Godot.Core.InputEventMouseButton.set_button_index
+
+{-# NOINLINE bindInputEventMouseButton_set_canceled #-}
+
+-- | If @true@, the mouse button event has been canceled.
+bindInputEventMouseButton_set_canceled :: MethodBind
+bindInputEventMouseButton_set_canceled
+  = unsafePerformIO $
+      withCString "InputEventMouseButton" $
+        \ clsNamePtr ->
+          withCString "set_canceled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the mouse button event has been canceled.
+set_canceled ::
+               (InputEventMouseButton :< cls, Object :< cls) =>
+               cls -> Bool -> IO ()
+set_canceled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindInputEventMouseButton_set_canceled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod InputEventMouseButton "set_canceled" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.InputEventMouseButton.set_canceled
 
 {-# NOINLINE bindInputEventMouseButton_set_doubleclick #-}
 

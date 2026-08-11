@@ -189,6 +189,7 @@ instance NodeMethod AudioStreamPlayer "_set_playing" '[Bool]
 {-# NOINLINE bindAudioStreamPlayer_get_bus #-}
 
 -- | Bus on which this audio is playing.
+--   			__Note:__ When setting this property, keep in mind that no validation is performed to see if the given name matches an existing bus. This is because audio bus layouts might be loaded after this property is set. If this given name can't be resolved at runtime, it will fall back to @"Master"@.
 bindAudioStreamPlayer_get_bus :: MethodBind
 bindAudioStreamPlayer_get_bus
   = unsafePerformIO $
@@ -199,6 +200,7 @@ bindAudioStreamPlayer_get_bus
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Bus on which this audio is playing.
+--   			__Note:__ When setting this property, keep in mind that no validation is performed to see if the given name matches an existing bus. This is because audio bus layouts might be loaded after this property is set. If this given name can't be resolved at runtime, it will fall back to @"Master"@.
 get_bus ::
           (AudioStreamPlayer :< cls, Object :< cls) => cls -> IO GodotString
 get_bus cls
@@ -593,6 +595,7 @@ instance NodeMethod AudioStreamPlayer "set_autoplay" '[Bool]
 {-# NOINLINE bindAudioStreamPlayer_set_bus #-}
 
 -- | Bus on which this audio is playing.
+--   			__Note:__ When setting this property, keep in mind that no validation is performed to see if the given name matches an existing bus. This is because audio bus layouts might be loaded after this property is set. If this given name can't be resolved at runtime, it will fall back to @"Master"@.
 bindAudioStreamPlayer_set_bus :: MethodBind
 bindAudioStreamPlayer_set_bus
   = unsafePerformIO $
@@ -603,6 +606,7 @@ bindAudioStreamPlayer_set_bus
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Bus on which this audio is playing.
+--   			__Note:__ When setting this property, keep in mind that no validation is performed to see if the given name matches an existing bus. This is because audio bus layouts might be loaded after this property is set. If this given name can't be resolved at runtime, it will fall back to @"Master"@.
 set_bus ::
           (AudioStreamPlayer :< cls, Object :< cls) =>
           cls -> GodotString -> IO ()

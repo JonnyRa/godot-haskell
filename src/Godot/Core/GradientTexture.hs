@@ -5,7 +5,9 @@ module Godot.Core.GradientTexture
        (Godot.Core.GradientTexture.get_width,
         Godot.Core.GradientTexture._update,
         Godot.Core.GradientTexture.get_gradient,
+        Godot.Core.GradientTexture.is_using_hdr,
         Godot.Core.GradientTexture.set_gradient,
+        Godot.Core.GradientTexture.set_use_hdr,
         Godot.Core.GradientTexture.set_width)
        where
 import Data.Coerce
@@ -24,6 +26,10 @@ instance NodeProperty GradientTexture "gradient" Gradient 'False
          where
         nodeProperty
           = (get_gradient, wrapDroppingSetter set_gradient, Nothing)
+
+instance NodeProperty GradientTexture "use_hdr" Bool 'False where
+        nodeProperty
+          = (is_using_hdr, wrapDroppingSetter set_use_hdr, Nothing)
 
 {-# NOINLINE bindGradientTexture_get_width #-}
 
@@ -112,6 +118,37 @@ instance NodeMethod GradientTexture "get_gradient" '[]
          where
         nodeMethod = Godot.Core.GradientTexture.get_gradient
 
+{-# NOINLINE bindGradientTexture_is_using_hdr #-}
+
+-- | If @true@, the generated texture will support high dynamic range (@Image.FORMAT_RGBAF@ format). This allows for glow effects to work if @Environment.glow_enabled@ is @true@. If @false@, the generated texture will use low dynamic range; overbright colors will be clamped (@Image.FORMAT_RGBA8@ format).
+bindGradientTexture_is_using_hdr :: MethodBind
+bindGradientTexture_is_using_hdr
+  = unsafePerformIO $
+      withCString "GradientTexture" $
+        \ clsNamePtr ->
+          withCString "is_using_hdr" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the generated texture will support high dynamic range (@Image.FORMAT_RGBAF@ format). This allows for glow effects to work if @Environment.glow_enabled@ is @true@. If @false@, the generated texture will use low dynamic range; overbright colors will be clamped (@Image.FORMAT_RGBA8@ format).
+is_using_hdr ::
+               (GradientTexture :< cls, Object :< cls) => cls -> IO Bool
+is_using_hdr cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGradientTexture_is_using_hdr
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GradientTexture "is_using_hdr" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.GradientTexture.is_using_hdr
+
 {-# NOINLINE bindGradientTexture_set_gradient #-}
 
 -- | The @Gradient@ that will be used to fill the texture.
@@ -143,6 +180,36 @@ instance NodeMethod GradientTexture "set_gradient" '[Gradient]
            (IO ())
          where
         nodeMethod = Godot.Core.GradientTexture.set_gradient
+
+{-# NOINLINE bindGradientTexture_set_use_hdr #-}
+
+-- | If @true@, the generated texture will support high dynamic range (@Image.FORMAT_RGBAF@ format). This allows for glow effects to work if @Environment.glow_enabled@ is @true@. If @false@, the generated texture will use low dynamic range; overbright colors will be clamped (@Image.FORMAT_RGBA8@ format).
+bindGradientTexture_set_use_hdr :: MethodBind
+bindGradientTexture_set_use_hdr
+  = unsafePerformIO $
+      withCString "GradientTexture" $
+        \ clsNamePtr ->
+          withCString "set_use_hdr" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the generated texture will support high dynamic range (@Image.FORMAT_RGBAF@ format). This allows for glow effects to work if @Environment.glow_enabled@ is @true@. If @false@, the generated texture will use low dynamic range; overbright colors will be clamped (@Image.FORMAT_RGBA8@ format).
+set_use_hdr ::
+              (GradientTexture :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_use_hdr cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGradientTexture_set_use_hdr (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GradientTexture "set_use_hdr" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.GradientTexture.set_use_hdr
 
 {-# NOINLINE bindGradientTexture_set_width #-}
 

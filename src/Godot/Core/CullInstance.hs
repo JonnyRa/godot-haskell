@@ -7,9 +7,11 @@ module Godot.Core.CullInstance
         Godot.Core.CullInstance._PORTAL_MODE_ROAMING,
         Godot.Core.CullInstance._PORTAL_MODE_GLOBAL,
         Godot.Core.CullInstance._PORTAL_MODE_DYNAMIC,
+        Godot.Core.CullInstance.get_allow_merging,
         Godot.Core.CullInstance.get_include_in_bound,
         Godot.Core.CullInstance.get_portal_autoplace_priority,
         Godot.Core.CullInstance.get_portal_mode,
+        Godot.Core.CullInstance.set_allow_merging,
         Godot.Core.CullInstance.set_include_in_bound,
         Godot.Core.CullInstance.set_portal_autoplace_priority,
         Godot.Core.CullInstance.set_portal_mode)
@@ -41,6 +43,12 @@ _PORTAL_MODE_GLOBAL = 3
 _PORTAL_MODE_DYNAMIC :: Int
 _PORTAL_MODE_DYNAMIC = 1
 
+instance NodeProperty CullInstance "allow_merging" Bool 'False
+         where
+        nodeProperty
+          = (get_allow_merging, wrapDroppingSetter set_allow_merging,
+             Nothing)
+
 instance NodeProperty CullInstance "autoplace_priority" Int 'False
          where
         nodeProperty
@@ -56,6 +64,41 @@ instance NodeProperty CullInstance "include_in_bound" Bool 'False
 instance NodeProperty CullInstance "portal_mode" Int 'False where
         nodeProperty
           = (get_portal_mode, wrapDroppingSetter set_portal_mode, Nothing)
+
+{-# NOINLINE bindCullInstance_get_allow_merging #-}
+
+-- | This allows fine control over the mesh merging feature in the @RoomManager@.
+--   			Setting this option to @false@ can be used to prevent an instance being merged. When set to @true@ (the default), merging will be determined by @Spatial.merging_mode@.
+--   			@i@Deprecated.@/i@ This property has been deprecated and is only included for backward compatibility. Please use @Spatial.merging_mode@ instead.
+bindCullInstance_get_allow_merging :: MethodBind
+bindCullInstance_get_allow_merging
+  = unsafePerformIO $
+      withCString "CullInstance" $
+        \ clsNamePtr ->
+          withCString "get_allow_merging" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | This allows fine control over the mesh merging feature in the @RoomManager@.
+--   			Setting this option to @false@ can be used to prevent an instance being merged. When set to @true@ (the default), merging will be determined by @Spatial.merging_mode@.
+--   			@i@Deprecated.@/i@ This property has been deprecated and is only included for backward compatibility. Please use @Spatial.merging_mode@ instead.
+get_allow_merging ::
+                    (CullInstance :< cls, Object :< cls) => cls -> IO Bool
+get_allow_merging cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCullInstance_get_allow_merging
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CullInstance "get_allow_merging" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.CullInstance.get_allow_merging
 
 {-# NOINLINE bindCullInstance_get_include_in_bound #-}
 
@@ -159,6 +202,42 @@ get_portal_mode cls
 instance NodeMethod CullInstance "get_portal_mode" '[] (IO Int)
          where
         nodeMethod = Godot.Core.CullInstance.get_portal_mode
+
+{-# NOINLINE bindCullInstance_set_allow_merging #-}
+
+-- | This allows fine control over the mesh merging feature in the @RoomManager@.
+--   			Setting this option to @false@ can be used to prevent an instance being merged. When set to @true@ (the default), merging will be determined by @Spatial.merging_mode@.
+--   			@i@Deprecated.@/i@ This property has been deprecated and is only included for backward compatibility. Please use @Spatial.merging_mode@ instead.
+bindCullInstance_set_allow_merging :: MethodBind
+bindCullInstance_set_allow_merging
+  = unsafePerformIO $
+      withCString "CullInstance" $
+        \ clsNamePtr ->
+          withCString "set_allow_merging" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | This allows fine control over the mesh merging feature in the @RoomManager@.
+--   			Setting this option to @false@ can be used to prevent an instance being merged. When set to @true@ (the default), merging will be determined by @Spatial.merging_mode@.
+--   			@i@Deprecated.@/i@ This property has been deprecated and is only included for backward compatibility. Please use @Spatial.merging_mode@ instead.
+set_allow_merging ::
+                    (CullInstance :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_allow_merging cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCullInstance_set_allow_merging
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CullInstance "set_allow_merging" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CullInstance.set_allow_merging
 
 {-# NOINLINE bindCullInstance_set_include_in_bound #-}
 

@@ -2,15 +2,22 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.Navigation
-       (Godot.Core.Navigation.get_closest_point,
+       (Godot.Core.Navigation.sig_map_changed,
+        Godot.Core.Navigation.get_cell_height,
+        Godot.Core.Navigation.get_cell_size,
+        Godot.Core.Navigation.get_closest_point,
         Godot.Core.Navigation.get_closest_point_normal,
         Godot.Core.Navigation.get_closest_point_owner,
         Godot.Core.Navigation.get_closest_point_to_segment,
+        Godot.Core.Navigation.get_edge_connection_margin,
+        Godot.Core.Navigation.get_navigation_layers,
+        Godot.Core.Navigation.get_rid,
         Godot.Core.Navigation.get_simple_path,
         Godot.Core.Navigation.get_up_vector,
-        Godot.Core.Navigation.navmesh_add,
-        Godot.Core.Navigation.navmesh_remove,
-        Godot.Core.Navigation.navmesh_set_transform,
+        Godot.Core.Navigation.set_cell_height,
+        Godot.Core.Navigation.set_cell_size,
+        Godot.Core.Navigation.set_edge_connection_margin,
+        Godot.Core.Navigation.set_navigation_layers,
         Godot.Core.Navigation.set_up_vector)
        where
 import Data.Coerce
@@ -25,9 +32,95 @@ import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Spatial()
 
+-- | Emitted when a navigation map is updated, when a region moves or is modified.
+sig_map_changed :: Godot.Internal.Dispatch.Signal Navigation
+sig_map_changed = Godot.Internal.Dispatch.Signal "map_changed"
+
+instance NodeSignal Navigation "map_changed" '[Rid]
+
+instance NodeProperty Navigation "cell_height" Float 'False where
+        nodeProperty
+          = (get_cell_height, wrapDroppingSetter set_cell_height, Nothing)
+
+instance NodeProperty Navigation "cell_size" Float 'False where
+        nodeProperty
+          = (get_cell_size, wrapDroppingSetter set_cell_size, Nothing)
+
+instance NodeProperty Navigation "edge_connection_margin" Float
+           'False
+         where
+        nodeProperty
+          = (get_edge_connection_margin,
+             wrapDroppingSetter set_edge_connection_margin, Nothing)
+
+instance NodeProperty Navigation "navigation_layers" Int 'False
+         where
+        nodeProperty
+          = (get_navigation_layers, wrapDroppingSetter set_navigation_layers,
+             Nothing)
+
 instance NodeProperty Navigation "up_vector" Vector3 'False where
         nodeProperty
           = (get_up_vector, wrapDroppingSetter set_up_vector, Nothing)
+
+{-# NOINLINE bindNavigation_get_cell_height #-}
+
+-- | The cell height to use for fields.
+bindNavigation_get_cell_height :: MethodBind
+bindNavigation_get_cell_height
+  = unsafePerformIO $
+      withCString "Navigation" $
+        \ clsNamePtr ->
+          withCString "get_cell_height" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The cell height to use for fields.
+get_cell_height ::
+                  (Navigation :< cls, Object :< cls) => cls -> IO Float
+get_cell_height cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation_get_cell_height (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation "get_cell_height" '[] (IO Float)
+         where
+        nodeMethod = Godot.Core.Navigation.get_cell_height
+
+{-# NOINLINE bindNavigation_get_cell_size #-}
+
+-- | The XZ plane cell size to use for fields.
+bindNavigation_get_cell_size :: MethodBind
+bindNavigation_get_cell_size
+  = unsafePerformIO $
+      withCString "Navigation" $
+        \ clsNamePtr ->
+          withCString "get_cell_size" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The XZ plane cell size to use for fields.
+get_cell_size ::
+                (Navigation :< cls, Object :< cls) => cls -> IO Float
+get_cell_size cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation_get_cell_size (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation "get_cell_size" '[] (IO Float) where
+        nodeMethod = Godot.Core.Navigation.get_cell_size
 
 {-# NOINLINE bindNavigation_get_closest_point #-}
 
@@ -96,7 +189,7 @@ instance NodeMethod Navigation "get_closest_point_normal"
 
 {-# NOINLINE bindNavigation_get_closest_point_owner #-}
 
--- | Returns the owner of the @NavigationMesh@ which contains the navigation point closest to the point given. This is usually a @NavigationMeshInstance@. For meshes added via @method navmesh_add@, returns the owner that was given (or @null@ if the @owner@ parameter was omitted).
+-- | Returns the owner of the @NavigationMesh@ which contains the navigation point closest to the point given. This is usually a @NavigationMeshInstance@.
 bindNavigation_get_closest_point_owner :: MethodBind
 bindNavigation_get_closest_point_owner
   = unsafePerformIO $
@@ -106,9 +199,9 @@ bindNavigation_get_closest_point_owner
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the owner of the @NavigationMesh@ which contains the navigation point closest to the point given. This is usually a @NavigationMeshInstance@. For meshes added via @method navmesh_add@, returns the owner that was given (or @null@ if the @owner@ parameter was omitted).
+-- | Returns the owner of the @NavigationMesh@ which contains the navigation point closest to the point given. This is usually a @NavigationMeshInstance@.
 get_closest_point_owner ::
-                          (Navigation :< cls, Object :< cls) => cls -> Vector3 -> IO Object
+                          (Navigation :< cls, Object :< cls) => cls -> Vector3 -> IO Rid
 get_closest_point_owner cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
@@ -116,10 +209,13 @@ get_closest_point_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation "get_closest_point_owner" '[Vector3]
-           (IO Object)
+           (IO Rid)
          where
         nodeMethod = Godot.Core.Navigation.get_closest_point_owner
 
@@ -159,10 +255,100 @@ instance NodeMethod Navigation "get_closest_point_to_segment"
          where
         nodeMethod = Godot.Core.Navigation.get_closest_point_to_segment
 
+{-# NOINLINE bindNavigation_get_edge_connection_margin #-}
+
+-- | This value is used to detect the near edges to connect compatible regions.
+bindNavigation_get_edge_connection_margin :: MethodBind
+bindNavigation_get_edge_connection_margin
+  = unsafePerformIO $
+      withCString "Navigation" $
+        \ clsNamePtr ->
+          withCString "get_edge_connection_margin" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | This value is used to detect the near edges to connect compatible regions.
+get_edge_connection_margin ::
+                             (Navigation :< cls, Object :< cls) => cls -> IO Float
+get_edge_connection_margin cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation_get_edge_connection_margin
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation "get_edge_connection_margin" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.Navigation.get_edge_connection_margin
+
+{-# NOINLINE bindNavigation_get_navigation_layers #-}
+
+-- | A bitfield determining all navigation map layers the navigation can use on a @method Navigation.get_simple_path@ path query.
+bindNavigation_get_navigation_layers :: MethodBind
+bindNavigation_get_navigation_layers
+  = unsafePerformIO $
+      withCString "Navigation" $
+        \ clsNamePtr ->
+          withCString "get_navigation_layers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | A bitfield determining all navigation map layers the navigation can use on a @method Navigation.get_simple_path@ path query.
+get_navigation_layers ::
+                        (Navigation :< cls, Object :< cls) => cls -> IO Int
+get_navigation_layers cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation_get_navigation_layers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation "get_navigation_layers" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.Navigation.get_navigation_layers
+
+{-# NOINLINE bindNavigation_get_rid #-}
+
+-- | Returns the @RID@ of the navigation map on the @NavigationServer@.
+bindNavigation_get_rid :: MethodBind
+bindNavigation_get_rid
+  = unsafePerformIO $
+      withCString "Navigation" $
+        \ clsNamePtr ->
+          withCString "get_rid" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the @RID@ of the navigation map on the @NavigationServer@.
+get_rid :: (Navigation :< cls, Object :< cls) => cls -> IO Rid
+get_rid cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation_get_rid (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation "get_rid" '[] (IO Rid) where
+        nodeMethod = Godot.Core.Navigation.get_rid
+
 {-# NOINLINE bindNavigation_get_simple_path #-}
 
--- | Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the agent properties associated with each @NavigationMesh@ (radius, height, etc.) are considered in the path calculation, otherwise they are ignored.
---   				__Note:__ This method has known issues and will often return non-optimal paths. These issues will be fixed in Godot 4.0.
+-- | @i@Deprecated.@/i@ @Navigation@ node and @method get_simple_path@ are deprecated and will be removed in a future version. Use @method NavigationServer.map_get_path@ instead.
+--   				Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the agent properties associated with each @NavigationMesh@ (radius, height, etc.) are considered in the path calculation, otherwise they are ignored.
 bindNavigation_get_simple_path :: MethodBind
 bindNavigation_get_simple_path
   = unsafePerformIO $
@@ -172,8 +358,8 @@ bindNavigation_get_simple_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the agent properties associated with each @NavigationMesh@ (radius, height, etc.) are considered in the path calculation, otherwise they are ignored.
---   				__Note:__ This method has known issues and will often return non-optimal paths. These issues will be fixed in Godot 4.0.
+-- | @i@Deprecated.@/i@ @Navigation@ node and @method get_simple_path@ are deprecated and will be removed in a future version. Use @method NavigationServer.map_get_path@ instead.
+--   				Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the agent properties associated with each @NavigationMesh@ (radius, height, etc.) are considered in the path calculation, otherwise they are ignored.
 get_simple_path ::
                   (Navigation :< cls, Object :< cls) =>
                   cls -> Vector3 -> Vector3 -> Maybe Bool -> IO PoolVector3Array
@@ -226,59 +412,25 @@ instance NodeMethod Navigation "get_up_vector" '[] (IO Vector3)
          where
         nodeMethod = Godot.Core.Navigation.get_up_vector
 
-{-# NOINLINE bindNavigation_navmesh_add #-}
+{-# NOINLINE bindNavigation_set_cell_height #-}
 
--- | Adds a @NavigationMesh@. Returns an ID for use with @method navmesh_remove@ or @method navmesh_set_transform@. If given, a @Transform2D@ is applied to the polygon. The optional @owner@ is used as return value for @method get_closest_point_owner@.
-bindNavigation_navmesh_add :: MethodBind
-bindNavigation_navmesh_add
+-- | The cell height to use for fields.
+bindNavigation_set_cell_height :: MethodBind
+bindNavigation_set_cell_height
   = unsafePerformIO $
       withCString "Navigation" $
         \ clsNamePtr ->
-          withCString "navmesh_add" $
+          withCString "set_cell_height" $
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a @NavigationMesh@. Returns an ID for use with @method navmesh_remove@ or @method navmesh_set_transform@. If given, a @Transform2D@ is applied to the polygon. The optional @owner@ is used as return value for @method get_closest_point_owner@.
-navmesh_add ::
-              (Navigation :< cls, Object :< cls) =>
-              cls -> NavigationMesh -> Transform -> Maybe Object -> IO Int
-navmesh_add cls arg1 arg2 arg3
-  = withVariantArray
-      [toVariant arg1, toVariant arg2, maybe VariantNil toVariant arg3]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindNavigation_navmesh_add (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod Navigation "navmesh_add"
-           '[NavigationMesh, Transform, Maybe Object]
-           (IO Int)
-         where
-        nodeMethod = Godot.Core.Navigation.navmesh_add
-
-{-# NOINLINE bindNavigation_navmesh_remove #-}
-
--- | Removes the @NavigationMesh@ with the given ID.
-bindNavigation_navmesh_remove :: MethodBind
-bindNavigation_navmesh_remove
-  = unsafePerformIO $
-      withCString "Navigation" $
-        \ clsNamePtr ->
-          withCString "navmesh_remove" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | Removes the @NavigationMesh@ with the given ID.
-navmesh_remove ::
-                 (Navigation :< cls, Object :< cls) => cls -> Int -> IO ()
-navmesh_remove cls arg1
+-- | The cell height to use for fields.
+set_cell_height ::
+                  (Navigation :< cls, Object :< cls) => cls -> Float -> IO ()
+set_cell_height cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
-         godot_method_bind_call bindNavigation_navmesh_remove (upcast cls)
+         godot_method_bind_call bindNavigation_set_cell_height (upcast cls)
            arrPtr
            len
            >>=
@@ -286,30 +438,59 @@ navmesh_remove cls arg1
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod Navigation "navmesh_remove" '[Int] (IO ())
+instance NodeMethod Navigation "set_cell_height" '[Float] (IO ())
          where
-        nodeMethod = Godot.Core.Navigation.navmesh_remove
+        nodeMethod = Godot.Core.Navigation.set_cell_height
 
-{-# NOINLINE bindNavigation_navmesh_set_transform #-}
+{-# NOINLINE bindNavigation_set_cell_size #-}
 
--- | Sets the transform applied to the @NavigationMesh@ with the given ID.
-bindNavigation_navmesh_set_transform :: MethodBind
-bindNavigation_navmesh_set_transform
+-- | The XZ plane cell size to use for fields.
+bindNavigation_set_cell_size :: MethodBind
+bindNavigation_set_cell_size
   = unsafePerformIO $
       withCString "Navigation" $
         \ clsNamePtr ->
-          withCString "navmesh_set_transform" $
+          withCString "set_cell_size" $
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the transform applied to the @NavigationMesh@ with the given ID.
-navmesh_set_transform ::
-                        (Navigation :< cls, Object :< cls) =>
-                        cls -> Int -> Transform -> IO ()
-navmesh_set_transform cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
+-- | The XZ plane cell size to use for fields.
+set_cell_size ::
+                (Navigation :< cls, Object :< cls) => cls -> Float -> IO ()
+set_cell_size cls arg1
+  = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
-         godot_method_bind_call bindNavigation_navmesh_set_transform
+         godot_method_bind_call bindNavigation_set_cell_size (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation "set_cell_size" '[Float] (IO ())
+         where
+        nodeMethod = Godot.Core.Navigation.set_cell_size
+
+{-# NOINLINE bindNavigation_set_edge_connection_margin #-}
+
+-- | This value is used to detect the near edges to connect compatible regions.
+bindNavigation_set_edge_connection_margin :: MethodBind
+bindNavigation_set_edge_connection_margin
+  = unsafePerformIO $
+      withCString "Navigation" $
+        \ clsNamePtr ->
+          withCString "set_edge_connection_margin" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | This value is used to detect the near edges to connect compatible regions.
+set_edge_connection_margin ::
+                             (Navigation :< cls, Object :< cls) => cls -> Float -> IO ()
+set_edge_connection_margin cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation_set_edge_connection_margin
            (upcast cls)
            arrPtr
            len
@@ -318,11 +499,43 @@ navmesh_set_transform cls arg1 arg2
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod Navigation "navmesh_set_transform"
-           '[Int, Transform]
+instance NodeMethod Navigation "set_edge_connection_margin"
+           '[Float]
            (IO ())
          where
-        nodeMethod = Godot.Core.Navigation.navmesh_set_transform
+        nodeMethod = Godot.Core.Navigation.set_edge_connection_margin
+
+{-# NOINLINE bindNavigation_set_navigation_layers #-}
+
+-- | A bitfield determining all navigation map layers the navigation can use on a @method Navigation.get_simple_path@ path query.
+bindNavigation_set_navigation_layers :: MethodBind
+bindNavigation_set_navigation_layers
+  = unsafePerformIO $
+      withCString "Navigation" $
+        \ clsNamePtr ->
+          withCString "set_navigation_layers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | A bitfield determining all navigation map layers the navigation can use on a @method Navigation.get_simple_path@ path query.
+set_navigation_layers ::
+                        (Navigation :< cls, Object :< cls) => cls -> Int -> IO ()
+set_navigation_layers cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation_set_navigation_layers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation "set_navigation_layers" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Navigation.set_navigation_layers
 
 {-# NOINLINE bindNavigation_set_up_vector #-}
 

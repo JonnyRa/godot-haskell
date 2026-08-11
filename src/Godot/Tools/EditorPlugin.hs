@@ -1336,7 +1336,7 @@ instance NodeMethod EditorPlugin "get_plugin_name" '[]
 
 {-# NOINLINE bindEditorPlugin_get_script_create_dialog #-}
 
--- | Gets the Editor's dialogue used for making scripts.
+-- | Gets the Editor's dialog used for making scripts.
 --   				__Note:__ Users can configure it before use.
 --   				__Warning:__ Removing and freeing this node will render a part of the editor useless and may cause a crash.
 bindEditorPlugin_get_script_create_dialog :: MethodBind
@@ -1348,7 +1348,7 @@ bindEditorPlugin_get_script_create_dialog
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the Editor's dialogue used for making scripts.
+-- | Gets the Editor's dialog used for making scripts.
 --   				__Note:__ Users can configure it before use.
 --   				__Warning:__ Removing and freeing this node will render a part of the editor useless and may cause a crash.
 get_script_create_dialog ::
@@ -1370,7 +1370,18 @@ instance NodeMethod EditorPlugin "get_script_create_dialog" '[]
 
 {-# NOINLINE bindEditorPlugin_get_state #-}
 
--- | Gets the state of your plugin editor. This is used when saving the scene (so state is kept when opening it again) and for switching tabs (so state can be restored when the tab returns).
+-- | Override this method to provide a state data you want to be saved, like view position, grid settings, folding, etc. This is used when saving the scene (so state is kept when opening it again) and for switching tabs (so state can be restored when the tab returns). This data is automatically saved for each scene in an @editstate@ file in the editor metadata folder. If you want to store global (scene-independent) editor data for your plugin, you can use @method get_window_layout@ instead.
+--   				Use @method set_state@ to restore your saved state.
+--   				__Note:__ This method should not be used to save important settings that should persist with the project.
+--   				__Note:__ You must implement @method get_plugin_name@ for the state to be stored and restored correctly.
+--   				
+--   @
+--   
+--   				func get_state():
+--   				    var state = {"zoom": zoom, "preferred_color": my_color}
+--   				    return state
+--   				
+--   @
 bindEditorPlugin_get_state :: MethodBind
 bindEditorPlugin_get_state
   = unsafePerformIO $
@@ -1380,7 +1391,18 @@ bindEditorPlugin_get_state
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the state of your plugin editor. This is used when saving the scene (so state is kept when opening it again) and for switching tabs (so state can be restored when the tab returns).
+-- | Override this method to provide a state data you want to be saved, like view position, grid settings, folding, etc. This is used when saving the scene (so state is kept when opening it again) and for switching tabs (so state can be restored when the tab returns). This data is automatically saved for each scene in an @editstate@ file in the editor metadata folder. If you want to store global (scene-independent) editor data for your plugin, you can use @method get_window_layout@ instead.
+--   				Use @method set_state@ to restore your saved state.
+--   				__Note:__ This method should not be used to save important settings that should persist with the project.
+--   				__Note:__ You must implement @method get_plugin_name@ for the state to be stored and restored correctly.
+--   				
+--   @
+--   
+--   				func get_state():
+--   				    var state = {"zoom": zoom, "preferred_color": my_color}
+--   				    return state
+--   				
+--   @
 get_state ::
             (EditorPlugin :< cls, Object :< cls) => cls -> IO Dictionary
 get_state cls
@@ -1427,7 +1449,16 @@ instance NodeMethod EditorPlugin "get_undo_redo" '[] (IO UndoRedo)
 
 {-# NOINLINE bindEditorPlugin_get_window_layout #-}
 
--- | Gets the GUI layout of the plugin. This is used to save the project's editor layout when @method queue_save_layout@ is called or the editor layout was changed(For example changing the position of a dock).
+-- | Override this method to provide the GUI layout of the plugin or any other data you want to be stored. This is used to save the project's editor layout when @method queue_save_layout@ is called or the editor layout was changed (for example changing the position of a dock). The data is stored in the @editor_layout.cfg@ file in the editor metadata directory.
+--   				Use @method set_window_layout@ to restore your saved layout.
+--   				
+--   @
+--   
+--   				func get_window_layout(configuration):
+--   				    configuration.set_value("MyPlugin", "window_position", $Window.position)
+--   				    configuration.set_value("MyPlugin", "icon_color", $Icon.modulate)
+--   				
+--   @
 bindEditorPlugin_get_window_layout :: MethodBind
 bindEditorPlugin_get_window_layout
   = unsafePerformIO $
@@ -1437,7 +1468,16 @@ bindEditorPlugin_get_window_layout
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets the GUI layout of the plugin. This is used to save the project's editor layout when @method queue_save_layout@ is called or the editor layout was changed(For example changing the position of a dock).
+-- | Override this method to provide the GUI layout of the plugin or any other data you want to be stored. This is used to save the project's editor layout when @method queue_save_layout@ is called or the editor layout was changed (for example changing the position of a dock). The data is stored in the @editor_layout.cfg@ file in the editor metadata directory.
+--   				Use @method set_window_layout@ to restore your saved layout.
+--   				
+--   @
+--   
+--   				func get_window_layout(configuration):
+--   				    configuration.set_value("MyPlugin", "window_position", $Window.position)
+--   				    configuration.set_value("MyPlugin", "icon_color", $Icon.modulate)
+--   				
+--   @
 get_window_layout ::
                     (EditorPlugin :< cls, Object :< cls) => cls -> ConfigFile -> IO ()
 get_window_layout cls arg1
@@ -2127,7 +2167,16 @@ instance NodeMethod EditorPlugin
 
 {-# NOINLINE bindEditorPlugin_set_state #-}
 
--- | Restore the state saved by @method get_state@.
+-- | Restore the state saved by @method get_state@. This method is called when the current scene tab is changed in the editor.
+--   				__Note:__ Your plugin must implement @method get_plugin_name@, otherwise it will not be recognized and this method will not be called.
+--   				
+--   @
+--   
+--   				func set_state(data):
+--   				    zoom = data.get("zoom", 1.0)
+--   				    preferred_color = data.get("my_color", Color.white)
+--   				
+--   @
 bindEditorPlugin_set_state :: MethodBind
 bindEditorPlugin_set_state
   = unsafePerformIO $
@@ -2137,7 +2186,16 @@ bindEditorPlugin_set_state
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Restore the state saved by @method get_state@.
+-- | Restore the state saved by @method get_state@. This method is called when the current scene tab is changed in the editor.
+--   				__Note:__ Your plugin must implement @method get_plugin_name@, otherwise it will not be recognized and this method will not be called.
+--   				
+--   @
+--   
+--   				func set_state(data):
+--   				    zoom = data.get("zoom", 1.0)
+--   				    preferred_color = data.get("my_color", Color.white)
+--   				
+--   @
 set_state ::
             (EditorPlugin :< cls, Object :< cls) => cls -> Dictionary -> IO ()
 set_state cls arg1
@@ -2157,7 +2215,15 @@ instance NodeMethod EditorPlugin "set_state" '[Dictionary] (IO ())
 
 {-# NOINLINE bindEditorPlugin_set_window_layout #-}
 
--- | Restore the plugin GUI layout saved by @method get_window_layout@.
+-- | Restore the plugin GUI layout and data saved by @method get_window_layout@. This method is called for every plugin on editor startup. Use the provided @configuration@ file to read your saved data.
+--   				
+--   @
+--   
+--   				func set_window_layout(configuration):
+--   				    $Window.position = configuration.get_value("MyPlugin", "window_position", Vector2())
+--   				    $Icon.modulate = configuration.get_value("MyPlugin", "icon_color", Color.white)
+--   				
+--   @
 bindEditorPlugin_set_window_layout :: MethodBind
 bindEditorPlugin_set_window_layout
   = unsafePerformIO $
@@ -2167,7 +2233,15 @@ bindEditorPlugin_set_window_layout
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Restore the plugin GUI layout saved by @method get_window_layout@.
+-- | Restore the plugin GUI layout and data saved by @method get_window_layout@. This method is called for every plugin on editor startup. Use the provided @configuration@ file to read your saved data.
+--   				
+--   @
+--   
+--   				func set_window_layout(configuration):
+--   				    $Window.position = configuration.get_value("MyPlugin", "window_position", Vector2())
+--   				    $Icon.modulate = configuration.get_value("MyPlugin", "icon_color", Color.white)
+--   				
+--   @
 set_window_layout ::
                     (EditorPlugin :< cls, Object :< cls) => cls -> ConfigFile -> IO ()
 set_window_layout cls arg1

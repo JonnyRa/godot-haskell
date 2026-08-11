@@ -32,6 +32,7 @@ module Godot.Core.CPUParticles2D
         Godot.Core.CPUParticles2D.convert_from_particles,
         Godot.Core.CPUParticles2D.get_amount,
         Godot.Core.CPUParticles2D.get_color,
+        Godot.Core.CPUParticles2D.get_color_initial_ramp,
         Godot.Core.CPUParticles2D.get_color_ramp,
         Godot.Core.CPUParticles2D.get_direction,
         Godot.Core.CPUParticles2D.get_draw_order,
@@ -63,6 +64,7 @@ module Godot.Core.CPUParticles2D
         Godot.Core.CPUParticles2D.restart,
         Godot.Core.CPUParticles2D.set_amount,
         Godot.Core.CPUParticles2D.set_color,
+        Godot.Core.CPUParticles2D.set_color_initial_ramp,
         Godot.Core.CPUParticles2D.set_color_ramp,
         Godot.Core.CPUParticles2D.set_direction,
         Godot.Core.CPUParticles2D.set_draw_order,
@@ -263,6 +265,13 @@ instance NodeProperty CPUParticles2D "anim_speed_random" Float
 
 instance NodeProperty CPUParticles2D "color" Color 'False where
         nodeProperty = (get_color, wrapDroppingSetter set_color, Nothing)
+
+instance NodeProperty CPUParticles2D "color_initial_ramp" Gradient
+           'False
+         where
+        nodeProperty
+          = (get_color_initial_ramp,
+             wrapDroppingSetter set_color_initial_ramp, Nothing)
 
 instance NodeProperty CPUParticles2D "color_ramp" Gradient 'False
          where
@@ -707,6 +716,35 @@ get_color cls
 
 instance NodeMethod CPUParticles2D "get_color" '[] (IO Color) where
         nodeMethod = Godot.Core.CPUParticles2D.get_color
+
+{-# NOINLINE bindCPUParticles2D_get_color_initial_ramp #-}
+
+-- | Each particle's initial color will vary along this @GradientTexture@ (multiplied with @color@).
+bindCPUParticles2D_get_color_initial_ramp :: MethodBind
+bindCPUParticles2D_get_color_initial_ramp
+  = unsafePerformIO $
+      withCString "CPUParticles2D" $
+        \ clsNamePtr ->
+          withCString "get_color_initial_ramp" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Each particle's initial color will vary along this @GradientTexture@ (multiplied with @color@).
+get_color_initial_ramp ::
+                         (CPUParticles2D :< cls, Object :< cls) => cls -> IO Gradient
+get_color_initial_ramp cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCPUParticles2D_get_color_initial_ramp
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod CPUParticles2D "get_color_initial_ramp" '[]
+           (IO Gradient)
+         where
+        nodeMethod = Godot.Core.CPUParticles2D.get_color_initial_ramp
 
 {-# NOINLINE bindCPUParticles2D_get_color_ramp #-}
 
@@ -1667,6 +1705,39 @@ set_color cls arg1
 instance NodeMethod CPUParticles2D "set_color" '[Color] (IO ())
          where
         nodeMethod = Godot.Core.CPUParticles2D.set_color
+
+{-# NOINLINE bindCPUParticles2D_set_color_initial_ramp #-}
+
+-- | Each particle's initial color will vary along this @GradientTexture@ (multiplied with @color@).
+bindCPUParticles2D_set_color_initial_ramp :: MethodBind
+bindCPUParticles2D_set_color_initial_ramp
+  = unsafePerformIO $
+      withCString "CPUParticles2D" $
+        \ clsNamePtr ->
+          withCString "set_color_initial_ramp" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Each particle's initial color will vary along this @GradientTexture@ (multiplied with @color@).
+set_color_initial_ramp ::
+                         (CPUParticles2D :< cls, Object :< cls) => cls -> Gradient -> IO ()
+set_color_initial_ramp cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCPUParticles2D_set_color_initial_ramp
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CPUParticles2D "set_color_initial_ramp"
+           '[Gradient]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CPUParticles2D.set_color_initial_ramp
 
 {-# NOINLINE bindCPUParticles2D_set_color_ramp #-}
 

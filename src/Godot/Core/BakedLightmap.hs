@@ -4,6 +4,7 @@
 module Godot.Core.BakedLightmap
        (Godot.Core.BakedLightmap._BAKE_QUALITY_LOW,
         Godot.Core.BakedLightmap._ENVIRONMENT_MODE_CUSTOM_COLOR,
+        Godot.Core.BakedLightmap._BAKE_ERROR_NO_ROOT,
         Godot.Core.BakedLightmap._BAKE_QUALITY_MEDIUM,
         Godot.Core.BakedLightmap._ENVIRONMENT_MODE_SCENE,
         Godot.Core.BakedLightmap._BAKE_QUALITY_ULTRA,
@@ -83,6 +84,9 @@ _BAKE_QUALITY_LOW = 0
 
 _ENVIRONMENT_MODE_CUSTOM_COLOR :: Int
 _ENVIRONMENT_MODE_CUSTOM_COLOR = 3
+
+_BAKE_ERROR_NO_ROOT :: Int
+_BAKE_ERROR_NO_ROOT = 8
 
 _BAKE_QUALITY_MEDIUM :: Int
 _BAKE_QUALITY_MEDIUM = 1
@@ -299,7 +303,7 @@ instance NodeMethod BakedLightmap "bake"
 
 {-# NOINLINE bindBakedLightmap_get_bake_quality #-}
 
--- | Determines the amount of samples per texel used in indrect light baking. The amount of samples for each quality level can be configured in the project settings.
+-- | Determines the amount of samples per texel used in indirect light baking. The amount of samples for each quality level can be configured in the project settings.
 bindBakedLightmap_get_bake_quality :: MethodBind
 bindBakedLightmap_get_bake_quality
   = unsafePerformIO $
@@ -309,7 +313,7 @@ bindBakedLightmap_get_bake_quality
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Determines the amount of samples per texel used in indrect light baking. The amount of samples for each quality level can be configured in the project settings.
+-- | Determines the amount of samples per texel used in indirect light baking. The amount of samples for each quality level can be configured in the project settings.
 get_bake_quality ::
                    (BakedLightmap :< cls, Object :< cls) => cls -> IO Int
 get_bake_quality cls
@@ -906,7 +910,8 @@ instance NodeMethod BakedLightmap "get_max_atlas_size" '[] (IO Int)
 
 {-# NOINLINE bindBakedLightmap_is_generate_atlas_enabled #-}
 
--- | When enabled, the lightmapper will merge the textures for all meshes into a single large layered texture. Not supported in GLES2.
+-- | If @true@, the lightmapper will merge the textures for all meshes into one or several large layered textures. If @false@, every mesh will get its own lightmap texture, which is less efficient.
+--   			__Note:__ Atlas lightmap rendering is only supported in GLES3, @i@not@/i@ GLES2. Non-atlas lightmap rendering is supported by both GLES3 and GLES2. If @ProjectSettings.rendering/quality/driver/fallback_to_gles2@ is @true@, consider baking lightmaps with @atlas_generate@ set to @false@ so that the resulting lightmap is visible in both GLES3 and GLES2.
 bindBakedLightmap_is_generate_atlas_enabled :: MethodBind
 bindBakedLightmap_is_generate_atlas_enabled
   = unsafePerformIO $
@@ -916,7 +921,8 @@ bindBakedLightmap_is_generate_atlas_enabled
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | When enabled, the lightmapper will merge the textures for all meshes into a single large layered texture. Not supported in GLES2.
+-- | If @true@, the lightmapper will merge the textures for all meshes into one or several large layered textures. If @false@, every mesh will get its own lightmap texture, which is less efficient.
+--   			__Note:__ Atlas lightmap rendering is only supported in GLES3, @i@not@/i@ GLES2. Non-atlas lightmap rendering is supported by both GLES3 and GLES2. If @ProjectSettings.rendering/quality/driver/fallback_to_gles2@ is @true@, consider baking lightmaps with @atlas_generate@ set to @false@ so that the resulting lightmap is visible in both GLES3 and GLES2.
 is_generate_atlas_enabled ::
                             (BakedLightmap :< cls, Object :< cls) => cls -> IO Bool
 is_generate_atlas_enabled cls
@@ -1032,7 +1038,7 @@ instance NodeMethod BakedLightmap "is_using_hdr" '[] (IO Bool)
 
 {-# NOINLINE bindBakedLightmap_set_bake_quality #-}
 
--- | Determines the amount of samples per texel used in indrect light baking. The amount of samples for each quality level can be configured in the project settings.
+-- | Determines the amount of samples per texel used in indirect light baking. The amount of samples for each quality level can be configured in the project settings.
 bindBakedLightmap_set_bake_quality :: MethodBind
 bindBakedLightmap_set_bake_quality
   = unsafePerformIO $
@@ -1042,7 +1048,7 @@ bindBakedLightmap_set_bake_quality
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Determines the amount of samples per texel used in indrect light baking. The amount of samples for each quality level can be configured in the project settings.
+-- | Determines the amount of samples per texel used in indirect light baking. The amount of samples for each quality level can be configured in the project settings.
 set_bake_quality ::
                    (BakedLightmap :< cls, Object :< cls) => cls -> Int -> IO ()
 set_bake_quality cls arg1
@@ -1555,7 +1561,8 @@ instance NodeMethod BakedLightmap "set_extents" '[Vector3] (IO ())
 
 {-# NOINLINE bindBakedLightmap_set_generate_atlas #-}
 
--- | When enabled, the lightmapper will merge the textures for all meshes into a single large layered texture. Not supported in GLES2.
+-- | If @true@, the lightmapper will merge the textures for all meshes into one or several large layered textures. If @false@, every mesh will get its own lightmap texture, which is less efficient.
+--   			__Note:__ Atlas lightmap rendering is only supported in GLES3, @i@not@/i@ GLES2. Non-atlas lightmap rendering is supported by both GLES3 and GLES2. If @ProjectSettings.rendering/quality/driver/fallback_to_gles2@ is @true@, consider baking lightmaps with @atlas_generate@ set to @false@ so that the resulting lightmap is visible in both GLES3 and GLES2.
 bindBakedLightmap_set_generate_atlas :: MethodBind
 bindBakedLightmap_set_generate_atlas
   = unsafePerformIO $
@@ -1565,7 +1572,8 @@ bindBakedLightmap_set_generate_atlas
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | When enabled, the lightmapper will merge the textures for all meshes into a single large layered texture. Not supported in GLES2.
+-- | If @true@, the lightmapper will merge the textures for all meshes into one or several large layered textures. If @false@, every mesh will get its own lightmap texture, which is less efficient.
+--   			__Note:__ Atlas lightmap rendering is only supported in GLES3, @i@not@/i@ GLES2. Non-atlas lightmap rendering is supported by both GLES3 and GLES2. If @ProjectSettings.rendering/quality/driver/fallback_to_gles2@ is @true@, consider baking lightmaps with @atlas_generate@ set to @false@ so that the resulting lightmap is visible in both GLES3 and GLES2.
 set_generate_atlas ::
                      (BakedLightmap :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_generate_atlas cls arg1

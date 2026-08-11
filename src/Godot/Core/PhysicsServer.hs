@@ -11,7 +11,6 @@ module Godot.Core.PhysicsServer
         Godot.Core.PhysicsServer._AREA_SPACE_OVERRIDE_REPLACE,
         Godot.Core.PhysicsServer._SLIDER_JOINT_LINEAR_MOTION_RESTITUTION,
         Godot.Core.PhysicsServer._G6DOF_JOINT_ANGULAR_MOTOR_FORCE_LIMIT,
-        Godot.Core.PhysicsServer._SPACE_PARAM_TEST_MOTION_MIN_CONTACT_DEPTH,
         Godot.Core.PhysicsServer._SLIDER_JOINT_LINEAR_ORTHOGONAL_RESTITUTION,
         Godot.Core.PhysicsServer._SPACE_PARAM_BODY_ANGULAR_VELOCITY_DAMP_RATIO,
         Godot.Core.PhysicsServer._HINGE_JOINT_MOTOR_MAX_IMPULSE,
@@ -281,9 +280,6 @@ _SLIDER_JOINT_LINEAR_MOTION_RESTITUTION = 6
 
 _G6DOF_JOINT_ANGULAR_MOTOR_FORCE_LIMIT :: Int
 _G6DOF_JOINT_ANGULAR_MOTOR_FORCE_LIMIT = 18
-
-_SPACE_PARAM_TEST_MOTION_MIN_CONTACT_DEPTH :: Int
-_SPACE_PARAM_TEST_MOTION_MIN_CONTACT_DEPTH = 8
 
 _SLIDER_JOINT_LINEAR_ORTHOGONAL_RESTITUTION :: Int
 _SLIDER_JOINT_LINEAR_ORTHOGONAL_RESTITUTION = 9
@@ -3228,7 +3224,8 @@ instance NodeMethod PhysicsServer "cone_twist_joint_set_param"
 
 {-# NOINLINE bindPhysicsServer_free_rid #-}
 
--- | Destroys any of the objects created by PhysicsServer. If the @RID@ passed is not one of the objects that can be created by PhysicsServer, an error will be sent to the console.
+-- | Destroys an object created by the PhysicsServer.
+--   				__Note:__ See @method VisualServer.free_rid@ for details on how to handle RIDs for freed objects.
 bindPhysicsServer_free_rid :: MethodBind
 bindPhysicsServer_free_rid
   = unsafePerformIO $
@@ -3238,7 +3235,8 @@ bindPhysicsServer_free_rid
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Destroys any of the objects created by PhysicsServer. If the @RID@ passed is not one of the objects that can be created by PhysicsServer, an error will be sent to the console.
+-- | Destroys an object created by the PhysicsServer.
+--   				__Note:__ See @method VisualServer.free_rid@ for details on how to handle RIDs for freed objects.
 free_rid ::
            (PhysicsServer :< cls, Object :< cls) => cls -> Rid -> IO ()
 free_rid cls arg1

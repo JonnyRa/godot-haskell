@@ -281,9 +281,10 @@ bindColorPicker__preset_input
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 _preset_input ::
-                (ColorPicker :< cls, Object :< cls) => cls -> InputEvent -> IO ()
-_preset_input cls arg1
-  = withVariantArray [toVariant arg1]
+                (ColorPicker :< cls, Object :< cls) =>
+                cls -> InputEvent -> Color -> IO ()
+_preset_input cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindColorPicker__preset_input (upcast cls)
            arrPtr
@@ -293,7 +294,8 @@ _preset_input cls arg1
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod ColorPicker "_preset_input" '[InputEvent]
+instance NodeMethod ColorPicker "_preset_input"
+           '[InputEvent, Color]
            (IO ())
          where
         nodeMethod = Godot.Core.ColorPicker._preset_input

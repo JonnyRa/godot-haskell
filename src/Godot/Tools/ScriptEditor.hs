@@ -30,19 +30,22 @@ module Godot.Tools.ScriptEditor
         Godot.Tools.ScriptEditor._help_search,
         Godot.Tools.ScriptEditor._history_back,
         Godot.Tools.ScriptEditor._history_forward,
+        Godot.Tools.ScriptEditor._input,
         Godot.Tools.ScriptEditor._live_auto_reload_running_scripts,
         Godot.Tools.ScriptEditor._members_overview_selected,
         Godot.Tools.ScriptEditor._menu_option,
         Godot.Tools.ScriptEditor._on_find_in_files_modified_files,
         Godot.Tools.ScriptEditor._on_find_in_files_requested,
         Godot.Tools.ScriptEditor._on_find_in_files_result_selected,
+        Godot.Tools.ScriptEditor._on_replace_in_files_requested,
         Godot.Tools.ScriptEditor._open_recent_script,
+        Godot.Tools.ScriptEditor._prepare_file_menu,
         Godot.Tools.ScriptEditor._queue_close_tabs,
-        Godot.Tools.ScriptEditor._reload_scripts,
         Godot.Tools.ScriptEditor._request_help,
         Godot.Tools.ScriptEditor._res_saved_callback,
         Godot.Tools.ScriptEditor._resave_scripts,
         Godot.Tools.ScriptEditor._save_history,
+        Godot.Tools.ScriptEditor._scene_saved_callback,
         Godot.Tools.ScriptEditor._script_changed,
         Godot.Tools.ScriptEditor._script_created,
         Godot.Tools.ScriptEditor._script_list_gui_input,
@@ -63,11 +66,13 @@ module Godot.Tools.ScriptEditor
         Godot.Tools.ScriptEditor._update_script_names,
         Godot.Tools.ScriptEditor.can_drop_data_fw,
         Godot.Tools.ScriptEditor.drop_data_fw,
+        Godot.Tools.ScriptEditor.get_base_editor,
         Godot.Tools.ScriptEditor.get_current_script,
         Godot.Tools.ScriptEditor.get_drag_data_fw,
         Godot.Tools.ScriptEditor.get_open_scripts,
         Godot.Tools.ScriptEditor.goto_line,
-        Godot.Tools.ScriptEditor.open_script_create_dialog)
+        Godot.Tools.ScriptEditor.open_script_create_dialog,
+        Godot.Tools.ScriptEditor.reload_scripts)
        where
 import Data.Coerce
 import Foreign.C
@@ -866,6 +871,33 @@ instance NodeMethod ScriptEditor "_history_forward" '[] (IO ())
          where
         nodeMethod = Godot.Tools.ScriptEditor._history_forward
 
+{-# NOINLINE bindScriptEditor__input #-}
+
+bindScriptEditor__input :: MethodBind
+bindScriptEditor__input
+  = unsafePerformIO $
+      withCString "ScriptEditor" $
+        \ clsNamePtr ->
+          withCString "_input" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_input ::
+         (ScriptEditor :< cls, Object :< cls) => cls -> InputEvent -> IO ()
+_input cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindScriptEditor__input (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ScriptEditor "_input" '[InputEvent] (IO ())
+         where
+        nodeMethod = Godot.Tools.ScriptEditor._input
+
 {-# NOINLINE bindScriptEditor__live_auto_reload_running_scripts #-}
 
 bindScriptEditor__live_auto_reload_running_scripts :: MethodBind
@@ -1060,6 +1092,39 @@ instance NodeMethod ScriptEditor
         nodeMethod
           = Godot.Tools.ScriptEditor._on_find_in_files_result_selected
 
+{-# NOINLINE bindScriptEditor__on_replace_in_files_requested #-}
+
+bindScriptEditor__on_replace_in_files_requested :: MethodBind
+bindScriptEditor__on_replace_in_files_requested
+  = unsafePerformIO $
+      withCString "ScriptEditor" $
+        \ clsNamePtr ->
+          withCString "_on_replace_in_files_requested" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_on_replace_in_files_requested ::
+                                 (ScriptEditor :< cls, Object :< cls) => cls -> GodotString -> IO ()
+_on_replace_in_files_requested cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindScriptEditor__on_replace_in_files_requested
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ScriptEditor "_on_replace_in_files_requested"
+           '[GodotString]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Tools.ScriptEditor._on_replace_in_files_requested
+
 {-# NOINLINE bindScriptEditor__open_recent_script #-}
 
 bindScriptEditor__open_recent_script :: MethodBind
@@ -1090,6 +1155,35 @@ instance NodeMethod ScriptEditor "_open_recent_script" '[Int]
          where
         nodeMethod = Godot.Tools.ScriptEditor._open_recent_script
 
+{-# NOINLINE bindScriptEditor__prepare_file_menu #-}
+
+bindScriptEditor__prepare_file_menu :: MethodBind
+bindScriptEditor__prepare_file_menu
+  = unsafePerformIO $
+      withCString "ScriptEditor" $
+        \ clsNamePtr ->
+          withCString "_prepare_file_menu" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_prepare_file_menu ::
+                     (ScriptEditor :< cls, Object :< cls) => cls -> IO ()
+_prepare_file_menu cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindScriptEditor__prepare_file_menu
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ScriptEditor "_prepare_file_menu" '[] (IO ())
+         where
+        nodeMethod = Godot.Tools.ScriptEditor._prepare_file_menu
+
 {-# NOINLINE bindScriptEditor__queue_close_tabs #-}
 
 bindScriptEditor__queue_close_tabs :: MethodBind
@@ -1118,35 +1212,6 @@ _queue_close_tabs cls
 instance NodeMethod ScriptEditor "_queue_close_tabs" '[] (IO ())
          where
         nodeMethod = Godot.Tools.ScriptEditor._queue_close_tabs
-
-{-# NOINLINE bindScriptEditor__reload_scripts #-}
-
-bindScriptEditor__reload_scripts :: MethodBind
-bindScriptEditor__reload_scripts
-  = unsafePerformIO $
-      withCString "ScriptEditor" $
-        \ clsNamePtr ->
-          withCString "_reload_scripts" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
-_reload_scripts ::
-                  (ScriptEditor :< cls, Object :< cls) => cls -> IO ()
-_reload_scripts cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindScriptEditor__reload_scripts
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod ScriptEditor "_reload_scripts" '[] (IO ())
-         where
-        nodeMethod = Godot.Tools.ScriptEditor._reload_scripts
 
 {-# NOINLINE bindScriptEditor__request_help #-}
 
@@ -1263,6 +1328,37 @@ _save_history cls
 
 instance NodeMethod ScriptEditor "_save_history" '[] (IO ()) where
         nodeMethod = Godot.Tools.ScriptEditor._save_history
+
+{-# NOINLINE bindScriptEditor__scene_saved_callback #-}
+
+bindScriptEditor__scene_saved_callback :: MethodBind
+bindScriptEditor__scene_saved_callback
+  = unsafePerformIO $
+      withCString "ScriptEditor" $
+        \ clsNamePtr ->
+          withCString "_scene_saved_callback" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_scene_saved_callback ::
+                        (ScriptEditor :< cls, Object :< cls) => cls -> GodotString -> IO ()
+_scene_saved_callback cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindScriptEditor__scene_saved_callback
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ScriptEditor "_scene_saved_callback"
+           '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Tools.ScriptEditor._scene_saved_callback
 
 {-# NOINLINE bindScriptEditor__script_changed #-}
 
@@ -1861,6 +1957,34 @@ instance NodeMethod ScriptEditor "drop_data_fw"
          where
         nodeMethod = Godot.Tools.ScriptEditor.drop_data_fw
 
+{-# NOINLINE bindScriptEditor_get_base_editor #-}
+
+-- | Returns the underlying @Control@ used for editing scripts. For text scripts, this is a @TextEdit@.
+bindScriptEditor_get_base_editor :: MethodBind
+bindScriptEditor_get_base_editor
+  = unsafePerformIO $
+      withCString "ScriptEditor" $
+        \ clsNamePtr ->
+          withCString "get_base_editor" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the underlying @Control@ used for editing scripts. For text scripts, this is a @TextEdit@.
+get_base_editor ::
+                  (ScriptEditor :< cls, Object :< cls) => cls -> IO Control
+get_base_editor cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindScriptEditor_get_base_editor
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod ScriptEditor "get_base_editor" '[] (IO Control)
+         where
+        nodeMethod = Godot.Tools.ScriptEditor.get_base_editor
+
 {-# NOINLINE bindScriptEditor_get_current_script #-}
 
 -- | Returns a @Script@ that is currently active in editor.
@@ -2012,3 +2136,32 @@ instance NodeMethod ScriptEditor "open_script_create_dialog"
            (IO ())
          where
         nodeMethod = Godot.Tools.ScriptEditor.open_script_create_dialog
+
+{-# NOINLINE bindScriptEditor_reload_scripts #-}
+
+-- | Reload all currently opened scripts from disk in case the file contents are newer.
+bindScriptEditor_reload_scripts :: MethodBind
+bindScriptEditor_reload_scripts
+  = unsafePerformIO $
+      withCString "ScriptEditor" $
+        \ clsNamePtr ->
+          withCString "reload_scripts" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Reload all currently opened scripts from disk in case the file contents are newer.
+reload_scripts ::
+                 (ScriptEditor :< cls, Object :< cls) => cls -> IO ()
+reload_scripts cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindScriptEditor_reload_scripts (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ScriptEditor "reload_scripts" '[] (IO ()) where
+        nodeMethod = Godot.Tools.ScriptEditor.reload_scripts

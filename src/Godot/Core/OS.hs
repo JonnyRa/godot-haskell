@@ -7,28 +7,36 @@ module Godot.Core.OS
         Godot.Core.OS._SCREEN_ORIENTATION_SENSOR,
         Godot.Core.OS._DAY_THURSDAY, Godot.Core.OS._POWERSTATE_UNKNOWN,
         Godot.Core.OS._OPENGL_CONTEXT, Godot.Core.OS._MONTH_MARCH,
-        Godot.Core.OS._DAY_FRIDAY, Godot.Core.OS._SYSTEM_DIR_DOWNLOADS,
-        Godot.Core.OS._MONTH_NOVEMBER, Godot.Core.OS._MONTH_JULY,
-        Godot.Core.OS._SYSTEM_DIR_PICTURES, Godot.Core.OS._MONTH_DECEMBER,
-        Godot.Core.OS._DAY_TUESDAY, Godot.Core.OS._SYSTEM_DIR_DESKTOP,
-        Godot.Core.OS._DAY_MONDAY, Godot.Core.OS._SYSTEM_DIR_MUSIC,
+        Godot.Core.OS._KEYBOARD_TYPE_PASSWORD, Godot.Core.OS._DAY_FRIDAY,
+        Godot.Core.OS._SYSTEM_DIR_DOWNLOADS, Godot.Core.OS._MONTH_NOVEMBER,
+        Godot.Core.OS._MONTH_JULY, Godot.Core.OS._SYSTEM_DIR_PICTURES,
+        Godot.Core.OS._TTS_UTTERANCE_BOUNDARY,
+        Godot.Core.OS._MONTH_DECEMBER, Godot.Core.OS._DAY_TUESDAY,
+        Godot.Core.OS._SYSTEM_DIR_DESKTOP, Godot.Core.OS._DAY_MONDAY,
+        Godot.Core.OS._SYSTEM_DIR_MUSIC,
         Godot.Core.OS._SYSTEM_DIR_RINGTONES, Godot.Core.OS._MONTH_AUGUST,
         Godot.Core.OS._SYSTEM_DIR_DOCUMENTS,
         Godot.Core.OS._SYSTEM_DIR_MOVIES, Godot.Core.OS._SYSTEM_DIR_DCIM,
         Godot.Core.OS._POWERSTATE_CHARGED, Godot.Core.OS._MONTH_APRIL,
+        Godot.Core.OS._KEYBOARD_TYPE_PHONE,
         Godot.Core.OS._POWERSTATE_ON_BATTERY, Godot.Core.OS._DAY_SUNDAY,
         Godot.Core.OS._DISPLAY_HANDLE, Godot.Core.OS._APPLICATION_HANDLE,
-        Godot.Core.OS._MONTH_MAY,
+        Godot.Core.OS._TTS_UTTERANCE_CANCELED,
+        Godot.Core.OS._KEYBOARD_TYPE_NUMBER_DECIMAL,
+        Godot.Core.OS._MONTH_MAY, Godot.Core.OS._KEYBOARD_TYPE_MULTILINE,
         Godot.Core.OS._SCREEN_ORIENTATION_REVERSE_PORTRAIT,
         Godot.Core.OS._MONTH_JANUARY, Godot.Core.OS._MONTH_OCTOBER,
         Godot.Core.OS._SCREEN_ORIENTATION_PORTRAIT,
         Godot.Core.OS._SCREEN_ORIENTATION_SENSOR_LANDSCAPE,
         Godot.Core.OS._MONTH_SEPTEMBER, Godot.Core.OS._VIDEO_DRIVER_GLES2,
+        Godot.Core.OS._KEYBOARD_TYPE_EMAIL_ADDRESS,
         Godot.Core.OS._POWERSTATE_CHARGING, Godot.Core.OS._MONTH_FEBRUARY,
-        Godot.Core.OS._MONTH_JUNE,
+        Godot.Core.OS._MONTH_JUNE, Godot.Core.OS._KEYBOARD_TYPE_NUMBER,
+        Godot.Core.OS._KEYBOARD_TYPE_URL,
         Godot.Core.OS._SCREEN_ORIENTATION_REVERSE_LANDSCAPE,
-        Godot.Core.OS._DAY_SATURDAY, Godot.Core.OS._WINDOW_VIEW,
-        Godot.Core.OS._WINDOW_HANDLE,
+        Godot.Core.OS._KEYBOARD_TYPE_DEFAULT, Godot.Core.OS._DAY_SATURDAY,
+        Godot.Core.OS._TTS_UTTERANCE_ENDED, Godot.Core.OS._WINDOW_VIEW,
+        Godot.Core.OS._WINDOW_HANDLE, Godot.Core.OS._TTS_UTTERANCE_STARTED,
         Godot.Core.OS._SCREEN_ORIENTATION_LANDSCAPE,
         Godot.Core.OS._DAY_WEDNESDAY, Godot.Core.OS._VIDEO_DRIVER_GLES3,
         Godot.Core.OS.get_clipboard, Godot.Core.OS.set_clipboard,
@@ -69,8 +77,8 @@ module Godot.Core.OS
         Godot.Core.OS.set_window_size, Godot.Core.OS.alert,
         Godot.Core.OS.can_draw, Godot.Core.OS.can_use_threads,
         Godot.Core.OS.center_window, Godot.Core.OS.close_midi_inputs,
-        Godot.Core.OS.delay_msec, Godot.Core.OS.delay_usec,
-        Godot.Core.OS.dump_memory_to_file,
+        Godot.Core.OS.crash, Godot.Core.OS.delay_msec,
+        Godot.Core.OS.delay_usec, Godot.Core.OS.dump_memory_to_file,
         Godot.Core.OS.dump_resources_to_file, Godot.Core.OS.execute,
         Godot.Core.OS.find_scancode_from_string,
         Godot.Core.OS.get_audio_driver_count,
@@ -80,22 +88,28 @@ module Godot.Core.OS
         Godot.Core.OS.get_current_video_driver, Godot.Core.OS.get_data_dir,
         Godot.Core.OS.get_date, Godot.Core.OS.get_datetime,
         Godot.Core.OS.get_datetime_from_unix_time,
+        Godot.Core.OS.get_display_cutouts,
         Godot.Core.OS.get_dynamic_memory_usage,
         Godot.Core.OS.get_environment, Godot.Core.OS.get_executable_path,
         Godot.Core.OS.get_granted_permissions,
         Godot.Core.OS.get_ime_selection, Godot.Core.OS.get_ime_text,
         Godot.Core.OS.get_latin_keyboard_variant, Godot.Core.OS.get_locale,
-        Godot.Core.OS.get_locale_language, Godot.Core.OS.get_model_name,
+        Godot.Core.OS.get_locale_language,
+        Godot.Core.OS.get_main_thread_id, Godot.Core.OS.get_model_name,
         Godot.Core.OS.get_name, Godot.Core.OS.get_native_handle,
         Godot.Core.OS.get_power_percent_left,
         Godot.Core.OS.get_power_seconds_left,
         Godot.Core.OS.get_power_state, Godot.Core.OS.get_process_id,
         Godot.Core.OS.get_processor_count,
+        Godot.Core.OS.get_processor_name,
         Godot.Core.OS.get_real_window_size,
+        Godot.Core.OS.get_restart_on_exit_arguments,
         Godot.Core.OS.get_scancode_string, Godot.Core.OS.get_screen_count,
         Godot.Core.OS.get_screen_dpi, Godot.Core.OS.get_screen_max_scale,
-        Godot.Core.OS.get_screen_position, Godot.Core.OS.get_screen_scale,
-        Godot.Core.OS.get_screen_size, Godot.Core.OS.get_splash_tick_msec,
+        Godot.Core.OS.get_screen_position,
+        Godot.Core.OS.get_screen_refresh_rate,
+        Godot.Core.OS.get_screen_scale, Godot.Core.OS.get_screen_size,
+        Godot.Core.OS.get_splash_tick_msec,
         Godot.Core.OS.get_static_memory_peak_usage,
         Godot.Core.OS.get_static_memory_usage,
         Godot.Core.OS.get_system_dir, Godot.Core.OS.get_system_time_msecs,
@@ -115,12 +129,14 @@ module Godot.Core.OS
         Godot.Core.OS.global_menu_add_item,
         Godot.Core.OS.global_menu_add_separator,
         Godot.Core.OS.global_menu_clear,
-        Godot.Core.OS.global_menu_remove_item,
+        Godot.Core.OS.global_menu_remove_item, Godot.Core.OS.has_clipboard,
         Godot.Core.OS.has_environment, Godot.Core.OS.has_feature,
         Godot.Core.OS.has_touchscreen_ui_hint,
         Godot.Core.OS.has_virtual_keyboard,
         Godot.Core.OS.hide_virtual_keyboard, Godot.Core.OS.is_debug_build,
         Godot.Core.OS.is_ok_left_and_cancel_right,
+        Godot.Core.OS.is_process_running,
+        Godot.Core.OS.is_restart_on_exit_set,
         Godot.Core.OS.is_scancode_unicode, Godot.Core.OS.is_stdout_verbose,
         Godot.Core.OS.is_userfs_persistent,
         Godot.Core.OS.is_window_always_on_top,
@@ -129,7 +145,9 @@ module Godot.Core.OS
         Godot.Core.OS.keyboard_get_layout_count,
         Godot.Core.OS.keyboard_get_layout_language,
         Godot.Core.OS.keyboard_get_layout_name,
+        Godot.Core.OS.keyboard_get_scancode_from_physical,
         Godot.Core.OS.keyboard_set_current_layout, Godot.Core.OS.kill,
+        Godot.Core.OS.move_to_trash,
         Godot.Core.OS.move_window_to_foreground,
         Godot.Core.OS.native_video_is_playing,
         Godot.Core.OS.native_video_pause, Godot.Core.OS.native_video_play,
@@ -139,16 +157,24 @@ module Godot.Core.OS
         Godot.Core.OS.print_all_textures_by_size,
         Godot.Core.OS.print_resources_by_type,
         Godot.Core.OS.print_resources_in_use,
+        Godot.Core.OS.read_string_from_stdin,
         Godot.Core.OS.request_attention, Godot.Core.OS.request_permission,
         Godot.Core.OS.request_permissions, Godot.Core.OS.set_environment,
         Godot.Core.OS.set_icon, Godot.Core.OS.set_ime_active,
         Godot.Core.OS.set_ime_position, Godot.Core.OS.set_native_icon,
-        Godot.Core.OS.set_thread_name,
+        Godot.Core.OS.set_restart_on_exit, Godot.Core.OS.set_thread_name,
         Godot.Core.OS.set_use_file_access_save_and_swap,
         Godot.Core.OS.set_window_always_on_top,
         Godot.Core.OS.set_window_mouse_passthrough,
         Godot.Core.OS.set_window_title, Godot.Core.OS.shell_open,
-        Godot.Core.OS.show_virtual_keyboard)
+        Godot.Core.OS.show_virtual_keyboard,
+        Godot.Core.OS.show_virtual_keyboard_type,
+        Godot.Core.OS.tts_get_voices,
+        Godot.Core.OS.tts_get_voices_for_language,
+        Godot.Core.OS.tts_is_paused, Godot.Core.OS.tts_is_speaking,
+        Godot.Core.OS.tts_pause, Godot.Core.OS.tts_resume,
+        Godot.Core.OS.tts_set_utterance_callback, Godot.Core.OS.tts_speak,
+        Godot.Core.OS.tts_stop)
        where
 import Data.Coerce
 import Foreign.C
@@ -183,6 +209,9 @@ _OPENGL_CONTEXT = 4
 _MONTH_MARCH :: Int
 _MONTH_MARCH = 3
 
+_KEYBOARD_TYPE_PASSWORD :: Int
+_KEYBOARD_TYPE_PASSWORD = 6
+
 _DAY_FRIDAY :: Int
 _DAY_FRIDAY = 5
 
@@ -197,6 +226,9 @@ _MONTH_JULY = 7
 
 _SYSTEM_DIR_PICTURES :: Int
 _SYSTEM_DIR_PICTURES = 6
+
+_TTS_UTTERANCE_BOUNDARY :: Int
+_TTS_UTTERANCE_BOUNDARY = 3
 
 _MONTH_DECEMBER :: Int
 _MONTH_DECEMBER = 12
@@ -234,6 +266,9 @@ _POWERSTATE_CHARGED = 4
 _MONTH_APRIL :: Int
 _MONTH_APRIL = 4
 
+_KEYBOARD_TYPE_PHONE :: Int
+_KEYBOARD_TYPE_PHONE = 4
+
 _POWERSTATE_ON_BATTERY :: Int
 _POWERSTATE_ON_BATTERY = 1
 
@@ -246,8 +281,17 @@ _DISPLAY_HANDLE = 1
 _APPLICATION_HANDLE :: Int
 _APPLICATION_HANDLE = 0
 
+_TTS_UTTERANCE_CANCELED :: Int
+_TTS_UTTERANCE_CANCELED = 2
+
+_KEYBOARD_TYPE_NUMBER_DECIMAL :: Int
+_KEYBOARD_TYPE_NUMBER_DECIMAL = 3
+
 _MONTH_MAY :: Int
 _MONTH_MAY = 5
+
+_KEYBOARD_TYPE_MULTILINE :: Int
+_KEYBOARD_TYPE_MULTILINE = 1
 
 _SCREEN_ORIENTATION_REVERSE_PORTRAIT :: Int
 _SCREEN_ORIENTATION_REVERSE_PORTRAIT = 3
@@ -270,6 +314,9 @@ _MONTH_SEPTEMBER = 9
 _VIDEO_DRIVER_GLES2 :: Int
 _VIDEO_DRIVER_GLES2 = 1
 
+_KEYBOARD_TYPE_EMAIL_ADDRESS :: Int
+_KEYBOARD_TYPE_EMAIL_ADDRESS = 5
+
 _POWERSTATE_CHARGING :: Int
 _POWERSTATE_CHARGING = 3
 
@@ -279,17 +326,32 @@ _MONTH_FEBRUARY = 2
 _MONTH_JUNE :: Int
 _MONTH_JUNE = 6
 
+_KEYBOARD_TYPE_NUMBER :: Int
+_KEYBOARD_TYPE_NUMBER = 2
+
+_KEYBOARD_TYPE_URL :: Int
+_KEYBOARD_TYPE_URL = 7
+
 _SCREEN_ORIENTATION_REVERSE_LANDSCAPE :: Int
 _SCREEN_ORIENTATION_REVERSE_LANDSCAPE = 2
 
+_KEYBOARD_TYPE_DEFAULT :: Int
+_KEYBOARD_TYPE_DEFAULT = 0
+
 _DAY_SATURDAY :: Int
 _DAY_SATURDAY = 6
+
+_TTS_UTTERANCE_ENDED :: Int
+_TTS_UTTERANCE_ENDED = 1
 
 _WINDOW_VIEW :: Int
 _WINDOW_VIEW = 3
 
 _WINDOW_HANDLE :: Int
 _WINDOW_HANDLE = 2
+
+_TTS_UTTERANCE_STARTED :: Int
+_TTS_UTTERANCE_STARTED = 0
 
 _SCREEN_ORIENTATION_LANDSCAPE :: Int
 _SCREEN_ORIENTATION_LANDSCAPE = 0
@@ -1408,7 +1470,7 @@ instance NodeProperty OS "window_minimized" Bool 'False where
 {-# NOINLINE bindOS_get_window_per_pixel_transparency_enabled #-}
 
 -- | If @true@, the window background is transparent and the window frame is removed.
---   			Use @get_tree().get_root().set_transparent_background(true)@ to disable main viewport background rendering.
+--   			Enable @ProjectSettings.rendering/viewport/transparent_background@ or call @get_tree().get_root().set_transparent_background(true)@ to disable background rendering on the root @Viewport@.
 --   			__Note:__ This property has no effect if @ProjectSettings.display/window/per_pixel_transparency/allowed@ setting is disabled.
 --   			__Note:__ This property is implemented on HTML5, Linux, macOS, Windows, and Android. It can't be changed at runtime for Android. Use @ProjectSettings.display/window/per_pixel_transparency/enabled@ to set it at startup instead.
 bindOS_get_window_per_pixel_transparency_enabled :: MethodBind
@@ -1421,7 +1483,7 @@ bindOS_get_window_per_pixel_transparency_enabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the window background is transparent and the window frame is removed.
---   			Use @get_tree().get_root().set_transparent_background(true)@ to disable main viewport background rendering.
+--   			Enable @ProjectSettings.rendering/viewport/transparent_background@ or call @get_tree().get_root().set_transparent_background(true)@ to disable background rendering on the root @Viewport@.
 --   			__Note:__ This property has no effect if @ProjectSettings.display/window/per_pixel_transparency/allowed@ setting is disabled.
 --   			__Note:__ This property is implemented on HTML5, Linux, macOS, Windows, and Android. It can't be changed at runtime for Android. Use @ProjectSettings.display/window/per_pixel_transparency/enabled@ to set it at startup instead.
 get_window_per_pixel_transparency_enabled ::
@@ -1449,7 +1511,7 @@ instance NodeMethod OS "get_window_per_pixel_transparency_enabled"
 {-# NOINLINE bindOS_set_window_per_pixel_transparency_enabled #-}
 
 -- | If @true@, the window background is transparent and the window frame is removed.
---   			Use @get_tree().get_root().set_transparent_background(true)@ to disable main viewport background rendering.
+--   			Enable @ProjectSettings.rendering/viewport/transparent_background@ or call @get_tree().get_root().set_transparent_background(true)@ to disable background rendering on the root @Viewport@.
 --   			__Note:__ This property has no effect if @ProjectSettings.display/window/per_pixel_transparency/allowed@ setting is disabled.
 --   			__Note:__ This property is implemented on HTML5, Linux, macOS, Windows, and Android. It can't be changed at runtime for Android. Use @ProjectSettings.display/window/per_pixel_transparency/enabled@ to set it at startup instead.
 bindOS_set_window_per_pixel_transparency_enabled :: MethodBind
@@ -1462,7 +1524,7 @@ bindOS_set_window_per_pixel_transparency_enabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, the window background is transparent and the window frame is removed.
---   			Use @get_tree().get_root().set_transparent_background(true)@ to disable main viewport background rendering.
+--   			Enable @ProjectSettings.rendering/viewport/transparent_background@ or call @get_tree().get_root().set_transparent_background(true)@ to disable background rendering on the root @Viewport@.
 --   			__Note:__ This property has no effect if @ProjectSettings.display/window/per_pixel_transparency/allowed@ setting is disabled.
 --   			__Note:__ This property is implemented on HTML5, Linux, macOS, Windows, and Android. It can't be changed at runtime for Android. Use @ProjectSettings.display/window/per_pixel_transparency/enabled@ to set it at startup instead.
 set_window_per_pixel_transparency_enabled ::
@@ -1818,6 +1880,31 @@ close_midi_inputs cls
 instance NodeMethod OS "close_midi_inputs" '[] (IO ()) where
         nodeMethod = Godot.Core.OS.close_midi_inputs
 
+{-# NOINLINE bindOS_crash #-}
+
+-- | Crashes the engine (or the editor if called within a @tool@ script). This should @i@only@/i@ be used for testing the system's crash handler, not for any other purpose. For general error reporting, use (in order of preference) @method @GDScript.assert@, @method @GDScript.push_error@ or @method alert@. See also @method kill@.
+bindOS_crash :: MethodBind
+bindOS_crash
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "crash" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Crashes the engine (or the editor if called within a @tool@ script). This should @i@only@/i@ be used for testing the system's crash handler, not for any other purpose. For general error reporting, use (in order of preference) @method @GDScript.assert@, @method @GDScript.push_error@ or @method alert@. See also @method kill@.
+crash :: (OS :< cls, Object :< cls) => cls -> GodotString -> IO ()
+crash cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_crash (upcast cls) arrPtr len >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "crash" '[GodotString] (IO ()) where
+        nodeMethod = Godot.Core.OS.crash
+
 {-# NOINLINE bindOS_delay_msec #-}
 
 -- | Delays execution of the current thread by @msec@ milliseconds. @msec@ must be greater than or equal to @0@. Otherwise, @method delay_msec@ will do nothing and will print an error message.
@@ -1952,6 +2039,7 @@ instance NodeMethod OS "dump_resources_to_file" '[GodotString]
 --   				This method has slightly different behavior based on whether the @blocking@ mode is enabled.
 --   				If @blocking@ is @true@, the Godot thread will pause its execution while waiting for the process to terminate. The shell output of the process will be written to the @output@ array as a single string. When the process terminates, the Godot thread will resume execution.
 --   				If @blocking@ is @false@, the Godot thread will continue while the new process runs. It is not possible to retrieve the shell output in non-blocking mode, so @output@ will be empty.
+--   				On Windows, if @open_console@ is @true@ and process is console app, new terminal window will be opened, it's ignored on other platforms.
 --   				The return value also depends on the blocking mode. When blocking, the method will return an exit code of the process. When non-blocking, the method returns a process ID, which you can use to monitor the process (and potentially terminate it with @method kill@). If the process forking (non-blocking) or opening (blocking) fails, the method will return @-1@ or another exit code.
 --   				Example of blocking mode and retrieving the shell output:
 --   				
@@ -1996,6 +2084,7 @@ bindOS_execute
 --   				This method has slightly different behavior based on whether the @blocking@ mode is enabled.
 --   				If @blocking@ is @true@, the Godot thread will pause its execution while waiting for the process to terminate. The shell output of the process will be written to the @output@ array as a single string. When the process terminates, the Godot thread will resume execution.
 --   				If @blocking@ is @false@, the Godot thread will continue while the new process runs. It is not possible to retrieve the shell output in non-blocking mode, so @output@ will be empty.
+--   				On Windows, if @open_console@ is @true@ and process is console app, new terminal window will be opened, it's ignored on other platforms.
 --   				The return value also depends on the blocking mode. When blocking, the method will return an exit code of the process. When non-blocking, the method returns a process ID, which you can use to monitor the process (and potentially terminate it with @method kill@). If the process forking (non-blocking) or opening (blocking) fails, the method will return @-1@ or another exit code.
 --   				Example of blocking mode and retrieving the shell output:
 --   				
@@ -2031,13 +2120,14 @@ execute ::
           cls ->
             GodotString ->
               PoolStringArray ->
-                Maybe Bool -> Maybe Array -> Maybe Bool -> IO Int
-execute cls arg1 arg2 arg3 arg4 arg5
+                Maybe Bool -> Maybe Array -> Maybe Bool -> Maybe Bool -> IO Int
+execute cls arg1 arg2 arg3 arg4 arg5 arg6
   = withVariantArray
       [toVariant arg1, toVariant arg2,
        maybe (VariantBool True) toVariant arg3,
        defaultedVariant VariantArray V.empty arg4,
-       maybe (VariantBool False) toVariant arg5]
+       maybe (VariantBool False) toVariant arg5,
+       maybe (VariantBool False) toVariant arg6]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindOS_execute (upcast cls) arrPtr len >>=
            \ (err, var) ->
@@ -2046,7 +2136,7 @@ execute cls arg1 arg2 arg3 arg4 arg5
 
 instance NodeMethod OS "execute"
            '[GodotString, PoolStringArray, Maybe Bool, Maybe Array,
-             Maybe Bool]
+             Maybe Bool, Maybe Bool]
            (IO Int)
          where
         nodeMethod = Godot.Core.OS.execute
@@ -2145,7 +2235,7 @@ instance NodeMethod OS "get_audio_driver_name" '[Int]
 
 {-# NOINLINE bindOS_get_cache_dir #-}
 
--- | Returns the @i@global@/i@ cache data directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_CACHE_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_config_dir@ and @method get_data_dir@.
+-- | Returns the @i@global@/i@ cache data directory according to the operating system's standards. On Linux, this path can be overridden by setting the @XDG_CACHE_HOME@ environment variable before starting the project. See @url=$DOCS_URL/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_config_dir@ and @method get_data_dir@.
 --   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
 bindOS_get_cache_dir :: MethodBind
 bindOS_get_cache_dir
@@ -2156,7 +2246,7 @@ bindOS_get_cache_dir
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the @i@global@/i@ cache data directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_CACHE_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_config_dir@ and @method get_data_dir@.
+-- | Returns the @i@global@/i@ cache data directory according to the operating system's standards. On Linux, this path can be overridden by setting the @XDG_CACHE_HOME@ environment variable before starting the project. See @url=$DOCS_URL/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_config_dir@ and @method get_data_dir@.
 --   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
 get_cache_dir ::
                 (OS :< cls, Object :< cls) => cls -> IO GodotString
@@ -2187,6 +2277,10 @@ instance NodeMethod OS "get_cache_dir" '[] (IO GodotString) where
 --   				    if argument.find("=") > -1:
 --   				        var key_value = argument.split("=")
 --   				        arguments@key_value@0@.lstrip("--")@ = key_value@1@
+--   				    else:
+--   				        # Options without an argument will be present in the dictionary,
+--   				        # with the value set to an empty string.
+--   				        arguments@argument.lstrip("--")@ = ""
 --   				
 --   @
 bindOS_get_cmdline_args :: MethodBind
@@ -2211,6 +2305,10 @@ bindOS_get_cmdline_args
 --   				    if argument.find("=") > -1:
 --   				        var key_value = argument.split("=")
 --   				        arguments@key_value@0@.lstrip("--")@ = key_value@1@
+--   				    else:
+--   				        # Options without an argument will be present in the dictionary,
+--   				        # with the value set to an empty string.
+--   				        arguments@argument.lstrip("--")@ = ""
 --   				
 --   @
 get_cmdline_args ::
@@ -2231,7 +2329,7 @@ instance NodeMethod OS "get_cmdline_args" '[] (IO PoolStringArray)
 
 {-# NOINLINE bindOS_get_config_dir #-}
 
--- | Returns the @i@global@/i@ user configuration directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_CONFIG_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_data_dir@.
+-- | Returns the @i@global@/i@ user configuration directory according to the operating system's standards. On Linux, this path can be overridden by setting the @XDG_CONFIG_HOME@ environment variable before starting the project. See @url=$DOCS_URL/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_data_dir@.
 --   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
 bindOS_get_config_dir :: MethodBind
 bindOS_get_config_dir
@@ -2242,7 +2340,7 @@ bindOS_get_config_dir
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the @i@global@/i@ user configuration directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_CONFIG_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_data_dir@.
+-- | Returns the @i@global@/i@ user configuration directory according to the operating system's standards. On Linux, this path can be overridden by setting the @XDG_CONFIG_HOME@ environment variable before starting the project. See @url=$DOCS_URL/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_data_dir@.
 --   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
 get_config_dir ::
                  (OS :< cls, Object :< cls) => cls -> IO GodotString
@@ -2327,7 +2425,7 @@ instance NodeMethod OS "get_current_video_driver" '[] (IO Int)
 
 {-# NOINLINE bindOS_get_data_dir #-}
 
--- | Returns the @i@global@/i@ user data directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_DATA_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_config_dir@.
+-- | Returns the @i@global@/i@ user data directory according to the operating system's standards. On Linux, this path can be overridden by setting the @XDG_DATA_HOME@ environment variable before starting the project. See @url=$DOCS_URL/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_config_dir@.
 --   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
 bindOS_get_data_dir :: MethodBind
 bindOS_get_data_dir
@@ -2338,7 +2436,7 @@ bindOS_get_data_dir
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the @i@global@/i@ user data directory according to the operating system's standards. On desktop platforms, this path can be overridden by setting the @XDG_DATA_HOME@ environment variable before starting the project. See @url=https://docs.godotengine.org/en/latest/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_config_dir@.
+-- | Returns the @i@global@/i@ user data directory according to the operating system's standards. On Linux, this path can be overridden by setting the @XDG_DATA_HOME@ environment variable before starting the project. See @url=$DOCS_URL/tutorials/io/data_paths.html@File paths in Godot projects@/url@ in the documentation for more information. See also @method get_cache_dir@ and @method get_config_dir@.
 --   				Not to be confused with @method get_user_data_dir@, which returns the @i@project-specific@/i@ user data path.
 get_data_dir :: (OS :< cls, Object :< cls) => cls -> IO GodotString
 get_data_dir cls
@@ -2355,7 +2453,8 @@ instance NodeMethod OS "get_data_dir" '[] (IO GodotString) where
 
 {-# NOINLINE bindOS_get_date #-}
 
--- | Returns current date as a dictionary of keys: @year@, @month@, @day@, @weekday@, @dst@ (Daylight Savings Time).
+-- | Deprecated, use @method Time.get_date_dict_from_system@ instead.
+--   				Returns current date as a dictionary of keys: @year@, @month@, @day@, @weekday@, @dst@ (Daylight Savings Time).
 bindOS_get_date :: MethodBind
 bindOS_get_date
   = unsafePerformIO $
@@ -2365,7 +2464,8 @@ bindOS_get_date
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns current date as a dictionary of keys: @year@, @month@, @day@, @weekday@, @dst@ (Daylight Savings Time).
+-- | Deprecated, use @method Time.get_date_dict_from_system@ instead.
+--   				Returns current date as a dictionary of keys: @year@, @month@, @day@, @weekday@, @dst@ (Daylight Savings Time).
 get_date ::
            (OS :< cls, Object :< cls) => cls -> Maybe Bool -> IO Dictionary
 get_date cls arg1
@@ -2382,7 +2482,8 @@ instance NodeMethod OS "get_date" '[Maybe Bool] (IO Dictionary)
 
 {-# NOINLINE bindOS_get_datetime #-}
 
--- | Returns current datetime as a dictionary of keys: @year@, @month@, @day@, @weekday@, @dst@ (Daylight Savings Time), @hour@, @minute@, @second@.
+-- | Deprecated, use @method Time.get_datetime_dict_from_system@ instead.
+--   				Returns current datetime as a dictionary of keys: @year@, @month@, @day@, @weekday@, @dst@ (Daylight Savings Time), @hour@, @minute@, @second@.
 bindOS_get_datetime :: MethodBind
 bindOS_get_datetime
   = unsafePerformIO $
@@ -2392,7 +2493,8 @@ bindOS_get_datetime
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns current datetime as a dictionary of keys: @year@, @month@, @day@, @weekday@, @dst@ (Daylight Savings Time), @hour@, @minute@, @second@.
+-- | Deprecated, use @method Time.get_datetime_dict_from_system@ instead.
+--   				Returns current datetime as a dictionary of keys: @year@, @month@, @day@, @weekday@, @dst@ (Daylight Savings Time), @hour@, @minute@, @second@.
 get_datetime ::
                (OS :< cls, Object :< cls) => cls -> Maybe Bool -> IO Dictionary
 get_datetime cls arg1
@@ -2410,7 +2512,8 @@ instance NodeMethod OS "get_datetime" '[Maybe Bool] (IO Dictionary)
 
 {-# NOINLINE bindOS_get_datetime_from_unix_time #-}
 
--- | Gets a dictionary of time values corresponding to the given UNIX epoch time (in seconds).
+-- | Deprecated, use @method Time.get_datetime_dict_from_unix_time@ instead.
+--   				Gets a dictionary of time values corresponding to the given UNIX epoch time (in seconds).
 --   				The returned Dictionary's values will be the same as @method get_datetime@, with the exception of Daylight Savings Time as it cannot be determined from the epoch.
 bindOS_get_datetime_from_unix_time :: MethodBind
 bindOS_get_datetime_from_unix_time
@@ -2421,7 +2524,8 @@ bindOS_get_datetime_from_unix_time
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Gets a dictionary of time values corresponding to the given UNIX epoch time (in seconds).
+-- | Deprecated, use @method Time.get_datetime_dict_from_unix_time@ instead.
+--   				Gets a dictionary of time values corresponding to the given UNIX epoch time (in seconds).
 --   				The returned Dictionary's values will be the same as @method get_datetime@, with the exception of Daylight Savings Time as it cannot be determined from the epoch.
 get_datetime_from_unix_time ::
                               (OS :< cls, Object :< cls) => cls -> Int -> IO Dictionary
@@ -2441,6 +2545,37 @@ instance NodeMethod OS "get_datetime_from_unix_time" '[Int]
            (IO Dictionary)
          where
         nodeMethod = Godot.Core.OS.get_datetime_from_unix_time
+
+{-# NOINLINE bindOS_get_display_cutouts #-}
+
+-- | Returns an @Array@ of @Rect2@, each of which is the bounding rectangle for a display cutout or notch. These are non-functional areas on edge-to-edge screens used by cameras and sensors. Returns an empty array if the device does not have cutouts. See also @method get_window_safe_area@.
+--   				__Note:__ Currently only implemented on Android. Other platforms will return an empty array even if they do have display cutouts or notches.
+bindOS_get_display_cutouts :: MethodBind
+bindOS_get_display_cutouts
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_display_cutouts" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns an @Array@ of @Rect2@, each of which is the bounding rectangle for a display cutout or notch. These are non-functional areas on edge-to-edge screens used by cameras and sensors. Returns an empty array if the device does not have cutouts. See also @method get_window_safe_area@.
+--   				__Note:__ Currently only implemented on Android. Other platforms will return an empty array even if they do have display cutouts or notches.
+get_display_cutouts ::
+                      (OS :< cls, Object :< cls) => cls -> IO Array
+get_display_cutouts cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_display_cutouts (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_display_cutouts" '[] (IO Array) where
+        nodeMethod = Godot.Core.OS.get_display_cutouts
 
 {-# NOINLINE bindOS_get_dynamic_memory_usage #-}
 
@@ -2733,6 +2868,36 @@ instance NodeMethod OS "get_locale_language" '[] (IO GodotString)
          where
         nodeMethod = Godot.Core.OS.get_locale_language
 
+{-# NOINLINE bindOS_get_main_thread_id #-}
+
+-- | Returns the ID of the main thread. See @method get_thread_caller_id@.
+--   				__Note:__ Thread IDs are not deterministic and may be reused across application restarts.
+bindOS_get_main_thread_id :: MethodBind
+bindOS_get_main_thread_id
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_main_thread_id" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the ID of the main thread. See @method get_thread_caller_id@.
+--   				__Note:__ Thread IDs are not deterministic and may be reused across application restarts.
+get_main_thread_id :: (OS :< cls, Object :< cls) => cls -> IO Int
+get_main_thread_id cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_main_thread_id (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_main_thread_id" '[] (IO Int) where
+        nodeMethod = Godot.Core.OS.get_main_thread_id
+
 {-# NOINLINE bindOS_get_model_name #-}
 
 -- | Returns the model name of the current device.
@@ -2940,7 +3105,7 @@ instance NodeMethod OS "get_process_id" '[] (IO Int) where
 
 {-# NOINLINE bindOS_get_processor_count #-}
 
--- | Returns the number of threads available on the host machine.
+-- | Returns the number of @i@logical@/i@ CPU cores available on the host machine. On CPUs with HyperThreading enabled, this number will be greater than the number of @i@physical@/i@ CPU cores.
 bindOS_get_processor_count :: MethodBind
 bindOS_get_processor_count
   = unsafePerformIO $
@@ -2950,7 +3115,7 @@ bindOS_get_processor_count
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the number of threads available on the host machine.
+-- | Returns the number of @i@logical@/i@ CPU cores available on the host machine. On CPUs with HyperThreading enabled, this number will be greater than the number of @i@physical@/i@ CPU cores.
 get_processor_count :: (OS :< cls, Object :< cls) => cls -> IO Int
 get_processor_count cls
   = withVariantArray []
@@ -2965,6 +3130,38 @@ get_processor_count cls
 
 instance NodeMethod OS "get_processor_count" '[] (IO Int) where
         nodeMethod = Godot.Core.OS.get_processor_count
+
+{-# NOINLINE bindOS_get_processor_name #-}
+
+-- | Returns the name of the CPU model on the host machine (e.g. "Intel(R) Core(TM) i7-6700K CPU @ 4.00GHz").
+--   				__Note:__ This method is only implemented on Windows, macOS, Linux and iOS. On Android, HTML5 and UWP, @method get_processor_name@ returns an empty string.
+bindOS_get_processor_name :: MethodBind
+bindOS_get_processor_name
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_processor_name" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the name of the CPU model on the host machine (e.g. "Intel(R) Core(TM) i7-6700K CPU @ 4.00GHz").
+--   				__Note:__ This method is only implemented on Windows, macOS, Linux and iOS. On Android, HTML5 and UWP, @method get_processor_name@ returns an empty string.
+get_processor_name ::
+                     (OS :< cls, Object :< cls) => cls -> IO GodotString
+get_processor_name cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_processor_name (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_processor_name" '[] (IO GodotString)
+         where
+        nodeMethod = Godot.Core.OS.get_processor_name
 
 {-# NOINLINE bindOS_get_real_window_size #-}
 
@@ -2995,6 +3192,38 @@ get_real_window_size cls
 instance NodeMethod OS "get_real_window_size" '[] (IO Vector2)
          where
         nodeMethod = Godot.Core.OS.get_real_window_size
+
+{-# NOINLINE bindOS_get_restart_on_exit_arguments #-}
+
+-- | Returns the list of command line arguments that will be used when the project automatically restarts using @method set_restart_on_exit@. See also @method is_restart_on_exit_set@.
+bindOS_get_restart_on_exit_arguments :: MethodBind
+bindOS_get_restart_on_exit_arguments
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_restart_on_exit_arguments" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the list of command line arguments that will be used when the project automatically restarts using @method set_restart_on_exit@. See also @method is_restart_on_exit_set@.
+get_restart_on_exit_arguments ::
+                                (OS :< cls, Object :< cls) => cls -> IO PoolStringArray
+get_restart_on_exit_arguments cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_restart_on_exit_arguments
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_restart_on_exit_arguments" '[]
+           (IO PoolStringArray)
+         where
+        nodeMethod = Godot.Core.OS.get_restart_on_exit_arguments
 
 {-# NOINLINE bindOS_get_scancode_string #-}
 
@@ -3177,6 +3406,57 @@ instance NodeMethod OS "get_screen_position" '[Maybe Int]
            (IO Vector2)
          where
         nodeMethod = Godot.Core.OS.get_screen_position
+
+{-# NOINLINE bindOS_get_screen_refresh_rate #-}
+
+-- | Returns the current refresh rate of the specified screen. If @screen@ is @-1@ (the default value), the current screen will be used.
+--   				__Note:__ Returns @-1.0@ if Godot fails to find the refresh rate for the specified screen. On HTML5, @method get_screen_refresh_rate@ will always return @-1.0@ as there is no way to retrieve the refresh rate on that platform.
+--   				To fallback to a default refresh rate if the method fails, try:
+--   				
+--   @
+--   
+--   				var refresh_rate = OS.get_screen_refresh_rate()
+--   				if refresh_rate < 0:
+--   				    refresh_rate = 60.0
+--   				
+--   @
+bindOS_get_screen_refresh_rate :: MethodBind
+bindOS_get_screen_refresh_rate
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "get_screen_refresh_rate" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the current refresh rate of the specified screen. If @screen@ is @-1@ (the default value), the current screen will be used.
+--   				__Note:__ Returns @-1.0@ if Godot fails to find the refresh rate for the specified screen. On HTML5, @method get_screen_refresh_rate@ will always return @-1.0@ as there is no way to retrieve the refresh rate on that platform.
+--   				To fallback to a default refresh rate if the method fails, try:
+--   				
+--   @
+--   
+--   				var refresh_rate = OS.get_screen_refresh_rate()
+--   				if refresh_rate < 0:
+--   				    refresh_rate = 60.0
+--   				
+--   @
+get_screen_refresh_rate ::
+                          (OS :< cls, Object :< cls) => cls -> Maybe Int -> IO Float
+get_screen_refresh_rate cls arg1
+  = withVariantArray [maybe (VariantInt (-1)) toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_get_screen_refresh_rate (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "get_screen_refresh_rate" '[Maybe Int]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.OS.get_screen_refresh_rate
 
 {-# NOINLINE bindOS_get_screen_scale #-}
 
@@ -3517,7 +3797,8 @@ instance NodeMethod OS "get_thread_caller_id" '[] (IO Int) where
 
 {-# NOINLINE bindOS_get_ticks_msec #-}
 
--- | Returns the amount of time passed in milliseconds since the engine started.
+-- | Deprecated, use @method Time.get_ticks_msec@ instead.
+--   				Returns the amount of time passed in milliseconds since the engine started.
 bindOS_get_ticks_msec :: MethodBind
 bindOS_get_ticks_msec
   = unsafePerformIO $
@@ -3527,7 +3808,8 @@ bindOS_get_ticks_msec
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the amount of time passed in milliseconds since the engine started.
+-- | Deprecated, use @method Time.get_ticks_msec@ instead.
+--   				Returns the amount of time passed in milliseconds since the engine started.
 get_ticks_msec :: (OS :< cls, Object :< cls) => cls -> IO Int
 get_ticks_msec cls
   = withVariantArray []
@@ -3544,7 +3826,8 @@ instance NodeMethod OS "get_ticks_msec" '[] (IO Int) where
 
 {-# NOINLINE bindOS_get_ticks_usec #-}
 
--- | Returns the amount of time passed in microseconds since the engine started.
+-- | Deprecated, use @method Time.get_ticks_usec@ instead.
+--   				Returns the amount of time passed in microseconds since the engine started.
 bindOS_get_ticks_usec :: MethodBind
 bindOS_get_ticks_usec
   = unsafePerformIO $
@@ -3554,7 +3837,8 @@ bindOS_get_ticks_usec
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the amount of time passed in microseconds since the engine started.
+-- | Deprecated, use @method Time.get_ticks_usec@ instead.
+--   				Returns the amount of time passed in microseconds since the engine started.
 get_ticks_usec :: (OS :< cls, Object :< cls) => cls -> IO Int
 get_ticks_usec cls
   = withVariantArray []
@@ -3571,7 +3855,8 @@ instance NodeMethod OS "get_ticks_usec" '[] (IO Int) where
 
 {-# NOINLINE bindOS_get_time #-}
 
--- | Returns current time as a dictionary of keys: hour, minute, second.
+-- | Deprecated, use @method Time.get_time_dict_from_system@ instead.
+--   				Returns current time as a dictionary of keys: hour, minute, second.
 bindOS_get_time :: MethodBind
 bindOS_get_time
   = unsafePerformIO $
@@ -3581,7 +3866,8 @@ bindOS_get_time
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns current time as a dictionary of keys: hour, minute, second.
+-- | Deprecated, use @method Time.get_time_dict_from_system@ instead.
+--   				Returns current time as a dictionary of keys: hour, minute, second.
 get_time ::
            (OS :< cls, Object :< cls) => cls -> Maybe Bool -> IO Dictionary
 get_time cls arg1
@@ -3630,7 +3916,7 @@ instance NodeMethod OS "get_time_zone_info" '[] (IO Dictionary)
 
 -- | Returns a string that is unique to the device.
 --   				__Note:__ This string may change without notice if the user reinstalls/upgrades their operating system or changes their hardware. This means it should generally not be used to encrypt persistent data as the data saved before an unexpected ID change would become inaccessible. The returned string may also be falsified using external programs, so do not rely on the string returned by @method get_unique_id@ for security purposes.
---   				__Note:__ Returns an empty string on HTML5 and UWP, as this method isn't implemented on those platforms yet.
+--   				__Note:__ Returns an empty string and prints an error on HTML5, as this method cannot be implemented on this platform.
 bindOS_get_unique_id :: MethodBind
 bindOS_get_unique_id
   = unsafePerformIO $
@@ -3642,7 +3928,7 @@ bindOS_get_unique_id
 
 -- | Returns a string that is unique to the device.
 --   				__Note:__ This string may change without notice if the user reinstalls/upgrades their operating system or changes their hardware. This means it should generally not be used to encrypt persistent data as the data saved before an unexpected ID change would become inaccessible. The returned string may also be falsified using external programs, so do not rely on the string returned by @method get_unique_id@ for security purposes.
---   				__Note:__ Returns an empty string on HTML5 and UWP, as this method isn't implemented on those platforms yet.
+--   				__Note:__ Returns an empty string and prints an error on HTML5, as this method cannot be implemented on this platform.
 get_unique_id ::
                 (OS :< cls, Object :< cls) => cls -> IO GodotString
 get_unique_id cls
@@ -3661,6 +3947,7 @@ instance NodeMethod OS "get_unique_id" '[] (IO GodotString) where
 
 -- | Returns the current UNIX epoch timestamp in seconds.
 --   				__Important:__ This is the system clock that the user can manually set. __Never use__ this method for precise time calculation since its results are also subject to automatic adjustments by the operating system. __Always use__ @method get_ticks_usec@ or @method get_ticks_msec@ for precise time calculation instead, since they are guaranteed to be monotonic (i.e. never decrease).
+--   				__Note:__ To get a floating point timestamp with sub-second precision, use @method Time.get_unix_time_from_system@.
 bindOS_get_unix_time :: MethodBind
 bindOS_get_unix_time
   = unsafePerformIO $
@@ -3672,6 +3959,7 @@ bindOS_get_unix_time
 
 -- | Returns the current UNIX epoch timestamp in seconds.
 --   				__Important:__ This is the system clock that the user can manually set. __Never use__ this method for precise time calculation since its results are also subject to automatic adjustments by the operating system. __Always use__ @method get_ticks_usec@ or @method get_ticks_msec@ for precise time calculation instead, since they are guaranteed to be monotonic (i.e. never decrease).
+--   				__Note:__ To get a floating point timestamp with sub-second precision, use @method Time.get_unix_time_from_system@.
 get_unix_time :: (OS :< cls, Object :< cls) => cls -> IO Int
 get_unix_time cls
   = withVariantArray []
@@ -4018,6 +4306,32 @@ instance NodeMethod OS "global_menu_remove_item"
          where
         nodeMethod = Godot.Core.OS.global_menu_remove_item
 
+{-# NOINLINE bindOS_has_clipboard #-}
+
+-- | Returns @true@ if there is content on the clipboard.
+bindOS_has_clipboard :: MethodBind
+bindOS_has_clipboard
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "has_clipboard" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if there is content on the clipboard.
+has_clipboard :: (OS :< cls, Object :< cls) => cls -> IO Bool
+has_clipboard cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_has_clipboard (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "has_clipboard" '[] (IO Bool) where
+        nodeMethod = Godot.Core.OS.has_clipboard
+
 {-# NOINLINE bindOS_has_environment #-}
 
 -- | Returns @true@ if the environment variable with the name @variable@ exists.
@@ -4051,7 +4365,7 @@ instance NodeMethod OS "has_environment" '[GodotString] (IO Bool)
 
 {-# NOINLINE bindOS_has_feature #-}
 
--- | Returns @true@ if the feature for the given feature tag is supported in the currently running instance, depending on the platform, build etc. Can be used to check whether you're currently running a debug build, on a certain platform or arch, etc. Refer to the @url=https://docs.godotengine.org/en/3.4/tutorials/export/feature_tags.html@Feature Tags@/url@ documentation for more details.
+-- | Returns @true@ if the feature for the given feature tag is supported in the currently running instance, depending on the platform, build etc. Can be used to check whether you're currently running a debug build, on a certain platform or arch, etc. Refer to the @url=$DOCS_URL/tutorials/export/feature_tags.html@Feature Tags@/url@ documentation for more details.
 --   				__Note:__ Tag names are case-sensitive.
 bindOS_has_feature :: MethodBind
 bindOS_has_feature
@@ -4062,7 +4376,7 @@ bindOS_has_feature
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if the feature for the given feature tag is supported in the currently running instance, depending on the platform, build etc. Can be used to check whether you're currently running a debug build, on a certain platform or arch, etc. Refer to the @url=https://docs.godotengine.org/en/3.4/tutorials/export/feature_tags.html@Feature Tags@/url@ documentation for more details.
+-- | Returns @true@ if the feature for the given feature tag is supported in the currently running instance, depending on the platform, build etc. Can be used to check whether you're currently running a debug build, on a certain platform or arch, etc. Refer to the @url=$DOCS_URL/tutorials/export/feature_tags.html@Feature Tags@/url@ documentation for more details.
 --   				__Note:__ Tag names are case-sensitive.
 has_feature ::
               (OS :< cls, Object :< cls) => cls -> GodotString -> IO Bool
@@ -4226,6 +4540,68 @@ is_ok_left_and_cancel_right cls
 instance NodeMethod OS "is_ok_left_and_cancel_right" '[] (IO Bool)
          where
         nodeMethod = Godot.Core.OS.is_ok_left_and_cancel_right
+
+{-# NOINLINE bindOS_is_process_running #-}
+
+-- | Returns @true@ if the child process ID (@pid@) is still running or @false@ if it has terminated.
+--   				Must be a valid ID generated from @method execute@.
+--   				__Note:__ This method is implemented on Android, iOS, Linux, macOS and Windows.
+bindOS_is_process_running :: MethodBind
+bindOS_is_process_running
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "is_process_running" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if the child process ID (@pid@) is still running or @false@ if it has terminated.
+--   				Must be a valid ID generated from @method execute@.
+--   				__Note:__ This method is implemented on Android, iOS, Linux, macOS and Windows.
+is_process_running ::
+                     (OS :< cls, Object :< cls) => cls -> Int -> IO Bool
+is_process_running cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_is_process_running (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "is_process_running" '[Int] (IO Bool) where
+        nodeMethod = Godot.Core.OS.is_process_running
+
+{-# NOINLINE bindOS_is_restart_on_exit_set #-}
+
+-- | Returns @true@ if the project will automatically restart when it exits for any reason, @false@ otherwise. See also @method set_restart_on_exit@ and @method get_restart_on_exit_arguments@.
+bindOS_is_restart_on_exit_set :: MethodBind
+bindOS_is_restart_on_exit_set
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "is_restart_on_exit_set" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if the project will automatically restart when it exits for any reason, @false@ otherwise. See also @method set_restart_on_exit@ and @method get_restart_on_exit_arguments@.
+is_restart_on_exit_set ::
+                         (OS :< cls, Object :< cls) => cls -> IO Bool
+is_restart_on_exit_set cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_is_restart_on_exit_set (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "is_restart_on_exit_set" '[] (IO Bool) where
+        nodeMethod = Godot.Core.OS.is_restart_on_exit_set
 
 {-# NOINLINE bindOS_is_scancode_unicode #-}
 
@@ -4504,6 +4880,40 @@ instance NodeMethod OS "keyboard_get_layout_name" '[Int]
          where
         nodeMethod = Godot.Core.OS.keyboard_get_layout_name
 
+{-# NOINLINE bindOS_keyboard_get_scancode_from_physical #-}
+
+-- | Converts a physical (US QWERTY) @scancode@ to one in the active keyboard layout.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+bindOS_keyboard_get_scancode_from_physical :: MethodBind
+bindOS_keyboard_get_scancode_from_physical
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "keyboard_get_scancode_from_physical" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Converts a physical (US QWERTY) @scancode@ to one in the active keyboard layout.
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+keyboard_get_scancode_from_physical ::
+                                      (OS :< cls, Object :< cls) => cls -> Int -> IO Int
+keyboard_get_scancode_from_physical cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_keyboard_get_scancode_from_physical
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "keyboard_get_scancode_from_physical" '[Int]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.OS.keyboard_get_scancode_from_physical
+
 {-# NOINLINE bindOS_keyboard_set_current_layout #-}
 
 -- | Sets active keyboard layout.
@@ -4539,7 +4949,7 @@ instance NodeMethod OS "keyboard_set_current_layout" '[Int] (IO ())
 
 {-# NOINLINE bindOS_kill #-}
 
--- | Kill (terminate) the process identified by the given process ID (@pid@), e.g. the one returned by @method execute@ in non-blocking mode.
+-- | Kill (terminate) the process identified by the given process ID (@pid@), e.g. the one returned by @method execute@ in non-blocking mode. See also @method crash@.
 --   				__Note:__ This method can also be used to kill processes that were not spawned by the game.
 --   				__Note:__ This method is implemented on Android, iOS, Linux, macOS and Windows.
 bindOS_kill :: MethodBind
@@ -4551,7 +4961,7 @@ bindOS_kill
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Kill (terminate) the process identified by the given process ID (@pid@), e.g. the one returned by @method execute@ in non-blocking mode.
+-- | Kill (terminate) the process identified by the given process ID (@pid@), e.g. the one returned by @method execute@ in non-blocking mode. See also @method crash@.
 --   				__Note:__ This method can also be used to kill processes that were not spawned by the game.
 --   				__Note:__ This method is implemented on Android, iOS, Linux, macOS and Windows.
 kill :: (OS :< cls, Object :< cls) => cls -> Int -> IO Int
@@ -4565,6 +4975,52 @@ kill cls arg1
 
 instance NodeMethod OS "kill" '[Int] (IO Int) where
         nodeMethod = Godot.Core.OS.kill
+
+{-# NOINLINE bindOS_move_to_trash #-}
+
+-- | Moves the file or directory to the system's recycle bin. See also @method Directory.remove@.
+--   				The method takes only global paths, so you may need to use @method ProjectSettings.globalize_path@. Do not use it for files in @res://@ as it will not work in exported project.
+--   				__Note:__ If the user has disabled the recycle bin on their system, the file will be permanently deleted instead.
+--   				
+--   @
+--   
+--   				var file_to_remove = "user://slot1.sav"
+--   				OS.move_to_trash(ProjectSettings.globalize_path(file_to_remove))
+--   				
+--   @
+bindOS_move_to_trash :: MethodBind
+bindOS_move_to_trash
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "move_to_trash" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Moves the file or directory to the system's recycle bin. See also @method Directory.remove@.
+--   				The method takes only global paths, so you may need to use @method ProjectSettings.globalize_path@. Do not use it for files in @res://@ as it will not work in exported project.
+--   				__Note:__ If the user has disabled the recycle bin on their system, the file will be permanently deleted instead.
+--   				
+--   @
+--   
+--   				var file_to_remove = "user://slot1.sav"
+--   				OS.move_to_trash(ProjectSettings.globalize_path(file_to_remove))
+--   				
+--   @
+move_to_trash ::
+                (OS :< cls, Object :< cls) => cls -> GodotString -> IO Int
+move_to_trash cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_move_to_trash (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "move_to_trash" '[GodotString] (IO Int)
+         where
+        nodeMethod = Godot.Core.OS.move_to_trash
 
 {-# NOINLINE bindOS_move_window_to_foreground #-}
 
@@ -4908,6 +5364,39 @@ instance NodeMethod OS "print_resources_in_use" '[Maybe Bool]
          where
         nodeMethod = Godot.Core.OS.print_resources_in_use
 
+{-# NOINLINE bindOS_read_string_from_stdin #-}
+
+-- | Reads a user input string from the standard input (usually the terminal). This operation is @i@blocking@/i@, which causes the window to freeze if @method read_string_from_stdin@ is called on the main thread. The thread calling @method read_string_from_stdin@ will block until the program receives a line break in standard input (usually by the user pressing @kbd@Enter@/kbd@).
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+bindOS_read_string_from_stdin :: MethodBind
+bindOS_read_string_from_stdin
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "read_string_from_stdin" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Reads a user input string from the standard input (usually the terminal). This operation is @i@blocking@/i@, which causes the window to freeze if @method read_string_from_stdin@ is called on the main thread. The thread calling @method read_string_from_stdin@ will block until the program receives a line break in standard input (usually by the user pressing @kbd@Enter@/kbd@).
+--   				__Note:__ This method is implemented on Linux, macOS and Windows.
+read_string_from_stdin ::
+                         (OS :< cls, Object :< cls) => cls -> IO GodotString
+read_string_from_stdin cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_read_string_from_stdin (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "read_string_from_stdin" '[]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.OS.read_string_from_stdin
+
 {-# NOINLINE bindOS_request_attention #-}
 
 -- | Request the user attention to the window. It'll flash the taskbar button on Windows or bounce the dock icon on OSX.
@@ -5160,6 +5649,47 @@ instance NodeMethod OS "set_native_icon" '[GodotString] (IO ())
          where
         nodeMethod = Godot.Core.OS.set_native_icon
 
+{-# NOINLINE bindOS_set_restart_on_exit #-}
+
+-- | If @restart@ is @true@, restarts the project automatically when it is exited with @method SceneTree.quit@ or @Node.NOTIFICATION_WM_QUIT_REQUEST@. Command line @arguments@ can be supplied. To restart the project with the same command line arguments as originally used to run the project, pass @method get_cmdline_args@ as the value for @arguments@.
+--   				@method set_restart_on_exit@ can be used to apply setting changes that require a restart. See also @method is_restart_on_exit_set@ and @method get_restart_on_exit_arguments@.
+--   				__Note:__ This method is only effective on desktop platforms, and only when the project isn't started from the editor. It will have no effect on mobile and Web platforms, or when the project is started from the editor.
+--   				__Note:__ If the project process crashes or is @i@killed@/i@ by the user (by sending @SIGKILL@ instead of the usual @SIGTERM@), the project won't restart automatically.
+bindOS_set_restart_on_exit :: MethodBind
+bindOS_set_restart_on_exit
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "set_restart_on_exit" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @restart@ is @true@, restarts the project automatically when it is exited with @method SceneTree.quit@ or @Node.NOTIFICATION_WM_QUIT_REQUEST@. Command line @arguments@ can be supplied. To restart the project with the same command line arguments as originally used to run the project, pass @method get_cmdline_args@ as the value for @arguments@.
+--   				@method set_restart_on_exit@ can be used to apply setting changes that require a restart. See also @method is_restart_on_exit_set@ and @method get_restart_on_exit_arguments@.
+--   				__Note:__ This method is only effective on desktop platforms, and only when the project isn't started from the editor. It will have no effect on mobile and Web platforms, or when the project is started from the editor.
+--   				__Note:__ If the project process crashes or is @i@killed@/i@ by the user (by sending @SIGKILL@ instead of the usual @SIGTERM@), the project won't restart automatically.
+set_restart_on_exit ::
+                      (OS :< cls, Object :< cls) =>
+                      cls -> Bool -> Maybe PoolStringArray -> IO ()
+set_restart_on_exit cls arg1 arg2
+  = withVariantArray
+      [toVariant arg1,
+       defaultedVariant VariantPoolStringArray V.empty arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_set_restart_on_exit (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "set_restart_on_exit"
+           '[Bool, Maybe PoolStringArray]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.OS.set_restart_on_exit
+
 {-# NOINLINE bindOS_set_thread_name #-}
 
 -- | Sets the name of the current thread.
@@ -5358,8 +5888,9 @@ instance NodeMethod OS "set_window_title" '[GodotString] (IO ())
 -- | Requests the OS to open a resource with the most appropriate program. For example:
 --   				- @OS.shell_open("C:\\Users\name\Downloads")@ on Windows opens the file explorer at the user's Downloads folder.
 --   				- @OS.shell_open("https://godotengine.org")@ opens the default web browser on the official Godot website.
---   				- @OS.shell_open("mailto:example@example.com")@ opens the default email client with the "To" field set to @example@example.com@. See @url=https://blog.escapecreative.com/customizing-mailto-links/@Customizing @mailto:@ Links@/url@ for a list of fields that can be added.
+--   				- @OS.shell_open("mailto:example@example.com")@ opens the default email client with the "To" field set to @example@example.com@. See @url=https://datatracker.ietf.org/doc/html/rfc2368@RFC 2368 - The @mailto@ URL scheme@/url@ for a list of fields that can be added.
 --   				Use @method ProjectSettings.globalize_path@ to convert a @res://@ or @user://@ path into a system path for use with this method.
+--   				__Note:__ Use @method String.percent_encode@ to encode characters within URLs in a URL-safe, portable way. This is especially required for line breaks. Otherwise, @method shell_open@ may not work correctly in a project exported to the Web platform.
 --   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS and Windows.
 bindOS_shell_open :: MethodBind
 bindOS_shell_open
@@ -5373,8 +5904,9 @@ bindOS_shell_open
 -- | Requests the OS to open a resource with the most appropriate program. For example:
 --   				- @OS.shell_open("C:\\Users\name\Downloads")@ on Windows opens the file explorer at the user's Downloads folder.
 --   				- @OS.shell_open("https://godotengine.org")@ opens the default web browser on the official Godot website.
---   				- @OS.shell_open("mailto:example@example.com")@ opens the default email client with the "To" field set to @example@example.com@. See @url=https://blog.escapecreative.com/customizing-mailto-links/@Customizing @mailto:@ Links@/url@ for a list of fields that can be added.
+--   				- @OS.shell_open("mailto:example@example.com")@ opens the default email client with the "To" field set to @example@example.com@. See @url=https://datatracker.ietf.org/doc/html/rfc2368@RFC 2368 - The @mailto@ URL scheme@/url@ for a list of fields that can be added.
 --   				Use @method ProjectSettings.globalize_path@ to convert a @res://@ or @user://@ path into a system path for use with this method.
+--   				__Note:__ Use @method String.percent_encode@ to encode characters within URLs in a URL-safe, portable way. This is especially required for line breaks. Otherwise, @method shell_open@ may not work correctly in a project exported to the Web platform.
 --   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS and Windows.
 shell_open ::
              (OS :< cls, Object :< cls) => cls -> GodotString -> IO Int
@@ -5395,7 +5927,8 @@ instance NodeMethod OS "shell_open" '[GodotString] (IO Int) where
 -- | Shows the virtual keyboard if the platform has one.
 --   				The @existing_text@ parameter is useful for implementing your own @LineEdit@ or @TextEdit@, as it tells the virtual keyboard what text has already been typed (the virtual keyboard uses it for auto-correct and predictions).
 --   				The @multiline@ parameter needs to be set to @true@ to be able to enter multiple lines of text, as in @TextEdit@.
---   				__Note:__ This method is implemented on Android, iOS and UWP.
+--   				__Note:__ This method is equivalent to calling @method show_virtual_keyboard_type@ with either default or multiline keyboard type. It is kept for compatibility with previous Godot releases and should be considered @i@deprecated@/i@ and replaced by @method show_virtual_keyboard_type@.
+--   				__Note:__ This method is implemented on Android, iOS, UWP, and HTML5.
 bindOS_show_virtual_keyboard :: MethodBind
 bindOS_show_virtual_keyboard
   = unsafePerformIO $
@@ -5408,7 +5941,8 @@ bindOS_show_virtual_keyboard
 -- | Shows the virtual keyboard if the platform has one.
 --   				The @existing_text@ parameter is useful for implementing your own @LineEdit@ or @TextEdit@, as it tells the virtual keyboard what text has already been typed (the virtual keyboard uses it for auto-correct and predictions).
 --   				The @multiline@ parameter needs to be set to @true@ to be able to enter multiple lines of text, as in @TextEdit@.
---   				__Note:__ This method is implemented on Android, iOS and UWP.
+--   				__Note:__ This method is equivalent to calling @method show_virtual_keyboard_type@ with either default or multiline keyboard type. It is kept for compatibility with previous Godot releases and should be considered @i@deprecated@/i@ and replaced by @method show_virtual_keyboard_type@.
+--   				__Note:__ This method is implemented on Android, iOS, UWP, and HTML5.
 show_virtual_keyboard ::
                         (OS :< cls, Object :< cls) =>
                         cls -> Maybe GodotString -> Maybe Bool -> IO ()
@@ -5430,3 +5964,373 @@ instance NodeMethod OS "show_virtual_keyboard"
            (IO ())
          where
         nodeMethod = Godot.Core.OS.show_virtual_keyboard
+
+{-# NOINLINE bindOS_show_virtual_keyboard_type #-}
+
+-- | Shows the virtual keyboard if the platform has one.
+--   				The @existing_text@ parameter is useful for implementing your own @LineEdit@ or @TextEdit@, as it tells the virtual keyboard what text has already been typed (the virtual keyboard uses it for auto-correct and predictions).
+--   				The @type@ parameter allows selecting which virtual keyboard to show.
+--   				__Note:__ This method is implemented on Android, iOS, UWP, and HTML5.
+bindOS_show_virtual_keyboard_type :: MethodBind
+bindOS_show_virtual_keyboard_type
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "show_virtual_keyboard_type" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Shows the virtual keyboard if the platform has one.
+--   				The @existing_text@ parameter is useful for implementing your own @LineEdit@ or @TextEdit@, as it tells the virtual keyboard what text has already been typed (the virtual keyboard uses it for auto-correct and predictions).
+--   				The @type@ parameter allows selecting which virtual keyboard to show.
+--   				__Note:__ This method is implemented on Android, iOS, UWP, and HTML5.
+show_virtual_keyboard_type ::
+                             (OS :< cls, Object :< cls) =>
+                             cls -> Maybe GodotString -> Maybe Int -> IO ()
+show_virtual_keyboard_type cls arg1 arg2
+  = withVariantArray
+      [defaultedVariant VariantString "" arg1,
+       maybe (VariantInt (0)) toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_show_virtual_keyboard_type
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "show_virtual_keyboard_type"
+           '[Maybe GodotString, Maybe Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.OS.show_virtual_keyboard_type
+
+{-# NOINLINE bindOS_tts_get_voices #-}
+
+-- | Returns an @Array@ of voice information dictionaries.
+--   				Each @Dictionary@ contains two @String@ entries:
+--   				- @name@ is voice name.
+--   				- @id@ is voice identifier.
+--   				- @language@ is language code in @lang_Variant@ format. @lang@ part is a 2 or 3-letter code based on the ISO-639 standard, in lowercase. And @Variant@ part is an engine dependent string describing country, region or/and dialect.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+bindOS_tts_get_voices :: MethodBind
+bindOS_tts_get_voices
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "tts_get_voices" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns an @Array@ of voice information dictionaries.
+--   				Each @Dictionary@ contains two @String@ entries:
+--   				- @name@ is voice name.
+--   				- @id@ is voice identifier.
+--   				- @language@ is language code in @lang_Variant@ format. @lang@ part is a 2 or 3-letter code based on the ISO-639 standard, in lowercase. And @Variant@ part is an engine dependent string describing country, region or/and dialect.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+tts_get_voices :: (OS :< cls, Object :< cls) => cls -> IO Array
+tts_get_voices cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_tts_get_voices (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "tts_get_voices" '[] (IO Array) where
+        nodeMethod = Godot.Core.OS.tts_get_voices
+
+{-# NOINLINE bindOS_tts_get_voices_for_language #-}
+
+-- | Returns an @PoolStringArray@ of voice identifiers for the @language@.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+bindOS_tts_get_voices_for_language :: MethodBind
+bindOS_tts_get_voices_for_language
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "tts_get_voices_for_language" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns an @PoolStringArray@ of voice identifiers for the @language@.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+tts_get_voices_for_language ::
+                              (OS :< cls, Object :< cls) =>
+                              cls -> GodotString -> IO PoolStringArray
+tts_get_voices_for_language cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_tts_get_voices_for_language
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "tts_get_voices_for_language" '[GodotString]
+           (IO PoolStringArray)
+         where
+        nodeMethod = Godot.Core.OS.tts_get_voices_for_language
+
+{-# NOINLINE bindOS_tts_is_paused #-}
+
+-- | Returns @true@ if the synthesizer is in a paused state.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+bindOS_tts_is_paused :: MethodBind
+bindOS_tts_is_paused
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "tts_is_paused" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if the synthesizer is in a paused state.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+tts_is_paused :: (OS :< cls, Object :< cls) => cls -> IO Bool
+tts_is_paused cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_tts_is_paused (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "tts_is_paused" '[] (IO Bool) where
+        nodeMethod = Godot.Core.OS.tts_is_paused
+
+{-# NOINLINE bindOS_tts_is_speaking #-}
+
+-- | Returns @true@ if the synthesizer is generating speech, or have utterance waiting in the queue.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+bindOS_tts_is_speaking :: MethodBind
+bindOS_tts_is_speaking
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "tts_is_speaking" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if the synthesizer is generating speech, or have utterance waiting in the queue.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+tts_is_speaking :: (OS :< cls, Object :< cls) => cls -> IO Bool
+tts_is_speaking cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_tts_is_speaking (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "tts_is_speaking" '[] (IO Bool) where
+        nodeMethod = Godot.Core.OS.tts_is_speaking
+
+{-# NOINLINE bindOS_tts_pause #-}
+
+-- | Puts the synthesizer into a paused state.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+bindOS_tts_pause :: MethodBind
+bindOS_tts_pause
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "tts_pause" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Puts the synthesizer into a paused state.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+tts_pause :: (OS :< cls, Object :< cls) => cls -> IO ()
+tts_pause cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_tts_pause (upcast cls) arrPtr len >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "tts_pause" '[] (IO ()) where
+        nodeMethod = Godot.Core.OS.tts_pause
+
+{-# NOINLINE bindOS_tts_resume #-}
+
+-- | Resumes the synthesizer if it was paused.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+bindOS_tts_resume :: MethodBind
+bindOS_tts_resume
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "tts_resume" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Resumes the synthesizer if it was paused.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+tts_resume :: (OS :< cls, Object :< cls) => cls -> IO ()
+tts_resume cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_tts_resume (upcast cls) arrPtr len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "tts_resume" '[] (IO ()) where
+        nodeMethod = Godot.Core.OS.tts_resume
+
+{-# NOINLINE bindOS_tts_set_utterance_callback #-}
+
+-- | Adds a callback, which is called when the utterance has started, finished, canceled or reached a text boundary.
+--   				- @TTS_UTTERANCE_STARTED@, @TTS_UTTERANCE_ENDED@, and @TTS_UTTERANCE_CANCELED@ callable's method should take one @int@ parameter, the utterance id.
+--   				- @TTS_UTTERANCE_BOUNDARY@ callable's method should take two @int@ parameters, the index of the character and the utterance id.
+--   				__Note:__ The granularity of the boundary callbacks is engine dependent.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+bindOS_tts_set_utterance_callback :: MethodBind
+bindOS_tts_set_utterance_callback
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "tts_set_utterance_callback" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Adds a callback, which is called when the utterance has started, finished, canceled or reached a text boundary.
+--   				- @TTS_UTTERANCE_STARTED@, @TTS_UTTERANCE_ENDED@, and @TTS_UTTERANCE_CANCELED@ callable's method should take one @int@ parameter, the utterance id.
+--   				- @TTS_UTTERANCE_BOUNDARY@ callable's method should take two @int@ parameters, the index of the character and the utterance id.
+--   				__Note:__ The granularity of the boundary callbacks is engine dependent.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+tts_set_utterance_callback ::
+                             (OS :< cls, Object :< cls) =>
+                             cls -> Int -> Object -> GodotString -> IO ()
+tts_set_utterance_callback cls arg1 arg2 arg3
+  = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_tts_set_utterance_callback
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "tts_set_utterance_callback"
+           '[Int, Object, GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.OS.tts_set_utterance_callback
+
+{-# NOINLINE bindOS_tts_speak #-}
+
+-- | Adds an utterance to the queue. If @interrupt@ is @true@, the queue is cleared first.
+--   				- @voice@ identifier is one of the @"id"@ values returned by @method tts_get_voices@ or one of the values returned by @method tts_get_voices_for_language@.
+--   				- @volume@ ranges from @0@ (lowest) to @100@ (highest).
+--   				- @pitch@ ranges from @0.0@ (lowest) to @2.0@ (highest), @1.0@ is default pitch for the current voice.
+--   				- @rate@ ranges from @0.1@ (lowest) to @10.0@ (highest), @1.0@ is a normal speaking rate. Other values act as a percentage relative.
+--   				- @utterance_id@ is passed as a parameter to the callback functions.
+--   				__Note:__ On Windows and Linux, utterance @text@ can use SSML markup. SSML support is engine and voice dependent. If the engine does not support SSML, you should strip out all XML markup before calling @method tts_speak@.
+--   				__Note:__ The granularity of pitch, rate, and volume is engine and voice dependent. Values may be truncated.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+bindOS_tts_speak :: MethodBind
+bindOS_tts_speak
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "tts_speak" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Adds an utterance to the queue. If @interrupt@ is @true@, the queue is cleared first.
+--   				- @voice@ identifier is one of the @"id"@ values returned by @method tts_get_voices@ or one of the values returned by @method tts_get_voices_for_language@.
+--   				- @volume@ ranges from @0@ (lowest) to @100@ (highest).
+--   				- @pitch@ ranges from @0.0@ (lowest) to @2.0@ (highest), @1.0@ is default pitch for the current voice.
+--   				- @rate@ ranges from @0.1@ (lowest) to @10.0@ (highest), @1.0@ is a normal speaking rate. Other values act as a percentage relative.
+--   				- @utterance_id@ is passed as a parameter to the callback functions.
+--   				__Note:__ On Windows and Linux, utterance @text@ can use SSML markup. SSML support is engine and voice dependent. If the engine does not support SSML, you should strip out all XML markup before calling @method tts_speak@.
+--   				__Note:__ The granularity of pitch, rate, and volume is engine and voice dependent. Values may be truncated.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+tts_speak ::
+            (OS :< cls, Object :< cls) =>
+            cls ->
+              GodotString ->
+                GodotString ->
+                  Maybe Int ->
+                    Maybe Float -> Maybe Float -> Maybe Int -> Maybe Bool -> IO ()
+tts_speak cls arg1 arg2 arg3 arg4 arg5 arg6 arg7
+  = withVariantArray
+      [toVariant arg1, toVariant arg2,
+       maybe (VariantInt (50)) toVariant arg3,
+       maybe (VariantReal (1)) toVariant arg4,
+       maybe (VariantReal (1)) toVariant arg5,
+       maybe (VariantInt (0)) toVariant arg6,
+       maybe (VariantBool False) toVariant arg7]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_tts_speak (upcast cls) arrPtr len >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "tts_speak"
+           '[GodotString, GodotString, Maybe Int, Maybe Float, Maybe Float,
+             Maybe Int, Maybe Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.OS.tts_speak
+
+{-# NOINLINE bindOS_tts_stop #-}
+
+-- | Stops synthesis in progress and removes all utterances from the queue.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+bindOS_tts_stop :: MethodBind
+bindOS_tts_stop
+  = unsafePerformIO $
+      withCString "_OS" $
+        \ clsNamePtr ->
+          withCString "tts_stop" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Stops synthesis in progress and removes all utterances from the queue.
+--   				__Note:__ This method is implemented on Android, iOS, HTML5, Linux, macOS, and Windows.
+--   				__Note:__ @ProjectSettings.audio/general/text_to_speech@ should be @true@ to use text-to-speech.
+tts_stop :: (OS :< cls, Object :< cls) => cls -> IO ()
+tts_stop cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindOS_tts_stop (upcast cls) arrPtr len >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod OS "tts_stop" '[] (IO ()) where
+        nodeMethod = Godot.Core.OS.tts_stop

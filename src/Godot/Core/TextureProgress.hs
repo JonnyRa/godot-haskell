@@ -340,6 +340,7 @@ instance NodeMethod TextureProgress "get_progress_texture" '[]
 {-# NOINLINE bindTextureProgress_get_radial_center_offset #-}
 
 -- | Offsets @texture_progress@ if @fill_mode@ is @FILL_CLOCKWISE@ or @FILL_COUNTER_CLOCKWISE@.
+--   			__Note:__ The effective radial center always stays within the @texture_progress@ bounds. If you need to move it outside the texture's bounds, modify the @texture_progress@ to contain additional empty space where needed.
 bindTextureProgress_get_radial_center_offset :: MethodBind
 bindTextureProgress_get_radial_center_offset
   = unsafePerformIO $
@@ -350,6 +351,7 @@ bindTextureProgress_get_radial_center_offset
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Offsets @texture_progress@ if @fill_mode@ is @FILL_CLOCKWISE@ or @FILL_COUNTER_CLOCKWISE@.
+--   			__Note:__ The effective radial center always stays within the @texture_progress@ bounds. If you need to move it outside the texture's bounds, modify the @texture_progress@ to contain additional empty space where needed.
 get_radial_center_offset ::
                            (TextureProgress :< cls, Object :< cls) => cls -> IO Vector2
 get_radial_center_offset cls
@@ -372,6 +374,7 @@ instance NodeMethod TextureProgress "get_radial_center_offset" '[]
 {-# NOINLINE bindTextureProgress_get_radial_initial_angle #-}
 
 -- | Starting angle for the fill of @texture_progress@ if @fill_mode@ is @FILL_CLOCKWISE@ or @FILL_COUNTER_CLOCKWISE@. When the node's @value@ is equal to its @min_value@, the texture doesn't show up at all. When the @value@ increases, the texture fills and tends towards @radial_fill_degrees@.
+--   			__Note:__ @radial_initial_angle@ is wrapped between @0@ and @360@ degrees (inclusive).
 bindTextureProgress_get_radial_initial_angle :: MethodBind
 bindTextureProgress_get_radial_initial_angle
   = unsafePerformIO $
@@ -382,6 +385,7 @@ bindTextureProgress_get_radial_initial_angle
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Starting angle for the fill of @texture_progress@ if @fill_mode@ is @FILL_CLOCKWISE@ or @FILL_COUNTER_CLOCKWISE@. When the node's @value@ is equal to its @min_value@, the texture doesn't show up at all. When the @value@ increases, the texture fills and tends towards @radial_fill_degrees@.
+--   			__Note:__ @radial_initial_angle@ is wrapped between @0@ and @360@ degrees (inclusive).
 get_radial_initial_angle ::
                            (TextureProgress :< cls, Object :< cls) => cls -> IO Float
 get_radial_initial_angle cls
@@ -758,6 +762,7 @@ instance NodeMethod TextureProgress "set_progress_texture"
 {-# NOINLINE bindTextureProgress_set_radial_center_offset #-}
 
 -- | Offsets @texture_progress@ if @fill_mode@ is @FILL_CLOCKWISE@ or @FILL_COUNTER_CLOCKWISE@.
+--   			__Note:__ The effective radial center always stays within the @texture_progress@ bounds. If you need to move it outside the texture's bounds, modify the @texture_progress@ to contain additional empty space where needed.
 bindTextureProgress_set_radial_center_offset :: MethodBind
 bindTextureProgress_set_radial_center_offset
   = unsafePerformIO $
@@ -768,6 +773,7 @@ bindTextureProgress_set_radial_center_offset
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Offsets @texture_progress@ if @fill_mode@ is @FILL_CLOCKWISE@ or @FILL_COUNTER_CLOCKWISE@.
+--   			__Note:__ The effective radial center always stays within the @texture_progress@ bounds. If you need to move it outside the texture's bounds, modify the @texture_progress@ to contain additional empty space where needed.
 set_radial_center_offset ::
                            (TextureProgress :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_radial_center_offset cls arg1
@@ -791,6 +797,7 @@ instance NodeMethod TextureProgress "set_radial_center_offset"
 {-# NOINLINE bindTextureProgress_set_radial_initial_angle #-}
 
 -- | Starting angle for the fill of @texture_progress@ if @fill_mode@ is @FILL_CLOCKWISE@ or @FILL_COUNTER_CLOCKWISE@. When the node's @value@ is equal to its @min_value@, the texture doesn't show up at all. When the @value@ increases, the texture fills and tends towards @radial_fill_degrees@.
+--   			__Note:__ @radial_initial_angle@ is wrapped between @0@ and @360@ degrees (inclusive).
 bindTextureProgress_set_radial_initial_angle :: MethodBind
 bindTextureProgress_set_radial_initial_angle
   = unsafePerformIO $
@@ -801,6 +808,7 @@ bindTextureProgress_set_radial_initial_angle
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Starting angle for the fill of @texture_progress@ if @fill_mode@ is @FILL_CLOCKWISE@ or @FILL_COUNTER_CLOCKWISE@. When the node's @value@ is equal to its @min_value@, the texture doesn't show up at all. When the @value@ increases, the texture fills and tends towards @radial_fill_degrees@.
+--   			__Note:__ @radial_initial_angle@ is wrapped between @0@ and @360@ degrees (inclusive).
 set_radial_initial_angle ::
                            (TextureProgress :< cls, Object :< cls) => cls -> Float -> IO ()
 set_radial_initial_angle cls arg1

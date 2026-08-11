@@ -12,6 +12,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._PROPERTY_USAGE_SCRIPT_VARIABLE,
         Godot.Core.GlobalConstants._KEY_KP_ENTER,
         Godot.Core.GlobalConstants._ERR_DUPLICATE_SYMBOL,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_LINK,
         Godot.Core.GlobalConstants._KEY_LAUNCHA,
         Godot.Core.GlobalConstants._OP_EQUAL,
         Godot.Core.GlobalConstants._TYPE_INT,
@@ -77,6 +78,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._TYPE_INT_ARRAY,
         Godot.Core.GlobalConstants._PROPERTY_HINT_FILE,
         Godot.Core.GlobalConstants._JOY_ANALOG_LX,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_METHOD_OF_VARIANT_TYPE,
         Godot.Core.GlobalConstants._MIDI_MESSAGE_NOTE_OFF,
         Godot.Core.GlobalConstants._TYPE_VECTOR2_ARRAY,
         Godot.Core.GlobalConstants._OP_LESS_EQUAL,
@@ -90,11 +92,13 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._METHOD_FLAG_EDITOR,
         Godot.Core.GlobalConstants._BUTTON_MASK_RIGHT,
         Godot.Core.GlobalConstants._TYPE_STRING,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_STOP,
         Godot.Core.GlobalConstants._JOY_PADDLE1,
         Godot.Core.GlobalConstants._ERR_BUG,
         Godot.Core.GlobalConstants._KEY_ASCIICIRCUM,
         Godot.Core.GlobalConstants._JOY_DS_A,
         Godot.Core.GlobalConstants._KEY_R,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_ACTIVE_SENSING,
         Godot.Core.GlobalConstants._JOY_DPAD_RIGHT,
         Godot.Core.GlobalConstants._TYPE_VECTOR3,
         Godot.Core.GlobalConstants._ERR_DATABASE_CANT_READ,
@@ -104,7 +108,10 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._KEY_E,
         Godot.Core.GlobalConstants._KEY_KP_1,
         Godot.Core.GlobalConstants._ERR_CANT_FORK,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_PROPERTY_OF_SCRIPT,
         Godot.Core.GlobalConstants._PROPERTY_USAGE_NO_INSTANCE_STATE,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_TIMING_CLOCK,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_SYSTEM_RESET,
         Godot.Core.GlobalConstants._KEY_5,
         Godot.Core.GlobalConstants._OP_NOT,
         Godot.Core.GlobalConstants._ERR_PRINTER_ON_FIRE,
@@ -118,6 +125,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._OP_BIT_XOR,
         Godot.Core.GlobalConstants._METHOD_FLAG_FROM_SCRIPT,
         Godot.Core.GlobalConstants._KEY_KP_ADD,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_SONG_POSITION_POINTER,
         Godot.Core.GlobalConstants._BUTTON_WHEEL_RIGHT,
         Godot.Core.GlobalConstants._TYPE_NODE_PATH,
         Godot.Core.GlobalConstants._KEY_U,
@@ -128,9 +136,12 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._ERR_UNAVAILABLE,
         Godot.Core.GlobalConstants._ERR_ALREADY_IN_USE,
         Godot.Core.GlobalConstants._JOY_BUTTON_20,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_MAX,
         Godot.Core.GlobalConstants._JOY_DPAD_UP,
         Godot.Core.GlobalConstants._KEY_X,
         Godot.Core.GlobalConstants._KEY_QUOTEDBL,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_METHOD_OF_BASE_TYPE,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_SONG_SELECT,
         Godot.Core.GlobalConstants._KEY_REGISTERED,
         Godot.Core.GlobalConstants._KEY_H,
         Godot.Core.GlobalConstants._KEY_DIRECTION_R,
@@ -145,6 +156,8 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._KEY_8,
         Godot.Core.GlobalConstants._ERR_PARSE_ERROR,
         Godot.Core.GlobalConstants._KEY_KP_MULTIPLY,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_LAYERS_2D_NAVIGATION,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_METHOD_OF_INSTANCE,
         Godot.Core.GlobalConstants._JOY_BUTTON_10,
         Godot.Core.GlobalConstants._KEY_EACUTE,
         Godot.Core.GlobalConstants._KEY_LAUNCH6,
@@ -163,6 +176,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._KEY_SEMICOLON,
         Godot.Core.GlobalConstants._MIDI_MESSAGE_CHANNEL_PRESSURE,
         Godot.Core.GlobalConstants._KEY_BRACKETLEFT,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_CONTINUE,
         Godot.Core.GlobalConstants._PROPERTY_HINT_FLAGS,
         Godot.Core.GlobalConstants._OP_AND,
         Godot.Core.GlobalConstants._KEY_PARENLEFT,
@@ -182,11 +196,13 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._KEY_MASK_SHIFT,
         Godot.Core.GlobalConstants._KEY_3,
         Godot.Core.GlobalConstants._KEY_SSHARP,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_OBJECT_ID,
         Godot.Core.GlobalConstants._JOY_ANALOG_LY,
         Godot.Core.GlobalConstants._JOY_OCULUS_AX,
         Godot.Core.GlobalConstants._KEY_SCROLLLOCK,
         Godot.Core.GlobalConstants._PROPERTY_HINT_GLOBAL_FILE,
         Godot.Core.GlobalConstants._KEY_CODE_MASK,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_SYSTEM_EXCLUSIVE,
         Godot.Core.GlobalConstants._JOY_ANALOG_R2,
         Godot.Core.GlobalConstants._ERR_LINK_FAILED,
         Godot.Core.GlobalConstants._JOY_BUTTON_15,
@@ -228,10 +244,12 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._ERR_FILE_CANT_WRITE,
         Godot.Core.GlobalConstants._KEY_9,
         Godot.Core.GlobalConstants._HALIGN_CENTER,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_LAYERS_3D_NAVIGATION,
         Godot.Core.GlobalConstants._ERR_DOES_NOT_EXIST,
         Godot.Core.GlobalConstants._TYPE_BOOL,
         Godot.Core.GlobalConstants._KEY_F16,
         Godot.Core.GlobalConstants._PROPERTY_HINT_EXP_EASING,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_OBJECT_TOO_BIG,
         Godot.Core.GlobalConstants._KEY_DIVISION,
         Godot.Core.GlobalConstants._JOY_GUIDE,
         Godot.Core.GlobalConstants._KEY_DELETE,
@@ -256,6 +274,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._ERR_INVALID_DATA,
         Godot.Core.GlobalConstants._JOY_OCULUS_MENU,
         Godot.Core.GlobalConstants._ERR_OUT_OF_MEMORY,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_ENUM_SUGGESTION,
         Godot.Core.GlobalConstants._KEY_HOMEPAGE,
         Godot.Core.GlobalConstants._OP_SUBTRACT,
         Godot.Core.GlobalConstants._KEY_KP_8,
@@ -269,6 +288,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._OP_NEGATE,
         Godot.Core.GlobalConstants._JOY_BUTTON_6,
         Godot.Core.GlobalConstants._PROPERTY_HINT_COLOR_NO_ALPHA,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_QUARTER_FRAME,
         Godot.Core.GlobalConstants._KEY_AE,
         Godot.Core.GlobalConstants._KEY_MINUS,
         Godot.Core.GlobalConstants._BUTTON_MIDDLE,
@@ -286,6 +306,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._JOY_L3,
         Godot.Core.GlobalConstants._OP_SHIFT_LEFT,
         Godot.Core.GlobalConstants._KEY_SPACE,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_SAVE_FILE,
         Godot.Core.GlobalConstants._CORNER_TOP_LEFT,
         Godot.Core.GlobalConstants._KEY_HOME,
         Godot.Core.GlobalConstants._JOY_PADDLE4,
@@ -316,6 +337,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._KEY_LAUNCH2,
         Godot.Core.GlobalConstants._KEY_F1,
         Godot.Core.GlobalConstants._KEY_CONTROL,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_NODE_PATH_TO_EDITED_NODE,
         Godot.Core.GlobalConstants._KEY_AACUTE,
         Godot.Core.GlobalConstants._KEY_SYSREQ,
         Godot.Core.GlobalConstants._KEY_LAUNCHB,
@@ -338,8 +360,10 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._KEY_MASK_ALT,
         Godot.Core.GlobalConstants._KEY_J,
         Godot.Core.GlobalConstants._KEY_SUPER_L,
+        Godot.Core.GlobalConstants._METHOD_FLAG_VARARG,
         Godot.Core.GlobalConstants._HALIGN_RIGHT,
         Godot.Core.GlobalConstants._JOY_BUTTON_0,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_START,
         Godot.Core.GlobalConstants._KEY_TREBLEDOWN,
         Godot.Core.GlobalConstants._KEY_EDIAERESIS,
         Godot.Core.GlobalConstants._KEY_MASK_CTRL,
@@ -351,6 +375,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._VERTICAL,
         Godot.Core.GlobalConstants._KEY_VOLUMEDOWN,
         Godot.Core.GlobalConstants._KEY_F15,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_PROPERTY_OF_VARIANT_TYPE,
         Godot.Core.GlobalConstants._KEY_UDIAERESIS,
         Godot.Core.GlobalConstants._KEY_REFRESH,
         Godot.Core.GlobalConstants._KEY_SLASH,
@@ -374,6 +399,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._KEY_HYPER_L,
         Godot.Core.GlobalConstants._KEY_UP,
         Godot.Core.GlobalConstants._JOY_VR_PAD,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_METHOD_OF_SCRIPT,
         Godot.Core.GlobalConstants._TYPE_RAW_ARRAY,
         Godot.Core.GlobalConstants._KEY_PERIOD,
         Godot.Core.GlobalConstants._KEY_ACIRCUMFLEX,
@@ -400,6 +426,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._KEY_LAUNCH5,
         Godot.Core.GlobalConstants._KEY_F6,
         Godot.Core.GlobalConstants._CORNER_BOTTOM_RIGHT,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_PROPERTY_OF_BASE_TYPE,
         Godot.Core.GlobalConstants._ERR_FILE_CANT_OPEN,
         Godot.Core.GlobalConstants._KEY_LAUNCHE,
         Godot.Core.GlobalConstants._KEY_NUMBERSIGN,
@@ -432,6 +459,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._JOY_BUTTON_1,
         Godot.Core.GlobalConstants._KEY_PERCENT,
         Godot.Core.GlobalConstants._PROPERTY_HINT_RANGE,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_PROPERTY_OF_INSTANCE,
         Godot.Core.GlobalConstants._KEY_LEFT,
         Godot.Core.GlobalConstants._KEY_F14,
         Godot.Core.GlobalConstants._METHOD_FLAGS_DEFAULT,
@@ -440,6 +468,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._METHOD_FLAG_REVERSE,
         Godot.Core.GlobalConstants._KEY_GUILLEMOTLEFT,
         Godot.Core.GlobalConstants._TYPE_TRANSFORM,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_NODE_PATH_VALID_TYPES,
         Godot.Core.GlobalConstants._JOY_DS_X,
         Godot.Core.GlobalConstants._ERR_SKIP,
         Godot.Core.GlobalConstants._OP_POSITIVE,
@@ -467,6 +496,8 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._JOY_SONY_SQUARE,
         Godot.Core.GlobalConstants._ERR_FILE_CORRUPT,
         Godot.Core.GlobalConstants._BUTTON_XBUTTON1,
+        Godot.Core.GlobalConstants._MIDI_MESSAGE_TUNE_REQUEST,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_LOCALE_ID,
         Godot.Core.GlobalConstants._KEY_F11,
         Godot.Core.GlobalConstants._OP_NOT_EQUAL,
         Godot.Core.GlobalConstants._KEY_OOBLIQUE,
@@ -479,6 +510,7 @@ module Godot.Core.GlobalConstants
         Godot.Core.GlobalConstants._MARGIN_BOTTOM,
         Godot.Core.GlobalConstants._PROPERTY_HINT_NONE,
         Godot.Core.GlobalConstants._KEY_MASK_META,
+        Godot.Core.GlobalConstants._PROPERTY_HINT_TYPE_STRING,
         Godot.Core.GlobalConstants._KEY_MASK_GROUP_SWITCH,
         Godot.Core.GlobalConstants._KEY_COLON,
         Godot.Core.GlobalConstants._KEY_HELP,
@@ -565,6 +597,9 @@ _KEY_KP_ENTER = 16777222
 _ERR_DUPLICATE_SYMBOL :: Int
 _ERR_DUPLICATE_SYMBOL = 42
 
+_PROPERTY_HINT_LINK :: Int
+_PROPERTY_HINT_LINK = 6
+
 _KEY_LAUNCHA :: Int
 _KEY_LAUNCHA = 16777314
 
@@ -590,7 +625,7 @@ _PROPERTY_USAGE_NETWORK :: Int
 _PROPERTY_USAGE_NETWORK = 4
 
 _PROPERTY_HINT_KEY_ACCEL :: Int
-_PROPERTY_HINT_KEY_ACCEL = 7
+_PROPERTY_HINT_KEY_ACCEL = 8
 
 _MIDI_MESSAGE_CONTROL_CHANGE :: Int
 _MIDI_MESSAGE_CONTROL_CHANGE = 11
@@ -644,7 +679,7 @@ _KEY_CURRENCY :: Int
 _KEY_CURRENCY = 164
 
 _PROPERTY_HINT_IMAGE_COMPRESS_LOSSLESS :: Int
-_PROPERTY_HINT_IMAGE_COMPRESS_LOSSLESS = 22
+_PROPERTY_HINT_IMAGE_COMPRESS_LOSSLESS = 25
 
 _BUTTON_WHEEL_DOWN :: Int
 _BUTTON_WHEEL_DOWN = 5
@@ -755,10 +790,13 @@ _TYPE_INT_ARRAY :: Int
 _TYPE_INT_ARRAY = 21
 
 _PROPERTY_HINT_FILE :: Int
-_PROPERTY_HINT_FILE = 13
+_PROPERTY_HINT_FILE = 16
 
 _JOY_ANALOG_LX :: Int
 _JOY_ANALOG_LX = 0
+
+_PROPERTY_HINT_METHOD_OF_VARIANT_TYPE :: Int
+_PROPERTY_HINT_METHOD_OF_VARIANT_TYPE = 29
 
 _MIDI_MESSAGE_NOTE_OFF :: Int
 _MIDI_MESSAGE_NOTE_OFF = 8
@@ -799,6 +837,9 @@ _BUTTON_MASK_RIGHT = 2
 _TYPE_STRING :: Int
 _TYPE_STRING = 4
 
+_MIDI_MESSAGE_STOP :: Int
+_MIDI_MESSAGE_STOP = 252
+
 _JOY_PADDLE1 :: Int
 _JOY_PADDLE1 = 18
 
@@ -813,6 +854,9 @@ _JOY_DS_A = 1
 
 _KEY_R :: Int
 _KEY_R = 82
+
+_MIDI_MESSAGE_ACTIVE_SENSING :: Int
+_MIDI_MESSAGE_ACTIVE_SENSING = 254
 
 _JOY_DPAD_RIGHT :: Int
 _JOY_DPAD_RIGHT = 15
@@ -841,8 +885,17 @@ _KEY_KP_1 = 16777351
 _ERR_CANT_FORK :: Int
 _ERR_CANT_FORK = 29
 
+_PROPERTY_HINT_PROPERTY_OF_SCRIPT :: Int
+_PROPERTY_HINT_PROPERTY_OF_SCRIPT = 36
+
 _PROPERTY_USAGE_NO_INSTANCE_STATE :: Int
 _PROPERTY_USAGE_NO_INSTANCE_STATE = 2048
+
+_MIDI_MESSAGE_TIMING_CLOCK :: Int
+_MIDI_MESSAGE_TIMING_CLOCK = 248
+
+_MIDI_MESSAGE_SYSTEM_RESET :: Int
+_MIDI_MESSAGE_SYSTEM_RESET = 255
 
 _KEY_5 :: Int
 _KEY_5 = 53
@@ -883,6 +936,9 @@ _METHOD_FLAG_FROM_SCRIPT = 64
 _KEY_KP_ADD :: Int
 _KEY_KP_ADD = 16777349
 
+_MIDI_MESSAGE_SONG_POSITION_POINTER :: Int
+_MIDI_MESSAGE_SONG_POSITION_POINTER = 242
+
 _BUTTON_WHEEL_RIGHT :: Int
 _BUTTON_WHEEL_RIGHT = 7
 
@@ -913,6 +969,9 @@ _ERR_ALREADY_IN_USE = 22
 _JOY_BUTTON_20 :: Int
 _JOY_BUTTON_20 = 20
 
+_PROPERTY_HINT_MAX :: Int
+_PROPERTY_HINT_MAX = 42
+
 _JOY_DPAD_UP :: Int
 _JOY_DPAD_UP = 12
 
@@ -921,6 +980,12 @@ _KEY_X = 88
 
 _KEY_QUOTEDBL :: Int
 _KEY_QUOTEDBL = 34
+
+_PROPERTY_HINT_METHOD_OF_BASE_TYPE :: Int
+_PROPERTY_HINT_METHOD_OF_BASE_TYPE = 30
+
+_MIDI_MESSAGE_SONG_SELECT :: Int
+_MIDI_MESSAGE_SONG_SELECT = 243
 
 _KEY_REGISTERED :: Int
 _KEY_REGISTERED = 174
@@ -964,6 +1029,12 @@ _ERR_PARSE_ERROR = 43
 _KEY_KP_MULTIPLY :: Int
 _KEY_KP_MULTIPLY = 16777345
 
+_PROPERTY_HINT_LAYERS_2D_NAVIGATION :: Int
+_PROPERTY_HINT_LAYERS_2D_NAVIGATION = 12
+
+_PROPERTY_HINT_METHOD_OF_INSTANCE :: Int
+_PROPERTY_HINT_METHOD_OF_INSTANCE = 31
+
 _JOY_BUTTON_10 :: Int
 _JOY_BUTTON_10 = 10
 
@@ -998,7 +1069,7 @@ _CORNER_BOTTOM_LEFT :: Int
 _CORNER_BOTTOM_LEFT = 3
 
 _PROPERTY_HINT_DIR :: Int
-_PROPERTY_HINT_DIR = 14
+_PROPERTY_HINT_DIR = 17
 
 _JOY_XBOX_B :: Int
 _JOY_XBOX_B = 1
@@ -1018,8 +1089,11 @@ _MIDI_MESSAGE_CHANNEL_PRESSURE = 13
 _KEY_BRACKETLEFT :: Int
 _KEY_BRACKETLEFT = 91
 
+_MIDI_MESSAGE_CONTINUE :: Int
+_MIDI_MESSAGE_CONTINUE = 251
+
 _PROPERTY_HINT_FLAGS :: Int
-_PROPERTY_HINT_FLAGS = 8
+_PROPERTY_HINT_FLAGS = 9
 
 _OP_AND :: Int
 _OP_AND = 20
@@ -1075,6 +1149,9 @@ _KEY_3 = 51
 _KEY_SSHARP :: Int
 _KEY_SSHARP = 223
 
+_PROPERTY_HINT_OBJECT_ID :: Int
+_PROPERTY_HINT_OBJECT_ID = 26
+
 _JOY_ANALOG_LY :: Int
 _JOY_ANALOG_LY = 1
 
@@ -1085,10 +1162,13 @@ _KEY_SCROLLLOCK :: Int
 _KEY_SCROLLLOCK = 16777243
 
 _PROPERTY_HINT_GLOBAL_FILE :: Int
-_PROPERTY_HINT_GLOBAL_FILE = 15
+_PROPERTY_HINT_GLOBAL_FILE = 18
 
 _KEY_CODE_MASK :: Int
 _KEY_CODE_MASK = 33554431
+
+_MIDI_MESSAGE_SYSTEM_EXCLUSIVE :: Int
+_MIDI_MESSAGE_SYSTEM_EXCLUSIVE = 240
 
 _JOY_ANALOG_R2 :: Int
 _JOY_ANALOG_R2 = 7
@@ -1103,7 +1183,7 @@ _KEY_LAUNCH3 :: Int
 _KEY_LAUNCH3 = 16777307
 
 _JOY_BUTTON_MAX :: Int
-_JOY_BUTTON_MAX = 23
+_JOY_BUTTON_MAX = 128
 
 _PROPERTY_USAGE_CHECKABLE :: Int
 _PROPERTY_USAGE_CHECKABLE = 16
@@ -1196,7 +1276,7 @@ _ERR_FILE_MISSING_DEPENDENCIES :: Int
 _ERR_FILE_MISSING_DEPENDENCIES = 17
 
 _PROPERTY_HINT_LAYERS_2D_PHYSICS :: Int
-_PROPERTY_HINT_LAYERS_2D_PHYSICS = 10
+_PROPERTY_HINT_LAYERS_2D_PHYSICS = 11
 
 _JOY_BUTTON_3 :: Int
 _JOY_BUTTON_3 = 3
@@ -1213,6 +1293,9 @@ _KEY_9 = 57
 _HALIGN_CENTER :: Int
 _HALIGN_CENTER = 1
 
+_PROPERTY_HINT_LAYERS_3D_NAVIGATION :: Int
+_PROPERTY_HINT_LAYERS_3D_NAVIGATION = 15
+
 _ERR_DOES_NOT_EXIST :: Int
 _ERR_DOES_NOT_EXIST = 33
 
@@ -1224,6 +1307,9 @@ _KEY_F16 = 16777259
 
 _PROPERTY_HINT_EXP_EASING :: Int
 _PROPERTY_HINT_EXP_EASING = 4
+
+_PROPERTY_HINT_OBJECT_TOO_BIG :: Int
+_PROPERTY_HINT_OBJECT_TOO_BIG = 37
 
 _KEY_DIVISION :: Int
 _KEY_DIVISION = 247
@@ -1297,6 +1383,9 @@ _JOY_OCULUS_MENU = 3
 _ERR_OUT_OF_MEMORY :: Int
 _ERR_OUT_OF_MEMORY = 6
 
+_PROPERTY_HINT_ENUM_SUGGESTION :: Int
+_PROPERTY_HINT_ENUM_SUGGESTION = 40
+
 _KEY_HOMEPAGE :: Int
 _KEY_HOMEPAGE = 16777297
 
@@ -1334,7 +1423,10 @@ _JOY_BUTTON_6 :: Int
 _JOY_BUTTON_6 = 6
 
 _PROPERTY_HINT_COLOR_NO_ALPHA :: Int
-_PROPERTY_HINT_COLOR_NO_ALPHA = 20
+_PROPERTY_HINT_COLOR_NO_ALPHA = 23
+
+_MIDI_MESSAGE_QUARTER_FRAME :: Int
+_MIDI_MESSAGE_QUARTER_FRAME = 241
 
 _KEY_AE :: Int
 _KEY_AE = 198
@@ -1387,6 +1479,9 @@ _OP_SHIFT_LEFT = 14
 _KEY_SPACE :: Int
 _KEY_SPACE = 32
 
+_PROPERTY_HINT_SAVE_FILE :: Int
+_PROPERTY_HINT_SAVE_FILE = 39
+
 _CORNER_TOP_LEFT :: Int
 _CORNER_TOP_LEFT = 0
 
@@ -1412,7 +1507,7 @@ _KEY_KP_3 :: Int
 _KEY_KP_3 = 16777353
 
 _PROPERTY_HINT_GLOBAL_DIR :: Int
-_PROPERTY_HINT_GLOBAL_DIR = 16
+_PROPERTY_HINT_GLOBAL_DIR = 19
 
 _JOY_AXIS_0 :: Int
 _JOY_AXIS_0 = 0
@@ -1433,7 +1528,7 @@ _KEY_DIAERESIS :: Int
 _KEY_DIAERESIS = 168
 
 _PROPERTY_HINT_IMAGE_COMPRESS_LOSSY :: Int
-_PROPERTY_HINT_IMAGE_COMPRESS_LOSSY = 21
+_PROPERTY_HINT_IMAGE_COMPRESS_LOSSY = 24
 
 _KEY_ONEHALF :: Int
 _KEY_ONEHALF = 189
@@ -1476,6 +1571,9 @@ _KEY_F1 = 16777244
 
 _KEY_CONTROL :: Int
 _KEY_CONTROL = 16777238
+
+_PROPERTY_HINT_NODE_PATH_TO_EDITED_NODE :: Int
+_PROPERTY_HINT_NODE_PATH_TO_EDITED_NODE = 28
 
 _KEY_AACUTE :: Int
 _KEY_AACUTE = 193
@@ -1543,11 +1641,17 @@ _KEY_J = 74
 _KEY_SUPER_L :: Int
 _KEY_SUPER_L = 16777260
 
+_METHOD_FLAG_VARARG :: Int
+_METHOD_FLAG_VARARG = 128
+
 _HALIGN_RIGHT :: Int
 _HALIGN_RIGHT = 2
 
 _JOY_BUTTON_0 :: Int
 _JOY_BUTTON_0 = 0
+
+_MIDI_MESSAGE_START :: Int
+_MIDI_MESSAGE_START = 250
 
 _KEY_TREBLEDOWN :: Int
 _KEY_TREBLEDOWN = 16777291
@@ -1582,6 +1686,9 @@ _KEY_VOLUMEDOWN = 16777284
 _KEY_F15 :: Int
 _KEY_F15 = 16777258
 
+_PROPERTY_HINT_PROPERTY_OF_VARIANT_TYPE :: Int
+_PROPERTY_HINT_PROPERTY_OF_VARIANT_TYPE = 33
+
 _KEY_UDIAERESIS :: Int
 _KEY_UDIAERESIS = 220
 
@@ -1592,7 +1699,7 @@ _KEY_SLASH :: Int
 _KEY_SLASH = 47
 
 _PROPERTY_HINT_PLACEHOLDER_TEXT :: Int
-_PROPERTY_HINT_PLACEHOLDER_TEXT = 19
+_PROPERTY_HINT_PLACEHOLDER_TEXT = 22
 
 _KEY_F12 :: Int
 _KEY_F12 = 16777255
@@ -1651,6 +1758,9 @@ _KEY_UP = 16777232
 _JOY_VR_PAD :: Int
 _JOY_VR_PAD = 14
 
+_PROPERTY_HINT_METHOD_OF_SCRIPT :: Int
+_PROPERTY_HINT_METHOD_OF_SCRIPT = 32
+
 _TYPE_RAW_ARRAY :: Int
 _TYPE_RAW_ARRAY = 20
 
@@ -1700,7 +1810,7 @@ _KEY_UNDERSCORE :: Int
 _KEY_UNDERSCORE = 95
 
 _PROPERTY_HINT_LAYERS_2D_RENDER :: Int
-_PROPERTY_HINT_LAYERS_2D_RENDER = 9
+_PROPERTY_HINT_LAYERS_2D_RENDER = 10
 
 _KEY_ENTER :: Int
 _KEY_ENTER = 16777221
@@ -1718,7 +1828,7 @@ _JOY_BUTTON_13 :: Int
 _JOY_BUTTON_13 = 13
 
 _PROPERTY_HINT_LAYERS_3D_PHYSICS :: Int
-_PROPERTY_HINT_LAYERS_3D_PHYSICS = 12
+_PROPERTY_HINT_LAYERS_3D_PHYSICS = 14
 
 _KEY_LAUNCH5 :: Int
 _KEY_LAUNCH5 = 16777309
@@ -1728,6 +1838,9 @@ _KEY_F6 = 16777249
 
 _CORNER_BOTTOM_RIGHT :: Int
 _CORNER_BOTTOM_RIGHT = 2
+
+_PROPERTY_HINT_PROPERTY_OF_BASE_TYPE :: Int
+_PROPERTY_HINT_PROPERTY_OF_BASE_TYPE = 34
 
 _ERR_FILE_CANT_OPEN :: Int
 _ERR_FILE_CANT_OPEN = 12
@@ -1825,6 +1938,9 @@ _KEY_PERCENT = 37
 _PROPERTY_HINT_RANGE :: Int
 _PROPERTY_HINT_RANGE = 1
 
+_PROPERTY_HINT_PROPERTY_OF_INSTANCE :: Int
+_PROPERTY_HINT_PROPERTY_OF_INSTANCE = 35
+
 _KEY_LEFT :: Int
 _KEY_LEFT = 16777231
 
@@ -1848,6 +1964,9 @@ _KEY_GUILLEMOTLEFT = 171
 
 _TYPE_TRANSFORM :: Int
 _TYPE_TRANSFORM = 13
+
+_PROPERTY_HINT_NODE_PATH_VALID_TYPES :: Int
+_PROPERTY_HINT_NODE_PATH_VALID_TYPES = 38
 
 _JOY_DS_X :: Int
 _JOY_DS_X = 3
@@ -1930,6 +2049,12 @@ _ERR_FILE_CORRUPT = 16
 _BUTTON_XBUTTON1 :: Int
 _BUTTON_XBUTTON1 = 8
 
+_MIDI_MESSAGE_TUNE_REQUEST :: Int
+_MIDI_MESSAGE_TUNE_REQUEST = 246
+
+_PROPERTY_HINT_LOCALE_ID :: Int
+_PROPERTY_HINT_LOCALE_ID = 41
+
 _KEY_F11 :: Int
 _KEY_F11 = 16777254
 
@@ -1966,6 +2091,9 @@ _PROPERTY_HINT_NONE = 0
 _KEY_MASK_META :: Int
 _KEY_MASK_META = 134217728
 
+_PROPERTY_HINT_TYPE_STRING :: Int
+_PROPERTY_HINT_TYPE_STRING = 27
+
 _KEY_MASK_GROUP_SWITCH :: Int
 _KEY_MASK_GROUP_SWITCH = 1073741824
 
@@ -1991,7 +2119,7 @@ _JOY_PADDLE2 :: Int
 _JOY_PADDLE2 = 19
 
 _PROPERTY_HINT_MULTILINE_TEXT :: Int
-_PROPERTY_HINT_MULTILINE_TEXT = 18
+_PROPERTY_HINT_MULTILINE_TEXT = 21
 
 _KEY_LAUNCHMEDIA :: Int
 _KEY_LAUNCHMEDIA = 16777303
@@ -2048,7 +2176,7 @@ _KEY_CLEAR :: Int
 _KEY_CLEAR = 16777228
 
 _PROPERTY_HINT_RESOURCE_TYPE :: Int
-_PROPERTY_HINT_RESOURCE_TYPE = 17
+_PROPERTY_HINT_RESOURCE_TYPE = 20
 
 _KEY_ESCAPE :: Int
 _KEY_ESCAPE = 16777217
@@ -2063,7 +2191,7 @@ _KEY_TWOSUPERIOR :: Int
 _KEY_TWOSUPERIOR = 178
 
 _PROPERTY_HINT_LAYERS_3D_RENDER :: Int
-_PROPERTY_HINT_LAYERS_3D_RENDER = 11
+_PROPERTY_HINT_LAYERS_3D_RENDER = 13
 
 _PROPERTY_USAGE_DEFAULT_INTL :: Int
 _PROPERTY_USAGE_DEFAULT_INTL = 71

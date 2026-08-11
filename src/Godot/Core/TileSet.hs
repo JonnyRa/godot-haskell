@@ -3,9 +3,10 @@
   MultiParamTypeClasses #-}
 module Godot.Core.TileSet
        (Godot.Core.TileSet._BITMASK_2X2, Godot.Core.TileSet._BITMASK_3X3,
+        Godot.Core.TileSet._FALLBACK_AUTO,
         Godot.Core.TileSet._BIND_BOTTOMLEFT,
         Godot.Core.TileSet._BIND_CENTER, Godot.Core.TileSet._BIND_LEFT,
-        Godot.Core.TileSet._ATLAS_TILE,
+        Godot.Core.TileSet._FALLBACK_ICON, Godot.Core.TileSet._ATLAS_TILE,
         Godot.Core.TileSet._BITMASK_3X3_MINIMAL,
         Godot.Core.TileSet._BIND_RIGHT, Godot.Core.TileSet._BIND_TOPLEFT,
         Godot.Core.TileSet._BIND_BOTTOM,
@@ -18,6 +19,7 @@ module Godot.Core.TileSet
         Godot.Core.TileSet.autotile_clear_bitmask_map,
         Godot.Core.TileSet.autotile_get_bitmask,
         Godot.Core.TileSet.autotile_get_bitmask_mode,
+        Godot.Core.TileSet.autotile_get_fallback_mode,
         Godot.Core.TileSet.autotile_get_icon_coordinate,
         Godot.Core.TileSet.autotile_get_light_occluder,
         Godot.Core.TileSet.autotile_get_navigation_polygon,
@@ -27,6 +29,7 @@ module Godot.Core.TileSet
         Godot.Core.TileSet.autotile_get_z_index,
         Godot.Core.TileSet.autotile_set_bitmask,
         Godot.Core.TileSet.autotile_set_bitmask_mode,
+        Godot.Core.TileSet.autotile_set_fallback_mode,
         Godot.Core.TileSet.autotile_set_icon_coordinate,
         Godot.Core.TileSet.autotile_set_light_occluder,
         Godot.Core.TileSet.autotile_set_navigation_polygon,
@@ -97,6 +100,9 @@ _BITMASK_2X2 = 0
 _BITMASK_3X3 :: Int
 _BITMASK_3X3 = 2
 
+_FALLBACK_AUTO :: Int
+_FALLBACK_AUTO = 0
+
 _BIND_BOTTOMLEFT :: Int
 _BIND_BOTTOMLEFT = 64
 
@@ -105,6 +111,9 @@ _BIND_CENTER = 16
 
 _BIND_LEFT :: Int
 _BIND_LEFT = 8
+
+_FALLBACK_ICON :: Int
+_FALLBACK_ICON = 1
 
 _ATLAS_TILE :: Int
 _ATLAS_TILE = 2
@@ -330,6 +339,38 @@ instance NodeMethod TileSet "autotile_get_bitmask_mode" '[Int]
            (IO Int)
          where
         nodeMethod = Godot.Core.TileSet.autotile_get_bitmask_mode
+
+{-# NOINLINE bindTileSet_autotile_get_fallback_mode #-}
+
+-- | Returns the @enum FallbackMode@ of the autotile.
+bindTileSet_autotile_get_fallback_mode :: MethodBind
+bindTileSet_autotile_get_fallback_mode
+  = unsafePerformIO $
+      withCString "TileSet" $
+        \ clsNamePtr ->
+          withCString "autotile_get_fallback_mode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the @enum FallbackMode@ of the autotile.
+autotile_get_fallback_mode ::
+                             (TileSet :< cls, Object :< cls) => cls -> Int -> IO Int
+autotile_get_fallback_mode cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTileSet_autotile_get_fallback_mode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TileSet "autotile_get_fallback_mode" '[Int]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.TileSet.autotile_get_fallback_mode
 
 {-# NOINLINE bindTileSet_autotile_get_icon_coordinate #-}
 
@@ -623,10 +664,43 @@ instance NodeMethod TileSet "autotile_set_bitmask_mode" '[Int, Int]
          where
         nodeMethod = Godot.Core.TileSet.autotile_set_bitmask_mode
 
+{-# NOINLINE bindTileSet_autotile_set_fallback_mode #-}
+
+-- | Returns the @enum FallbackMode@ of the autotile.
+bindTileSet_autotile_set_fallback_mode :: MethodBind
+bindTileSet_autotile_set_fallback_mode
+  = unsafePerformIO $
+      withCString "TileSet" $
+        \ clsNamePtr ->
+          withCString "autotile_set_fallback_mode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the @enum FallbackMode@ of the autotile.
+autotile_set_fallback_mode ::
+                             (TileSet :< cls, Object :< cls) => cls -> Int -> Int -> IO ()
+autotile_set_fallback_mode cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTileSet_autotile_set_fallback_mode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TileSet "autotile_set_fallback_mode"
+           '[Int, Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.TileSet.autotile_set_fallback_mode
+
 {-# NOINLINE bindTileSet_autotile_set_icon_coordinate #-}
 
 -- | Sets the subtile that will be used as an icon in an atlas/autotile given its coordinates.
---   				The subtile defined as the icon will be used as a fallback when the atlas/autotile's bitmask information is incomplete. It will also be used to represent it in the TileSet editor.
+--   				The subtile defined as the icon may be used as a fallback when the atlas/autotile's bitmask information is incomplete. It will also be used to represent it in the TileSet editor.
 bindTileSet_autotile_set_icon_coordinate :: MethodBind
 bindTileSet_autotile_set_icon_coordinate
   = unsafePerformIO $
@@ -637,7 +711,7 @@ bindTileSet_autotile_set_icon_coordinate
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets the subtile that will be used as an icon in an atlas/autotile given its coordinates.
---   				The subtile defined as the icon will be used as a fallback when the atlas/autotile's bitmask information is incomplete. It will also be used to represent it in the TileSet editor.
+--   				The subtile defined as the icon may be used as a fallback when the atlas/autotile's bitmask information is incomplete. It will also be used to represent it in the TileSet editor.
 autotile_set_icon_coordinate ::
                                (TileSet :< cls, Object :< cls) => cls -> Int -> Vector2 -> IO ()
 autotile_set_icon_coordinate cls arg1 arg2

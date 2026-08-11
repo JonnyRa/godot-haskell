@@ -40,8 +40,10 @@ module Godot.Core.SceneTree
         Godot.Core.SceneTree.change_scene,
         Godot.Core.SceneTree.change_scene_to,
         Godot.Core.SceneTree.create_timer,
+        Godot.Core.SceneTree.create_tween,
         Godot.Core.SceneTree.get_current_scene,
         Godot.Core.SceneTree.get_edited_scene_root,
+        Godot.Core.SceneTree.get_first_node_in_group,
         Godot.Core.SceneTree.get_frame,
         Godot.Core.SceneTree.get_multiplayer,
         Godot.Core.SceneTree.get_network_connected_peers,
@@ -49,16 +51,20 @@ module Godot.Core.SceneTree
         Godot.Core.SceneTree.get_network_unique_id,
         Godot.Core.SceneTree.get_node_count,
         Godot.Core.SceneTree.get_nodes_in_group,
+        Godot.Core.SceneTree.get_processed_tweens,
         Godot.Core.SceneTree.get_root,
         Godot.Core.SceneTree.get_rpc_sender_id,
         Godot.Core.SceneTree.has_group,
         Godot.Core.SceneTree.has_network_peer,
+        Godot.Core.SceneTree.is_auto_accept_quit,
         Godot.Core.SceneTree.is_debugging_collisions_hint,
         Godot.Core.SceneTree.is_debugging_navigation_hint,
         Godot.Core.SceneTree.is_input_handled,
         Godot.Core.SceneTree.is_multiplayer_poll_enabled,
         Godot.Core.SceneTree.is_network_server,
         Godot.Core.SceneTree.is_paused,
+        Godot.Core.SceneTree.is_physics_interpolation_enabled,
+        Godot.Core.SceneTree.is_quit_on_go_back,
         Godot.Core.SceneTree.is_refusing_new_network_connections,
         Godot.Core.SceneTree.is_using_font_oversampling,
         Godot.Core.SceneTree.notify_group,
@@ -77,6 +83,7 @@ module Godot.Core.SceneTree
         Godot.Core.SceneTree.set_multiplayer_poll_enabled,
         Godot.Core.SceneTree.set_network_peer,
         Godot.Core.SceneTree.set_pause,
+        Godot.Core.SceneTree.set_physics_interpolation_enabled,
         Godot.Core.SceneTree.set_quit_on_go_back,
         Godot.Core.SceneTree.set_refuse_new_network_connections,
         Godot.Core.SceneTree.set_screen_stretch,
@@ -235,6 +242,12 @@ sig_tree_changed = Godot.Internal.Dispatch.Signal "tree_changed"
 
 instance NodeSignal SceneTree "tree_changed" '[]
 
+instance NodeProperty SceneTree "auto_accept_quit" Bool 'False
+         where
+        nodeProperty
+          = (is_auto_accept_quit, wrapDroppingSetter set_auto_accept_quit,
+             Nothing)
+
 instance NodeProperty SceneTree "current_scene" Node 'False where
         nodeProperty
           = (get_current_scene, wrapDroppingSetter set_current_scene,
@@ -278,6 +291,17 @@ instance NodeProperty SceneTree "network_peer"
 
 instance NodeProperty SceneTree "paused" Bool 'False where
         nodeProperty = (is_paused, wrapDroppingSetter set_pause, Nothing)
+
+instance NodeProperty SceneTree "physics_interpolation" Bool 'False
+         where
+        nodeProperty
+          = (is_physics_interpolation_enabled,
+             wrapDroppingSetter set_physics_interpolation_enabled, Nothing)
+
+instance NodeProperty SceneTree "quit_on_go_back" Bool 'False where
+        nodeProperty
+          = (is_quit_on_go_back, wrapDroppingSetter set_quit_on_go_back,
+             Nothing)
 
 instance NodeProperty SceneTree "refuse_new_network_connections"
            Bool
@@ -597,6 +621,7 @@ instance NodeMethod SceneTree "change_scene" '[GodotString]
 -- | Changes the running scene to a new instance of the given @PackedScene@.
 --   				Returns @OK@ on success or @ERR_CANT_CREATE@ if the scene cannot be instantiated.
 --   				__Note:__ The scene change is deferred, which means that the new scene node is added on the next idle frame. You won't be able to access it immediately after the @method change_scene_to@ call.
+--   				__Note:__ Passing a value of @null@ into the method will unload the current scene without loading a new one.
 bindSceneTree_change_scene_to :: MethodBind
 bindSceneTree_change_scene_to
   = unsafePerformIO $
@@ -609,6 +634,7 @@ bindSceneTree_change_scene_to
 -- | Changes the running scene to a new instance of the given @PackedScene@.
 --   				Returns @OK@ on success or @ERR_CANT_CREATE@ if the scene cannot be instantiated.
 --   				__Note:__ The scene change is deferred, which means that the new scene node is added on the next idle frame. You won't be able to access it immediately after the @method change_scene_to@ call.
+--   				__Note:__ Passing a value of @null@ into the method will unload the current scene without loading a new one.
 change_scene_to ::
                   (SceneTree :< cls, Object :< cls) => cls -> PackedScene -> IO Int
 change_scene_to cls arg1
@@ -681,6 +707,34 @@ instance NodeMethod SceneTree "create_timer" '[Float, Maybe Bool]
          where
         nodeMethod = Godot.Core.SceneTree.create_timer
 
+{-# NOINLINE bindSceneTree_create_tween #-}
+
+-- | Creates and returns a new @SceneTreeTween@.
+bindSceneTree_create_tween :: MethodBind
+bindSceneTree_create_tween
+  = unsafePerformIO $
+      withCString "SceneTree" $
+        \ clsNamePtr ->
+          withCString "create_tween" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Creates and returns a new @SceneTreeTween@.
+create_tween ::
+               (SceneTree :< cls, Object :< cls) => cls -> IO SceneTreeTween
+create_tween cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSceneTree_create_tween (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod SceneTree "create_tween" '[]
+           (IO SceneTreeTween)
+         where
+        nodeMethod = Godot.Core.SceneTree.create_tween
+
 {-# NOINLINE bindSceneTree_get_current_scene #-}
 
 -- | The current scene.
@@ -735,6 +789,36 @@ get_edited_scene_root cls
 instance NodeMethod SceneTree "get_edited_scene_root" '[] (IO Node)
          where
         nodeMethod = Godot.Core.SceneTree.get_edited_scene_root
+
+{-# NOINLINE bindSceneTree_get_first_node_in_group #-}
+
+-- | Returns the first node in the specified group, or @null@ if the group is empty or does not exist.
+bindSceneTree_get_first_node_in_group :: MethodBind
+bindSceneTree_get_first_node_in_group
+  = unsafePerformIO $
+      withCString "SceneTree" $
+        \ clsNamePtr ->
+          withCString "get_first_node_in_group" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the first node in the specified group, or @null@ if the group is empty or does not exist.
+get_first_node_in_group ::
+                          (SceneTree :< cls, Object :< cls) => cls -> GodotString -> IO Node
+get_first_node_in_group cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSceneTree_get_first_node_in_group
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod SceneTree "get_first_node_in_group"
+           '[GodotString]
+           (IO Node)
+         where
+        nodeMethod = Godot.Core.SceneTree.get_first_node_in_group
 
 {-# NOINLINE bindSceneTree_get_frame #-}
 
@@ -944,6 +1028,37 @@ instance NodeMethod SceneTree "get_nodes_in_group" '[GodotString]
          where
         nodeMethod = Godot.Core.SceneTree.get_nodes_in_group
 
+{-# NOINLINE bindSceneTree_get_processed_tweens #-}
+
+-- | Returns an array of currently existing @SceneTreeTween@s in the @SceneTree@ (both running and paused).
+bindSceneTree_get_processed_tweens :: MethodBind
+bindSceneTree_get_processed_tweens
+  = unsafePerformIO $
+      withCString "SceneTree" $
+        \ clsNamePtr ->
+          withCString "get_processed_tweens" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns an array of currently existing @SceneTreeTween@s in the @SceneTree@ (both running and paused).
+get_processed_tweens ::
+                       (SceneTree :< cls, Object :< cls) => cls -> IO Array
+get_processed_tweens cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSceneTree_get_processed_tweens
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SceneTree "get_processed_tweens" '[] (IO Array)
+         where
+        nodeMethod = Godot.Core.SceneTree.get_processed_tweens
+
 {-# NOINLINE bindSceneTree_get_root #-}
 
 -- | The @SceneTree@'s root @Viewport@.
@@ -1057,9 +1172,43 @@ instance NodeMethod SceneTree "has_network_peer" '[] (IO Bool)
          where
         nodeMethod = Godot.Core.SceneTree.has_network_peer
 
+{-# NOINLINE bindSceneTree_is_auto_accept_quit #-}
+
+-- | If @true@, the application automatically accepts quitting.
+--   			For mobile platforms, see @quit_on_go_back@.
+bindSceneTree_is_auto_accept_quit :: MethodBind
+bindSceneTree_is_auto_accept_quit
+  = unsafePerformIO $
+      withCString "SceneTree" $
+        \ clsNamePtr ->
+          withCString "is_auto_accept_quit" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the application automatically accepts quitting.
+--   			For mobile platforms, see @quit_on_go_back@.
+is_auto_accept_quit ::
+                      (SceneTree :< cls, Object :< cls) => cls -> IO Bool
+is_auto_accept_quit cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSceneTree_is_auto_accept_quit
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SceneTree "is_auto_accept_quit" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.SceneTree.is_auto_accept_quit
+
 {-# NOINLINE bindSceneTree_is_debugging_collisions_hint #-}
 
 -- | If @true@, collision shapes will be visible when running the game from the editor for debugging purposes.
+--   			__Note:__ This property is not designed to be changed at run-time. Changing the value of @debug_collisions_hint@ while the project is running will not have the desired effect.
 bindSceneTree_is_debugging_collisions_hint :: MethodBind
 bindSceneTree_is_debugging_collisions_hint
   = unsafePerformIO $
@@ -1070,6 +1219,7 @@ bindSceneTree_is_debugging_collisions_hint
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, collision shapes will be visible when running the game from the editor for debugging purposes.
+--   			__Note:__ This property is not designed to be changed at run-time. Changing the value of @debug_collisions_hint@ while the project is running will not have the desired effect.
 is_debugging_collisions_hint ::
                                (SceneTree :< cls, Object :< cls) => cls -> IO Bool
 is_debugging_collisions_hint cls
@@ -1092,6 +1242,7 @@ instance NodeMethod SceneTree "is_debugging_collisions_hint" '[]
 {-# NOINLINE bindSceneTree_is_debugging_navigation_hint #-}
 
 -- | If @true@, navigation polygons will be visible when running the game from the editor for debugging purposes.
+--   			__Note:__ This property is not designed to be changed at run-time. Changing the value of @debug_navigation_hint@ while the project is running will not have the desired effect.
 bindSceneTree_is_debugging_navigation_hint :: MethodBind
 bindSceneTree_is_debugging_navigation_hint
   = unsafePerformIO $
@@ -1102,6 +1253,7 @@ bindSceneTree_is_debugging_navigation_hint
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, navigation polygons will be visible when running the game from the editor for debugging purposes.
+--   			__Note:__ This property is not designed to be changed at run-time. Changing the value of @debug_navigation_hint@ while the project is running will not have the desired effect.
 is_debugging_navigation_hint ::
                                (SceneTree :< cls, Object :< cls) => cls -> IO Bool
 is_debugging_navigation_hint cls
@@ -1245,6 +1397,73 @@ is_paused cls
 
 instance NodeMethod SceneTree "is_paused" '[] (IO Bool) where
         nodeMethod = Godot.Core.SceneTree.is_paused
+
+{-# NOINLINE bindSceneTree_is_physics_interpolation_enabled #-}
+
+-- | Although physics interpolation would normally be globally turned on and off using @ProjectSettings.physics/common/physics_interpolation@, this property allows control over interpolation at runtime.
+bindSceneTree_is_physics_interpolation_enabled :: MethodBind
+bindSceneTree_is_physics_interpolation_enabled
+  = unsafePerformIO $
+      withCString "SceneTree" $
+        \ clsNamePtr ->
+          withCString "is_physics_interpolation_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Although physics interpolation would normally be globally turned on and off using @ProjectSettings.physics/common/physics_interpolation@, this property allows control over interpolation at runtime.
+is_physics_interpolation_enabled ::
+                                   (SceneTree :< cls, Object :< cls) => cls -> IO Bool
+is_physics_interpolation_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindSceneTree_is_physics_interpolation_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SceneTree "is_physics_interpolation_enabled"
+           '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.SceneTree.is_physics_interpolation_enabled
+
+{-# NOINLINE bindSceneTree_is_quit_on_go_back #-}
+
+-- | If @true@, the application quits automatically on going back (e.g. on Android).
+--   			To handle 'Go Back' button when this option is disabled, use @MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST@.
+bindSceneTree_is_quit_on_go_back :: MethodBind
+bindSceneTree_is_quit_on_go_back
+  = unsafePerformIO $
+      withCString "SceneTree" $
+        \ clsNamePtr ->
+          withCString "is_quit_on_go_back" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the application quits automatically on going back (e.g. on Android).
+--   			To handle 'Go Back' button when this option is disabled, use @MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST@.
+is_quit_on_go_back ::
+                     (SceneTree :< cls, Object :< cls) => cls -> IO Bool
+is_quit_on_go_back cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSceneTree_is_quit_on_go_back
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SceneTree "is_quit_on_go_back" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.SceneTree.is_quit_on_go_back
 
 {-# NOINLINE bindSceneTree_is_refusing_new_network_connections #-}
 
@@ -1477,8 +1696,8 @@ instance NodeMethod SceneTree "reload_current_scene" '[] (IO Int)
 
 {-# NOINLINE bindSceneTree_set_auto_accept_quit #-}
 
--- | If @true@, the application automatically accepts quitting. Enabled by default.
---   				For mobile platforms, see @method set_quit_on_go_back@.
+-- | If @true@, the application automatically accepts quitting.
+--   			For mobile platforms, see @quit_on_go_back@.
 bindSceneTree_set_auto_accept_quit :: MethodBind
 bindSceneTree_set_auto_accept_quit
   = unsafePerformIO $
@@ -1488,8 +1707,8 @@ bindSceneTree_set_auto_accept_quit
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the application automatically accepts quitting. Enabled by default.
---   				For mobile platforms, see @method set_quit_on_go_back@.
+-- | If @true@, the application automatically accepts quitting.
+--   			For mobile platforms, see @quit_on_go_back@.
 set_auto_accept_quit ::
                        (SceneTree :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_auto_accept_quit cls arg1
@@ -1542,6 +1761,7 @@ instance NodeMethod SceneTree "set_current_scene" '[Node] (IO ())
 {-# NOINLINE bindSceneTree_set_debug_collisions_hint #-}
 
 -- | If @true@, collision shapes will be visible when running the game from the editor for debugging purposes.
+--   			__Note:__ This property is not designed to be changed at run-time. Changing the value of @debug_collisions_hint@ while the project is running will not have the desired effect.
 bindSceneTree_set_debug_collisions_hint :: MethodBind
 bindSceneTree_set_debug_collisions_hint
   = unsafePerformIO $
@@ -1552,6 +1772,7 @@ bindSceneTree_set_debug_collisions_hint
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, collision shapes will be visible when running the game from the editor for debugging purposes.
+--   			__Note:__ This property is not designed to be changed at run-time. Changing the value of @debug_collisions_hint@ while the project is running will not have the desired effect.
 set_debug_collisions_hint ::
                             (SceneTree :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_debug_collisions_hint cls arg1
@@ -1574,6 +1795,7 @@ instance NodeMethod SceneTree "set_debug_collisions_hint" '[Bool]
 {-# NOINLINE bindSceneTree_set_debug_navigation_hint #-}
 
 -- | If @true@, navigation polygons will be visible when running the game from the editor for debugging purposes.
+--   			__Note:__ This property is not designed to be changed at run-time. Changing the value of @debug_navigation_hint@ while the project is running will not have the desired effect.
 bindSceneTree_set_debug_navigation_hint :: MethodBind
 bindSceneTree_set_debug_navigation_hint
   = unsafePerformIO $
@@ -1584,6 +1806,7 @@ bindSceneTree_set_debug_navigation_hint
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | If @true@, navigation polygons will be visible when running the game from the editor for debugging purposes.
+--   			__Note:__ This property is not designed to be changed at run-time. Changing the value of @debug_navigation_hint@ while the project is running will not have the desired effect.
 set_debug_navigation_hint ::
                             (SceneTree :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_debug_navigation_hint cls arg1
@@ -1863,10 +2086,44 @@ set_pause cls arg1
 instance NodeMethod SceneTree "set_pause" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.SceneTree.set_pause
 
+{-# NOINLINE bindSceneTree_set_physics_interpolation_enabled #-}
+
+-- | Although physics interpolation would normally be globally turned on and off using @ProjectSettings.physics/common/physics_interpolation@, this property allows control over interpolation at runtime.
+bindSceneTree_set_physics_interpolation_enabled :: MethodBind
+bindSceneTree_set_physics_interpolation_enabled
+  = unsafePerformIO $
+      withCString "SceneTree" $
+        \ clsNamePtr ->
+          withCString "set_physics_interpolation_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Although physics interpolation would normally be globally turned on and off using @ProjectSettings.physics/common/physics_interpolation@, this property allows control over interpolation at runtime.
+set_physics_interpolation_enabled ::
+                                    (SceneTree :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_physics_interpolation_enabled cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindSceneTree_set_physics_interpolation_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SceneTree "set_physics_interpolation_enabled"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.SceneTree.set_physics_interpolation_enabled
+
 {-# NOINLINE bindSceneTree_set_quit_on_go_back #-}
 
--- | If @true@, the application quits automatically on going back (e.g. on Android). Enabled by default.
---   				To handle 'Go Back' button when this option is disabled, use @MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST@.
+-- | If @true@, the application quits automatically on going back (e.g. on Android).
+--   			To handle 'Go Back' button when this option is disabled, use @MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST@.
 bindSceneTree_set_quit_on_go_back :: MethodBind
 bindSceneTree_set_quit_on_go_back
   = unsafePerformIO $
@@ -1876,8 +2133,8 @@ bindSceneTree_set_quit_on_go_back
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, the application quits automatically on going back (e.g. on Android). Enabled by default.
---   				To handle 'Go Back' button when this option is disabled, use @MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST@.
+-- | If @true@, the application quits automatically on going back (e.g. on Android).
+--   			To handle 'Go Back' button when this option is disabled, use @MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST@.
 set_quit_on_go_back ::
                       (SceneTree :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_quit_on_go_back cls arg1

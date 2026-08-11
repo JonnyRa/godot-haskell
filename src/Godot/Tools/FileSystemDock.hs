@@ -24,7 +24,6 @@ module Godot.Tools.FileSystemDock
         Godot.Tools.FileSystemDock._folder_removed,
         Godot.Tools.FileSystemDock._fs_changed,
         Godot.Tools.FileSystemDock._fw_history,
-        Godot.Tools.FileSystemDock._make_dir_confirm,
         Godot.Tools.FileSystemDock._make_scene_confirm,
         Godot.Tools.FileSystemDock._move_operation_confirm,
         Godot.Tools.FileSystemDock._move_with_overwrite,
@@ -560,35 +559,6 @@ _fw_history cls
 
 instance NodeMethod FileSystemDock "_fw_history" '[] (IO ()) where
         nodeMethod = Godot.Tools.FileSystemDock._fw_history
-
-{-# NOINLINE bindFileSystemDock__make_dir_confirm #-}
-
-bindFileSystemDock__make_dir_confirm :: MethodBind
-bindFileSystemDock__make_dir_confirm
-  = unsafePerformIO $
-      withCString "FileSystemDock" $
-        \ clsNamePtr ->
-          withCString "_make_dir_confirm" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
-_make_dir_confirm ::
-                    (FileSystemDock :< cls, Object :< cls) => cls -> IO ()
-_make_dir_confirm cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindFileSystemDock__make_dir_confirm
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod FileSystemDock "_make_dir_confirm" '[] (IO ())
-         where
-        nodeMethod = Godot.Tools.FileSystemDock._make_dir_confirm
 
 {-# NOINLINE bindFileSystemDock__make_scene_confirm #-}
 

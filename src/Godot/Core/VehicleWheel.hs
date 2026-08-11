@@ -3,6 +3,7 @@
   MultiParamTypeClasses #-}
 module Godot.Core.VehicleWheel
        (Godot.Core.VehicleWheel.get_brake,
+        Godot.Core.VehicleWheel.get_contact_body,
         Godot.Core.VehicleWheel.get_damping_compression,
         Godot.Core.VehicleWheel.get_damping_relaxation,
         Godot.Core.VehicleWheel.get_engine_force,
@@ -157,6 +158,37 @@ get_brake cls
 instance NodeMethod VehicleWheel "get_brake" '[] (IO Float) where
         nodeMethod = Godot.Core.VehicleWheel.get_brake
 
+{-# NOINLINE bindVehicleWheel_get_contact_body #-}
+
+-- | Returns the contacting body node if valid in the tree, as @Spatial@. At the moment, @GridMap@ is not supported so the node will be always of type @PhysicsBody@.
+--   				Returns @null@ if the wheel is not in contact with a surface, or the contact body is not a @PhysicsBody@.
+bindVehicleWheel_get_contact_body :: MethodBind
+bindVehicleWheel_get_contact_body
+  = unsafePerformIO $
+      withCString "VehicleWheel" $
+        \ clsNamePtr ->
+          withCString "get_contact_body" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the contacting body node if valid in the tree, as @Spatial@. At the moment, @GridMap@ is not supported so the node will be always of type @PhysicsBody@.
+--   				Returns @null@ if the wheel is not in contact with a surface, or the contact body is not a @PhysicsBody@.
+get_contact_body ::
+                   (VehicleWheel :< cls, Object :< cls) => cls -> IO Spatial
+get_contact_body cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVehicleWheel_get_contact_body
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod VehicleWheel "get_contact_body" '[]
+           (IO Spatial)
+         where
+        nodeMethod = Godot.Core.VehicleWheel.get_contact_body
+
 {-# NOINLINE bindVehicleWheel_get_damping_compression #-}
 
 -- | The damping applied to the spring when the spring is being compressed. This value should be between 0.0 (no damping) and 1.0. A value of 0.0 means the car will keep bouncing as the spring keeps its energy. A good value for this is around 0.3 for a normal car, 0.5 for a race car.
@@ -223,7 +255,7 @@ instance NodeMethod VehicleWheel "get_damping_relaxation" '[]
 
 {-# NOINLINE bindVehicleWheel_get_engine_force #-}
 
--- | Accelerates the wheel by applying an engine force. The wheel is only speed up if it is in contact with a surface. The @RigidBody.mass@ of the vehicle has an effect on the acceleration of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 50 range for acceleration.
+-- | Accelerates the wheel by applying an engine force. The wheel is only sped up if it is in contact with a surface. The @RigidBody.mass@ of the vehicle has an effect on the acceleration of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 50 range for acceleration.
 --   			__Note:__ The simulation does not take the effect of gears into account, you will need to add logic for this if you wish to simulate gears.
 --   			A negative value will result in the wheel reversing.
 bindVehicleWheel_get_engine_force :: MethodBind
@@ -235,7 +267,7 @@ bindVehicleWheel_get_engine_force
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Accelerates the wheel by applying an engine force. The wheel is only speed up if it is in contact with a surface. The @RigidBody.mass@ of the vehicle has an effect on the acceleration of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 50 range for acceleration.
+-- | Accelerates the wheel by applying an engine force. The wheel is only sped up if it is in contact with a surface. The @RigidBody.mass@ of the vehicle has an effect on the acceleration of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 50 range for acceleration.
 --   			__Note:__ The simulation does not take the effect of gears into account, you will need to add logic for this if you wish to simulate gears.
 --   			A negative value will result in the wheel reversing.
 get_engine_force ::
@@ -754,7 +786,7 @@ instance NodeMethod VehicleWheel "set_damping_relaxation" '[Float]
 
 {-# NOINLINE bindVehicleWheel_set_engine_force #-}
 
--- | Accelerates the wheel by applying an engine force. The wheel is only speed up if it is in contact with a surface. The @RigidBody.mass@ of the vehicle has an effect on the acceleration of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 50 range for acceleration.
+-- | Accelerates the wheel by applying an engine force. The wheel is only sped up if it is in contact with a surface. The @RigidBody.mass@ of the vehicle has an effect on the acceleration of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 50 range for acceleration.
 --   			__Note:__ The simulation does not take the effect of gears into account, you will need to add logic for this if you wish to simulate gears.
 --   			A negative value will result in the wheel reversing.
 bindVehicleWheel_set_engine_force :: MethodBind
@@ -766,7 +798,7 @@ bindVehicleWheel_set_engine_force
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Accelerates the wheel by applying an engine force. The wheel is only speed up if it is in contact with a surface. The @RigidBody.mass@ of the vehicle has an effect on the acceleration of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 50 range for acceleration.
+-- | Accelerates the wheel by applying an engine force. The wheel is only sped up if it is in contact with a surface. The @RigidBody.mass@ of the vehicle has an effect on the acceleration of the vehicle. For a vehicle with a mass set to 1000, try a value in the 25 - 50 range for acceleration.
 --   			__Note:__ The simulation does not take the effect of gears into account, you will need to add logic for this if you wish to simulate gears.
 --   			A negative value will result in the wheel reversing.
 set_engine_force ::

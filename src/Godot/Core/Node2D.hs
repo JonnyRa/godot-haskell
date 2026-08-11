@@ -455,6 +455,7 @@ instance NodeMethod Node2D "get_rotation_degrees" '[] (IO Float)
 {-# NOINLINE bindNode2D_get_scale #-}
 
 -- | The node's scale. Unscaled value: @(1, 1)@.
+--   			__Note:__ Negative X scales in 2D are not decomposable from the transformation matrix. Due to the way scale is represented with transformation matrices in Godot, negative scales on the X axis will be changed to negative scales on the Y axis and a rotation of 180 degrees when decomposed.
 bindNode2D_get_scale :: MethodBind
 bindNode2D_get_scale
   = unsafePerformIO $
@@ -465,6 +466,7 @@ bindNode2D_get_scale
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The node's scale. Unscaled value: @(1, 1)@.
+--   			__Note:__ Negative X scales in 2D are not decomposable from the transformation matrix. Due to the way scale is represented with transformation matrices in Godot, negative scales on the X axis will be changed to negative scales on the Y axis and a rotation of 180 degrees when decomposed.
 get_scale :: (Node2D :< cls, Object :< cls) => cls -> IO Vector2
 get_scale cls
   = withVariantArray []
@@ -921,6 +923,7 @@ instance NodeMethod Node2D "set_rotation_degrees" '[Float] (IO ())
 {-# NOINLINE bindNode2D_set_scale #-}
 
 -- | The node's scale. Unscaled value: @(1, 1)@.
+--   			__Note:__ Negative X scales in 2D are not decomposable from the transformation matrix. Due to the way scale is represented with transformation matrices in Godot, negative scales on the X axis will be changed to negative scales on the Y axis and a rotation of 180 degrees when decomposed.
 bindNode2D_set_scale :: MethodBind
 bindNode2D_set_scale
   = unsafePerformIO $
@@ -931,6 +934,7 @@ bindNode2D_set_scale
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The node's scale. Unscaled value: @(1, 1)@.
+--   			__Note:__ Negative X scales in 2D are not decomposable from the transformation matrix. Due to the way scale is represented with transformation matrices in Godot, negative scales on the X axis will be changed to negative scales on the Y axis and a rotation of 180 degrees when decomposed.
 set_scale ::
             (Node2D :< cls, Object :< cls) => cls -> Vector2 -> IO ()
 set_scale cls arg1

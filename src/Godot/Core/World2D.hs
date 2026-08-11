@@ -4,6 +4,7 @@
 module Godot.Core.World2D
        (Godot.Core.World2D.get_canvas,
         Godot.Core.World2D.get_direct_space_state,
+        Godot.Core.World2D.get_navigation_map,
         Godot.Core.World2D.get_space)
        where
 import Data.Coerce
@@ -26,6 +27,9 @@ instance NodeProperty World2D "direct_space_state"
            'True
          where
         nodeProperty = (get_direct_space_state, (), Nothing)
+
+instance NodeProperty World2D "navigation_map" Rid 'True where
+        nodeProperty = (get_navigation_map, (), Nothing)
 
 instance NodeProperty World2D "space" Rid 'True where
         nodeProperty = (get_space, (), Nothing)
@@ -86,6 +90,35 @@ instance NodeMethod World2D "get_direct_space_state" '[]
            (IO Physics2DDirectSpaceState)
          where
         nodeMethod = Godot.Core.World2D.get_direct_space_state
+
+{-# NOINLINE bindWorld2D_get_navigation_map #-}
+
+-- | The @RID@ of this world's navigation map. Used by the @Navigation2DServer@.
+bindWorld2D_get_navigation_map :: MethodBind
+bindWorld2D_get_navigation_map
+  = unsafePerformIO $
+      withCString "World2D" $
+        \ clsNamePtr ->
+          withCString "get_navigation_map" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The @RID@ of this world's navigation map. Used by the @Navigation2DServer@.
+get_navigation_map ::
+                     (World2D :< cls, Object :< cls) => cls -> IO Rid
+get_navigation_map cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindWorld2D_get_navigation_map (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod World2D "get_navigation_map" '[] (IO Rid) where
+        nodeMethod = Godot.Core.World2D.get_navigation_map
 
 {-# NOINLINE bindWorld2D_get_space #-}
 

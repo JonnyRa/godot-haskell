@@ -31,6 +31,8 @@ module Godot.Core.Tree
         Godot.Core.Tree.ensure_cursor_is_visible,
         Godot.Core.Tree.get_allow_reselect,
         Godot.Core.Tree.get_allow_rmb_select,
+        Godot.Core.Tree.get_allow_search,
+        Godot.Core.Tree.get_button_id_at_position,
         Godot.Core.Tree.get_column_at_position,
         Godot.Core.Tree.get_column_title, Godot.Core.Tree.get_column_width,
         Godot.Core.Tree.get_columns, Godot.Core.Tree.get_custom_popup_rect,
@@ -46,13 +48,14 @@ module Godot.Core.Tree
         Godot.Core.Tree.is_folding_hidden, Godot.Core.Tree.is_root_hidden,
         Godot.Core.Tree.scroll_to_item, Godot.Core.Tree.set_allow_reselect,
         Godot.Core.Tree.set_allow_rmb_select,
+        Godot.Core.Tree.set_allow_search,
         Godot.Core.Tree.set_column_expand,
         Godot.Core.Tree.set_column_min_width,
         Godot.Core.Tree.set_column_title,
         Godot.Core.Tree.set_column_titles_visible,
         Godot.Core.Tree.set_columns, Godot.Core.Tree.set_drop_mode_flags,
         Godot.Core.Tree.set_hide_folding, Godot.Core.Tree.set_hide_root,
-        Godot.Core.Tree.set_select_mode)
+        Godot.Core.Tree.set_select_mode, Godot.Core.Tree.set_selected)
        where
 import Data.Coerce
 import Foreign.C
@@ -202,6 +205,16 @@ instance NodeProperty Tree "allow_rmb_select" Bool 'False where
         nodeProperty
           = (get_allow_rmb_select, wrapDroppingSetter set_allow_rmb_select,
              Nothing)
+
+instance NodeProperty Tree "allow_search" Bool 'False where
+        nodeProperty
+          = (get_allow_search, wrapDroppingSetter set_allow_search, Nothing)
+
+instance NodeProperty Tree "column_titles_visible" Bool 'False
+         where
+        nodeProperty
+          = (are_column_titles_visible,
+             wrapDroppingSetter set_column_titles_visible, Nothing)
 
 instance NodeProperty Tree "columns" Int 'False where
         nodeProperty
@@ -416,7 +429,7 @@ instance NodeMethod Tree "_value_editor_changed" '[Float] (IO ())
 
 {-# NOINLINE bindTree_are_column_titles_visible #-}
 
--- | Returns @true@ if the column titles are being shown.
+-- | If @true@, column titles are visible.
 bindTree_are_column_titles_visible :: MethodBind
 bindTree_are_column_titles_visible
   = unsafePerformIO $
@@ -426,7 +439,7 @@ bindTree_are_column_titles_visible
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if the column titles are being shown.
+-- | If @true@, column titles are visible.
 are_column_titles_visible ::
                             (Tree :< cls, Object :< cls) => cls -> IO Bool
 are_column_titles_visible cls
@@ -622,6 +635,66 @@ get_allow_rmb_select cls
 
 instance NodeMethod Tree "get_allow_rmb_select" '[] (IO Bool) where
         nodeMethod = Godot.Core.Tree.get_allow_rmb_select
+
+{-# NOINLINE bindTree_get_allow_search #-}
+
+-- | If @true@, allows navigating the @Tree@ with letter keys through incremental search.
+bindTree_get_allow_search :: MethodBind
+bindTree_get_allow_search
+  = unsafePerformIO $
+      withCString "Tree" $
+        \ clsNamePtr ->
+          withCString "get_allow_search" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, allows navigating the @Tree@ with letter keys through incremental search.
+get_allow_search :: (Tree :< cls, Object :< cls) => cls -> IO Bool
+get_allow_search cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTree_get_allow_search (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Tree "get_allow_search" '[] (IO Bool) where
+        nodeMethod = Godot.Core.Tree.get_allow_search
+
+{-# NOINLINE bindTree_get_button_id_at_position #-}
+
+-- | Returns the button id at @position@, or -1 if no button is there.
+bindTree_get_button_id_at_position :: MethodBind
+bindTree_get_button_id_at_position
+  = unsafePerformIO $
+      withCString "Tree" $
+        \ clsNamePtr ->
+          withCString "get_button_id_at_position" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the button id at @position@, or -1 if no button is there.
+get_button_id_at_position ::
+                            (Tree :< cls, Object :< cls) => cls -> Vector2 -> IO Int
+get_button_id_at_position cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTree_get_button_id_at_position
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Tree "get_button_id_at_position" '[Vector2]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.Tree.get_button_id_at_position
 
 {-# NOINLINE bindTree_get_column_at_position #-}
 
@@ -843,7 +916,7 @@ instance NodeMethod Tree "get_drop_section_at_position" '[Vector2]
 --   @
 --   
 --   				func _ready():
---   				    $Tree.item_edited.connect(on_Tree_item_edited)
+--   				    $Tree.connect("item_edited", self, "on_Tree_item_edited")
 --   
 --   				func on_Tree_item_edited():
 --   				    print($Tree.get_edited()) # This item just got edited (e.g. checked).
@@ -863,7 +936,7 @@ bindTree_get_edited
 --   @
 --   
 --   				func _ready():
---   				    $Tree.item_edited.connect(on_Tree_item_edited)
+--   				    $Tree.connect("item_edited", self, "on_Tree_item_edited")
 --   
 --   				func on_Tree_item_edited():
 --   				    print($Tree.get_edited()) # This item just got edited (e.g. checked).
@@ -1305,6 +1378,35 @@ instance NodeMethod Tree "set_allow_rmb_select" '[Bool] (IO ())
          where
         nodeMethod = Godot.Core.Tree.set_allow_rmb_select
 
+{-# NOINLINE bindTree_set_allow_search #-}
+
+-- | If @true@, allows navigating the @Tree@ with letter keys through incremental search.
+bindTree_set_allow_search :: MethodBind
+bindTree_set_allow_search
+  = unsafePerformIO $
+      withCString "Tree" $
+        \ clsNamePtr ->
+          withCString "set_allow_search" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, allows navigating the @Tree@ with letter keys through incremental search.
+set_allow_search ::
+                   (Tree :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_allow_search cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTree_set_allow_search (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Tree "set_allow_search" '[Bool] (IO ()) where
+        nodeMethod = Godot.Core.Tree.set_allow_search
+
 {-# NOINLINE bindTree_set_column_expand #-}
 
 -- | If @true@, the column will have the "Expand" flag of @Control@. Columns that have the "Expand" flag will use their "min_width" in a similar fashion to @Control.size_flags_stretch_ratio@.
@@ -1569,3 +1671,32 @@ set_select_mode cls arg1
 
 instance NodeMethod Tree "set_select_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Tree.set_select_mode
+
+{-# NOINLINE bindTree_set_selected #-}
+
+-- | Selects the specified @TreeItem@ and column.
+bindTree_set_selected :: MethodBind
+bindTree_set_selected
+  = unsafePerformIO $
+      withCString "Tree" $
+        \ clsNamePtr ->
+          withCString "set_selected" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Selects the specified @TreeItem@ and column.
+set_selected ::
+               (Tree :< cls, Object :< cls) => cls -> Object -> Int -> IO ()
+set_selected cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTree_set_selected (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Tree "set_selected" '[Object, Int] (IO ())
+         where
+        nodeMethod = Godot.Core.Tree.set_selected

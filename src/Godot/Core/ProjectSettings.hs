@@ -2,7 +2,8 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.ProjectSettings
-       (Godot.Core.ProjectSettings.add_property_info,
+       (Godot.Core.ProjectSettings.sig_project_settings_changed,
+        Godot.Core.ProjectSettings.add_property_info,
         Godot.Core.ProjectSettings.clear,
         Godot.Core.ProjectSettings.get_order,
         Godot.Core.ProjectSettings.get_setting,
@@ -29,6 +30,14 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Object()
+
+-- | Objects can use this signal to restrict reading of settings only to situations where a change has been made.
+sig_project_settings_changed ::
+                             Godot.Internal.Dispatch.Signal ProjectSettings
+sig_project_settings_changed
+  = Godot.Internal.Dispatch.Signal "project_settings_changed"
+
+instance NodeSignal ProjectSettings "project_settings_changed" '[]
 
 {-# NOINLINE bindProjectSettings_add_property_info #-}
 
@@ -210,7 +219,7 @@ instance NodeMethod ProjectSettings "get_setting" '[GodotString]
 
 {-# NOINLINE bindProjectSettings_globalize_path #-}
 
--- | Returns the absolute, native OS path corresponding to the localized @path@ (starting with @res://@ or @user://@). The returned path will vary depending on the operating system and user preferences. See @url=https://docs.godotengine.org/en/3.4/tutorials/io/data_paths.html@File paths in Godot projects@/url@ to see what those paths convert to. See also @method localize_path@.
+-- | Returns the absolute, native OS path corresponding to the localized @path@ (starting with @res://@ or @user://@). The returned path will vary depending on the operating system and user preferences. See @url=$DOCS_URL/tutorials/io/data_paths.html@File paths in Godot projects@/url@ to see what those paths convert to. See also @method localize_path@.
 --   				__Note:__ @method globalize_path@ with @res://@ will not work in an exported project. Instead, prepend the executable's base directory to the path when running from an exported project:
 --   				
 --   @
@@ -237,7 +246,7 @@ bindProjectSettings_globalize_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the absolute, native OS path corresponding to the localized @path@ (starting with @res://@ or @user://@). The returned path will vary depending on the operating system and user preferences. See @url=https://docs.godotengine.org/en/3.4/tutorials/io/data_paths.html@File paths in Godot projects@/url@ to see what those paths convert to. See also @method localize_path@.
+-- | Returns the absolute, native OS path corresponding to the localized @path@ (starting with @res://@ or @user://@). The returned path will vary depending on the operating system and user preferences. See @url=$DOCS_URL/tutorials/io/data_paths.html@File paths in Godot projects@/url@ to see what those paths convert to. See also @method localize_path@.
 --   				__Note:__ @method globalize_path@ with @res://@ will not work in an exported project. Instead, prepend the executable's base directory to the path when running from an exported project:
 --   				
 --   @

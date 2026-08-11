@@ -2,7 +2,9 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.Slider
-       (Godot.Core.Slider._gui_input, Godot.Core.Slider.get_ticks,
+       (Godot.Core.Slider.sig_drag_ended,
+        Godot.Core.Slider.sig_drag_started, Godot.Core.Slider._gui_input,
+        Godot.Core.Slider.get_ticks,
         Godot.Core.Slider.get_ticks_on_borders,
         Godot.Core.Slider.is_editable, Godot.Core.Slider.is_scrollable,
         Godot.Core.Slider.set_editable, Godot.Core.Slider.set_scrollable,
@@ -20,6 +22,18 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Range()
+
+-- | Emitted when dragging stops. If @value_changed@ is true, @Range.value@ is different from the value when you started the dragging.
+sig_drag_ended :: Godot.Internal.Dispatch.Signal Slider
+sig_drag_ended = Godot.Internal.Dispatch.Signal "drag_ended"
+
+instance NodeSignal Slider "drag_ended" '[Bool]
+
+-- | Emitted when dragging is started.
+sig_drag_started :: Godot.Internal.Dispatch.Signal Slider
+sig_drag_started = Godot.Internal.Dispatch.Signal "drag_started"
+
+instance NodeSignal Slider "drag_started" '[]
 
 instance NodeProperty Slider "editable" Bool 'False where
         nodeProperty

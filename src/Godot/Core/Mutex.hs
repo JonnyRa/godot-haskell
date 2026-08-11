@@ -76,6 +76,7 @@ instance NodeMethod Mutex "try_lock" '[] (IO Int) where
 
 -- | Unlocks this @Mutex@, leaving it to other threads.
 --   				__Note:__ If a thread called @method lock@ or @method try_lock@ multiple times while already having ownership of the mutex, it must also call @method unlock@ the same number of times in order to unlock it correctly.
+--   				__Warning:__ Calling @method unlock@ more times that @method lock@ on a given thread, thus ending up trying to unlock a non-locked mutex, is wrong and may causes crashes or deadlocks.
 bindMutex_unlock :: MethodBind
 bindMutex_unlock
   = unsafePerformIO $
@@ -87,6 +88,7 @@ bindMutex_unlock
 
 -- | Unlocks this @Mutex@, leaving it to other threads.
 --   				__Note:__ If a thread called @method lock@ or @method try_lock@ multiple times while already having ownership of the mutex, it must also call @method unlock@ the same number of times in order to unlock it correctly.
+--   				__Warning:__ Calling @method unlock@ more times that @method lock@ on a given thread, thus ending up trying to unlock a non-locked mutex, is wrong and may causes crashes or deadlocks.
 unlock :: (Mutex :< cls, Object :< cls) => cls -> IO ()
 unlock cls
   = withVariantArray []

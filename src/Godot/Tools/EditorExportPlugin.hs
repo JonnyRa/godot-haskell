@@ -13,6 +13,7 @@ module Godot.Tools.EditorExportPlugin
         Godot.Tools.EditorExportPlugin.add_ios_linker_flags,
         Godot.Tools.EditorExportPlugin.add_ios_plist_content,
         Godot.Tools.EditorExportPlugin.add_ios_project_static_lib,
+        Godot.Tools.EditorExportPlugin.add_osx_plugin_file,
         Godot.Tools.EditorExportPlugin.add_shared_object,
         Godot.Tools.EditorExportPlugin.skip)
        where
@@ -409,9 +410,47 @@ instance NodeMethod EditorExportPlugin "add_ios_project_static_lib"
         nodeMethod
           = Godot.Tools.EditorExportPlugin.add_ios_project_static_lib
 
+{-# NOINLINE bindEditorExportPlugin_add_osx_plugin_file #-}
+
+-- | Adds file or directory matching @path@ to @PlugIns@ directory of macOS app bundle.
+--   				__Note:__ This is useful only for macOS exports.
+bindEditorExportPlugin_add_osx_plugin_file :: MethodBind
+bindEditorExportPlugin_add_osx_plugin_file
+  = unsafePerformIO $
+      withCString "EditorExportPlugin" $
+        \ clsNamePtr ->
+          withCString "add_osx_plugin_file" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Adds file or directory matching @path@ to @PlugIns@ directory of macOS app bundle.
+--   				__Note:__ This is useful only for macOS exports.
+add_osx_plugin_file ::
+                      (EditorExportPlugin :< cls, Object :< cls) =>
+                      cls -> GodotString -> IO ()
+add_osx_plugin_file cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEditorExportPlugin_add_osx_plugin_file
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorExportPlugin "add_osx_plugin_file"
+           '[GodotString]
+           (IO ())
+         where
+        nodeMethod = Godot.Tools.EditorExportPlugin.add_osx_plugin_file
+
 {-# NOINLINE bindEditorExportPlugin_add_shared_object #-}
 
--- | Adds a shared object with the given @tags@ and destination @path@.
+-- | Adds a shared object or a directory containing only shared objects with the given @tags@ and destination @path@.
+--   				__Note:__ In case of macOS exports, those shared objects will be added to @Frameworks@ directory of app bundle.
+--   				In case of a directory code-sign will error if you place non code object in directory.
 bindEditorExportPlugin_add_shared_object :: MethodBind
 bindEditorExportPlugin_add_shared_object
   = unsafePerformIO $
@@ -421,7 +460,9 @@ bindEditorExportPlugin_add_shared_object
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a shared object with the given @tags@ and destination @path@.
+-- | Adds a shared object or a directory containing only shared objects with the given @tags@ and destination @path@.
+--   				__Note:__ In case of macOS exports, those shared objects will be added to @Frameworks@ directory of app bundle.
+--   				In case of a directory code-sign will error if you place non code object in directory.
 add_shared_object ::
                     (EditorExportPlugin :< cls, Object :< cls) =>
                     cls -> GodotString -> PoolStringArray -> IO ()

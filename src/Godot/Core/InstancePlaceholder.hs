@@ -21,7 +21,8 @@ import Godot.Core.Node()
 
 {-# NOINLINE bindInstancePlaceholder_create_instance #-}
 
--- | Not thread-safe. Use @method Object.call_deferred@ if calling from a thread.
+-- | Call this method to actually load in the node. The created node will be placed as a sibling @i@above@/i@ the @InstancePlaceholder@ in the scene tree. The @Node@'s reference is also returned for convenience.
+--   				__Note:__ @method create_instance@ is not thread-safe. Use @method Object.call_deferred@ if calling from a thread.
 bindInstancePlaceholder_create_instance :: MethodBind
 bindInstancePlaceholder_create_instance
   = unsafePerformIO $
@@ -31,7 +32,8 @@ bindInstancePlaceholder_create_instance
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Not thread-safe. Use @method Object.call_deferred@ if calling from a thread.
+-- | Call this method to actually load in the node. The created node will be placed as a sibling @i@above@/i@ the @InstancePlaceholder@ in the scene tree. The @Node@'s reference is also returned for convenience.
+--   				__Note:__ @method create_instance@ is not thread-safe. Use @method Object.call_deferred@ if calling from a thread.
 create_instance ::
                   (InstancePlaceholder :< cls, Object :< cls) =>
                   cls -> Maybe Bool -> Maybe PackedScene -> IO Node
@@ -87,6 +89,8 @@ instance NodeMethod InstancePlaceholder "get_instance_path" '[]
 
 {-# NOINLINE bindInstancePlaceholder_get_stored_values #-}
 
+-- | Returns the list of properties that will be applied to the node when @method create_instance@ is called.
+--   				If @with_order@ is @true@, a key named @.order@ (note the leading period) is added to the dictionary. This @.order@ key is an @Array@ of @String@ property names specifying the order in which properties will be applied (with index 0 being the first).
 bindInstancePlaceholder_get_stored_values :: MethodBind
 bindInstancePlaceholder_get_stored_values
   = unsafePerformIO $
@@ -96,6 +100,8 @@ bindInstancePlaceholder_get_stored_values
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | Returns the list of properties that will be applied to the node when @method create_instance@ is called.
+--   				If @with_order@ is @true@, a key named @.order@ (note the leading period) is added to the dictionary. This @.order@ key is an @Array@ of @String@ property names specifying the order in which properties will be applied (with index 0 being the first).
 get_stored_values ::
                     (InstancePlaceholder :< cls, Object :< cls) =>
                     cls -> Maybe Bool -> IO Dictionary

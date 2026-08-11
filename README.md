@@ -16,7 +16,7 @@ The easiest way to get started is to have a look at the demos included in the
 directory. First check out ["Dodge the
 Creeps!"](https://github.com/SimulaVR/godot-haskell/tree/master/examples/dodge-the-creeps),
 your first game from the [Godot
-documentation](https://docs.godotengine.org/en/3.1/getting_started/step_by_step/your_first_game.html). Following
+documentation](https://docs.godotengine.org/en/3.6/getting_started/step_by_step/your_first_game.html). Following
 along with the documentation and the code should make everything understandable.
 
 To build:
@@ -32,6 +32,13 @@ To make changes to the game, in two different terminals:
 make stack-watch
 make project-watch
 ```
+
+or alternatively with `godot.bash`
+```
+buildDodgeTheCreeps --from top level of repo
+godot-haskell-project-generator game src --(from dodge-the-creeps) but you can run from anywhere
+```
+You can also build the latter using installHaskellGenerator
 
 The first command will constantly build Haskell code and copy the shared library
 into the Godot project, demo. The second command will constantly scan the Godot
@@ -89,7 +96,7 @@ stack new myproject https://raw.githubusercontent.com/SimulaVR/godot-haskell/mas
 
 You will need to regenerate the bindings if you switch Godot versions. At
 present, these are generated for the version that corresponds to the
-godot_headers submodule included here. This was 3.1 at the time of writing.
+godot_headers submodule included here. This was 3.6.2 at the time of writing.
 
 To regenerate bindings:
 
@@ -119,6 +126,9 @@ stack build
 rm ../src/Godot/Core/* ../src/Godot/Tools/*
 stack exec godot-haskell-classgen -- ../godot_headers/api.json ../godot_doc_classes.json ../
 ```
+
+or just source godot.bash
+and run `rebuildGodotTypes`
 
 That's it! The rest of the bindings are fairly lightweight with few
 dependencies, so you shouldn't see much breakage in the rest of the package.

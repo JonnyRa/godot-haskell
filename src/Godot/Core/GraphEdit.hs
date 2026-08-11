@@ -19,7 +19,9 @@ module Godot.Core.GraphEdit
         Godot.Core.GraphEdit._connections_layer_draw,
         Godot.Core.GraphEdit._graph_node_moved,
         Godot.Core.GraphEdit._graph_node_raised,
+        Godot.Core.GraphEdit._graph_node_selected,
         Godot.Core.GraphEdit._graph_node_slot_updated,
+        Godot.Core.GraphEdit._graph_node_unselected,
         Godot.Core.GraphEdit._gui_input,
         Godot.Core.GraphEdit._minimap_draw,
         Godot.Core.GraphEdit._minimap_toggled,
@@ -118,20 +120,20 @@ sig_connection_to_empty
 instance NodeSignal GraphEdit "connection_to_empty"
            '[GodotString, Int, Vector2]
 
--- | Emitted when the user presses @Ctrl + C@.
+-- | Emitted when the user presses @kbd@Ctrl + C@/kbd@.
 sig_copy_nodes_request :: Godot.Internal.Dispatch.Signal GraphEdit
 sig_copy_nodes_request
   = Godot.Internal.Dispatch.Signal "copy_nodes_request"
 
 instance NodeSignal GraphEdit "copy_nodes_request" '[]
 
--- | Emitted when a GraphNode is attempted to be removed from the GraphEdit.
+-- | Emitted when a GraphNode is attempted to be removed from the GraphEdit. Provides a list of node names to be removed (all selected nodes, excluding nodes without closing button).
 sig_delete_nodes_request ::
                          Godot.Internal.Dispatch.Signal GraphEdit
 sig_delete_nodes_request
   = Godot.Internal.Dispatch.Signal "delete_nodes_request"
 
-instance NodeSignal GraphEdit "delete_nodes_request" '[]
+instance NodeSignal GraphEdit "delete_nodes_request" '[Array]
 
 -- | Emitted to the GraphEdit when the connection between @from_slot@ slot of @from@ GraphNode and @to_slot@ slot of @to@ GraphNode is attempted to be removed.
 sig_disconnection_request ::
@@ -162,7 +164,7 @@ sig_node_unselected
 
 instance NodeSignal GraphEdit "node_unselected" '[Node]
 
--- | Emitted when the user presses @Ctrl + V@.
+-- | Emitted when the user presses @kbd@Ctrl + V@/kbd@.
 sig_paste_nodes_request :: Godot.Internal.Dispatch.Signal GraphEdit
 sig_paste_nodes_request
   = Godot.Internal.Dispatch.Signal "paste_nodes_request"
@@ -322,6 +324,36 @@ instance NodeMethod GraphEdit "_graph_node_raised" '[Node] (IO ())
          where
         nodeMethod = Godot.Core.GraphEdit._graph_node_raised
 
+{-# NOINLINE bindGraphEdit__graph_node_selected #-}
+
+bindGraphEdit__graph_node_selected :: MethodBind
+bindGraphEdit__graph_node_selected
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "_graph_node_selected" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_graph_node_selected ::
+                       (GraphEdit :< cls, Object :< cls) => cls -> Node -> IO ()
+_graph_node_selected cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit__graph_node_selected
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "_graph_node_selected" '[Node]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GraphEdit._graph_node_selected
+
 {-# NOINLINE bindGraphEdit__graph_node_slot_updated #-}
 
 bindGraphEdit__graph_node_slot_updated :: MethodBind
@@ -352,6 +384,36 @@ instance NodeMethod GraphEdit "_graph_node_slot_updated"
            (IO ())
          where
         nodeMethod = Godot.Core.GraphEdit._graph_node_slot_updated
+
+{-# NOINLINE bindGraphEdit__graph_node_unselected #-}
+
+bindGraphEdit__graph_node_unselected :: MethodBind
+bindGraphEdit__graph_node_unselected
+  = unsafePerformIO $
+      withCString "GraphEdit" $
+        \ clsNamePtr ->
+          withCString "_graph_node_unselected" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_graph_node_unselected ::
+                         (GraphEdit :< cls, Object :< cls) => cls -> Node -> IO ()
+_graph_node_unselected cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGraphEdit__graph_node_unselected
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GraphEdit "_graph_node_unselected" '[Node]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GraphEdit._graph_node_unselected
 
 {-# NOINLINE bindGraphEdit__gui_input #-}
 

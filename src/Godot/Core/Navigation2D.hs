@@ -2,12 +2,16 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.Navigation2D
-       (Godot.Core.Navigation2D.get_closest_point,
+       (Godot.Core.Navigation2D.get_cell_size,
+        Godot.Core.Navigation2D.get_closest_point,
         Godot.Core.Navigation2D.get_closest_point_owner,
+        Godot.Core.Navigation2D.get_edge_connection_margin,
+        Godot.Core.Navigation2D.get_navigation_layers,
+        Godot.Core.Navigation2D.get_rid,
         Godot.Core.Navigation2D.get_simple_path,
-        Godot.Core.Navigation2D.navpoly_add,
-        Godot.Core.Navigation2D.navpoly_remove,
-        Godot.Core.Navigation2D.navpoly_set_transform)
+        Godot.Core.Navigation2D.set_cell_size,
+        Godot.Core.Navigation2D.set_edge_connection_margin,
+        Godot.Core.Navigation2D.set_navigation_layers)
        where
 import Data.Coerce
 import Foreign.C
@@ -20,6 +24,53 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.Node2D()
+
+instance NodeProperty Navigation2D "cell_size" Float 'False where
+        nodeProperty
+          = (get_cell_size, wrapDroppingSetter set_cell_size, Nothing)
+
+instance NodeProperty Navigation2D "edge_connection_margin" Float
+           'False
+         where
+        nodeProperty
+          = (get_edge_connection_margin,
+             wrapDroppingSetter set_edge_connection_margin, Nothing)
+
+instance NodeProperty Navigation2D "navigation_layers" Int 'False
+         where
+        nodeProperty
+          = (get_navigation_layers, wrapDroppingSetter set_navigation_layers,
+             Nothing)
+
+{-# NOINLINE bindNavigation2D_get_cell_size #-}
+
+-- | The XY plane cell size to use for fields.
+bindNavigation2D_get_cell_size :: MethodBind
+bindNavigation2D_get_cell_size
+  = unsafePerformIO $
+      withCString "Navigation2D" $
+        \ clsNamePtr ->
+          withCString "get_cell_size" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The XY plane cell size to use for fields.
+get_cell_size ::
+                (Navigation2D :< cls, Object :< cls) => cls -> IO Float
+get_cell_size cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation2D_get_cell_size (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation2D "get_cell_size" '[] (IO Float)
+         where
+        nodeMethod = Godot.Core.Navigation2D.get_cell_size
 
 {-# NOINLINE bindNavigation2D_get_closest_point #-}
 
@@ -56,7 +107,7 @@ instance NodeMethod Navigation2D "get_closest_point" '[Vector2]
 
 {-# NOINLINE bindNavigation2D_get_closest_point_owner #-}
 
--- | Returns the owner of the @NavigationPolygon@ which contains the navigation point closest to the point given. This is usually a @NavigationPolygonInstance@. For polygons added via @method navpoly_add@, returns the owner that was given (or @null@ if the @owner@ parameter was omitted).
+-- | Returns the owner of the @NavigationPolygon@ which contains the navigation point closest to the point given. This is usually a @NavigationPolygonInstance@.
 bindNavigation2D_get_closest_point_owner :: MethodBind
 bindNavigation2D_get_closest_point_owner
   = unsafePerformIO $
@@ -66,9 +117,9 @@ bindNavigation2D_get_closest_point_owner
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the owner of the @NavigationPolygon@ which contains the navigation point closest to the point given. This is usually a @NavigationPolygonInstance@. For polygons added via @method navpoly_add@, returns the owner that was given (or @null@ if the @owner@ parameter was omitted).
+-- | Returns the owner of the @NavigationPolygon@ which contains the navigation point closest to the point given. This is usually a @NavigationPolygonInstance@.
 get_closest_point_owner ::
-                          (Navigation2D :< cls, Object :< cls) => cls -> Vector2 -> IO Object
+                          (Navigation2D :< cls, Object :< cls) => cls -> Vector2 -> IO Rid
 get_closest_point_owner cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
@@ -76,18 +127,112 @@ get_closest_point_owner cls arg1
            (upcast cls)
            arrPtr
            len
-           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod Navigation2D "get_closest_point_owner"
            '[Vector2]
-           (IO Object)
+           (IO Rid)
          where
         nodeMethod = Godot.Core.Navigation2D.get_closest_point_owner
 
+{-# NOINLINE bindNavigation2D_get_edge_connection_margin #-}
+
+-- | This value is used to detect the near edges to connect compatible regions.
+bindNavigation2D_get_edge_connection_margin :: MethodBind
+bindNavigation2D_get_edge_connection_margin
+  = unsafePerformIO $
+      withCString "Navigation2D" $
+        \ clsNamePtr ->
+          withCString "get_edge_connection_margin" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | This value is used to detect the near edges to connect compatible regions.
+get_edge_connection_margin ::
+                             (Navigation2D :< cls, Object :< cls) => cls -> IO Float
+get_edge_connection_margin cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation2D_get_edge_connection_margin
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation2D "get_edge_connection_margin" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.Navigation2D.get_edge_connection_margin
+
+{-# NOINLINE bindNavigation2D_get_navigation_layers #-}
+
+-- | A bitfield determining all navigation map layers the navigation can use on a @method Navigation2D.get_simple_path@ path query.
+bindNavigation2D_get_navigation_layers :: MethodBind
+bindNavigation2D_get_navigation_layers
+  = unsafePerformIO $
+      withCString "Navigation2D" $
+        \ clsNamePtr ->
+          withCString "get_navigation_layers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | A bitfield determining all navigation map layers the navigation can use on a @method Navigation2D.get_simple_path@ path query.
+get_navigation_layers ::
+                        (Navigation2D :< cls, Object :< cls) => cls -> IO Int
+get_navigation_layers cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation2D_get_navigation_layers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation2D "get_navigation_layers" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.Navigation2D.get_navigation_layers
+
+{-# NOINLINE bindNavigation2D_get_rid #-}
+
+-- | Returns the object's @RID@.
+bindNavigation2D_get_rid :: MethodBind
+bindNavigation2D_get_rid
+  = unsafePerformIO $
+      withCString "Navigation2D" $
+        \ clsNamePtr ->
+          withCString "get_rid" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the object's @RID@.
+get_rid :: (Navigation2D :< cls, Object :< cls) => cls -> IO Rid
+get_rid cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation2D_get_rid (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation2D "get_rid" '[] (IO Rid) where
+        nodeMethod = Godot.Core.Navigation2D.get_rid
+
 {-# NOINLINE bindNavigation2D_get_simple_path #-}
 
--- | Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the path is smoothed by merging path segments where possible.
---   				__Note:__ This method has known issues and will often return non-optimal paths. These issues will be fixed in Godot 4.0.
+-- | @i@Deprecated.@/i@ @Navigation2D@ node and @method get_simple_path@ are deprecated and will be removed in a future version. Use @method Navigation2DServer.map_get_path@ instead.
+--   				Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the path is smoothed by merging path segments where possible.
 bindNavigation2D_get_simple_path :: MethodBind
 bindNavigation2D_get_simple_path
   = unsafePerformIO $
@@ -97,8 +242,8 @@ bindNavigation2D_get_simple_path
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the path is smoothed by merging path segments where possible.
---   				__Note:__ This method has known issues and will often return non-optimal paths. These issues will be fixed in Godot 4.0.
+-- | @i@Deprecated.@/i@ @Navigation2D@ node and @method get_simple_path@ are deprecated and will be removed in a future version. Use @method Navigation2DServer.map_get_path@ instead.
+--   				Returns the path between two given points. Points are in local coordinate space. If @optimize@ is @true@ (the default), the path is smoothed by merging path segments where possible.
 get_simple_path ::
                   (Navigation2D :< cls, Object :< cls) =>
                   cls -> Vector2 -> Vector2 -> Maybe Bool -> IO PoolVector2Array
@@ -122,59 +267,25 @@ instance NodeMethod Navigation2D "get_simple_path"
          where
         nodeMethod = Godot.Core.Navigation2D.get_simple_path
 
-{-# NOINLINE bindNavigation2D_navpoly_add #-}
+{-# NOINLINE bindNavigation2D_set_cell_size #-}
 
--- | Adds a @NavigationPolygon@. Returns an ID for use with @method navpoly_remove@ or @method navpoly_set_transform@. If given, a @Transform2D@ is applied to the polygon. The optional @owner@ is used as return value for @method get_closest_point_owner@.
-bindNavigation2D_navpoly_add :: MethodBind
-bindNavigation2D_navpoly_add
+-- | The XY plane cell size to use for fields.
+bindNavigation2D_set_cell_size :: MethodBind
+bindNavigation2D_set_cell_size
   = unsafePerformIO $
       withCString "Navigation2D" $
         \ clsNamePtr ->
-          withCString "navpoly_add" $
+          withCString "set_cell_size" $
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a @NavigationPolygon@. Returns an ID for use with @method navpoly_remove@ or @method navpoly_set_transform@. If given, a @Transform2D@ is applied to the polygon. The optional @owner@ is used as return value for @method get_closest_point_owner@.
-navpoly_add ::
-              (Navigation2D :< cls, Object :< cls) =>
-              cls -> NavigationPolygon -> Transform2d -> Maybe Object -> IO Int
-navpoly_add cls arg1 arg2 arg3
-  = withVariantArray
-      [toVariant arg1, toVariant arg2, maybe VariantNil toVariant arg3]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindNavigation2D_navpoly_add (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod Navigation2D "navpoly_add"
-           '[NavigationPolygon, Transform2d, Maybe Object]
-           (IO Int)
-         where
-        nodeMethod = Godot.Core.Navigation2D.navpoly_add
-
-{-# NOINLINE bindNavigation2D_navpoly_remove #-}
-
--- | Removes the @NavigationPolygon@ with the given ID.
-bindNavigation2D_navpoly_remove :: MethodBind
-bindNavigation2D_navpoly_remove
-  = unsafePerformIO $
-      withCString "Navigation2D" $
-        \ clsNamePtr ->
-          withCString "navpoly_remove" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | Removes the @NavigationPolygon@ with the given ID.
-navpoly_remove ::
-                 (Navigation2D :< cls, Object :< cls) => cls -> Int -> IO ()
-navpoly_remove cls arg1
+-- | The XY plane cell size to use for fields.
+set_cell_size ::
+                (Navigation2D :< cls, Object :< cls) => cls -> Float -> IO ()
+set_cell_size cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
-         godot_method_bind_call bindNavigation2D_navpoly_remove (upcast cls)
+         godot_method_bind_call bindNavigation2D_set_cell_size (upcast cls)
            arrPtr
            len
            >>=
@@ -182,30 +293,29 @@ navpoly_remove cls arg1
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod Navigation2D "navpoly_remove" '[Int] (IO ())
+instance NodeMethod Navigation2D "set_cell_size" '[Float] (IO ())
          where
-        nodeMethod = Godot.Core.Navigation2D.navpoly_remove
+        nodeMethod = Godot.Core.Navigation2D.set_cell_size
 
-{-# NOINLINE bindNavigation2D_navpoly_set_transform #-}
+{-# NOINLINE bindNavigation2D_set_edge_connection_margin #-}
 
--- | Sets the transform applied to the @NavigationPolygon@ with the given ID.
-bindNavigation2D_navpoly_set_transform :: MethodBind
-bindNavigation2D_navpoly_set_transform
+-- | This value is used to detect the near edges to connect compatible regions.
+bindNavigation2D_set_edge_connection_margin :: MethodBind
+bindNavigation2D_set_edge_connection_margin
   = unsafePerformIO $
       withCString "Navigation2D" $
         \ clsNamePtr ->
-          withCString "navpoly_set_transform" $
+          withCString "set_edge_connection_margin" $
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the transform applied to the @NavigationPolygon@ with the given ID.
-navpoly_set_transform ::
-                        (Navigation2D :< cls, Object :< cls) =>
-                        cls -> Int -> Transform2d -> IO ()
-navpoly_set_transform cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
+-- | This value is used to detect the near edges to connect compatible regions.
+set_edge_connection_margin ::
+                             (Navigation2D :< cls, Object :< cls) => cls -> Float -> IO ()
+set_edge_connection_margin cls arg1
+  = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
-         godot_method_bind_call bindNavigation2D_navpoly_set_transform
+         godot_method_bind_call bindNavigation2D_set_edge_connection_margin
            (upcast cls)
            arrPtr
            len
@@ -214,8 +324,40 @@ navpoly_set_transform cls arg1 arg2
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod Navigation2D "navpoly_set_transform"
-           '[Int, Transform2d]
+instance NodeMethod Navigation2D "set_edge_connection_margin"
+           '[Float]
            (IO ())
          where
-        nodeMethod = Godot.Core.Navigation2D.navpoly_set_transform
+        nodeMethod = Godot.Core.Navigation2D.set_edge_connection_margin
+
+{-# NOINLINE bindNavigation2D_set_navigation_layers #-}
+
+-- | A bitfield determining all navigation map layers the navigation can use on a @method Navigation2D.get_simple_path@ path query.
+bindNavigation2D_set_navigation_layers :: MethodBind
+bindNavigation2D_set_navigation_layers
+  = unsafePerformIO $
+      withCString "Navigation2D" $
+        \ clsNamePtr ->
+          withCString "set_navigation_layers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | A bitfield determining all navigation map layers the navigation can use on a @method Navigation2D.get_simple_path@ path query.
+set_navigation_layers ::
+                        (Navigation2D :< cls, Object :< cls) => cls -> Int -> IO ()
+set_navigation_layers cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigation2D_set_navigation_layers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Navigation2D "set_navigation_layers" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Navigation2D.set_navigation_layers

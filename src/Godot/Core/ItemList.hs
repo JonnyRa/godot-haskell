@@ -19,6 +19,7 @@ module Godot.Core.ItemList
         Godot.Core.ItemList.ensure_current_is_visible,
         Godot.Core.ItemList.get_allow_reselect,
         Godot.Core.ItemList.get_allow_rmb_select,
+        Godot.Core.ItemList.get_allow_search,
         Godot.Core.ItemList.get_fixed_column_width,
         Godot.Core.ItemList.get_fixed_icon_size,
         Godot.Core.ItemList.get_icon_mode,
@@ -49,6 +50,7 @@ module Godot.Core.ItemList
         Godot.Core.ItemList.remove_item, Godot.Core.ItemList.select,
         Godot.Core.ItemList.set_allow_reselect,
         Godot.Core.ItemList.set_allow_rmb_select,
+        Godot.Core.ItemList.set_allow_search,
         Godot.Core.ItemList.set_auto_height,
         Godot.Core.ItemList.set_fixed_column_width,
         Godot.Core.ItemList.set_fixed_icon_size,
@@ -97,7 +99,7 @@ _SELECT_SINGLE = 0
 _ICON_MODE_TOP :: Int
 _ICON_MODE_TOP = 0
 
--- | Triggered when specified list item is activated via double-clicking or by pressing Enter.
+-- | Triggered when specified list item is activated via double-clicking or by pressing @kbd@Enter@/kbd@.
 sig_item_activated :: Godot.Internal.Dispatch.Signal ItemList
 sig_item_activated
   = Godot.Internal.Dispatch.Signal "item_activated"
@@ -150,6 +152,10 @@ instance NodeProperty ItemList "allow_rmb_select" Bool 'False where
         nodeProperty
           = (get_allow_rmb_select, wrapDroppingSetter set_allow_rmb_select,
              Nothing)
+
+instance NodeProperty ItemList "allow_search" Bool 'False where
+        nodeProperty
+          = (get_allow_search, wrapDroppingSetter set_allow_search, Nothing)
 
 instance NodeProperty ItemList "auto_height" Bool 'False where
         nodeProperty
@@ -490,6 +496,35 @@ get_allow_rmb_select cls
 instance NodeMethod ItemList "get_allow_rmb_select" '[] (IO Bool)
          where
         nodeMethod = Godot.Core.ItemList.get_allow_rmb_select
+
+{-# NOINLINE bindItemList_get_allow_search #-}
+
+-- | If @true@, allows navigating the @ItemList@ with letter keys through incremental search.
+bindItemList_get_allow_search :: MethodBind
+bindItemList_get_allow_search
+  = unsafePerformIO $
+      withCString "ItemList" $
+        \ clsNamePtr ->
+          withCString "get_allow_search" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, allows navigating the @ItemList@ with letter keys through incremental search.
+get_allow_search ::
+                   (ItemList :< cls, Object :< cls) => cls -> IO Bool
+get_allow_search cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindItemList_get_allow_search (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ItemList "get_allow_search" '[] (IO Bool) where
+        nodeMethod = Godot.Core.ItemList.get_allow_search
 
 {-# NOINLINE bindItemList_get_fixed_column_width #-}
 
@@ -1472,6 +1507,36 @@ instance NodeMethod ItemList "set_allow_rmb_select" '[Bool] (IO ())
          where
         nodeMethod = Godot.Core.ItemList.set_allow_rmb_select
 
+{-# NOINLINE bindItemList_set_allow_search #-}
+
+-- | If @true@, allows navigating the @ItemList@ with letter keys through incremental search.
+bindItemList_set_allow_search :: MethodBind
+bindItemList_set_allow_search
+  = unsafePerformIO $
+      withCString "ItemList" $
+        \ clsNamePtr ->
+          withCString "set_allow_search" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, allows navigating the @ItemList@ with letter keys through incremental search.
+set_allow_search ::
+                   (ItemList :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_allow_search cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindItemList_set_allow_search (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ItemList "set_allow_search" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.ItemList.set_allow_search
+
 {-# NOINLINE bindItemList_set_auto_height #-}
 
 -- | If @true@, the control will automatically resize the height to fit its content.
@@ -1698,7 +1763,7 @@ instance NodeMethod ItemList "set_item_custom_fg_color"
 {-# NOINLINE bindItemList_set_item_disabled #-}
 
 -- | Disables (or enables) the item at the specified index.
---   				Disabled items cannot be selected and do not trigger activation signals (when double-clicking or pressing Enter).
+--   				Disabled items cannot be selected and do not trigger activation signals (when double-clicking or pressing @kbd@Enter@/kbd@).
 bindItemList_set_item_disabled :: MethodBind
 bindItemList_set_item_disabled
   = unsafePerformIO $
@@ -1709,7 +1774,7 @@ bindItemList_set_item_disabled
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Disables (or enables) the item at the specified index.
---   				Disabled items cannot be selected and do not trigger activation signals (when double-clicking or pressing Enter).
+--   				Disabled items cannot be selected and do not trigger activation signals (when double-clicking or pressing @kbd@Enter@/kbd@).
 set_item_disabled ::
                     (ItemList :< cls, Object :< cls) => cls -> Int -> Bool -> IO ()
 set_item_disabled cls arg1 arg2

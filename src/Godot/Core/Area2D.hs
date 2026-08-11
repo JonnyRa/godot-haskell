@@ -89,8 +89,19 @@ instance NodeSignal Area2D "area_exited" '[Area2D]
 -- | Emitted when one of another Area2D's @Shape2D@s enters one of this Area2D's @Shape2D@s. Requires @monitoring@ to be set to @true@.
 --   				@area_rid@ the @RID@ of the other Area2D's @CollisionObject2D@ used by the @Physics2DServer@.
 --   				@area@ the other Area2D.
---   				@area_shape_index@ the index of the @Shape2D@ of the other Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @area.shape_owner_get_owner(area_shape_index)@.
---   				@local_shape_index@ the index of the @Shape2D@ of this Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@area_shape_index@ the index of the @Shape2D@ from the other Area2D.
+--   				@local_shape_index@ the index of the @Shape2D@ from this Area2D.
+--   				__Example of getting the__ @CollisionShape2D@ __node from the shape index:__
+--   				
+--   @
+--   
+--   				var other_shape_owner = area.shape_find_owner(area_shape_index)
+--   				var other_shape_node = area.shape_owner_get_owner(other_shape_owner)
+--   
+--   				var local_shape_owner = shape_find_owner(local_shape_index)
+--   				var local_shape_node = shape_owner_get_owner(local_shape_owner)
+--   				
+--   @
 sig_area_shape_entered :: Godot.Internal.Dispatch.Signal Area2D
 sig_area_shape_entered
   = Godot.Internal.Dispatch.Signal "area_shape_entered"
@@ -101,8 +112,9 @@ instance NodeSignal Area2D "area_shape_entered"
 -- | Emitted when one of another Area2D's @Shape2D@s exits one of this Area2D's @Shape2D@s. Requires @monitoring@ to be set to @true@.
 --   				@area_rid@ the @RID@ of the other Area2D's @CollisionObject2D@ used by the @Physics2DServer@.
 --   				@area@ the other Area2D.
---   				@area_shape_index@ the index of the @Shape2D@ of the other Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @area.shape_owner_get_owner(area_shape_index)@.
---   				@local_shape_index@ the index of the @Shape2D@ of this Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@area_shape_index@ the index of the @Shape2D@ from the other Area2D.
+--   				@local_shape_index@ the index of the @Shape2D@ from this Area2D.
+--   				See also @signal area_shape_entered@.
 sig_area_shape_exited :: Godot.Internal.Dispatch.Signal Area2D
 sig_area_shape_exited
   = Godot.Internal.Dispatch.Signal "area_shape_exited"
@@ -127,8 +139,19 @@ instance NodeSignal Area2D "body_exited" '[Node]
 -- | Emitted when one of a @PhysicsBody2D@ or @TileMap@'s @Shape2D@s enters one of this Area2D's @Shape2D@s. Requires @monitoring@ to be set to @true@. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
 --   				@body_rid@ the @RID@ of the @PhysicsBody2D@ or @TileSet@'s @CollisionObject2D@ used by the @Physics2DServer@.
 --   				@body@ the @Node@, if it exists in the tree, of the @PhysicsBody2D@ or @TileMap@.
---   				@body_shape_index@ the index of the @Shape2D@ of the @PhysicsBody2D@ or @TileMap@ used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @body.shape_owner_get_owner(body_shape_index)@.
---   				@local_shape_index@ the index of the @Shape2D@ of this Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@body_shape_index@ the index of the @Shape2D@ from the @PhysicsBody2D@ or @TileMap@.
+--   				@local_shape_index@ the index of the @Shape2D@ from this Area2D.
+--   				__Example of getting the__ @CollisionShape2D@ __node from the shape index:__
+--   				
+--   @
+--   
+--   				var body_shape_owner = body.shape_find_owner(body_shape_index)
+--   				var body_shape_node = body.shape_owner_get_owner(body_shape_owner)
+--   
+--   				var local_shape_owner = shape_find_owner(local_shape_index)
+--   				var local_shape_node = shape_owner_get_owner(local_shape_owner)
+--   				
+--   @
 sig_body_shape_entered :: Godot.Internal.Dispatch.Signal Area2D
 sig_body_shape_entered
   = Godot.Internal.Dispatch.Signal "body_shape_entered"
@@ -139,8 +162,9 @@ instance NodeSignal Area2D "body_shape_entered"
 -- | Emitted when one of a @PhysicsBody2D@ or @TileMap@'s @Shape2D@s exits one of this Area2D's @Shape2D@s. Requires @monitoring@ to be set to @true@. @TileMap@s are detected if the @TileSet@ has Collision @Shape2D@s.
 --   				@body_rid@ the @RID@ of the @PhysicsBody2D@ or @TileSet@'s @CollisionObject2D@ used by the @Physics2DServer@.
 --   				@body@ the @Node@, if it exists in the tree, of the @PhysicsBody2D@ or @TileMap@.
---   				@body_shape_index@ the index of the @Shape2D@ of the @PhysicsBody2D@ or @TileMap@ used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @body.shape_owner_get_owner(body_shape_index)@.
---   				@local_shape_index@ the index of the @Shape2D@ of this Area2D used by the @Physics2DServer@. Get the @CollisionShape2D@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@body_shape_index@ the index of the @Shape2D@ from the @PhysicsBody2D@ or @TileMap@.
+--   				@local_shape_index@ the index of the @Shape2D@ from this Area2D.
+--   				See also @signal body_shape_entered@.
 sig_body_shape_exited :: Godot.Internal.Dispatch.Signal Area2D
 sig_body_shape_exited
   = Godot.Internal.Dispatch.Signal "body_shape_exited"

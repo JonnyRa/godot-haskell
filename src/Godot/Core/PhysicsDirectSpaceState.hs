@@ -5,6 +5,7 @@ module Godot.Core.PhysicsDirectSpaceState
        (Godot.Core.PhysicsDirectSpaceState.cast_motion,
         Godot.Core.PhysicsDirectSpaceState.collide_shape,
         Godot.Core.PhysicsDirectSpaceState.get_rest_info,
+        Godot.Core.PhysicsDirectSpaceState.intersect_point,
         Godot.Core.PhysicsDirectSpaceState.intersect_ray,
         Godot.Core.PhysicsDirectSpaceState.intersect_shape)
        where
@@ -140,6 +141,61 @@ instance NodeMethod PhysicsDirectSpaceState "get_rest_info"
            (IO Dictionary)
          where
         nodeMethod = Godot.Core.PhysicsDirectSpaceState.get_rest_info
+
+{-# NOINLINE bindPhysicsDirectSpaceState_intersect_point #-}
+
+-- | Checks whether a point is inside any solid shape. The shapes the point is inside of are returned in an array containing dictionaries with the following fields:
+--   				@collider@: The colliding object.
+--   				@collider_id@: The colliding object's ID.
+--   				@rid@: The intersecting object's @RID@.
+--   				@shape@: The shape index of the colliding shape.
+--   				The number of intersections can be limited with the @max_results@ parameter, to reduce the processing time.
+--   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody@s or @Area@s, respectively.
+bindPhysicsDirectSpaceState_intersect_point :: MethodBind
+bindPhysicsDirectSpaceState_intersect_point
+  = unsafePerformIO $
+      withCString "PhysicsDirectSpaceState" $
+        \ clsNamePtr ->
+          withCString "intersect_point" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Checks whether a point is inside any solid shape. The shapes the point is inside of are returned in an array containing dictionaries with the following fields:
+--   				@collider@: The colliding object.
+--   				@collider_id@: The colliding object's ID.
+--   				@rid@: The intersecting object's @RID@.
+--   				@shape@: The shape index of the colliding shape.
+--   				The number of intersections can be limited with the @max_results@ parameter, to reduce the processing time.
+--   				Additionally, the method can take an @exclude@ array of objects or @RID@s that are to be excluded from collisions, a @collision_mask@ bitmask representing the physics layers to check in, or booleans to determine if the ray should collide with @PhysicsBody@s or @Area@s, respectively.
+intersect_point ::
+                  (PhysicsDirectSpaceState :< cls, Object :< cls) =>
+                  cls ->
+                    Vector3 ->
+                      Maybe Int ->
+                        Maybe Array -> Maybe Int -> Maybe Bool -> Maybe Bool -> IO Array
+intersect_point cls arg1 arg2 arg3 arg4 arg5 arg6
+  = withVariantArray
+      [toVariant arg1, maybe (VariantInt (32)) toVariant arg2,
+       defaultedVariant VariantArray V.empty arg3,
+       maybe (VariantInt (2147483647)) toVariant arg4,
+       maybe (VariantBool True) toVariant arg5,
+       maybe (VariantBool False) toVariant arg6]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindPhysicsDirectSpaceState_intersect_point
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod PhysicsDirectSpaceState "intersect_point"
+           '[Vector3, Maybe Int, Maybe Array, Maybe Int, Maybe Bool,
+             Maybe Bool]
+           (IO Array)
+         where
+        nodeMethod = Godot.Core.PhysicsDirectSpaceState.intersect_point
 
 {-# NOINLINE bindPhysicsDirectSpaceState_intersect_ray #-}
 

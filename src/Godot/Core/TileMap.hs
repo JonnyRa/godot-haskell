@@ -36,12 +36,14 @@ module Godot.Core.TileMap
         Godot.Core.TileMap.get_collision_use_parent,
         Godot.Core.TileMap.get_custom_transform,
         Godot.Core.TileMap.get_half_offset, Godot.Core.TileMap.get_mode,
+        Godot.Core.TileMap.get_navigation_layers,
         Godot.Core.TileMap.get_occluder_light_mask,
         Godot.Core.TileMap.get_quadrant_size,
         Godot.Core.TileMap.get_tile_origin, Godot.Core.TileMap.get_tileset,
         Godot.Core.TileMap.get_used_cells,
         Godot.Core.TileMap.get_used_cells_by_id,
         Godot.Core.TileMap.get_used_rect,
+        Godot.Core.TileMap.is_baking_navigation,
         Godot.Core.TileMap.is_cell_transposed,
         Godot.Core.TileMap.is_cell_x_flipped,
         Godot.Core.TileMap.is_cell_y_flipped,
@@ -49,8 +51,10 @@ module Godot.Core.TileMap
         Godot.Core.TileMap.is_compatibility_mode_enabled,
         Godot.Core.TileMap.is_show_collision_enabled,
         Godot.Core.TileMap.is_y_sort_mode_enabled,
-        Godot.Core.TileMap.map_to_world, Godot.Core.TileMap.set_cell,
-        Godot.Core.TileMap.set_cell_size, Godot.Core.TileMap.set_cellv,
+        Godot.Core.TileMap.map_to_world,
+        Godot.Core.TileMap.set_bake_navigation,
+        Godot.Core.TileMap.set_cell, Godot.Core.TileMap.set_cell_size,
+        Godot.Core.TileMap.set_cellv,
         Godot.Core.TileMap.set_centered_textures,
         Godot.Core.TileMap.set_clip_uv,
         Godot.Core.TileMap.set_collision_bounce,
@@ -64,6 +68,7 @@ module Godot.Core.TileMap
         Godot.Core.TileMap.set_compatibility_mode,
         Godot.Core.TileMap.set_custom_transform,
         Godot.Core.TileMap.set_half_offset, Godot.Core.TileMap.set_mode,
+        Godot.Core.TileMap.set_navigation_layers,
         Godot.Core.TileMap.set_occluder_light_mask,
         Godot.Core.TileMap.set_quadrant_size,
         Godot.Core.TileMap.set_show_collision,
@@ -128,6 +133,11 @@ sig_settings_changed
   = Godot.Internal.Dispatch.Signal "settings_changed"
 
 instance NodeSignal TileMap "settings_changed" '[]
+
+instance NodeProperty TileMap "bake_navigation" Bool 'False where
+        nodeProperty
+          = (is_baking_navigation, wrapDroppingSetter set_bake_navigation,
+             Nothing)
 
 instance NodeProperty TileMap "cell_clip_uv" Bool 'False where
         nodeProperty
@@ -208,6 +218,11 @@ instance NodeProperty TileMap "compatibility_mode" Bool 'False
 
 instance NodeProperty TileMap "mode" Int 'False where
         nodeProperty = (get_mode, wrapDroppingSetter set_mode, Nothing)
+
+instance NodeProperty TileMap "navigation_layers" Int 'False where
+        nodeProperty
+          = (get_navigation_layers, wrapDroppingSetter set_navigation_layers,
+             Nothing)
 
 instance NodeProperty TileMap "occluder_light_mask" Int 'False
          where
@@ -680,7 +695,7 @@ instance NodeMethod TileMap "get_collision_friction" '[] (IO Float)
 
 {-# NOINLINE bindTileMap_get_collision_layer #-}
 
--- | The collision layer(s) for all colliders in the TileMap. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The collision layer(s) for all colliders in the TileMap. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindTileMap_get_collision_layer :: MethodBind
 bindTileMap_get_collision_layer
   = unsafePerformIO $
@@ -690,7 +705,7 @@ bindTileMap_get_collision_layer
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The collision layer(s) for all colliders in the TileMap. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The collision layer(s) for all colliders in the TileMap. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_layer ::
                       (TileMap :< cls, Object :< cls) => cls -> IO Int
 get_collision_layer cls
@@ -742,7 +757,7 @@ instance NodeMethod TileMap "get_collision_layer_bit" '[Int]
 
 {-# NOINLINE bindTileMap_get_collision_mask #-}
 
--- | The collision mask(s) for all colliders in the TileMap. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The collision mask(s) for all colliders in the TileMap. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindTileMap_get_collision_mask :: MethodBind
 bindTileMap_get_collision_mask
   = unsafePerformIO $
@@ -752,7 +767,7 @@ bindTileMap_get_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The collision mask(s) for all colliders in the TileMap. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The collision mask(s) for all colliders in the TileMap. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_mask ::
                      (TileMap :< cls, Object :< cls) => cls -> IO Int
 get_collision_mask cls
@@ -950,6 +965,37 @@ get_mode cls
 
 instance NodeMethod TileMap "get_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.TileMap.get_mode
+
+{-# NOINLINE bindTileMap_get_navigation_layers #-}
+
+-- | The navigation layers the TileMap generates its navigation regions in.
+bindTileMap_get_navigation_layers :: MethodBind
+bindTileMap_get_navigation_layers
+  = unsafePerformIO $
+      withCString "TileMap" $
+        \ clsNamePtr ->
+          withCString "get_navigation_layers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The navigation layers the TileMap generates its navigation regions in.
+get_navigation_layers ::
+                        (TileMap :< cls, Object :< cls) => cls -> IO Int
+get_navigation_layers cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTileMap_get_navigation_layers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TileMap "get_navigation_layers" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.TileMap.get_navigation_layers
 
 {-# NOINLINE bindTileMap_get_occluder_light_mask #-}
 
@@ -1151,6 +1197,37 @@ get_used_rect cls
 
 instance NodeMethod TileMap "get_used_rect" '[] (IO Rect2) where
         nodeMethod = Godot.Core.TileMap.get_used_rect
+
+{-# NOINLINE bindTileMap_is_baking_navigation #-}
+
+-- | If @true@, this TileMap bakes a navigation region.
+bindTileMap_is_baking_navigation :: MethodBind
+bindTileMap_is_baking_navigation
+  = unsafePerformIO $
+      withCString "TileMap" $
+        \ clsNamePtr ->
+          withCString "is_baking_navigation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, this TileMap bakes a navigation region.
+is_baking_navigation ::
+                       (TileMap :< cls, Object :< cls) => cls -> IO Bool
+is_baking_navigation cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTileMap_is_baking_navigation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TileMap "is_baking_navigation" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.TileMap.is_baking_navigation
 
 {-# NOINLINE bindTileMap_is_cell_transposed #-}
 
@@ -1430,6 +1507,36 @@ instance NodeMethod TileMap "map_to_world" '[Vector2, Maybe Bool]
          where
         nodeMethod = Godot.Core.TileMap.map_to_world
 
+{-# NOINLINE bindTileMap_set_bake_navigation #-}
+
+-- | If @true@, this TileMap bakes a navigation region.
+bindTileMap_set_bake_navigation :: MethodBind
+bindTileMap_set_bake_navigation
+  = unsafePerformIO $
+      withCString "TileMap" $
+        \ clsNamePtr ->
+          withCString "set_bake_navigation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, this TileMap bakes a navigation region.
+set_bake_navigation ::
+                      (TileMap :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_bake_navigation cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTileMap_set_bake_navigation (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TileMap "set_bake_navigation" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.TileMap.set_bake_navigation
+
 {-# NOINLINE bindTileMap_set_cell #-}
 
 -- | Sets the tile index for the given cell.
@@ -1552,13 +1659,16 @@ bindTileMap_set_cellv
 set_cellv ::
             (TileMap :< cls, Object :< cls) =>
             cls ->
-              Vector2 -> Int -> Maybe Bool -> Maybe Bool -> Maybe Bool -> IO ()
-set_cellv cls arg1 arg2 arg3 arg4 arg5
+              Vector2 ->
+                Int ->
+                  Maybe Bool -> Maybe Bool -> Maybe Bool -> Maybe Vector2 -> IO ()
+set_cellv cls arg1 arg2 arg3 arg4 arg5 arg6
   = withVariantArray
       [toVariant arg1, toVariant arg2,
        maybe (VariantBool False) toVariant arg3,
        maybe (VariantBool False) toVariant arg4,
-       maybe (VariantBool False) toVariant arg5]
+       maybe (VariantBool False) toVariant arg5,
+       defaultedVariant VariantVector2 (V2 0 0) arg6]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindTileMap_set_cellv (upcast cls) arrPtr
            len
@@ -1568,7 +1678,7 @@ set_cellv cls arg1 arg2 arg3 arg4 arg5
                \ ret -> godot_variant_destroy var >> return ret)
 
 instance NodeMethod TileMap "set_cellv"
-           '[Vector2, Int, Maybe Bool, Maybe Bool, Maybe Bool]
+           '[Vector2, Int, Maybe Bool, Maybe Bool, Maybe Bool, Maybe Vector2]
            (IO ())
          where
         nodeMethod = Godot.Core.TileMap.set_cellv
@@ -1699,7 +1809,7 @@ instance NodeMethod TileMap "set_collision_friction" '[Float]
 
 {-# NOINLINE bindTileMap_set_collision_layer #-}
 
--- | The collision layer(s) for all colliders in the TileMap. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The collision layer(s) for all colliders in the TileMap. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindTileMap_set_collision_layer :: MethodBind
 bindTileMap_set_collision_layer
   = unsafePerformIO $
@@ -1709,7 +1819,7 @@ bindTileMap_set_collision_layer
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The collision layer(s) for all colliders in the TileMap. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The collision layer(s) for all colliders in the TileMap. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_layer ::
                       (TileMap :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_layer cls arg1
@@ -1761,7 +1871,7 @@ instance NodeMethod TileMap "set_collision_layer_bit" '[Int, Bool]
 
 {-# NOINLINE bindTileMap_set_collision_mask #-}
 
--- | The collision mask(s) for all colliders in the TileMap. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The collision mask(s) for all colliders in the TileMap. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindTileMap_set_collision_mask :: MethodBind
 bindTileMap_set_collision_mask
   = unsafePerformIO $
@@ -1771,7 +1881,7 @@ bindTileMap_set_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The collision mask(s) for all colliders in the TileMap. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The collision mask(s) for all colliders in the TileMap. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_mask ::
                      (TileMap :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_mask cls arg1
@@ -2007,6 +2117,37 @@ set_mode cls arg1
 
 instance NodeMethod TileMap "set_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.TileMap.set_mode
+
+{-# NOINLINE bindTileMap_set_navigation_layers #-}
+
+-- | The navigation layers the TileMap generates its navigation regions in.
+bindTileMap_set_navigation_layers :: MethodBind
+bindTileMap_set_navigation_layers
+  = unsafePerformIO $
+      withCString "TileMap" $
+        \ clsNamePtr ->
+          withCString "set_navigation_layers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The navigation layers the TileMap generates its navigation regions in.
+set_navigation_layers ::
+                        (TileMap :< cls, Object :< cls) => cls -> Int -> IO ()
+set_navigation_layers cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTileMap_set_navigation_layers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TileMap "set_navigation_layers" '[Int] (IO ())
+         where
+        nodeMethod = Godot.Core.TileMap.set_navigation_layers
 
 {-# NOINLINE bindTileMap_set_occluder_light_mask #-}
 

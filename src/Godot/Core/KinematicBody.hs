@@ -2,12 +2,16 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.KinematicBody
-       (Godot.Core.KinematicBody._direct_state_changed,
+       (Godot.Core.KinematicBody._PLATFORM_VEL_ON_LEAVE_NEVER,
+        Godot.Core.KinematicBody._PLATFORM_VEL_ON_LEAVE_UPWARD_ONLY,
+        Godot.Core.KinematicBody._PLATFORM_VEL_ON_LEAVE_ALWAYS,
+        Godot.Core.KinematicBody._direct_state_changed,
         Godot.Core.KinematicBody.get_axis_lock,
         Godot.Core.KinematicBody.get_floor_angle,
         Godot.Core.KinematicBody.get_floor_normal,
         Godot.Core.KinematicBody.get_floor_velocity,
         Godot.Core.KinematicBody.get_last_slide_collision,
+        Godot.Core.KinematicBody.get_moving_platform_apply_velocity_on_leave,
         Godot.Core.KinematicBody.get_safe_margin,
         Godot.Core.KinematicBody.get_slide_collision,
         Godot.Core.KinematicBody.get_slide_count,
@@ -19,6 +23,7 @@ module Godot.Core.KinematicBody
         Godot.Core.KinematicBody.move_and_slide,
         Godot.Core.KinematicBody.move_and_slide_with_snap,
         Godot.Core.KinematicBody.set_axis_lock,
+        Godot.Core.KinematicBody.set_moving_platform_apply_velocity_on_leave,
         Godot.Core.KinematicBody.set_safe_margin,
         Godot.Core.KinematicBody.set_sync_to_physics,
         Godot.Core.KinematicBody.test_move)
@@ -34,6 +39,15 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.PhysicsBody()
+
+_PLATFORM_VEL_ON_LEAVE_NEVER :: Int
+_PLATFORM_VEL_ON_LEAVE_NEVER = 2
+
+_PLATFORM_VEL_ON_LEAVE_UPWARD_ONLY :: Int
+_PLATFORM_VEL_ON_LEAVE_UPWARD_ONLY = 1
+
+_PLATFORM_VEL_ON_LEAVE_ALWAYS :: Int
+_PLATFORM_VEL_ON_LEAVE_ALWAYS = 0
 
 instance NodeProperty KinematicBody "axis_lock_motion_x" Bool
            'False
@@ -83,6 +97,16 @@ instance NodeProperty KinematicBody "move_lock_z" Bool 'False where
         nodeProperty
           = (wrapIndexedGetter 4 get_axis_lock,
              wrapIndexedSetter 4 set_axis_lock, Nothing)
+
+instance NodeProperty KinematicBody
+           "moving_platform_apply_velocity_on_leave"
+           Int
+           'False
+         where
+        nodeProperty
+          = (get_moving_platform_apply_velocity_on_leave,
+             wrapDroppingSetter set_moving_platform_apply_velocity_on_leave,
+             Nothing)
 
 {-# NOINLINE bindKinematicBody__direct_state_changed #-}
 
@@ -272,6 +296,44 @@ instance NodeMethod KinematicBody "get_last_slide_collision" '[]
            (IO KinematicCollision)
          where
         nodeMethod = Godot.Core.KinematicBody.get_last_slide_collision
+
+{-# NOINLINE bindKinematicBody_get_moving_platform_apply_velocity_on_leave
+             #-}
+
+-- | Sets the behavior to apply when you leave a moving platform. By default, to be physically accurate, when you leave the last platform velocity is applied. See @enum MovingPlatformApplyVelocityOnLeave@ constants for available behavior.
+bindKinematicBody_get_moving_platform_apply_velocity_on_leave ::
+                                                              MethodBind
+bindKinematicBody_get_moving_platform_apply_velocity_on_leave
+  = unsafePerformIO $
+      withCString "KinematicBody" $
+        \ clsNamePtr ->
+          withCString "get_moving_platform_apply_velocity_on_leave" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the behavior to apply when you leave a moving platform. By default, to be physically accurate, when you leave the last platform velocity is applied. See @enum MovingPlatformApplyVelocityOnLeave@ constants for available behavior.
+get_moving_platform_apply_velocity_on_leave ::
+                                              (KinematicBody :< cls, Object :< cls) => cls -> IO Int
+get_moving_platform_apply_velocity_on_leave cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindKinematicBody_get_moving_platform_apply_velocity_on_leave
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod KinematicBody
+           "get_moving_platform_apply_velocity_on_leave"
+           '[]
+           (IO Int)
+         where
+        nodeMethod
+          = Godot.Core.KinematicBody.get_moving_platform_apply_velocity_on_leave
 
 {-# NOINLINE bindKinematicBody_get_safe_margin #-}
 
@@ -669,6 +731,45 @@ instance NodeMethod KinematicBody "set_axis_lock" '[Int, Bool]
            (IO ())
          where
         nodeMethod = Godot.Core.KinematicBody.set_axis_lock
+
+{-# NOINLINE bindKinematicBody_set_moving_platform_apply_velocity_on_leave
+             #-}
+
+-- | Sets the behavior to apply when you leave a moving platform. By default, to be physically accurate, when you leave the last platform velocity is applied. See @enum MovingPlatformApplyVelocityOnLeave@ constants for available behavior.
+bindKinematicBody_set_moving_platform_apply_velocity_on_leave ::
+                                                              MethodBind
+bindKinematicBody_set_moving_platform_apply_velocity_on_leave
+  = unsafePerformIO $
+      withCString "KinematicBody" $
+        \ clsNamePtr ->
+          withCString "set_moving_platform_apply_velocity_on_leave" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the behavior to apply when you leave a moving platform. By default, to be physically accurate, when you leave the last platform velocity is applied. See @enum MovingPlatformApplyVelocityOnLeave@ constants for available behavior.
+set_moving_platform_apply_velocity_on_leave ::
+                                              (KinematicBody :< cls, Object :< cls) =>
+                                              cls -> Int -> IO ()
+set_moving_platform_apply_velocity_on_leave cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindKinematicBody_set_moving_platform_apply_velocity_on_leave
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod KinematicBody
+           "set_moving_platform_apply_velocity_on_leave"
+           '[Int]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.KinematicBody.set_moving_platform_apply_velocity_on_leave
 
 {-# NOINLINE bindKinematicBody_set_safe_margin #-}
 

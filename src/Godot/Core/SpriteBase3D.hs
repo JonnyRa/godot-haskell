@@ -2,12 +2,14 @@
   TypeFamilies, TypeOperators, FlexibleContexts, DataKinds,
   MultiParamTypeClasses #-}
 module Godot.Core.SpriteBase3D
-       (Godot.Core.SpriteBase3D._FLAG_SHADED,
+       (Godot.Core.SpriteBase3D._FLAG_DISABLE_DEPTH_TEST,
+        Godot.Core.SpriteBase3D._FLAG_SHADED,
         Godot.Core.SpriteBase3D._ALPHA_CUT_OPAQUE_PREPASS,
         Godot.Core.SpriteBase3D._FLAG_DOUBLE_SIDED,
         Godot.Core.SpriteBase3D._ALPHA_CUT_DISABLED,
         Godot.Core.SpriteBase3D._ALPHA_CUT_DISCARD,
         Godot.Core.SpriteBase3D._FLAG_MAX,
+        Godot.Core.SpriteBase3D._FLAG_FIXED_SIZE,
         Godot.Core.SpriteBase3D._FLAG_TRANSPARENT,
         Godot.Core.SpriteBase3D._im_update,
         Godot.Core.SpriteBase3D._queue_update,
@@ -21,6 +23,7 @@ module Godot.Core.SpriteBase3D
         Godot.Core.SpriteBase3D.get_offset,
         Godot.Core.SpriteBase3D.get_opacity,
         Godot.Core.SpriteBase3D.get_pixel_size,
+        Godot.Core.SpriteBase3D.get_render_priority,
         Godot.Core.SpriteBase3D.is_centered,
         Godot.Core.SpriteBase3D.is_flipped_h,
         Godot.Core.SpriteBase3D.is_flipped_v,
@@ -34,7 +37,8 @@ module Godot.Core.SpriteBase3D
         Godot.Core.SpriteBase3D.set_modulate,
         Godot.Core.SpriteBase3D.set_offset,
         Godot.Core.SpriteBase3D.set_opacity,
-        Godot.Core.SpriteBase3D.set_pixel_size)
+        Godot.Core.SpriteBase3D.set_pixel_size,
+        Godot.Core.SpriteBase3D.set_render_priority)
        where
 import Data.Coerce
 import Foreign.C
@@ -47,6 +51,9 @@ import System.IO.Unsafe
 import Godot.Gdnative.Internal
 import Godot.Api.Types
 import Godot.Core.GeometryInstance()
+
+_FLAG_DISABLE_DEPTH_TEST :: Int
+_FLAG_DISABLE_DEPTH_TEST = 3
 
 _FLAG_SHADED :: Int
 _FLAG_SHADED = 1
@@ -64,7 +71,10 @@ _ALPHA_CUT_DISCARD :: Int
 _ALPHA_CUT_DISCARD = 1
 
 _FLAG_MAX :: Int
-_FLAG_MAX = 3
+_FLAG_MAX = 5
+
+_FLAG_FIXED_SIZE :: Int
+_FLAG_FIXED_SIZE = 4
 
 _FLAG_TRANSPARENT :: Int
 _FLAG_TRANSPARENT = 0
@@ -91,6 +101,11 @@ instance NodeProperty SpriteBase3D "double_sided" Bool 'False where
           = (wrapIndexedGetter 2 get_draw_flag,
              wrapIndexedSetter 2 set_draw_flag, Nothing)
 
+instance NodeProperty SpriteBase3D "fixed_size" Bool 'False where
+        nodeProperty
+          = (wrapIndexedGetter 4 get_draw_flag,
+             wrapIndexedSetter 4 set_draw_flag, Nothing)
+
 instance NodeProperty SpriteBase3D "flip_h" Bool 'False where
         nodeProperty
           = (is_flipped_h, wrapDroppingSetter set_flip_h, Nothing)
@@ -103,6 +118,12 @@ instance NodeProperty SpriteBase3D "modulate" Color 'False where
         nodeProperty
           = (get_modulate, wrapDroppingSetter set_modulate, Nothing)
 
+instance NodeProperty SpriteBase3D "no_depth_test" Bool 'False
+         where
+        nodeProperty
+          = (wrapIndexedGetter 3 get_draw_flag,
+             wrapIndexedSetter 3 set_draw_flag, Nothing)
+
 instance NodeProperty SpriteBase3D "offset" Vector2 'False where
         nodeProperty = (get_offset, wrapDroppingSetter set_offset, Nothing)
 
@@ -113,6 +134,12 @@ instance NodeProperty SpriteBase3D "opacity" Float 'False where
 instance NodeProperty SpriteBase3D "pixel_size" Float 'False where
         nodeProperty
           = (get_pixel_size, wrapDroppingSetter set_pixel_size, Nothing)
+
+instance NodeProperty SpriteBase3D "render_priority" Int 'False
+         where
+        nodeProperty
+          = (get_render_priority, wrapDroppingSetter set_render_priority,
+             Nothing)
 
 instance NodeProperty SpriteBase3D "shaded" Bool 'False where
         nodeProperty
@@ -353,7 +380,7 @@ instance NodeMethod SpriteBase3D "get_item_rect" '[] (IO Rect2)
 {-# NOINLINE bindSpriteBase3D_get_modulate #-}
 
 -- | A color value used to @i@multiply@/i@ the texture's colors. Can be used for mood-coloring or to simulate the color of light.
---   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@/color@ must be inserted in the shader's @fragment()@ function.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @Material3D.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function.
 bindSpriteBase3D_get_modulate :: MethodBind
 bindSpriteBase3D_get_modulate
   = unsafePerformIO $
@@ -364,7 +391,7 @@ bindSpriteBase3D_get_modulate
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | A color value used to @i@multiply@/i@ the texture's colors. Can be used for mood-coloring or to simulate the color of light.
---   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@/color@ must be inserted in the shader's @fragment()@ function.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @Material3D.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function.
 get_modulate ::
                (SpriteBase3D :< cls, Object :< cls) => cls -> IO Color
 get_modulate cls
@@ -415,7 +442,7 @@ instance NodeMethod SpriteBase3D "get_offset" '[] (IO Vector2)
 {-# NOINLINE bindSpriteBase3D_get_opacity #-}
 
 -- | The texture's visibility on a scale from @0@ (fully invisible) to @1@ (fully visible). @opacity@ is a multiplier for the @modulate@ color's alpha channel.
---   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@/color@ must be inserted in the shader's @fragment()@ function.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @Material3D.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@ must be inserted in the shader's @fragment()@ function.
 bindSpriteBase3D_get_opacity :: MethodBind
 bindSpriteBase3D_get_opacity
   = unsafePerformIO $
@@ -426,7 +453,7 @@ bindSpriteBase3D_get_opacity
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The texture's visibility on a scale from @0@ (fully invisible) to @1@ (fully visible). @opacity@ is a multiplier for the @modulate@ color's alpha channel.
---   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@/color@ must be inserted in the shader's @fragment()@ function.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @Material3D.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@ must be inserted in the shader's @fragment()@ function.
 get_opacity ::
               (SpriteBase3D :< cls, Object :< cls) => cls -> IO Float
 get_opacity cls
@@ -472,6 +499,41 @@ get_pixel_size cls
 instance NodeMethod SpriteBase3D "get_pixel_size" '[] (IO Float)
          where
         nodeMethod = Godot.Core.SpriteBase3D.get_pixel_size
+
+{-# NOINLINE bindSpriteBase3D_get_render_priority #-}
+
+-- | Sets the render priority for the sprite. Higher priority objects will be sorted in front of lower priority objects.
+--   			__Note:__ This only applies if @alpha_cut@ is set to @ALPHA_CUT_DISABLED@ (default value).
+--   			__Note:__ This only applies to sorting of transparent objects. This will not impact how transparent objects are sorted relative to opaque objects. This is because opaque objects are not sorted, while transparent objects are sorted from back to front (subject to priority).
+bindSpriteBase3D_get_render_priority :: MethodBind
+bindSpriteBase3D_get_render_priority
+  = unsafePerformIO $
+      withCString "SpriteBase3D" $
+        \ clsNamePtr ->
+          withCString "get_render_priority" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the render priority for the sprite. Higher priority objects will be sorted in front of lower priority objects.
+--   			__Note:__ This only applies if @alpha_cut@ is set to @ALPHA_CUT_DISABLED@ (default value).
+--   			__Note:__ This only applies to sorting of transparent objects. This will not impact how transparent objects are sorted relative to opaque objects. This is because opaque objects are not sorted, while transparent objects are sorted from back to front (subject to priority).
+get_render_priority ::
+                      (SpriteBase3D :< cls, Object :< cls) => cls -> IO Int
+get_render_priority cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSpriteBase3D_get_render_priority
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SpriteBase3D "get_render_priority" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.SpriteBase3D.get_render_priority
 
 {-# NOINLINE bindSpriteBase3D_is_centered #-}
 
@@ -771,7 +833,7 @@ instance NodeMethod SpriteBase3D "set_flip_v" '[Bool] (IO ()) where
 {-# NOINLINE bindSpriteBase3D_set_modulate #-}
 
 -- | A color value used to @i@multiply@/i@ the texture's colors. Can be used for mood-coloring or to simulate the color of light.
---   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@/color@ must be inserted in the shader's @fragment()@ function.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @Material3D.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function.
 bindSpriteBase3D_set_modulate :: MethodBind
 bindSpriteBase3D_set_modulate
   = unsafePerformIO $
@@ -782,7 +844,7 @@ bindSpriteBase3D_set_modulate
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | A color value used to @i@multiply@/i@ the texture's colors. Can be used for mood-coloring or to simulate the color of light.
---   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@/color@ must be inserted in the shader's @fragment()@ function.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the color defined in @modulate@ will be ignored. For a @SpatialMaterial@, @Material3D.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALBEDO *= COLOR.rgb;@ must be inserted in the shader's @fragment()@ function.
 set_modulate ::
                (SpriteBase3D :< cls, Object :< cls) => cls -> Color -> IO ()
 set_modulate cls arg1
@@ -833,7 +895,7 @@ instance NodeMethod SpriteBase3D "set_offset" '[Vector2] (IO ())
 {-# NOINLINE bindSpriteBase3D_set_opacity #-}
 
 -- | The texture's visibility on a scale from @0@ (fully invisible) to @1@ (fully visible). @opacity@ is a multiplier for the @modulate@ color's alpha channel.
---   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@/color@ must be inserted in the shader's @fragment()@ function.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @Material3D.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@ must be inserted in the shader's @fragment()@ function.
 bindSpriteBase3D_set_opacity :: MethodBind
 bindSpriteBase3D_set_opacity
   = unsafePerformIO $
@@ -844,7 +906,7 @@ bindSpriteBase3D_set_opacity
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The texture's visibility on a scale from @0@ (fully invisible) to @1@ (fully visible). @opacity@ is a multiplier for the @modulate@ color's alpha channel.
---   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @SpatialMaterial.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@/color@ must be inserted in the shader's @fragment()@ function.
+--   			__Note:__ If a @GeometryInstance.material_override@ is defined on the @SpriteBase3D@, the material override must be configured to take vertex colors into account for albedo. Otherwise, the opacity defined in @opacity@ will be ignored. For a @SpatialMaterial@, @Material3D.vertex_color_use_as_albedo@ must be @true@. For a @ShaderMaterial@, @ALPHA *= COLOR.a;@ must be inserted in the shader's @fragment()@ function.
 set_opacity ::
               (SpriteBase3D :< cls, Object :< cls) => cls -> Float -> IO ()
 set_opacity cls arg1
@@ -891,3 +953,39 @@ set_pixel_size cls arg1
 instance NodeMethod SpriteBase3D "set_pixel_size" '[Float] (IO ())
          where
         nodeMethod = Godot.Core.SpriteBase3D.set_pixel_size
+
+{-# NOINLINE bindSpriteBase3D_set_render_priority #-}
+
+-- | Sets the render priority for the sprite. Higher priority objects will be sorted in front of lower priority objects.
+--   			__Note:__ This only applies if @alpha_cut@ is set to @ALPHA_CUT_DISABLED@ (default value).
+--   			__Note:__ This only applies to sorting of transparent objects. This will not impact how transparent objects are sorted relative to opaque objects. This is because opaque objects are not sorted, while transparent objects are sorted from back to front (subject to priority).
+bindSpriteBase3D_set_render_priority :: MethodBind
+bindSpriteBase3D_set_render_priority
+  = unsafePerformIO $
+      withCString "SpriteBase3D" $
+        \ clsNamePtr ->
+          withCString "set_render_priority" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the render priority for the sprite. Higher priority objects will be sorted in front of lower priority objects.
+--   			__Note:__ This only applies if @alpha_cut@ is set to @ALPHA_CUT_DISABLED@ (default value).
+--   			__Note:__ This only applies to sorting of transparent objects. This will not impact how transparent objects are sorted relative to opaque objects. This is because opaque objects are not sorted, while transparent objects are sorted from back to front (subject to priority).
+set_render_priority ::
+                      (SpriteBase3D :< cls, Object :< cls) => cls -> Int -> IO ()
+set_render_priority cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSpriteBase3D_set_render_priority
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SpriteBase3D "set_render_priority" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.SpriteBase3D.set_render_priority

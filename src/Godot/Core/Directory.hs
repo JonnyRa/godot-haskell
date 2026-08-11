@@ -242,7 +242,10 @@ instance NodeMethod Directory "get_current_drive" '[] (IO Int)
 
 {-# NOINLINE bindDirectory_get_drive #-}
 
--- | On Windows, returns the name of the drive (partition) passed as an argument (e.g. @C:@). On other platforms, or if the requested drive does not exist, the method returns an empty String.
+-- | On Windows, returns the name of the drive (partition) passed as an argument (e.g. @C:@).
+--   				On macOS, returns the path to the mounted volume passed as an argument.
+--   				On Linux, returns the path to the mounted volume or GTK 3 bookmark passed as an argument.
+--   				On other platforms, or if the requested drive does not exist, the method returns an empty String.
 bindDirectory_get_drive :: MethodBind
 bindDirectory_get_drive
   = unsafePerformIO $
@@ -252,7 +255,10 @@ bindDirectory_get_drive
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | On Windows, returns the name of the drive (partition) passed as an argument (e.g. @C:@). On other platforms, or if the requested drive does not exist, the method returns an empty String.
+-- | On Windows, returns the name of the drive (partition) passed as an argument (e.g. @C:@).
+--   				On macOS, returns the path to the mounted volume passed as an argument.
+--   				On Linux, returns the path to the mounted volume or GTK 3 bookmark passed as an argument.
+--   				On other platforms, or if the requested drive does not exist, the method returns an empty String.
 get_drive ::
             (Directory :< cls, Object :< cls) => cls -> Int -> IO GodotString
 get_drive cls arg1
@@ -271,7 +277,10 @@ instance NodeMethod Directory "get_drive" '[Int] (IO GodotString)
 
 {-# NOINLINE bindDirectory_get_drive_count #-}
 
--- | On Windows, returns the number of drives (partitions) mounted on the current filesystem. On other platforms, the method returns 0.
+-- | On Windows, returns the number of drives (partitions) mounted on the current filesystem.
+--   				On macOS, returns the number of mounted volumes.
+--   				On Linux, returns the number of mounted volumes and GTK 3 bookmarks.
+--   				On other platforms, the method returns 0.
 bindDirectory_get_drive_count :: MethodBind
 bindDirectory_get_drive_count
   = unsafePerformIO $
@@ -281,7 +290,10 @@ bindDirectory_get_drive_count
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | On Windows, returns the number of drives (partitions) mounted on the current filesystem. On other platforms, the method returns 0.
+-- | On Windows, returns the number of drives (partitions) mounted on the current filesystem.
+--   				On macOS, returns the number of mounted volumes.
+--   				On Linux, returns the number of mounted volumes and GTK 3 bookmarks.
+--   				On other platforms, the method returns 0.
 get_drive_count ::
                   (Directory :< cls, Object :< cls) => cls -> IO Int
 get_drive_count cls
@@ -520,7 +532,8 @@ instance NodeMethod Directory "open" '[GodotString] (IO Int) where
 
 {-# NOINLINE bindDirectory_remove #-}
 
--- | Deletes the target file or an empty directory. The argument can be relative to the current directory, or an absolute path. If the target directory is not empty, the operation will fail.
+-- | Permanently deletes the target file or an empty directory. The argument can be relative to the current directory, or an absolute path. If the target directory is not empty, the operation will fail.
+--   				If you don't want to delete the file/directory permanently, use @method OS.move_to_trash@ instead.
 --   				Returns one of the @enum Error@ code constants (@OK@ on success).
 bindDirectory_remove :: MethodBind
 bindDirectory_remove
@@ -531,7 +544,8 @@ bindDirectory_remove
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Deletes the target file or an empty directory. The argument can be relative to the current directory, or an absolute path. If the target directory is not empty, the operation will fail.
+-- | Permanently deletes the target file or an empty directory. The argument can be relative to the current directory, or an absolute path. If the target directory is not empty, the operation will fail.
+--   				If you don't want to delete the file/directory permanently, use @method OS.move_to_trash@ instead.
 --   				Returns one of the @enum Error@ code constants (@OK@ on success).
 remove ::
          (Directory :< cls, Object :< cls) => cls -> GodotString -> IO Int

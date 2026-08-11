@@ -21,6 +21,7 @@ module Godot.Core.ARVRInterface
         Godot.Core.ARVRInterface.get_name,
         Godot.Core.ARVRInterface.get_render_targetsize,
         Godot.Core.ARVRInterface.get_tracking_status,
+        Godot.Core.ARVRInterface.get_transform_for_eye,
         Godot.Core.ARVRInterface.initialize,
         Godot.Core.ARVRInterface.is_initialized,
         Godot.Core.ARVRInterface.is_primary,
@@ -292,6 +293,40 @@ instance NodeMethod ARVRInterface "get_tracking_status" '[]
            (IO Int)
          where
         nodeMethod = Godot.Core.ARVRInterface.get_tracking_status
+
+{-# NOINLINE bindARVRInterface_get_transform_for_eye #-}
+
+-- | Returns the transform for an eye multiplied by @transform@. The usual value for @transform@ is the global_transform of the current ARVROrigin.
+bindARVRInterface_get_transform_for_eye :: MethodBind
+bindARVRInterface_get_transform_for_eye
+  = unsafePerformIO $
+      withCString "ARVRInterface" $
+        \ clsNamePtr ->
+          withCString "get_transform_for_eye" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the transform for an eye multiplied by @transform@. The usual value for @transform@ is the global_transform of the current ARVROrigin.
+get_transform_for_eye ::
+                        (ARVRInterface :< cls, Object :< cls) =>
+                        cls -> Int -> Transform -> IO Transform
+get_transform_for_eye cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindARVRInterface_get_transform_for_eye
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod ARVRInterface "get_transform_for_eye"
+           '[Int, Transform]
+           (IO Transform)
+         where
+        nodeMethod = Godot.Core.ARVRInterface.get_transform_for_eye
 
 {-# NOINLINE bindARVRInterface_initialize #-}
 

@@ -4,9 +4,7 @@
 module Godot.Core.AnimatedSprite
        (Godot.Core.AnimatedSprite.sig_animation_finished,
         Godot.Core.AnimatedSprite.sig_frame_changed,
-        Godot.Core.AnimatedSprite._is_playing,
         Godot.Core.AnimatedSprite._res_changed,
-        Godot.Core.AnimatedSprite._set_playing,
         Godot.Core.AnimatedSprite.get_animation,
         Godot.Core.AnimatedSprite.get_frame,
         Godot.Core.AnimatedSprite.get_offset,
@@ -23,6 +21,7 @@ module Godot.Core.AnimatedSprite
         Godot.Core.AnimatedSprite.set_flip_v,
         Godot.Core.AnimatedSprite.set_frame,
         Godot.Core.AnimatedSprite.set_offset,
+        Godot.Core.AnimatedSprite.set_playing,
         Godot.Core.AnimatedSprite.set_speed_scale,
         Godot.Core.AnimatedSprite.set_sprite_frames,
         Godot.Core.AnimatedSprite.stop)
@@ -84,42 +83,12 @@ instance NodeProperty AnimatedSprite "offset" Vector2 'False where
 
 instance NodeProperty AnimatedSprite "playing" Bool 'False where
         nodeProperty
-          = (_is_playing, wrapDroppingSetter _set_playing, Nothing)
+          = (is_playing, wrapDroppingSetter set_playing, Nothing)
 
 instance NodeProperty AnimatedSprite "speed_scale" Float 'False
          where
         nodeProperty
           = (get_speed_scale, wrapDroppingSetter set_speed_scale, Nothing)
-
-{-# NOINLINE bindAnimatedSprite__is_playing #-}
-
--- | If @true@, the @animation@ is currently playing.
-bindAnimatedSprite__is_playing :: MethodBind
-bindAnimatedSprite__is_playing
-  = unsafePerformIO $
-      withCString "AnimatedSprite" $
-        \ clsNamePtr ->
-          withCString "_is_playing" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | If @true@, the @animation@ is currently playing.
-_is_playing ::
-              (AnimatedSprite :< cls, Object :< cls) => cls -> IO Bool
-_is_playing cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindAnimatedSprite__is_playing (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod AnimatedSprite "_is_playing" '[] (IO Bool)
-         where
-        nodeMethod = Godot.Core.AnimatedSprite._is_playing
 
 {-# NOINLINE bindAnimatedSprite__res_changed #-}
 
@@ -147,36 +116,6 @@ _res_changed cls
 
 instance NodeMethod AnimatedSprite "_res_changed" '[] (IO ()) where
         nodeMethod = Godot.Core.AnimatedSprite._res_changed
-
-{-# NOINLINE bindAnimatedSprite__set_playing #-}
-
--- | If @true@, the @animation@ is currently playing.
-bindAnimatedSprite__set_playing :: MethodBind
-bindAnimatedSprite__set_playing
-  = unsafePerformIO $
-      withCString "AnimatedSprite" $
-        \ clsNamePtr ->
-          withCString "_set_playing" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
--- | If @true@, the @animation@ is currently playing.
-_set_playing ::
-               (AnimatedSprite :< cls, Object :< cls) => cls -> Bool -> IO ()
-_set_playing cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindAnimatedSprite__set_playing (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod AnimatedSprite "_set_playing" '[Bool] (IO ())
-         where
-        nodeMethod = Godot.Core.AnimatedSprite._set_playing
 
 {-# NOINLINE bindAnimatedSprite_get_animation #-}
 
@@ -302,7 +241,7 @@ instance NodeMethod AnimatedSprite "get_speed_scale" '[] (IO Float)
 
 {-# NOINLINE bindAnimatedSprite_get_sprite_frames #-}
 
--- | The @SpriteFrames@ resource containing the animation(s).
+-- | The @SpriteFrames@ resource containing the animation(s). Allows you the option to load, edit, clear, make unique and save the states of the @SpriteFrames@ resource.
 bindAnimatedSprite_get_sprite_frames :: MethodBind
 bindAnimatedSprite_get_sprite_frames
   = unsafePerformIO $
@@ -312,7 +251,7 @@ bindAnimatedSprite_get_sprite_frames
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The @SpriteFrames@ resource containing the animation(s).
+-- | The @SpriteFrames@ resource containing the animation(s). Allows you the option to load, edit, clear, make unique and save the states of the @SpriteFrames@ resource.
 get_sprite_frames ::
                     (AnimatedSprite :< cls, Object :< cls) => cls -> IO SpriteFrames
 get_sprite_frames cls
@@ -421,7 +360,7 @@ instance NodeMethod AnimatedSprite "is_flipped_v" '[] (IO Bool)
 
 {-# NOINLINE bindAnimatedSprite_is_playing #-}
 
--- | Returns @true@ if an animation is currently being played.
+-- | If @true@, the @animation@ is currently playing.
 bindAnimatedSprite_is_playing :: MethodBind
 bindAnimatedSprite_is_playing
   = unsafePerformIO $
@@ -431,7 +370,7 @@ bindAnimatedSprite_is_playing
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if an animation is currently being played.
+-- | If @true@, the @animation@ is currently playing.
 is_playing ::
              (AnimatedSprite :< cls, Object :< cls) => cls -> IO Bool
 is_playing cls
@@ -664,6 +603,36 @@ instance NodeMethod AnimatedSprite "set_offset" '[Vector2] (IO ())
          where
         nodeMethod = Godot.Core.AnimatedSprite.set_offset
 
+{-# NOINLINE bindAnimatedSprite_set_playing #-}
+
+-- | If @true@, the @animation@ is currently playing.
+bindAnimatedSprite_set_playing :: MethodBind
+bindAnimatedSprite_set_playing
+  = unsafePerformIO $
+      withCString "AnimatedSprite" $
+        \ clsNamePtr ->
+          withCString "set_playing" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the @animation@ is currently playing.
+set_playing ::
+              (AnimatedSprite :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_playing cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindAnimatedSprite_set_playing (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod AnimatedSprite "set_playing" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.AnimatedSprite.set_playing
+
 {-# NOINLINE bindAnimatedSprite_set_speed_scale #-}
 
 -- | The animation speed is multiplied by this value.
@@ -698,7 +667,7 @@ instance NodeMethod AnimatedSprite "set_speed_scale" '[Float]
 
 {-# NOINLINE bindAnimatedSprite_set_sprite_frames #-}
 
--- | The @SpriteFrames@ resource containing the animation(s).
+-- | The @SpriteFrames@ resource containing the animation(s). Allows you the option to load, edit, clear, make unique and save the states of the @SpriteFrames@ resource.
 bindAnimatedSprite_set_sprite_frames :: MethodBind
 bindAnimatedSprite_set_sprite_frames
   = unsafePerformIO $
@@ -708,7 +677,7 @@ bindAnimatedSprite_set_sprite_frames
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The @SpriteFrames@ resource containing the animation(s).
+-- | The @SpriteFrames@ resource containing the animation(s). Allows you the option to load, edit, clear, make unique and save the states of the @SpriteFrames@ resource.
 set_sprite_frames ::
                     (AnimatedSprite :< cls, Object :< cls) =>
                     cls -> SpriteFrames -> IO ()

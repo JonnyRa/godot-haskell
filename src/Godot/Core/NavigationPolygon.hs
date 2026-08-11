@@ -11,6 +11,7 @@ module Godot.Core.NavigationPolygon
         Godot.Core.NavigationPolygon.add_polygon,
         Godot.Core.NavigationPolygon.clear_outlines,
         Godot.Core.NavigationPolygon.clear_polygons,
+        Godot.Core.NavigationPolygon.get_mesh,
         Godot.Core.NavigationPolygon.get_outline,
         Godot.Core.NavigationPolygon.get_outline_count,
         Godot.Core.NavigationPolygon.get_polygon,
@@ -331,6 +332,35 @@ clear_polygons cls
 instance NodeMethod NavigationPolygon "clear_polygons" '[] (IO ())
          where
         nodeMethod = Godot.Core.NavigationPolygon.clear_polygons
+
+{-# NOINLINE bindNavigationPolygon_get_mesh #-}
+
+-- | Returns the @NavigationMesh@ resulting from this navigation polygon. This navmesh can be used to update the navmesh of a region with the @method NavigationServer.region_set_navmesh@ API directly (as 2D uses the 3D server behind the scene).
+bindNavigationPolygon_get_mesh :: MethodBind
+bindNavigationPolygon_get_mesh
+  = unsafePerformIO $
+      withCString "NavigationPolygon" $
+        \ clsNamePtr ->
+          withCString "get_mesh" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns the @NavigationMesh@ resulting from this navigation polygon. This navmesh can be used to update the navmesh of a region with the @method NavigationServer.region_set_navmesh@ API directly (as 2D uses the 3D server behind the scene).
+get_mesh ::
+           (NavigationPolygon :< cls, Object :< cls) =>
+           cls -> IO NavigationMesh
+get_mesh cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigationPolygon_get_mesh (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod NavigationPolygon "get_mesh" '[]
+           (IO NavigationMesh)
+         where
+        nodeMethod = Godot.Core.NavigationPolygon.get_mesh
 
 {-# NOINLINE bindNavigationPolygon_get_outline #-}
 

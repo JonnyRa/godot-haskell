@@ -257,7 +257,7 @@ instance NodeMethod SoftBody "get_collision_exceptions" '[]
 
 -- | The physics layers this SoftBody is in.
 --   			Collidable objects can exist in any of 32 different layers. These layers work like a tagging system, and are not visual. A collidable can use these layers to select with which objects it can collide, using the collision_mask property.
---   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindSoftBody_get_collision_layer :: MethodBind
 bindSoftBody_get_collision_layer
   = unsafePerformIO $
@@ -269,7 +269,7 @@ bindSoftBody_get_collision_layer
 
 -- | The physics layers this SoftBody is in.
 --   			Collidable objects can exist in any of 32 different layers. These layers work like a tagging system, and are not visual. A collidable can use these layers to select with which objects it can collide, using the collision_mask property.
---   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_layer ::
                       (SoftBody :< cls, Object :< cls) => cls -> IO Int
 get_collision_layer cls
@@ -322,7 +322,7 @@ instance NodeMethod SoftBody "get_collision_layer_bit" '[Int]
 
 {-# NOINLINE bindSoftBody_get_collision_mask #-}
 
--- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layers this SoftBody scans for collisions. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindSoftBody_get_collision_mask :: MethodBind
 bindSoftBody_get_collision_mask
   = unsafePerformIO $
@@ -332,7 +332,7 @@ bindSoftBody_get_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layers this SoftBody scans for collisions. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_mask ::
                      (SoftBody :< cls, Object :< cls) => cls -> IO Int
 get_collision_mask cls
@@ -840,7 +840,7 @@ instance NodeMethod SoftBody "set_areaAngular_stiffness" '[Float]
 
 -- | The physics layers this SoftBody is in.
 --   			Collidable objects can exist in any of 32 different layers. These layers work like a tagging system, and are not visual. A collidable can use these layers to select with which objects it can collide, using the collision_mask property.
---   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindSoftBody_set_collision_layer :: MethodBind
 bindSoftBody_set_collision_layer
   = unsafePerformIO $
@@ -852,7 +852,7 @@ bindSoftBody_set_collision_layer
 
 -- | The physics layers this SoftBody is in.
 --   			Collidable objects can exist in any of 32 different layers. These layers work like a tagging system, and are not visual. A collidable can use these layers to select with which objects it can collide, using the collision_mask property.
---   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			A contact is detected if object A is in any of the layers that object B scans, or object B is in any layer scanned by object A. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_layer ::
                       (SoftBody :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_layer cls arg1
@@ -905,7 +905,7 @@ instance NodeMethod SoftBody "set_collision_layer_bit" '[Int, Bool]
 
 {-# NOINLINE bindSoftBody_set_collision_mask #-}
 
--- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layers this SoftBody scans for collisions. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindSoftBody_set_collision_mask :: MethodBind
 bindSoftBody_set_collision_mask
   = unsafePerformIO $
@@ -915,7 +915,7 @@ bindSoftBody_set_collision_mask
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The physics layers this SoftBody scans for collisions. See @url=https://docs.godotengine.org/en/3.4/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+-- | The physics layers this SoftBody scans for collisions. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_mask ::
                      (SoftBody :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_mask cls arg1

@@ -173,7 +173,7 @@ instance NodeMethod Sprite3D "get_region_rect" '[] (IO Rect2) where
 
 {-# NOINLINE bindSprite3D_get_texture #-}
 
--- | @Texture@ object to draw. If @GeometryInstance.material_override@ is used, this will be overridden.
+-- | @Texture@ object to draw. If @GeometryInstance.material_override@ is used, this will be overridden. The size information is still used.
 bindSprite3D_get_texture :: MethodBind
 bindSprite3D_get_texture
   = unsafePerformIO $
@@ -183,7 +183,7 @@ bindSprite3D_get_texture
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | @Texture@ object to draw. If @GeometryInstance.material_override@ is used, this will be overridden.
+-- | @Texture@ object to draw. If @GeometryInstance.material_override@ is used, this will be overridden. The size information is still used.
 get_texture ::
               (Sprite3D :< cls, Object :< cls) => cls -> IO Texture
 get_texture cls
@@ -396,7 +396,7 @@ instance NodeMethod Sprite3D "set_region_rect" '[Rect2] (IO ())
 
 {-# NOINLINE bindSprite3D_set_texture #-}
 
--- | @Texture@ object to draw. If @GeometryInstance.material_override@ is used, this will be overridden.
+-- | @Texture@ object to draw. If @GeometryInstance.material_override@ is used, this will be overridden. The size information is still used.
 bindSprite3D_set_texture :: MethodBind
 bindSprite3D_set_texture
   = unsafePerformIO $
@@ -406,7 +406,7 @@ bindSprite3D_set_texture
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | @Texture@ object to draw. If @GeometryInstance.material_override@ is used, this will be overridden.
+-- | @Texture@ object to draw. If @GeometryInstance.material_override@ is used, this will be overridden. The size information is still used.
 set_texture ::
               (Sprite3D :< cls, Object :< cls) => cls -> Texture -> IO ()
 set_texture cls arg1

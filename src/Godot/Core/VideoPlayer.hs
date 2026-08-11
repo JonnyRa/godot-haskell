@@ -12,14 +12,14 @@ module Godot.Core.VideoPlayer
         Godot.Core.VideoPlayer.get_volume,
         Godot.Core.VideoPlayer.get_volume_db,
         Godot.Core.VideoPlayer.has_autoplay,
-        Godot.Core.VideoPlayer.has_expand,
+        Godot.Core.VideoPlayer.has_expand, Godot.Core.VideoPlayer.has_loop,
         Godot.Core.VideoPlayer.is_paused,
         Godot.Core.VideoPlayer.is_playing, Godot.Core.VideoPlayer.play,
         Godot.Core.VideoPlayer.set_audio_track,
         Godot.Core.VideoPlayer.set_autoplay,
         Godot.Core.VideoPlayer.set_buffering_msec,
         Godot.Core.VideoPlayer.set_bus, Godot.Core.VideoPlayer.set_expand,
-        Godot.Core.VideoPlayer.set_paused,
+        Godot.Core.VideoPlayer.set_loop, Godot.Core.VideoPlayer.set_paused,
         Godot.Core.VideoPlayer.set_stream,
         Godot.Core.VideoPlayer.set_stream_position,
         Godot.Core.VideoPlayer.set_volume,
@@ -61,6 +61,9 @@ instance NodeProperty VideoPlayer "bus" GodotString 'False where
 
 instance NodeProperty VideoPlayer "expand" Bool 'False where
         nodeProperty = (has_expand, wrapDroppingSetter set_expand, Nothing)
+
+instance NodeProperty VideoPlayer "loop" Bool 'False where
+        nodeProperty = (has_loop, wrapDroppingSetter set_loop, Nothing)
 
 instance NodeProperty VideoPlayer "paused" Bool 'False where
         nodeProperty = (is_paused, wrapDroppingSetter set_paused, Nothing)
@@ -408,6 +411,33 @@ has_expand cls
 instance NodeMethod VideoPlayer "has_expand" '[] (IO Bool) where
         nodeMethod = Godot.Core.VideoPlayer.has_expand
 
+{-# NOINLINE bindVideoPlayer_has_loop #-}
+
+-- | If @true@, the video restarts when it reaches its end.
+bindVideoPlayer_has_loop :: MethodBind
+bindVideoPlayer_has_loop
+  = unsafePerformIO $
+      withCString "VideoPlayer" $
+        \ clsNamePtr ->
+          withCString "has_loop" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the video restarts when it reaches its end.
+has_loop :: (VideoPlayer :< cls, Object :< cls) => cls -> IO Bool
+has_loop cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVideoPlayer_has_loop (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VideoPlayer "has_loop" '[] (IO Bool) where
+        nodeMethod = Godot.Core.VideoPlayer.has_loop
+
 {-# NOINLINE bindVideoPlayer_is_paused #-}
 
 -- | If @true@, the video is paused.
@@ -640,6 +670,34 @@ set_expand cls arg1
 
 instance NodeMethod VideoPlayer "set_expand" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.VideoPlayer.set_expand
+
+{-# NOINLINE bindVideoPlayer_set_loop #-}
+
+-- | If @true@, the video restarts when it reaches its end.
+bindVideoPlayer_set_loop :: MethodBind
+bindVideoPlayer_set_loop
+  = unsafePerformIO $
+      withCString "VideoPlayer" $
+        \ clsNamePtr ->
+          withCString "set_loop" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the video restarts when it reaches its end.
+set_loop ::
+           (VideoPlayer :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_loop cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindVideoPlayer_set_loop (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod VideoPlayer "set_loop" '[Bool] (IO ()) where
+        nodeMethod = Godot.Core.VideoPlayer.set_loop
 
 {-# NOINLINE bindVideoPlayer_set_paused #-}
 

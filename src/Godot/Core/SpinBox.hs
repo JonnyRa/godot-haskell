@@ -3,13 +3,17 @@
   MultiParamTypeClasses #-}
 module Godot.Core.SpinBox
        (Godot.Core.SpinBox._gui_input,
+        Godot.Core.SpinBox._line_edit_focus_enter,
         Godot.Core.SpinBox._line_edit_focus_exit,
         Godot.Core.SpinBox._line_edit_input,
         Godot.Core.SpinBox._range_click_timeout,
         Godot.Core.SpinBox._text_entered, Godot.Core.SpinBox.apply,
-        Godot.Core.SpinBox.get_align, Godot.Core.SpinBox.get_line_edit,
-        Godot.Core.SpinBox.get_prefix, Godot.Core.SpinBox.get_suffix,
-        Godot.Core.SpinBox.is_editable, Godot.Core.SpinBox.set_align,
+        Godot.Core.SpinBox.get_align,
+        Godot.Core.SpinBox.get_custom_arrow_step,
+        Godot.Core.SpinBox.get_line_edit, Godot.Core.SpinBox.get_prefix,
+        Godot.Core.SpinBox.get_suffix, Godot.Core.SpinBox.is_editable,
+        Godot.Core.SpinBox.set_align,
+        Godot.Core.SpinBox.set_custom_arrow_step,
         Godot.Core.SpinBox.set_editable, Godot.Core.SpinBox.set_prefix,
         Godot.Core.SpinBox.set_suffix)
        where
@@ -27,6 +31,12 @@ import Godot.Core.Range()
 
 instance NodeProperty SpinBox "align" Int 'False where
         nodeProperty = (get_align, wrapDroppingSetter set_align, Nothing)
+
+instance NodeProperty SpinBox "custom_arrow_step" Float 'False
+         where
+        nodeProperty
+          = (get_custom_arrow_step, wrapDroppingSetter set_custom_arrow_step,
+             Nothing)
 
 instance NodeProperty SpinBox "editable" Bool 'False where
         nodeProperty
@@ -64,6 +74,35 @@ _gui_input cls arg1
 instance NodeMethod SpinBox "_gui_input" '[InputEvent] (IO ())
          where
         nodeMethod = Godot.Core.SpinBox._gui_input
+
+{-# NOINLINE bindSpinBox__line_edit_focus_enter #-}
+
+bindSpinBox__line_edit_focus_enter :: MethodBind
+bindSpinBox__line_edit_focus_enter
+  = unsafePerformIO $
+      withCString "SpinBox" $
+        \ clsNamePtr ->
+          withCString "_line_edit_focus_enter" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_line_edit_focus_enter ::
+                         (SpinBox :< cls, Object :< cls) => cls -> IO ()
+_line_edit_focus_enter cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSpinBox__line_edit_focus_enter
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SpinBox "_line_edit_focus_enter" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.SpinBox._line_edit_focus_enter
 
 {-# NOINLINE bindSpinBox__line_edit_focus_exit #-}
 
@@ -233,6 +272,37 @@ get_align cls
 instance NodeMethod SpinBox "get_align" '[] (IO Int) where
         nodeMethod = Godot.Core.SpinBox.get_align
 
+{-# NOINLINE bindSpinBox_get_custom_arrow_step #-}
+
+-- | If not @0@, @value@ will always be rounded to a multiple of @custom_arrow_step@ when interacting with the arrow buttons of the @SpinBox@.
+bindSpinBox_get_custom_arrow_step :: MethodBind
+bindSpinBox_get_custom_arrow_step
+  = unsafePerformIO $
+      withCString "SpinBox" $
+        \ clsNamePtr ->
+          withCString "get_custom_arrow_step" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If not @0@, @value@ will always be rounded to a multiple of @custom_arrow_step@ when interacting with the arrow buttons of the @SpinBox@.
+get_custom_arrow_step ::
+                        (SpinBox :< cls, Object :< cls) => cls -> IO Float
+get_custom_arrow_step cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSpinBox_get_custom_arrow_step
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SpinBox "get_custom_arrow_step" '[] (IO Float)
+         where
+        nodeMethod = Godot.Core.SpinBox.get_custom_arrow_step
+
 {-# NOINLINE bindSpinBox_get_line_edit #-}
 
 -- | Returns the @LineEdit@ instance from this @SpinBox@. You can use it to access properties and methods of @LineEdit@.
@@ -370,6 +440,38 @@ set_align cls arg1
 
 instance NodeMethod SpinBox "set_align" '[Int] (IO ()) where
         nodeMethod = Godot.Core.SpinBox.set_align
+
+{-# NOINLINE bindSpinBox_set_custom_arrow_step #-}
+
+-- | If not @0@, @value@ will always be rounded to a multiple of @custom_arrow_step@ when interacting with the arrow buttons of the @SpinBox@.
+bindSpinBox_set_custom_arrow_step :: MethodBind
+bindSpinBox_set_custom_arrow_step
+  = unsafePerformIO $
+      withCString "SpinBox" $
+        \ clsNamePtr ->
+          withCString "set_custom_arrow_step" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If not @0@, @value@ will always be rounded to a multiple of @custom_arrow_step@ when interacting with the arrow buttons of the @SpinBox@.
+set_custom_arrow_step ::
+                        (SpinBox :< cls, Object :< cls) => cls -> Float -> IO ()
+set_custom_arrow_step cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindSpinBox_set_custom_arrow_step
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod SpinBox "set_custom_arrow_step" '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.SpinBox.set_custom_arrow_step
 
 {-# NOINLINE bindSpinBox_set_editable #-}
 

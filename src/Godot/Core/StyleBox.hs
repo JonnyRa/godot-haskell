@@ -49,8 +49,8 @@ instance NodeProperty StyleBox "content_margin_top" Float 'False
 
 {-# NOINLINE bindStyleBox_draw #-}
 
--- | Draws this stylebox using a @CanvasItem@ with given @RID@.
---   				You can get a @RID@ value using @method Object.get_instance_id@ on a @CanvasItem@-derived node.
+-- | Draws this stylebox using a canvas item identified by the given @RID@.
+--   				The @RID@ value can either be the result of @method CanvasItem.get_canvas_item@ called on an existing @CanvasItem@-derived node, or directly from creating a canvas item in the @VisualServer@ with @method VisualServer.canvas_item_create@.
 bindStyleBox_draw :: MethodBind
 bindStyleBox_draw
   = unsafePerformIO $
@@ -60,8 +60,8 @@ bindStyleBox_draw
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws this stylebox using a @CanvasItem@ with given @RID@.
---   				You can get a @RID@ value using @method Object.get_instance_id@ on a @CanvasItem@-derived node.
+-- | Draws this stylebox using a canvas item identified by the given @RID@.
+--   				The @RID@ value can either be the result of @method CanvasItem.get_canvas_item@ called on an existing @CanvasItem@-derived node, or directly from creating a canvas item in the @VisualServer@ with @method VisualServer.canvas_item_create@.
 draw ::
        (StyleBox :< cls, Object :< cls) => cls -> Rid -> Rect2 -> IO ()
 draw cls arg1 arg2

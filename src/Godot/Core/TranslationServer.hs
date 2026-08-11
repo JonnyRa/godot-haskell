@@ -4,11 +4,19 @@
 module Godot.Core.TranslationServer
        (Godot.Core.TranslationServer.add_translation,
         Godot.Core.TranslationServer.clear,
+        Godot.Core.TranslationServer.compare_locales,
+        Godot.Core.TranslationServer.get_all_countries,
+        Godot.Core.TranslationServer.get_all_languages,
+        Godot.Core.TranslationServer.get_all_scripts,
+        Godot.Core.TranslationServer.get_country_name,
+        Godot.Core.TranslationServer.get_language_name,
         Godot.Core.TranslationServer.get_loaded_locales,
         Godot.Core.TranslationServer.get_locale,
         Godot.Core.TranslationServer.get_locale_name,
+        Godot.Core.TranslationServer.get_script_name,
         Godot.Core.TranslationServer.remove_translation,
         Godot.Core.TranslationServer.set_locale,
+        Godot.Core.TranslationServer.standardize_locale,
         Godot.Core.TranslationServer.translate)
        where
 import Data.Coerce
@@ -84,6 +92,207 @@ clear cls
 
 instance NodeMethod TranslationServer "clear" '[] (IO ()) where
         nodeMethod = Godot.Core.TranslationServer.clear
+
+{-# NOINLINE bindTranslationServer_compare_locales #-}
+
+-- | Compares two locales and return similarity score between @0@(no match) and @10@(full match).
+bindTranslationServer_compare_locales :: MethodBind
+bindTranslationServer_compare_locales
+  = unsafePerformIO $
+      withCString "TranslationServer" $
+        \ clsNamePtr ->
+          withCString "compare_locales" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Compares two locales and return similarity score between @0@(no match) and @10@(full match).
+compare_locales ::
+                  (TranslationServer :< cls, Object :< cls) =>
+                  cls -> GodotString -> GodotString -> IO Int
+compare_locales cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTranslationServer_compare_locales
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TranslationServer "compare_locales"
+           '[GodotString, GodotString]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.TranslationServer.compare_locales
+
+{-# NOINLINE bindTranslationServer_get_all_countries #-}
+
+-- | Returns array of known country codes.
+bindTranslationServer_get_all_countries :: MethodBind
+bindTranslationServer_get_all_countries
+  = unsafePerformIO $
+      withCString "TranslationServer" $
+        \ clsNamePtr ->
+          withCString "get_all_countries" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns array of known country codes.
+get_all_countries ::
+                    (TranslationServer :< cls, Object :< cls) =>
+                    cls -> IO PoolStringArray
+get_all_countries cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTranslationServer_get_all_countries
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TranslationServer "get_all_countries" '[]
+           (IO PoolStringArray)
+         where
+        nodeMethod = Godot.Core.TranslationServer.get_all_countries
+
+{-# NOINLINE bindTranslationServer_get_all_languages #-}
+
+-- | Returns array of known language codes.
+bindTranslationServer_get_all_languages :: MethodBind
+bindTranslationServer_get_all_languages
+  = unsafePerformIO $
+      withCString "TranslationServer" $
+        \ clsNamePtr ->
+          withCString "get_all_languages" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns array of known language codes.
+get_all_languages ::
+                    (TranslationServer :< cls, Object :< cls) =>
+                    cls -> IO PoolStringArray
+get_all_languages cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTranslationServer_get_all_languages
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TranslationServer "get_all_languages" '[]
+           (IO PoolStringArray)
+         where
+        nodeMethod = Godot.Core.TranslationServer.get_all_languages
+
+{-# NOINLINE bindTranslationServer_get_all_scripts #-}
+
+-- | Returns array of known script codes.
+bindTranslationServer_get_all_scripts :: MethodBind
+bindTranslationServer_get_all_scripts
+  = unsafePerformIO $
+      withCString "TranslationServer" $
+        \ clsNamePtr ->
+          withCString "get_all_scripts" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns array of known script codes.
+get_all_scripts ::
+                  (TranslationServer :< cls, Object :< cls) =>
+                  cls -> IO PoolStringArray
+get_all_scripts cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTranslationServer_get_all_scripts
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TranslationServer "get_all_scripts" '[]
+           (IO PoolStringArray)
+         where
+        nodeMethod = Godot.Core.TranslationServer.get_all_scripts
+
+{-# NOINLINE bindTranslationServer_get_country_name #-}
+
+-- | Returns readable country name for the @country@ code.
+bindTranslationServer_get_country_name :: MethodBind
+bindTranslationServer_get_country_name
+  = unsafePerformIO $
+      withCString "TranslationServer" $
+        \ clsNamePtr ->
+          withCString "get_country_name" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns readable country name for the @country@ code.
+get_country_name ::
+                   (TranslationServer :< cls, Object :< cls) =>
+                   cls -> GodotString -> IO GodotString
+get_country_name cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTranslationServer_get_country_name
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TranslationServer "get_country_name"
+           '[GodotString]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.TranslationServer.get_country_name
+
+{-# NOINLINE bindTranslationServer_get_language_name #-}
+
+-- | Returns readable language name for the @language@ code.
+bindTranslationServer_get_language_name :: MethodBind
+bindTranslationServer_get_language_name
+  = unsafePerformIO $
+      withCString "TranslationServer" $
+        \ clsNamePtr ->
+          withCString "get_language_name" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns readable language name for the @language@ code.
+get_language_name ::
+                    (TranslationServer :< cls, Object :< cls) =>
+                    cls -> GodotString -> IO GodotString
+get_language_name cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTranslationServer_get_language_name
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TranslationServer "get_language_name"
+           '[GodotString]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.TranslationServer.get_language_name
 
 {-# NOINLINE bindTranslationServer_get_loaded_locales #-}
 
@@ -185,6 +394,40 @@ instance NodeMethod TranslationServer "get_locale_name"
          where
         nodeMethod = Godot.Core.TranslationServer.get_locale_name
 
+{-# NOINLINE bindTranslationServer_get_script_name #-}
+
+-- | Returns readable script name for the @script@ code.
+bindTranslationServer_get_script_name :: MethodBind
+bindTranslationServer_get_script_name
+  = unsafePerformIO $
+      withCString "TranslationServer" $
+        \ clsNamePtr ->
+          withCString "get_script_name" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns readable script name for the @script@ code.
+get_script_name ::
+                  (TranslationServer :< cls, Object :< cls) =>
+                  cls -> GodotString -> IO GodotString
+get_script_name cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTranslationServer_get_script_name
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TranslationServer "get_script_name"
+           '[GodotString]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.TranslationServer.get_script_name
+
 {-# NOINLINE bindTranslationServer_remove_translation #-}
 
 -- | Removes the given translation from the server.
@@ -253,6 +496,40 @@ instance NodeMethod TranslationServer "set_locale" '[GodotString]
            (IO ())
          where
         nodeMethod = Godot.Core.TranslationServer.set_locale
+
+{-# NOINLINE bindTranslationServer_standardize_locale #-}
+
+-- | Returns @locale@ string standardized to match known locales (e.g. @en-US@ would be matched to @en_US@).
+bindTranslationServer_standardize_locale :: MethodBind
+bindTranslationServer_standardize_locale
+  = unsafePerformIO $
+      withCString "TranslationServer" $
+        \ clsNamePtr ->
+          withCString "standardize_locale" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @locale@ string standardized to match known locales (e.g. @en-US@ would be matched to @en_US@).
+standardize_locale ::
+                     (TranslationServer :< cls, Object :< cls) =>
+                     cls -> GodotString -> IO GodotString
+standardize_locale cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindTranslationServer_standardize_locale
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod TranslationServer "standardize_locale"
+           '[GodotString]
+           (IO GodotString)
+         where
+        nodeMethod = Godot.Core.TranslationServer.standardize_locale
 
 {-# NOINLINE bindTranslationServer_translate #-}
 

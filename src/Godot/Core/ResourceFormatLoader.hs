@@ -168,7 +168,7 @@ instance NodeMethod ResourceFormatLoader "handles_type"
 
 {-# NOINLINE bindResourceFormatLoader_load #-}
 
--- | Loads a resource when the engine finds this loader to be compatible. If the loaded resource is the result of an import, @original_path@ will target the source file. Returns a @Resource@ object on success, or an @enum Error@ constant in case of failure.
+-- | Loads a resource when the engine finds this loader to be compatible. If the loaded resource is the result of an import, @original_path@ will target the source file. If @no_subresource_cache@ is true, sub-resources should not be cached. Returns a @Resource@ object on success, or an @enum Error@ constant in case of failure.
 bindResourceFormatLoader_load :: MethodBind
 bindResourceFormatLoader_load
   = unsafePerformIO $
@@ -178,12 +178,12 @@ bindResourceFormatLoader_load
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Loads a resource when the engine finds this loader to be compatible. If the loaded resource is the result of an import, @original_path@ will target the source file. Returns a @Resource@ object on success, or an @enum Error@ constant in case of failure.
+-- | Loads a resource when the engine finds this loader to be compatible. If the loaded resource is the result of an import, @original_path@ will target the source file. If @no_subresource_cache@ is true, sub-resources should not be cached. Returns a @Resource@ object on success, or an @enum Error@ constant in case of failure.
 load ::
        (ResourceFormatLoader :< cls, Object :< cls) =>
-       cls -> GodotString -> GodotString -> IO GodotVariant
-load cls arg1 arg2
-  = withVariantArray [toVariant arg1, toVariant arg2]
+       cls -> GodotString -> GodotString -> Bool -> IO GodotVariant
+load cls arg1 arg2 arg3
+  = withVariantArray [toVariant arg1, toVariant arg2, toVariant arg3]
       (\ (arrPtr, len) ->
          godot_method_bind_call bindResourceFormatLoader_load (upcast cls)
            arrPtr
@@ -191,7 +191,7 @@ load cls arg1 arg2
            >>= \ (err, var) -> throwIfErr err >> return var)
 
 instance NodeMethod ResourceFormatLoader "load"
-           '[GodotString, GodotString]
+           '[GodotString, GodotString, Bool]
            (IO GodotVariant)
          where
         nodeMethod = Godot.Core.ResourceFormatLoader.load

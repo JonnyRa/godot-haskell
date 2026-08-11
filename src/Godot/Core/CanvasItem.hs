@@ -8,6 +8,7 @@ module Godot.Core.CanvasItem
         Godot.Core.CanvasItem._NOTIFICATION_TRANSFORM_CHANGED,
         Godot.Core.CanvasItem._BLEND_MODE_ADD,
         Godot.Core.CanvasItem._BLEND_MODE_MIX,
+        Godot.Core.CanvasItem._NOTIFICATION_LOCAL_TRANSFORM_CHANGED,
         Godot.Core.CanvasItem._NOTIFICATION_DRAW,
         Godot.Core.CanvasItem._BLEND_MODE_MUL,
         Godot.Core.CanvasItem._BLEND_MODE_PREMULT_ALPHA,
@@ -35,6 +36,7 @@ module Godot.Core.CanvasItem
         Godot.Core.CanvasItem._is_on_top,
         Godot.Core.CanvasItem._set_on_top,
         Godot.Core.CanvasItem._toplevel_raise_self,
+        Godot.Core.CanvasItem._toplevel_visibility_changed,
         Godot.Core.CanvasItem._update_callback,
         Godot.Core.CanvasItem.draw_arc, Godot.Core.CanvasItem.draw_char,
         Godot.Core.CanvasItem.draw_circle,
@@ -122,6 +124,9 @@ _BLEND_MODE_ADD = 1
 _BLEND_MODE_MIX :: Int
 _BLEND_MODE_MIX = 0
 
+_NOTIFICATION_LOCAL_TRANSFORM_CHANGED :: Int
+_NOTIFICATION_LOCAL_TRANSFORM_CHANGED = 35
+
 _NOTIFICATION_DRAW :: Int
 _NOTIFICATION_DRAW = 30
 
@@ -137,7 +142,8 @@ _BLEND_MODE_SUB = 2
 _NOTIFICATION_VISIBILITY_CHANGED :: Int
 _NOTIFICATION_VISIBILITY_CHANGED = 31
 
--- | Emitted when the @CanvasItem@ must redraw. This can only be connected realtime, as deferred will not allow drawing.
+-- | Emitted when the @CanvasItem@ must redraw, @i@after@/i@ the related @NOTIFICATION_DRAW@ notification, and @i@before@/i@ @method _draw@ is called.
+--   				__Note:__ Deferred connections do not allow drawing through the @draw_*@ methods.
 sig_draw :: Godot.Internal.Dispatch.Signal CanvasItem
 sig_draw = Godot.Internal.Dispatch.Signal "draw"
 
@@ -202,7 +208,8 @@ instance NodeProperty CanvasItem "visible" Bool 'False where
 
 {-# NOINLINE bindCanvasItem__draw #-}
 
--- | Overridable function called by the engine (if defined) to draw the canvas item.
+-- | Called when @CanvasItem@ has been requested to redraw (when @method update@ is called, either manually or by the engine).
+--   				Corresponds to the @NOTIFICATION_DRAW@ notification in @method Object._notification@.
 bindCanvasItem__draw :: MethodBind
 bindCanvasItem__draw
   = unsafePerformIO $
@@ -212,7 +219,8 @@ bindCanvasItem__draw
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Overridable function called by the engine (if defined) to draw the canvas item.
+-- | Called when @CanvasItem@ has been requested to redraw (when @method update@ is called, either manually or by the engine).
+--   				Corresponds to the @NOTIFICATION_DRAW@ notification in @method Object._notification@.
 _draw :: (CanvasItem :< cls, Object :< cls) => cls -> IO ()
 _draw cls
   = withVariantArray []
@@ -771,6 +779,37 @@ instance NodeMethod CanvasItem "_toplevel_raise_self" '[] (IO ())
          where
         nodeMethod = Godot.Core.CanvasItem._toplevel_raise_self
 
+{-# NOINLINE bindCanvasItem__toplevel_visibility_changed #-}
+
+bindCanvasItem__toplevel_visibility_changed :: MethodBind
+bindCanvasItem__toplevel_visibility_changed
+  = unsafePerformIO $
+      withCString "CanvasItem" $
+        \ clsNamePtr ->
+          withCString "_toplevel_visibility_changed" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_toplevel_visibility_changed ::
+                               (CanvasItem :< cls, Object :< cls) => cls -> Bool -> IO ()
+_toplevel_visibility_changed cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindCanvasItem__toplevel_visibility_changed
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod CanvasItem "_toplevel_visibility_changed"
+           '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.CanvasItem._toplevel_visibility_changed
+
 {-# NOINLINE bindCanvasItem__update_callback #-}
 
 bindCanvasItem__update_callback :: MethodBind
@@ -801,6 +840,8 @@ instance NodeMethod CanvasItem "_update_callback" '[] (IO ()) where
 {-# NOINLINE bindCanvasItem_draw_arc #-}
 
 -- | Draws a unfilled arc between the given angles. The larger the value of @point_count@, the smoother the curve. See also @method draw_circle@.
+--   				__Note:__ Line drawing is not accelerated by batching if @antialiased@ is @true@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent lines and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedRegularPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 bindCanvasItem_draw_arc :: MethodBind
 bindCanvasItem_draw_arc
   = unsafePerformIO $
@@ -811,6 +852,8 @@ bindCanvasItem_draw_arc
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Draws a unfilled arc between the given angles. The larger the value of @point_count@, the smoother the curve. See also @method draw_circle@.
+--   				__Note:__ Line drawing is not accelerated by batching if @antialiased@ is @true@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent lines and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedRegularPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 draw_arc ::
            (CanvasItem :< cls, Object :< cls) =>
            cls ->
@@ -877,7 +920,8 @@ instance NodeMethod CanvasItem "draw_char"
 
 {-# NOINLINE bindCanvasItem_draw_circle #-}
 
--- | Draws a colored, unfilled circle. See also @method draw_arc@, @method draw_polyline@ and @method draw_polygon@.
+-- | Draws a colored, filled circle. See also @method draw_arc@, @method draw_polyline@ and @method draw_polygon@.
+--   				__Note:__ Built-in antialiasing is not provided for @method draw_circle@. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedRegularPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 bindCanvasItem_draw_circle :: MethodBind
 bindCanvasItem_draw_circle
   = unsafePerformIO $
@@ -887,7 +931,8 @@ bindCanvasItem_draw_circle
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws a colored, unfilled circle. See also @method draw_arc@, @method draw_polyline@ and @method draw_polygon@.
+-- | Draws a colored, filled circle. See also @method draw_arc@, @method draw_polyline@ and @method draw_polygon@.
+--   				__Note:__ Built-in antialiasing is not provided for @method draw_circle@. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedRegularPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 draw_circle ::
               (CanvasItem :< cls, Object :< cls) =>
               cls -> Vector2 -> Float -> Color -> IO ()
@@ -911,6 +956,7 @@ instance NodeMethod CanvasItem "draw_circle"
 {-# NOINLINE bindCanvasItem_draw_colored_polygon #-}
 
 -- | Draws a colored polygon of any amount of points, convex or concave. Unlike @method draw_polygon@, a single color must be specified for the whole polygon.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 bindCanvasItem_draw_colored_polygon :: MethodBind
 bindCanvasItem_draw_colored_polygon
   = unsafePerformIO $
@@ -921,6 +967,7 @@ bindCanvasItem_draw_colored_polygon
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Draws a colored polygon of any amount of points, convex or concave. Unlike @method draw_polygon@, a single color must be specified for the whole polygon.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 draw_colored_polygon ::
                        (CanvasItem :< cls, Object :< cls) =>
                        cls ->
@@ -954,6 +1001,8 @@ instance NodeMethod CanvasItem "draw_colored_polygon"
 {-# NOINLINE bindCanvasItem_draw_line #-}
 
 -- | Draws a line from a 2D point to another, with a given color and width. It can be optionally antialiased. See also @method draw_multiline@ and @method draw_polyline@.
+--   				__Note:__ Line drawing is not accelerated by batching if @antialiased@ is @true@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent lines and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 bindCanvasItem_draw_line :: MethodBind
 bindCanvasItem_draw_line
   = unsafePerformIO $
@@ -964,6 +1013,8 @@ bindCanvasItem_draw_line
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Draws a line from a 2D point to another, with a given color and width. It can be optionally antialiased. See also @method draw_multiline@ and @method draw_polyline@.
+--   				__Note:__ Line drawing is not accelerated by batching if @antialiased@ is @true@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent lines and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 draw_line ::
             (CanvasItem :< cls, Object :< cls) =>
             cls ->
@@ -1030,7 +1081,7 @@ instance NodeMethod CanvasItem "draw_mesh"
 {-# NOINLINE bindCanvasItem_draw_multiline #-}
 
 -- | Draws multiple disconnected lines with a uniform @color@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw interconnected lines, use @method draw_polyline@ instead.
---   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect.
+--   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 bindCanvasItem_draw_multiline :: MethodBind
 bindCanvasItem_draw_multiline
   = unsafePerformIO $
@@ -1041,7 +1092,7 @@ bindCanvasItem_draw_multiline
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Draws multiple disconnected lines with a uniform @color@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw interconnected lines, use @method draw_polyline@ instead.
---   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect.
+--   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 draw_multiline ::
                  (CanvasItem :< cls, Object :< cls) =>
                  cls ->
@@ -1069,7 +1120,7 @@ instance NodeMethod CanvasItem "draw_multiline"
 {-# NOINLINE bindCanvasItem_draw_multiline_colors #-}
 
 -- | Draws multiple disconnected lines with a uniform @width@ and segment-by-segment coloring. Colors assigned to line segments match by index between @points@ and @colors@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw interconnected lines, use @method draw_polyline_colors@ instead.
---   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect.
+--   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 bindCanvasItem_draw_multiline_colors :: MethodBind
 bindCanvasItem_draw_multiline_colors
   = unsafePerformIO $
@@ -1080,7 +1131,7 @@ bindCanvasItem_draw_multiline_colors
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Draws multiple disconnected lines with a uniform @width@ and segment-by-segment coloring. Colors assigned to line segments match by index between @points@ and @colors@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw interconnected lines, use @method draw_polyline_colors@ instead.
---   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect.
+--   				__Note:__ @width@ and @antialiased@ are currently not implemented and have no effect. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedLine2D node. That node relies on a texture with custom mipmaps to perform antialiasing. 2D batching is also still supported with those antialiased lines.
 draw_multiline_colors ::
                         (CanvasItem :< cls, Object :< cls) =>
                         cls ->
@@ -1144,6 +1195,7 @@ instance NodeMethod CanvasItem "draw_multimesh"
 {-# NOINLINE bindCanvasItem_draw_polygon #-}
 
 -- | Draws a solid polygon of any amount of points, convex or concave. Unlike @method draw_colored_polygon@, each point's color can be changed individually. See also @method draw_polyline@ and @method draw_polyline_colors@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 bindCanvasItem_draw_polygon :: MethodBind
 bindCanvasItem_draw_polygon
   = unsafePerformIO $
@@ -1154,6 +1206,7 @@ bindCanvasItem_draw_polygon
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Draws a solid polygon of any amount of points, convex or concave. Unlike @method draw_colored_polygon@, each point's color can be changed individually. See also @method draw_polyline@ and @method draw_polyline_colors@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 draw_polygon ::
                (CanvasItem :< cls, Object :< cls) =>
                cls ->
@@ -1186,6 +1239,7 @@ instance NodeMethod CanvasItem "draw_polygon"
 {-# NOINLINE bindCanvasItem_draw_polyline #-}
 
 -- | Draws interconnected line segments with a uniform @color@ and @width@ and optional antialiasing. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw disconnected lines, use @method draw_multiline@ instead. See also @method draw_polygon@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 bindCanvasItem_draw_polyline :: MethodBind
 bindCanvasItem_draw_polyline
   = unsafePerformIO $
@@ -1196,6 +1250,7 @@ bindCanvasItem_draw_polyline
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Draws interconnected line segments with a uniform @color@ and @width@ and optional antialiasing. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw disconnected lines, use @method draw_multiline@ instead. See also @method draw_polygon@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 draw_polyline ::
                 (CanvasItem :< cls, Object :< cls) =>
                 cls ->
@@ -1223,6 +1278,7 @@ instance NodeMethod CanvasItem "draw_polyline"
 {-# NOINLINE bindCanvasItem_draw_polyline_colors #-}
 
 -- | Draws interconnected line segments with a uniform @width@ and segment-by-segment coloring, and optional antialiasing. Colors assigned to line segments match by index between @points@ and @colors@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw disconnected lines, use @method draw_multiline_colors@ instead. See also @method draw_polygon@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 bindCanvasItem_draw_polyline_colors :: MethodBind
 bindCanvasItem_draw_polyline_colors
   = unsafePerformIO $
@@ -1233,6 +1289,7 @@ bindCanvasItem_draw_polyline_colors
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Draws interconnected line segments with a uniform @width@ and segment-by-segment coloring, and optional antialiasing. Colors assigned to line segments match by index between @points@ and @colors@. When drawing large amounts of lines, this is faster than using individual @method draw_line@ calls. To draw disconnected lines, use @method draw_multiline_colors@ instead. See also @method draw_polygon@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 draw_polyline_colors ::
                        (CanvasItem :< cls, Object :< cls) =>
                        cls ->
@@ -1303,8 +1360,9 @@ instance NodeMethod CanvasItem "draw_primitive"
 
 {-# NOINLINE bindCanvasItem_draw_rect #-}
 
--- | Draws a rectangle. If @filled@ is @true@, the rectangle will be filled with the @color@ specified. If @filled@ is @false@, the rectangle will be drawn as a stroke with the @color@ and @width@ specified. If @antialiased@ is @true@, the lines will be antialiased.
+-- | Draws a rectangle. If @filled@ is @true@, the rectangle will be filled with the @color@ specified. If @filled@ is @false@, the rectangle will be drawn as a stroke with the @color@ and @width@ specified. If @antialiased@ is @true@, the lines will attempt to perform antialiasing using OpenGL line smoothing.
 --   				__Note:__ @width@ and @antialiased@ are only effective if @filled@ is @false@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 bindCanvasItem_draw_rect :: MethodBind
 bindCanvasItem_draw_rect
   = unsafePerformIO $
@@ -1314,8 +1372,9 @@ bindCanvasItem_draw_rect
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Draws a rectangle. If @filled@ is @true@, the rectangle will be filled with the @color@ specified. If @filled@ is @false@, the rectangle will be drawn as a stroke with the @color@ and @width@ specified. If @antialiased@ is @true@, the lines will be antialiased.
+-- | Draws a rectangle. If @filled@ is @true@, the rectangle will be filled with the @color@ specified. If @filled@ is @false@, the rectangle will be drawn as a stroke with the @color@ and @width@ specified. If @antialiased@ is @true@, the lines will attempt to perform antialiasing using OpenGL line smoothing.
 --   				__Note:__ @width@ and @antialiased@ are only effective if @filled@ is @false@.
+--   				__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 draw_rect ::
             (CanvasItem :< cls, Object :< cls) =>
             cls ->
@@ -1713,7 +1772,7 @@ instance NodeMethod CanvasItem "get_canvas_item" '[] (IO Rid) where
 
 {-# NOINLINE bindCanvasItem_get_canvas_transform #-}
 
--- | Returns the transform matrix of this item's canvas.
+-- | Returns the transform from the coordinate system of the canvas, this item is in, to the @Viewport@s coordinate system.
 bindCanvasItem_get_canvas_transform :: MethodBind
 bindCanvasItem_get_canvas_transform
   = unsafePerformIO $
@@ -1723,7 +1782,7 @@ bindCanvasItem_get_canvas_transform
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the transform matrix of this item's canvas.
+-- | Returns the transform from the coordinate system of the canvas, this item is in, to the @Viewport@s coordinate system.
 get_canvas_transform ::
                        (CanvasItem :< cls, Object :< cls) => cls -> IO Transform2d
 get_canvas_transform cls
@@ -1745,7 +1804,7 @@ instance NodeMethod CanvasItem "get_canvas_transform" '[]
 
 {-# NOINLINE bindCanvasItem_get_global_mouse_position #-}
 
--- | Returns the global position of the mouse.
+-- | Returns the mouse's position in the @CanvasLayer@ that this @CanvasItem@ is in using the coordinate system of the @CanvasLayer@.
 bindCanvasItem_get_global_mouse_position :: MethodBind
 bindCanvasItem_get_global_mouse_position
   = unsafePerformIO $
@@ -1755,7 +1814,7 @@ bindCanvasItem_get_global_mouse_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the global position of the mouse.
+-- | Returns the mouse's position in the @CanvasLayer@ that this @CanvasItem@ is in using the coordinate system of the @CanvasLayer@.
 get_global_mouse_position ::
                             (CanvasItem :< cls, Object :< cls) => cls -> IO Vector2
 get_global_mouse_position cls
@@ -1777,7 +1836,7 @@ instance NodeMethod CanvasItem "get_global_mouse_position" '[]
 
 {-# NOINLINE bindCanvasItem_get_global_transform #-}
 
--- | Returns the global transform matrix of this item.
+-- | Returns the global transform matrix of this item, i.e. the combined transform up to the topmost @CanvasItem@ node. The topmost item is a @CanvasItem@ that either has no parent, has non-@CanvasItem@ parent or it is top-level. See also @method set_as_toplevel@.
 bindCanvasItem_get_global_transform :: MethodBind
 bindCanvasItem_get_global_transform
   = unsafePerformIO $
@@ -1787,7 +1846,7 @@ bindCanvasItem_get_global_transform
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the global transform matrix of this item.
+-- | Returns the global transform matrix of this item, i.e. the combined transform up to the topmost @CanvasItem@ node. The topmost item is a @CanvasItem@ that either has no parent, has non-@CanvasItem@ parent or it is top-level. See also @method set_as_toplevel@.
 get_global_transform ::
                        (CanvasItem :< cls, Object :< cls) => cls -> IO Transform2d
 get_global_transform cls
@@ -1809,7 +1868,7 @@ instance NodeMethod CanvasItem "get_global_transform" '[]
 
 {-# NOINLINE bindCanvasItem_get_global_transform_with_canvas #-}
 
--- | Returns the global transform matrix of this item in relation to the canvas.
+-- | Returns the transform from the local coordinate system of this @CanvasItem@ to the @Viewport@s coordinate system.
 bindCanvasItem_get_global_transform_with_canvas :: MethodBind
 bindCanvasItem_get_global_transform_with_canvas
   = unsafePerformIO $
@@ -1819,7 +1878,7 @@ bindCanvasItem_get_global_transform_with_canvas
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the global transform matrix of this item in relation to the canvas.
+-- | Returns the transform from the local coordinate system of this @CanvasItem@ to the @Viewport@s coordinate system.
 get_global_transform_with_canvas ::
                                    (CanvasItem :< cls, Object :< cls) => cls -> IO Transform2d
 get_global_transform_with_canvas cls
@@ -1872,7 +1931,7 @@ instance NodeMethod CanvasItem "get_light_mask" '[] (IO Int) where
 
 {-# NOINLINE bindCanvasItem_get_local_mouse_position #-}
 
--- | Returns the mouse position relative to this item's position.
+-- | Returns the mouse's position in this @CanvasItem@ using the local coordinate system of this @CanvasItem@.
 bindCanvasItem_get_local_mouse_position :: MethodBind
 bindCanvasItem_get_local_mouse_position
   = unsafePerformIO $
@@ -1882,7 +1941,7 @@ bindCanvasItem_get_local_mouse_position
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the mouse position relative to this item's position.
+-- | Returns the mouse's position in this @CanvasItem@ using the local coordinate system of this @CanvasItem@.
 get_local_mouse_position ::
                            (CanvasItem :< cls, Object :< cls) => cls -> IO Vector2
 get_local_mouse_position cls
@@ -2084,7 +2143,7 @@ instance NodeMethod CanvasItem "get_viewport_rect" '[] (IO Rect2)
 
 {-# NOINLINE bindCanvasItem_get_viewport_transform #-}
 
--- | Returns this item's transform in relation to the viewport.
+-- | Returns the transform from the coordinate system of the canvas, this item is in, to the @Viewport@s embedders coordinate system.
 bindCanvasItem_get_viewport_transform :: MethodBind
 bindCanvasItem_get_viewport_transform
   = unsafePerformIO $
@@ -2094,7 +2153,7 @@ bindCanvasItem_get_viewport_transform
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns this item's transform in relation to the viewport.
+-- | Returns the transform from the coordinate system of the canvas, this item is in, to the @Viewport@s embedders coordinate system.
 get_viewport_transform ::
                          (CanvasItem :< cls, Object :< cls) => cls -> IO Transform2d
 get_viewport_transform cls
@@ -2305,7 +2364,7 @@ instance NodeMethod CanvasItem "is_transform_notification_enabled"
 
 {-# NOINLINE bindCanvasItem_is_visible #-}
 
--- | If @true@, this @CanvasItem@ is drawn. The node is only visible if all of its antecedents are visible as well (in other words, @method is_visible_in_tree@ must return @true@).
+-- | If @true@, this @CanvasItem@ is drawn. The node is only visible if all of its ancestors are visible as well (in other words, @method is_visible_in_tree@ must return @true@).
 --   			__Note:__ For controls that inherit @Popup@, the correct way to make them visible is to call one of the multiple @popup*()@ functions instead.
 bindCanvasItem_is_visible :: MethodBind
 bindCanvasItem_is_visible
@@ -2316,7 +2375,7 @@ bindCanvasItem_is_visible
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, this @CanvasItem@ is drawn. The node is only visible if all of its antecedents are visible as well (in other words, @method is_visible_in_tree@ must return @true@).
+-- | If @true@, this @CanvasItem@ is drawn. The node is only visible if all of its ancestors are visible as well (in other words, @method is_visible_in_tree@ must return @true@).
 --   			__Note:__ For controls that inherit @Popup@, the correct way to make them visible is to call one of the multiple @popup*()@ functions instead.
 is_visible :: (CanvasItem :< cls, Object :< cls) => cls -> IO Bool
 is_visible cls
@@ -2335,7 +2394,7 @@ instance NodeMethod CanvasItem "is_visible" '[] (IO Bool) where
 
 {-# NOINLINE bindCanvasItem_is_visible_in_tree #-}
 
--- | Returns @true@ if the node is present in the @SceneTree@, its @visible@ property is @true@ and all its antecedents are also visible. If any antecedent is hidden, this node will not be visible in the scene tree.
+-- | Returns @true@ if the node is present in the @SceneTree@, its @visible@ property is @true@ and all its ancestors are also visible. If any ancestor is hidden, this node will not be visible in the scene tree, and is consequently not drawn (see @method _draw@).
 bindCanvasItem_is_visible_in_tree :: MethodBind
 bindCanvasItem_is_visible_in_tree
   = unsafePerformIO $
@@ -2345,7 +2404,7 @@ bindCanvasItem_is_visible_in_tree
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if the node is present in the @SceneTree@, its @visible@ property is @true@ and all its antecedents are also visible. If any antecedent is hidden, this node will not be visible in the scene tree.
+-- | Returns @true@ if the node is present in the @SceneTree@, its @visible@ property is @true@ and all its ancestors are also visible. If any ancestor is hidden, this node will not be visible in the scene tree, and is consequently not drawn (see @method _draw@).
 is_visible_in_tree ::
                      (CanvasItem :< cls, Object :< cls) => cls -> IO Bool
 is_visible_in_tree cls
@@ -2428,7 +2487,7 @@ instance NodeMethod CanvasItem "make_input_local" '[InputEvent]
 
 {-# NOINLINE bindCanvasItem_set_as_toplevel #-}
 
--- | If @enable@ is @true@, the node won't inherit its transform from parent canvas items.
+-- | If @enable@ is @true@, this @CanvasItem@ will @i@not@/i@ inherit its transform from parent @CanvasItem@s. Its draw order will also be changed to make it draw on top of other @CanvasItem@s that are not set as top-level. The @CanvasItem@ will effectively act as if it was placed as a child of a bare @Node@. See also @method is_set_as_toplevel@.
 bindCanvasItem_set_as_toplevel :: MethodBind
 bindCanvasItem_set_as_toplevel
   = unsafePerformIO $
@@ -2438,7 +2497,7 @@ bindCanvasItem_set_as_toplevel
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @enable@ is @true@, the node won't inherit its transform from parent canvas items.
+-- | If @enable@ is @true@, this @CanvasItem@ will @i@not@/i@ inherit its transform from parent @CanvasItem@s. Its draw order will also be changed to make it draw on top of other @CanvasItem@s that are not set as top-level. The @CanvasItem@ will effectively act as if it was placed as a child of a bare @Node@. See also @method is_set_as_toplevel@.
 set_as_toplevel ::
                   (CanvasItem :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_as_toplevel cls arg1
@@ -2580,7 +2639,7 @@ instance NodeMethod CanvasItem "set_modulate" '[Color] (IO ())
 
 {-# NOINLINE bindCanvasItem_set_notify_local_transform #-}
 
--- | If @enable@ is @true@, children will be updated with local transform data.
+-- | If @enable@ is @true@, this node will receive @NOTIFICATION_LOCAL_TRANSFORM_CHANGED@ when its local transform changes.
 bindCanvasItem_set_notify_local_transform :: MethodBind
 bindCanvasItem_set_notify_local_transform
   = unsafePerformIO $
@@ -2590,7 +2649,7 @@ bindCanvasItem_set_notify_local_transform
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @enable@ is @true@, children will be updated with local transform data.
+-- | If @enable@ is @true@, this node will receive @NOTIFICATION_LOCAL_TRANSFORM_CHANGED@ when its local transform changes.
 set_notify_local_transform ::
                              (CanvasItem :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_notify_local_transform cls arg1
@@ -2612,7 +2671,7 @@ instance NodeMethod CanvasItem "set_notify_local_transform" '[Bool]
 
 {-# NOINLINE bindCanvasItem_set_notify_transform #-}
 
--- | If @enable@ is @true@, children will be updated with global transform data.
+-- | If @enable@ is @true@, this node will receive @NOTIFICATION_TRANSFORM_CHANGED@ when its global transform changes.
 bindCanvasItem_set_notify_transform :: MethodBind
 bindCanvasItem_set_notify_transform
   = unsafePerformIO $
@@ -2622,7 +2681,7 @@ bindCanvasItem_set_notify_transform
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @enable@ is @true@, children will be updated with global transform data.
+-- | If @enable@ is @true@, this node will receive @NOTIFICATION_TRANSFORM_CHANGED@ when its global transform changes.
 set_notify_transform ::
                        (CanvasItem :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_notify_transform cls arg1
@@ -2707,7 +2766,7 @@ instance NodeMethod CanvasItem "set_use_parent_material" '[Bool]
 
 {-# NOINLINE bindCanvasItem_set_visible #-}
 
--- | If @true@, this @CanvasItem@ is drawn. The node is only visible if all of its antecedents are visible as well (in other words, @method is_visible_in_tree@ must return @true@).
+-- | If @true@, this @CanvasItem@ is drawn. The node is only visible if all of its ancestors are visible as well (in other words, @method is_visible_in_tree@ must return @true@).
 --   			__Note:__ For controls that inherit @Popup@, the correct way to make them visible is to call one of the multiple @popup*()@ functions instead.
 bindCanvasItem_set_visible :: MethodBind
 bindCanvasItem_set_visible
@@ -2718,7 +2777,7 @@ bindCanvasItem_set_visible
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, this @CanvasItem@ is drawn. The node is only visible if all of its antecedents are visible as well (in other words, @method is_visible_in_tree@ must return @true@).
+-- | If @true@, this @CanvasItem@ is drawn. The node is only visible if all of its ancestors are visible as well (in other words, @method is_visible_in_tree@ must return @true@).
 --   			__Note:__ For controls that inherit @Popup@, the correct way to make them visible is to call one of the multiple @popup*()@ functions instead.
 set_visible ::
               (CanvasItem :< cls, Object :< cls) => cls -> Bool -> IO ()
@@ -2764,7 +2823,7 @@ instance NodeMethod CanvasItem "show" '[] (IO ()) where
 
 {-# NOINLINE bindCanvasItem_update #-}
 
--- | Queue the @CanvasItem@ for update. @NOTIFICATION_DRAW@ will be called on idle time to request redraw.
+-- | Queues the @CanvasItem@ to redraw. During idle time, if @CanvasItem@ is visible, @NOTIFICATION_DRAW@ is sent and @method _draw@ is called. This only occurs __once__ per frame, even if this method has been called multiple times.
 bindCanvasItem_update :: MethodBind
 bindCanvasItem_update
   = unsafePerformIO $
@@ -2774,7 +2833,7 @@ bindCanvasItem_update
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Queue the @CanvasItem@ for update. @NOTIFICATION_DRAW@ will be called on idle time to request redraw.
+-- | Queues the @CanvasItem@ to redraw. During idle time, if @CanvasItem@ is visible, @NOTIFICATION_DRAW@ is sent and @method _draw@ is called. This only occurs __once__ per frame, even if this method has been called multiple times.
 update :: (CanvasItem :< cls, Object :< cls) => cls -> IO ()
 update cls
   = withVariantArray []

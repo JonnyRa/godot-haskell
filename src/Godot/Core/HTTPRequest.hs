@@ -3,7 +3,6 @@
   MultiParamTypeClasses #-}
 module Godot.Core.HTTPRequest
        (Godot.Core.HTTPRequest._RESULT_DOWNLOAD_FILE_CANT_OPEN,
-        Godot.Core.HTTPRequest._RESULT_BODY_DECOMPRESS_FAILED,
         Godot.Core.HTTPRequest._RESULT_SUCCESS,
         Godot.Core.HTTPRequest._RESULT_NO_RESPONSE,
         Godot.Core.HTTPRequest._RESULT_REQUEST_FAILED,
@@ -29,13 +28,13 @@ module Godot.Core.HTTPRequest
         Godot.Core.HTTPRequest.get_http_client_status,
         Godot.Core.HTTPRequest.get_max_redirects,
         Godot.Core.HTTPRequest.get_timeout,
-        Godot.Core.HTTPRequest.is_accepting_gzip,
         Godot.Core.HTTPRequest.is_using_threads,
         Godot.Core.HTTPRequest.request, Godot.Core.HTTPRequest.request_raw,
-        Godot.Core.HTTPRequest.set_accept_gzip,
         Godot.Core.HTTPRequest.set_body_size_limit,
         Godot.Core.HTTPRequest.set_download_chunk_size,
         Godot.Core.HTTPRequest.set_download_file,
+        Godot.Core.HTTPRequest.set_http_proxy,
+        Godot.Core.HTTPRequest.set_https_proxy,
         Godot.Core.HTTPRequest.set_max_redirects,
         Godot.Core.HTTPRequest.set_timeout,
         Godot.Core.HTTPRequest.set_use_threads)
@@ -53,10 +52,7 @@ import Godot.Api.Types
 import Godot.Core.Node()
 
 _RESULT_DOWNLOAD_FILE_CANT_OPEN :: Int
-_RESULT_DOWNLOAD_FILE_CANT_OPEN = 10
-
-_RESULT_BODY_DECOMPRESS_FAILED :: Int
-_RESULT_BODY_DECOMPRESS_FAILED = 8
+_RESULT_DOWNLOAD_FILE_CANT_OPEN = 9
 
 _RESULT_SUCCESS :: Int
 _RESULT_SUCCESS = 0
@@ -65,7 +61,7 @@ _RESULT_NO_RESPONSE :: Int
 _RESULT_NO_RESPONSE = 6
 
 _RESULT_REQUEST_FAILED :: Int
-_RESULT_REQUEST_FAILED = 9
+_RESULT_REQUEST_FAILED = 8
 
 _RESULT_CONNECTION_ERROR :: Int
 _RESULT_CONNECTION_ERROR = 4
@@ -80,7 +76,7 @@ _RESULT_BODY_SIZE_LIMIT_EXCEEDED :: Int
 _RESULT_BODY_SIZE_LIMIT_EXCEEDED = 7
 
 _RESULT_REDIRECT_LIMIT_REACHED :: Int
-_RESULT_REDIRECT_LIMIT_REACHED = 12
+_RESULT_REDIRECT_LIMIT_REACHED = 11
 
 _RESULT_SSL_HANDSHAKE_ERROR :: Int
 _RESULT_SSL_HANDSHAKE_ERROR = 5
@@ -89,10 +85,10 @@ _RESULT_CANT_RESOLVE :: Int
 _RESULT_CANT_RESOLVE = 3
 
 _RESULT_TIMEOUT :: Int
-_RESULT_TIMEOUT = 13
+_RESULT_TIMEOUT = 12
 
 _RESULT_DOWNLOAD_FILE_WRITE_ERROR :: Int
-_RESULT_DOWNLOAD_FILE_WRITE_ERROR = 11
+_RESULT_DOWNLOAD_FILE_WRITE_ERROR = 10
 
 -- | Emitted when a request is completed.
 sig_request_completed :: Godot.Internal.Dispatch.Signal HTTPRequest
@@ -101,10 +97,6 @@ sig_request_completed
 
 instance NodeSignal HTTPRequest "request_completed"
            '[Int, Int, PoolStringArray, PoolByteArray]
-
-instance NodeProperty HTTPRequest "accept_gzip" Bool 'False where
-        nodeProperty
-          = (is_accepting_gzip, wrapDroppingSetter set_accept_gzip, Nothing)
 
 instance NodeProperty HTTPRequest "body_size_limit" Int 'False
          where
@@ -130,7 +122,7 @@ instance NodeProperty HTTPRequest "max_redirects" Int 'False where
           = (get_max_redirects, wrapDroppingSetter set_max_redirects,
              Nothing)
 
-instance NodeProperty HTTPRequest "timeout" Int 'False where
+instance NodeProperty HTTPRequest "timeout" Float 'False where
         nodeProperty
           = (get_timeout, wrapDroppingSetter set_timeout, Nothing)
 
@@ -287,7 +279,7 @@ instance NodeMethod HTTPRequest "get_body_size" '[] (IO Int) where
 
 {-# NOINLINE bindHTTPRequest_get_body_size_limit #-}
 
--- | Maximum allowed size for response bodies.
+-- | Maximum allowed size for response bodies (@-1@ means no limit). When only small files are expected, this can be used to prevent disallow receiving files that are too large, preventing potential denial of service attacks.
 bindHTTPRequest_get_body_size_limit :: MethodBind
 bindHTTPRequest_get_body_size_limit
   = unsafePerformIO $
@@ -297,7 +289,7 @@ bindHTTPRequest_get_body_size_limit
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Maximum allowed size for response bodies.
+-- | Maximum allowed size for response bodies (@-1@ means no limit). When only small files are expected, this can be used to prevent disallow receiving files that are too large, preventing potential denial of service attacks.
 get_body_size_limit ::
                       (HTTPRequest :< cls, Object :< cls) => cls -> IO Int
 get_body_size_limit cls
@@ -352,7 +344,8 @@ instance NodeMethod HTTPRequest "get_download_chunk_size" '[]
 
 {-# NOINLINE bindHTTPRequest_get_download_file #-}
 
--- | The file to download into. Will output any received file into it.
+-- | The file to download into. If set to a non-empty string, the request output will be written to the file located at the path. If a file already exists at the specified location, it will be overwritten as soon as body data begins to be received.
+--   			__Note:__ Folders are not automatically created when the file is created. If @download_file@ points to a subfolder, it's recommended to create the necessary folders beforehand using @method Directory.make_dir_recursive@ to ensure the file can be written.
 bindHTTPRequest_get_download_file :: MethodBind
 bindHTTPRequest_get_download_file
   = unsafePerformIO $
@@ -362,7 +355,8 @@ bindHTTPRequest_get_download_file
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The file to download into. Will output any received file into it.
+-- | The file to download into. If set to a non-empty string, the request output will be written to the file located at the path. If a file already exists at the specified location, it will be overwritten as soon as body data begins to be received.
+--   			__Note:__ Folders are not automatically created when the file is created. If @download_file@ points to a subfolder, it's recommended to create the necessary folders beforehand using @method Directory.make_dir_recursive@ to ensure the file can be written.
 get_download_file ::
                     (HTTPRequest :< cls, Object :< cls) => cls -> IO GodotString
 get_download_file cls
@@ -447,7 +441,7 @@ instance NodeMethod HTTPRequest "get_http_client_status" '[]
 
 {-# NOINLINE bindHTTPRequest_get_max_redirects #-}
 
--- | Maximum number of allowed redirects.
+-- | Maximum number of allowed redirects. This is used to prevent endless redirect loops.
 bindHTTPRequest_get_max_redirects :: MethodBind
 bindHTTPRequest_get_max_redirects
   = unsafePerformIO $
@@ -457,7 +451,7 @@ bindHTTPRequest_get_max_redirects
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Maximum number of allowed redirects.
+-- | Maximum number of allowed redirects. This is used to prevent endless redirect loops.
 get_max_redirects ::
                     (HTTPRequest :< cls, Object :< cls) => cls -> IO Int
 get_max_redirects cls
@@ -478,6 +472,7 @@ instance NodeMethod HTTPRequest "get_max_redirects" '[] (IO Int)
 
 {-# NOINLINE bindHTTPRequest_get_timeout #-}
 
+-- | If set to a value greater than @0.0@ before the request starts, the HTTP request will time out after @timeout@ seconds have passed and the request is not @i@completed@/i@ yet. For small HTTP requests such as REST API usage, set @timeout@ to a value between @10.0@ and @30.0@ to prevent the application from getting stuck if the request fails to get a response in a timely manner. For file downloads, leave this to @0.0@ to prevent the download from failing if it takes too much time.
 bindHTTPRequest_get_timeout :: MethodBind
 bindHTTPRequest_get_timeout
   = unsafePerformIO $
@@ -487,7 +482,9 @@ bindHTTPRequest_get_timeout
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
-get_timeout :: (HTTPRequest :< cls, Object :< cls) => cls -> IO Int
+-- | If set to a value greater than @0.0@ before the request starts, the HTTP request will time out after @timeout@ seconds have passed and the request is not @i@completed@/i@ yet. For small HTTP requests such as REST API usage, set @timeout@ to a value between @10.0@ and @30.0@ to prevent the application from getting stuck if the request fails to get a response in a timely manner. For file downloads, leave this to @0.0@ to prevent the download from failing if it takes too much time.
+get_timeout ::
+              (HTTPRequest :< cls, Object :< cls) => cls -> IO Float
 get_timeout cls
   = withVariantArray []
       (\ (arrPtr, len) ->
@@ -499,37 +496,8 @@ get_timeout cls
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod HTTPRequest "get_timeout" '[] (IO Int) where
+instance NodeMethod HTTPRequest "get_timeout" '[] (IO Float) where
         nodeMethod = Godot.Core.HTTPRequest.get_timeout
-
-{-# NOINLINE bindHTTPRequest_is_accepting_gzip #-}
-
-bindHTTPRequest_is_accepting_gzip :: MethodBind
-bindHTTPRequest_is_accepting_gzip
-  = unsafePerformIO $
-      withCString "HTTPRequest" $
-        \ clsNamePtr ->
-          withCString "is_accepting_gzip" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
-is_accepting_gzip ::
-                    (HTTPRequest :< cls, Object :< cls) => cls -> IO Bool
-is_accepting_gzip cls
-  = withVariantArray []
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindHTTPRequest_is_accepting_gzip
-           (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod HTTPRequest "is_accepting_gzip" '[] (IO Bool)
-         where
-        nodeMethod = Godot.Core.HTTPRequest.is_accepting_gzip
 
 {-# NOINLINE bindHTTPRequest_is_using_threads #-}
 
@@ -651,37 +619,9 @@ instance NodeMethod HTTPRequest "request_raw"
          where
         nodeMethod = Godot.Core.HTTPRequest.request_raw
 
-{-# NOINLINE bindHTTPRequest_set_accept_gzip #-}
-
-bindHTTPRequest_set_accept_gzip :: MethodBind
-bindHTTPRequest_set_accept_gzip
-  = unsafePerformIO $
-      withCString "HTTPRequest" $
-        \ clsNamePtr ->
-          withCString "set_accept_gzip" $
-            \ methodNamePtr ->
-              godot_method_bind_get_method clsNamePtr methodNamePtr
-
-set_accept_gzip ::
-                  (HTTPRequest :< cls, Object :< cls) => cls -> Bool -> IO ()
-set_accept_gzip cls arg1
-  = withVariantArray [toVariant arg1]
-      (\ (arrPtr, len) ->
-         godot_method_bind_call bindHTTPRequest_set_accept_gzip (upcast cls)
-           arrPtr
-           len
-           >>=
-           \ (err, var) ->
-             throwIfErr err >> fromGodotVariant var >>=
-               \ ret -> godot_variant_destroy var >> return ret)
-
-instance NodeMethod HTTPRequest "set_accept_gzip" '[Bool] (IO ())
-         where
-        nodeMethod = Godot.Core.HTTPRequest.set_accept_gzip
-
 {-# NOINLINE bindHTTPRequest_set_body_size_limit #-}
 
--- | Maximum allowed size for response bodies.
+-- | Maximum allowed size for response bodies (@-1@ means no limit). When only small files are expected, this can be used to prevent disallow receiving files that are too large, preventing potential denial of service attacks.
 bindHTTPRequest_set_body_size_limit :: MethodBind
 bindHTTPRequest_set_body_size_limit
   = unsafePerformIO $
@@ -691,7 +631,7 @@ bindHTTPRequest_set_body_size_limit
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Maximum allowed size for response bodies.
+-- | Maximum allowed size for response bodies (@-1@ means no limit). When only small files are expected, this can be used to prevent disallow receiving files that are too large, preventing potential denial of service attacks.
 set_body_size_limit ::
                       (HTTPRequest :< cls, Object :< cls) => cls -> Int -> IO ()
 set_body_size_limit cls arg1
@@ -747,7 +687,8 @@ instance NodeMethod HTTPRequest "set_download_chunk_size" '[Int]
 
 {-# NOINLINE bindHTTPRequest_set_download_file #-}
 
--- | The file to download into. Will output any received file into it.
+-- | The file to download into. If set to a non-empty string, the request output will be written to the file located at the path. If a file already exists at the specified location, it will be overwritten as soon as body data begins to be received.
+--   			__Note:__ Folders are not automatically created when the file is created. If @download_file@ points to a subfolder, it's recommended to create the necessary folders beforehand using @method Directory.make_dir_recursive@ to ensure the file can be written.
 bindHTTPRequest_set_download_file :: MethodBind
 bindHTTPRequest_set_download_file
   = unsafePerformIO $
@@ -757,7 +698,8 @@ bindHTTPRequest_set_download_file
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The file to download into. Will output any received file into it.
+-- | The file to download into. If set to a non-empty string, the request output will be written to the file located at the path. If a file already exists at the specified location, it will be overwritten as soon as body data begins to be received.
+--   			__Note:__ Folders are not automatically created when the file is created. If @download_file@ points to a subfolder, it's recommended to create the necessary folders beforehand using @method Directory.make_dir_recursive@ to ensure the file can be written.
 set_download_file ::
                     (HTTPRequest :< cls, Object :< cls) => cls -> GodotString -> IO ()
 set_download_file cls arg1
@@ -777,9 +719,79 @@ instance NodeMethod HTTPRequest "set_download_file" '[GodotString]
          where
         nodeMethod = Godot.Core.HTTPRequest.set_download_file
 
+{-# NOINLINE bindHTTPRequest_set_http_proxy #-}
+
+-- | Sets the proxy server for HTTP requests.
+--   				The proxy server is unset if @host@ is empty or @port@ is -1.
+bindHTTPRequest_set_http_proxy :: MethodBind
+bindHTTPRequest_set_http_proxy
+  = unsafePerformIO $
+      withCString "HTTPRequest" $
+        \ clsNamePtr ->
+          withCString "set_http_proxy" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the proxy server for HTTP requests.
+--   				The proxy server is unset if @host@ is empty or @port@ is -1.
+set_http_proxy ::
+                 (HTTPRequest :< cls, Object :< cls) =>
+                 cls -> GodotString -> Int -> IO ()
+set_http_proxy cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindHTTPRequest_set_http_proxy (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod HTTPRequest "set_http_proxy"
+           '[GodotString, Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.HTTPRequest.set_http_proxy
+
+{-# NOINLINE bindHTTPRequest_set_https_proxy #-}
+
+-- | Sets the proxy server for HTTPS requests.
+--   				The proxy server is unset if @host@ is empty or @port@ is -1.
+bindHTTPRequest_set_https_proxy :: MethodBind
+bindHTTPRequest_set_https_proxy
+  = unsafePerformIO $
+      withCString "HTTPRequest" $
+        \ clsNamePtr ->
+          withCString "set_https_proxy" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the proxy server for HTTPS requests.
+--   				The proxy server is unset if @host@ is empty or @port@ is -1.
+set_https_proxy ::
+                  (HTTPRequest :< cls, Object :< cls) =>
+                  cls -> GodotString -> Int -> IO ()
+set_https_proxy cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindHTTPRequest_set_https_proxy (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod HTTPRequest "set_https_proxy"
+           '[GodotString, Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.HTTPRequest.set_https_proxy
+
 {-# NOINLINE bindHTTPRequest_set_max_redirects #-}
 
--- | Maximum number of allowed redirects.
+-- | Maximum number of allowed redirects. This is used to prevent endless redirect loops.
 bindHTTPRequest_set_max_redirects :: MethodBind
 bindHTTPRequest_set_max_redirects
   = unsafePerformIO $
@@ -789,7 +801,7 @@ bindHTTPRequest_set_max_redirects
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Maximum number of allowed redirects.
+-- | Maximum number of allowed redirects. This is used to prevent endless redirect loops.
 set_max_redirects ::
                     (HTTPRequest :< cls, Object :< cls) => cls -> Int -> IO ()
 set_max_redirects cls arg1
@@ -810,6 +822,7 @@ instance NodeMethod HTTPRequest "set_max_redirects" '[Int] (IO ())
 
 {-# NOINLINE bindHTTPRequest_set_timeout #-}
 
+-- | If set to a value greater than @0.0@ before the request starts, the HTTP request will time out after @timeout@ seconds have passed and the request is not @i@completed@/i@ yet. For small HTTP requests such as REST API usage, set @timeout@ to a value between @10.0@ and @30.0@ to prevent the application from getting stuck if the request fails to get a response in a timely manner. For file downloads, leave this to @0.0@ to prevent the download from failing if it takes too much time.
 bindHTTPRequest_set_timeout :: MethodBind
 bindHTTPRequest_set_timeout
   = unsafePerformIO $
@@ -819,8 +832,9 @@ bindHTTPRequest_set_timeout
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | If set to a value greater than @0.0@ before the request starts, the HTTP request will time out after @timeout@ seconds have passed and the request is not @i@completed@/i@ yet. For small HTTP requests such as REST API usage, set @timeout@ to a value between @10.0@ and @30.0@ to prevent the application from getting stuck if the request fails to get a response in a timely manner. For file downloads, leave this to @0.0@ to prevent the download from failing if it takes too much time.
 set_timeout ::
-              (HTTPRequest :< cls, Object :< cls) => cls -> Int -> IO ()
+              (HTTPRequest :< cls, Object :< cls) => cls -> Float -> IO ()
 set_timeout cls arg1
   = withVariantArray [toVariant arg1]
       (\ (arrPtr, len) ->
@@ -832,7 +846,8 @@ set_timeout cls arg1
              throwIfErr err >> fromGodotVariant var >>=
                \ ret -> godot_variant_destroy var >> return ret)
 
-instance NodeMethod HTTPRequest "set_timeout" '[Int] (IO ()) where
+instance NodeMethod HTTPRequest "set_timeout" '[Float] (IO ())
+         where
         nodeMethod = Godot.Core.HTTPRequest.set_timeout
 
 {-# NOINLINE bindHTTPRequest_set_use_threads #-}

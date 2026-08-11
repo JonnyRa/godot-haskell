@@ -106,8 +106,8 @@ instance NodeMethod Curve3D "_set_data" '[Dictionary] (IO ()) where
 
 {-# NOINLINE bindCurve3D_add_point #-}
 
--- | Adds a point to a curve at @position@ relative to the @Curve3D@'s position, with control points @in@ and @out@.
---   				If @at_position@ is given, the point is inserted before the point number @at_position@, moving that point (and every point after) after the inserted point. If @at_position@ is not given, or is an illegal value (@at_position <0@ or @at_position >= @method get_point_count@@), the point will be appended at the end of the point list.
+-- | Adds a point with the specified @position@ relative to the curve's own position, with control points @in@ and @out@. Appends the new point at the end of the point list.
+--   				If @index@ is given, the new point is inserted before the existing point identified by index @index@. Every existing point starting from @index@ is shifted further down the list of points. The index must be greater than or equal to @0@ and must not exceed the number of existing points in the line. See @method get_point_count@.
 bindCurve3D_add_point :: MethodBind
 bindCurve3D_add_point
   = unsafePerformIO $
@@ -117,8 +117,8 @@ bindCurve3D_add_point
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Adds a point to a curve at @position@ relative to the @Curve3D@'s position, with control points @in@ and @out@.
---   				If @at_position@ is given, the point is inserted before the point number @at_position@, moving that point (and every point after) after the inserted point. If @at_position@ is not given, or is an illegal value (@at_position <0@ or @at_position >= @method get_point_count@@), the point will be appended at the end of the point list.
+-- | Adds a point with the specified @position@ relative to the curve's own position, with control points @in@ and @out@. Appends the new point at the end of the point list.
+--   				If @index@ is given, the new point is inserted before the existing point identified by index @index@. Every existing point starting from @index@ is shifted further down the list of points. The index must be greater than or equal to @0@ and must not exceed the number of existing points in the line. See @method get_point_count@.
 add_point ::
             (Curve3D :< cls, Object :< cls) =>
             cls ->

@@ -257,7 +257,7 @@ instance NodeMethod CollisionObject "get_capture_input_on_drag" '[]
 {-# NOINLINE bindCollisionObject_get_collision_layer #-}
 
 -- | The physics layers this CollisionObject3D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
---   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindCollisionObject_get_collision_layer :: MethodBind
 bindCollisionObject_get_collision_layer
   = unsafePerformIO $
@@ -268,7 +268,7 @@ bindCollisionObject_get_collision_layer
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The physics layers this CollisionObject3D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
---   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_layer ::
                       (CollisionObject :< cls, Object :< cls) => cls -> IO Int
 get_collision_layer cls
@@ -324,7 +324,7 @@ instance NodeMethod CollisionObject "get_collision_layer_bit"
 {-# NOINLINE bindCollisionObject_get_collision_mask #-}
 
 -- | The physics layers this CollisionObject3D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
---   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindCollisionObject_get_collision_mask :: MethodBind
 bindCollisionObject_get_collision_mask
   = unsafePerformIO $
@@ -335,7 +335,7 @@ bindCollisionObject_get_collision_mask
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The physics layers this CollisionObject3D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
---   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 get_collision_mask ::
                      (CollisionObject :< cls, Object :< cls) => cls -> IO Int
 get_collision_mask cls
@@ -580,7 +580,7 @@ instance NodeMethod CollisionObject "set_capture_input_on_drag"
 {-# NOINLINE bindCollisionObject_set_collision_layer #-}
 
 -- | The physics layers this CollisionObject3D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
---   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindCollisionObject_set_collision_layer :: MethodBind
 bindCollisionObject_set_collision_layer
   = unsafePerformIO $
@@ -591,7 +591,7 @@ bindCollisionObject_set_collision_layer
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The physics layers this CollisionObject3D is in. Collision objects can exist in one or more of 32 different layers. See also @collision_mask@.
---   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_layer ::
                       (CollisionObject :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_layer cls arg1
@@ -613,8 +613,8 @@ instance NodeMethod CollisionObject "set_collision_layer" '[Int]
 
 {-# NOINLINE bindCollisionObject_set_collision_layer_bit #-}
 
--- | If @value@ is @true@, sets the specified @bit@ in the the @collision_layer@.
---   				If @value@ is @false@, clears the specified @bit@ in the the @collision_layer@.
+-- | If @value@ is @true@, sets the specified @bit@ in the @collision_layer@.
+--   				If @value@ is @false@, clears the specified @bit@ in the @collision_layer@.
 bindCollisionObject_set_collision_layer_bit :: MethodBind
 bindCollisionObject_set_collision_layer_bit
   = unsafePerformIO $
@@ -624,8 +624,8 @@ bindCollisionObject_set_collision_layer_bit
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @value@ is @true@, sets the specified @bit@ in the the @collision_layer@.
---   				If @value@ is @false@, clears the specified @bit@ in the the @collision_layer@.
+-- | If @value@ is @true@, sets the specified @bit@ in the @collision_layer@.
+--   				If @value@ is @false@, clears the specified @bit@ in the @collision_layer@.
 set_collision_layer_bit ::
                           (CollisionObject :< cls, Object :< cls) =>
                           cls -> Int -> Bool -> IO ()
@@ -650,7 +650,7 @@ instance NodeMethod CollisionObject "set_collision_layer_bit"
 {-# NOINLINE bindCollisionObject_set_collision_mask #-}
 
 -- | The physics layers this CollisionObject3D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
---   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 bindCollisionObject_set_collision_mask :: MethodBind
 bindCollisionObject_set_collision_mask
   = unsafePerformIO $
@@ -661,7 +661,7 @@ bindCollisionObject_set_collision_mask
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The physics layers this CollisionObject3D scans. Collision objects can scan one or more of 32 different layers. See also @collision_layer@.
---   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=https://docs.godotengine.org/en/latest/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
+--   			__Note:__ A contact is detected if object A is in any of the layers that object B scans, or object B is in any layers that object A scans. See @url=$DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks@Collision layers and masks@/url@ in the documentation for more information.
 set_collision_mask ::
                      (CollisionObject :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_mask cls arg1
@@ -683,8 +683,8 @@ instance NodeMethod CollisionObject "set_collision_mask" '[Int]
 
 {-# NOINLINE bindCollisionObject_set_collision_mask_bit #-}
 
--- | If @value@ is @true@, sets the specified @bit@ in the the @collision_mask@.
---   				If @value@ is @false@, clears the specified @bit@ in the the @collision_mask@.
+-- | If @value@ is @true@, sets the specified @bit@ in the @collision_mask@.
+--   				If @value@ is @false@, clears the specified @bit@ in the @collision_mask@.
 bindCollisionObject_set_collision_mask_bit :: MethodBind
 bindCollisionObject_set_collision_mask_bit
   = unsafePerformIO $
@@ -694,8 +694,8 @@ bindCollisionObject_set_collision_mask_bit
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @value@ is @true@, sets the specified @bit@ in the the @collision_mask@.
---   				If @value@ is @false@, clears the specified @bit@ in the the @collision_mask@.
+-- | If @value@ is @true@, sets the specified @bit@ in the @collision_mask@.
+--   				If @value@ is @false@, clears the specified @bit@ in the @collision_mask@.
 set_collision_mask_bit ::
                          (CollisionObject :< cls, Object :< cls) =>
                          cls -> Int -> Bool -> IO ()

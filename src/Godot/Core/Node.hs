@@ -6,9 +6,11 @@ module Godot.Core.Node
         Godot.Core.Node._DUPLICATE_SCRIPTS,
         Godot.Core.Node._NOTIFICATION_PAUSED,
         Godot.Core.Node._NOTIFICATION_MOVED_IN_PARENT,
+        Godot.Core.Node._NOTIFICATION_CHILD_ORDER_CHANGED,
         Godot.Core.Node._NOTIFICATION_UNPARENTED,
         Godot.Core.Node._PAUSE_MODE_PROCESS,
         Godot.Core.Node._NOTIFICATION_WM_ABOUT,
+        Godot.Core.Node._PHYSICS_INTERPOLATION_MODE_OFF,
         Godot.Core.Node._NOTIFICATION_DRAG_END,
         Godot.Core.Node._NOTIFICATION_PATH_CHANGED,
         Godot.Core.Node._NOTIFICATION_APP_PAUSED,
@@ -16,14 +18,17 @@ module Godot.Core.Node
         Godot.Core.Node._NOTIFICATION_INTERNAL_PHYSICS_PROCESS,
         Godot.Core.Node._NOTIFICATION_WM_GO_BACK_REQUEST,
         Godot.Core.Node._NOTIFICATION_WM_QUIT_REQUEST,
+        Godot.Core.Node._PHYSICS_INTERPOLATION_MODE_INHERIT,
         Godot.Core.Node._DUPLICATE_USE_INSTANCING,
         Godot.Core.Node._NOTIFICATION_ENTER_TREE,
         Godot.Core.Node._NOTIFICATION_EXIT_TREE,
         Godot.Core.Node._NOTIFICATION_WM_FOCUS_IN,
+        Godot.Core.Node._NOTIFICATION_RESET_PHYSICS_INTERPOLATION,
         Godot.Core.Node._NOTIFICATION_WM_MOUSE_EXIT,
         Godot.Core.Node._NOTIFICATION_PROCESS,
         Godot.Core.Node._NOTIFICATION_INTERNAL_PROCESS,
         Godot.Core.Node._PAUSE_MODE_STOP,
+        Godot.Core.Node._PHYSICS_INTERPOLATION_MODE_ON,
         Godot.Core.Node._PAUSE_MODE_INHERIT,
         Godot.Core.Node._NOTIFICATION_POST_ENTER_TREE,
         Godot.Core.Node._NOTIFICATION_TRANSLATION_CHANGED,
@@ -39,7 +44,10 @@ module Godot.Core.Node
         Godot.Core.Node._NOTIFICATION_APP_RESUMED,
         Godot.Core.Node._NOTIFICATION_READY,
         Godot.Core.Node._NOTIFICATION_WM_MOUSE_ENTER,
-        Godot.Core.Node._NOTIFICATION_CRASH, Godot.Core.Node.sig_ready,
+        Godot.Core.Node._NOTIFICATION_CRASH,
+        Godot.Core.Node.sig_child_entered_tree,
+        Godot.Core.Node.sig_child_exiting_tree,
+        Godot.Core.Node.sig_child_order_changed, Godot.Core.Node.sig_ready,
         Godot.Core.Node.sig_renamed, Godot.Core.Node.sig_tree_entered,
         Godot.Core.Node.sig_tree_exited, Godot.Core.Node.sig_tree_exiting,
         Godot.Core.Node._enter_tree, Godot.Core.Node._exit_tree,
@@ -48,13 +56,15 @@ module Godot.Core.Node
         Godot.Core.Node._get_import_path, Godot.Core.Node._input,
         Godot.Core.Node._physics_process, Godot.Core.Node._process,
         Godot.Core.Node._ready, Godot.Core.Node._set_editor_description,
-        Godot.Core.Node._set_import_path, Godot.Core.Node._unhandled_input,
+        Godot.Core.Node._set_import_path,
+        Godot.Core.Node._set_property_pinned,
+        Godot.Core.Node._unhandled_input,
         Godot.Core.Node._unhandled_key_input, Godot.Core.Node.add_child,
         Godot.Core.Node.add_child_below_node, Godot.Core.Node.add_to_group,
-        Godot.Core.Node.can_process, Godot.Core.Node.duplicate,
-        Godot.Core.Node.find_node, Godot.Core.Node.find_parent,
-        Godot.Core.Node.get_child, Godot.Core.Node.get_child_count,
-        Godot.Core.Node.get_children,
+        Godot.Core.Node.can_process, Godot.Core.Node.create_tween,
+        Godot.Core.Node.duplicate, Godot.Core.Node.find_node,
+        Godot.Core.Node.find_parent, Godot.Core.Node.get_child,
+        Godot.Core.Node.get_child_count, Godot.Core.Node.get_children,
         Godot.Core.Node.get_custom_multiplayer,
         Godot.Core.Node.get_filename, Godot.Core.Node.get_groups,
         Godot.Core.Node.get_index, Godot.Core.Node.get_multiplayer,
@@ -63,6 +73,7 @@ module Godot.Core.Node
         Godot.Core.Node.get_node_or_null, Godot.Core.Node.get_owner,
         Godot.Core.Node.get_parent, Godot.Core.Node.get_path,
         Godot.Core.Node.get_path_to, Godot.Core.Node.get_pause_mode,
+        Godot.Core.Node.get_physics_interpolation_mode,
         Godot.Core.Node.get_physics_process_delta_time,
         Godot.Core.Node.get_position_in_parent,
         Godot.Core.Node.get_process_delta_time,
@@ -72,14 +83,19 @@ module Godot.Core.Node
         Godot.Core.Node.has_node, Godot.Core.Node.has_node_and_resource,
         Godot.Core.Node.is_a_parent_of,
         Godot.Core.Node.is_displayed_folded,
+        Godot.Core.Node.is_editable_instance,
         Godot.Core.Node.is_greater_than, Godot.Core.Node.is_in_group,
         Godot.Core.Node.is_inside_tree, Godot.Core.Node.is_network_master,
+        Godot.Core.Node.is_node_ready,
+        Godot.Core.Node.is_physics_interpolated,
+        Godot.Core.Node.is_physics_interpolated_and_enabled,
         Godot.Core.Node.is_physics_processing,
         Godot.Core.Node.is_physics_processing_internal,
         Godot.Core.Node.is_processing, Godot.Core.Node.is_processing_input,
         Godot.Core.Node.is_processing_internal,
         Godot.Core.Node.is_processing_unhandled_input,
         Godot.Core.Node.is_processing_unhandled_key_input,
+        Godot.Core.Node.is_unique_name_in_owner,
         Godot.Core.Node.move_child, Godot.Core.Node.print_stray_nodes,
         Godot.Core.Node.print_tree, Godot.Core.Node.print_tree_pretty,
         Godot.Core.Node.propagate_call,
@@ -87,16 +103,19 @@ module Godot.Core.Node
         Godot.Core.Node.raise, Godot.Core.Node.remove_and_skip,
         Godot.Core.Node.remove_child, Godot.Core.Node.remove_from_group,
         Godot.Core.Node.replace_by, Godot.Core.Node.request_ready,
-        Godot.Core.Node.rpc, Godot.Core.Node.rpc_config,
-        Godot.Core.Node.rpc_id, Godot.Core.Node.rpc_unreliable,
-        Godot.Core.Node.rpc_unreliable_id, Godot.Core.Node.rset,
-        Godot.Core.Node.rset_config, Godot.Core.Node.rset_id,
-        Godot.Core.Node.rset_unreliable,
+        Godot.Core.Node.reset_physics_interpolation, Godot.Core.Node.rpc,
+        Godot.Core.Node.rpc_config, Godot.Core.Node.rpc_id,
+        Godot.Core.Node.rpc_unreliable, Godot.Core.Node.rpc_unreliable_id,
+        Godot.Core.Node.rset, Godot.Core.Node.rset_config,
+        Godot.Core.Node.rset_id, Godot.Core.Node.rset_unreliable,
         Godot.Core.Node.rset_unreliable_id,
         Godot.Core.Node.set_custom_multiplayer,
-        Godot.Core.Node.set_display_folded, Godot.Core.Node.set_filename,
-        Godot.Core.Node.set_name, Godot.Core.Node.set_network_master,
-        Godot.Core.Node.set_owner, Godot.Core.Node.set_pause_mode,
+        Godot.Core.Node.set_display_folded,
+        Godot.Core.Node.set_editable_instance,
+        Godot.Core.Node.set_filename, Godot.Core.Node.set_name,
+        Godot.Core.Node.set_network_master, Godot.Core.Node.set_owner,
+        Godot.Core.Node.set_pause_mode,
+        Godot.Core.Node.set_physics_interpolation_mode,
         Godot.Core.Node.set_physics_process,
         Godot.Core.Node.set_physics_process_internal,
         Godot.Core.Node.set_process, Godot.Core.Node.set_process_input,
@@ -105,6 +124,7 @@ module Godot.Core.Node
         Godot.Core.Node.set_process_unhandled_input,
         Godot.Core.Node.set_process_unhandled_key_input,
         Godot.Core.Node.set_scene_instance_load_placeholder,
+        Godot.Core.Node.set_unique_name_in_owner,
         Godot.Core.Node.update_configuration_warning)
        where
 import Data.Coerce
@@ -131,6 +151,9 @@ _NOTIFICATION_PAUSED = 14
 _NOTIFICATION_MOVED_IN_PARENT :: Int
 _NOTIFICATION_MOVED_IN_PARENT = 12
 
+_NOTIFICATION_CHILD_ORDER_CHANGED :: Int
+_NOTIFICATION_CHILD_ORDER_CHANGED = 24
+
 _NOTIFICATION_UNPARENTED :: Int
 _NOTIFICATION_UNPARENTED = 19
 
@@ -139,6 +162,9 @@ _PAUSE_MODE_PROCESS = 2
 
 _NOTIFICATION_WM_ABOUT :: Int
 _NOTIFICATION_WM_ABOUT = 1011
+
+_PHYSICS_INTERPOLATION_MODE_OFF :: Int
+_PHYSICS_INTERPOLATION_MODE_OFF = 1
 
 _NOTIFICATION_DRAG_END :: Int
 _NOTIFICATION_DRAG_END = 22
@@ -161,6 +187,9 @@ _NOTIFICATION_WM_GO_BACK_REQUEST = 1007
 _NOTIFICATION_WM_QUIT_REQUEST :: Int
 _NOTIFICATION_WM_QUIT_REQUEST = 1006
 
+_PHYSICS_INTERPOLATION_MODE_INHERIT :: Int
+_PHYSICS_INTERPOLATION_MODE_INHERIT = 0
+
 _DUPLICATE_USE_INSTANCING :: Int
 _DUPLICATE_USE_INSTANCING = 8
 
@@ -173,6 +202,9 @@ _NOTIFICATION_EXIT_TREE = 11
 _NOTIFICATION_WM_FOCUS_IN :: Int
 _NOTIFICATION_WM_FOCUS_IN = 1004
 
+_NOTIFICATION_RESET_PHYSICS_INTERPOLATION :: Int
+_NOTIFICATION_RESET_PHYSICS_INTERPOLATION = 28
+
 _NOTIFICATION_WM_MOUSE_EXIT :: Int
 _NOTIFICATION_WM_MOUSE_EXIT = 1003
 
@@ -184,6 +216,9 @@ _NOTIFICATION_INTERNAL_PROCESS = 25
 
 _PAUSE_MODE_STOP :: Int
 _PAUSE_MODE_STOP = 1
+
+_PHYSICS_INTERPOLATION_MODE_ON :: Int
+_PHYSICS_INTERPOLATION_MODE_ON = 2
 
 _PAUSE_MODE_INHERIT :: Int
 _PAUSE_MODE_INHERIT = 0
@@ -233,6 +268,29 @@ _NOTIFICATION_WM_MOUSE_ENTER = 1002
 _NOTIFICATION_CRASH :: Int
 _NOTIFICATION_CRASH = 1012
 
+-- | Emitted when a child node enters the scene tree, either because it entered on its own or because this node entered with it.
+--   				This signal is emitted @i@after@/i@ the child node's own @NOTIFICATION_ENTER_TREE@ and @signal tree_entered@.
+sig_child_entered_tree :: Godot.Internal.Dispatch.Signal Node
+sig_child_entered_tree
+  = Godot.Internal.Dispatch.Signal "child_entered_tree"
+
+instance NodeSignal Node "child_entered_tree" '[Node]
+
+-- | Emitted when a child node is about to exit the scene tree, either because it is being removed or freed directly, or because this node is exiting the tree.
+--   				When this signal is received, the child @node@ is still in the tree and valid. This signal is emitted @i@after@/i@ the child node's own @signal tree_exiting@ and @NOTIFICATION_EXIT_TREE@.
+sig_child_exiting_tree :: Godot.Internal.Dispatch.Signal Node
+sig_child_exiting_tree
+  = Godot.Internal.Dispatch.Signal "child_exiting_tree"
+
+instance NodeSignal Node "child_exiting_tree" '[Node]
+
+-- | Emitted when the list of children is changed. This happens when child nodes are added, moved, or removed.
+sig_child_order_changed :: Godot.Internal.Dispatch.Signal Node
+sig_child_order_changed
+  = Godot.Internal.Dispatch.Signal "child_order_changed"
+
+instance NodeSignal Node "child_order_changed" '[]
+
 -- | Emitted when the node is ready.
 sig_ready :: Godot.Internal.Dispatch.Signal Node
 sig_ready = Godot.Internal.Dispatch.Signal "ready"
@@ -246,6 +304,7 @@ sig_renamed = Godot.Internal.Dispatch.Signal "renamed"
 instance NodeSignal Node "renamed" '[]
 
 -- | Emitted when the node enters the tree.
+--   				This signal is emitted @i@after@/i@ the related @NOTIFICATION_ENTER_TREE@ notification.
 sig_tree_entered :: Godot.Internal.Dispatch.Signal Node
 sig_tree_entered = Godot.Internal.Dispatch.Signal "tree_entered"
 
@@ -258,6 +317,7 @@ sig_tree_exited = Godot.Internal.Dispatch.Signal "tree_exited"
 instance NodeSignal Node "tree_exited" '[]
 
 -- | Emitted when the node is still active but about to exit the tree. This is the right place for de-initialization (or a "destructor", if you will).
+--   				This signal is emitted @i@before@/i@ the related @NOTIFICATION_EXIT_TREE@ notification.
 sig_tree_exiting :: Godot.Internal.Dispatch.Signal Node
 sig_tree_exiting = Godot.Internal.Dispatch.Signal "tree_exiting"
 
@@ -297,10 +357,21 @@ instance NodeProperty Node "pause_mode" Int 'False where
         nodeProperty
           = (get_pause_mode, wrapDroppingSetter set_pause_mode, Nothing)
 
+instance NodeProperty Node "physics_interpolation_mode" Int 'False
+         where
+        nodeProperty
+          = (get_physics_interpolation_mode,
+             wrapDroppingSetter set_physics_interpolation_mode, Nothing)
+
 instance NodeProperty Node "process_priority" Int 'False where
         nodeProperty
           = (get_process_priority, wrapDroppingSetter set_process_priority,
              Nothing)
+
+instance NodeProperty Node "unique_name_in_owner" Bool 'False where
+        nodeProperty
+          = (is_unique_name_in_owner,
+             wrapDroppingSetter set_unique_name_in_owner, Nothing)
 
 {-# NOINLINE bindNode__enter_tree #-}
 
@@ -457,7 +528,7 @@ instance NodeMethod Node "_get_import_path" '[] (IO NodePath) where
 --   				It is only called if input processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_process_input@.
 --   				To consume the input event and stop it propagating further to other nodes, @method SceneTree.set_input_as_handled@ can be called.
 --   				For gameplay input, @method _unhandled_input@ and @method _unhandled_key_input@ are usually a better fit as they allow the GUI to intercept the events first.
---   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
+--   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not an orphan).
 bindNode__input :: MethodBind
 bindNode__input
   = unsafePerformIO $
@@ -471,7 +542,7 @@ bindNode__input
 --   				It is only called if input processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_process_input@.
 --   				To consume the input event and stop it propagating further to other nodes, @method SceneTree.set_input_as_handled@ can be called.
 --   				For gameplay input, @method _unhandled_input@ and @method _unhandled_key_input@ are usually a better fit as they allow the GUI to intercept the events first.
---   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
+--   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not an orphan).
 _input ::
          (Node :< cls, Object :< cls) => cls -> InputEvent -> IO ()
 _input cls arg1
@@ -490,7 +561,7 @@ instance NodeMethod Node "_input" '[InputEvent] (IO ()) where
 -- | Called during the physics processing step of the main loop. Physics processing means that the frame rate is synced to the physics, i.e. the @delta@ variable should be constant. @delta@ is in seconds.
 --   				It is only called if physics processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_physics_process@.
 --   				Corresponds to the @NOTIFICATION_PHYSICS_PROCESS@ notification in @method Object._notification@.
---   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
+--   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not an orphan).
 bindNode__physics_process :: MethodBind
 bindNode__physics_process
   = unsafePerformIO $
@@ -503,7 +574,7 @@ bindNode__physics_process
 -- | Called during the physics processing step of the main loop. Physics processing means that the frame rate is synced to the physics, i.e. the @delta@ variable should be constant. @delta@ is in seconds.
 --   				It is only called if physics processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_physics_process@.
 --   				Corresponds to the @NOTIFICATION_PHYSICS_PROCESS@ notification in @method Object._notification@.
---   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
+--   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not an orphan).
 _physics_process ::
                    (Node :< cls, Object :< cls) => cls -> Float -> IO ()
 _physics_process cls arg1
@@ -525,7 +596,7 @@ instance NodeMethod Node "_physics_process" '[Float] (IO ()) where
 -- | Called during the processing step of the main loop. Processing happens at every frame and as fast as possible, so the @delta@ time since the previous frame is not constant. @delta@ is in seconds.
 --   				It is only called if processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_process@.
 --   				Corresponds to the @NOTIFICATION_PROCESS@ notification in @method Object._notification@.
---   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
+--   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not an orphan).
 bindNode__process :: MethodBind
 bindNode__process
   = unsafePerformIO $
@@ -538,7 +609,7 @@ bindNode__process
 -- | Called during the processing step of the main loop. Processing happens at every frame and as fast as possible, so the @delta@ time since the previous frame is not constant. @delta@ is in seconds.
 --   				It is only called if processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_process@.
 --   				Corresponds to the @NOTIFICATION_PROCESS@ notification in @method Object._notification@.
---   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
+--   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not an orphan).
 _process :: (Node :< cls, Object :< cls) => cls -> Float -> IO ()
 _process cls arg1
   = withVariantArray [toVariant arg1]
@@ -557,7 +628,7 @@ instance NodeMethod Node "_process" '[Float] (IO ()) where
 -- | Called when the node is "ready", i.e. when both the node and its children have entered the scene tree. If the node has children, their @method _ready@ callbacks get triggered first, and the parent node will receive the ready notification afterwards.
 --   				Corresponds to the @NOTIFICATION_READY@ notification in @method Object._notification@. See also the @onready@ keyword for variables.
 --   				Usually used for initialization. For even earlier initialization, @method Object._init@ may be used. See also @method _enter_tree@.
---   				__Note:__ @method _ready@ may be called only once for each node. After removing a node from the scene tree and adding again, @_ready@ will not be called for the second time. This can be bypassed with requesting another call with @method request_ready@, which may be called anywhere before adding the node again.
+--   				__Note:__ @method _ready@ may be called only once for each node. After removing a node from the scene tree and adding it again, @_ready@ will not be called a second time. This can be bypassed by requesting another call with @method request_ready@, which may be called anywhere before adding the node again.
 bindNode__ready :: MethodBind
 bindNode__ready
   = unsafePerformIO $
@@ -570,7 +641,7 @@ bindNode__ready
 -- | Called when the node is "ready", i.e. when both the node and its children have entered the scene tree. If the node has children, their @method _ready@ callbacks get triggered first, and the parent node will receive the ready notification afterwards.
 --   				Corresponds to the @NOTIFICATION_READY@ notification in @method Object._notification@. See also the @onready@ keyword for variables.
 --   				Usually used for initialization. For even earlier initialization, @method Object._init@ may be used. See also @method _enter_tree@.
---   				__Note:__ @method _ready@ may be called only once for each node. After removing a node from the scene tree and adding again, @_ready@ will not be called for the second time. This can be bypassed with requesting another call with @method request_ready@, which may be called anywhere before adding the node again.
+--   				__Note:__ @method _ready@ may be called only once for each node. After removing a node from the scene tree and adding it again, @_ready@ will not be called a second time. This can be bypassed by requesting another call with @method request_ready@, which may be called anywhere before adding the node again.
 _ready :: (Node :< cls, Object :< cls) => cls -> IO ()
 _ready cls
   = withVariantArray []
@@ -641,13 +712,43 @@ instance NodeMethod Node "_set_import_path" '[NodePath] (IO ())
          where
         nodeMethod = Godot.Core.Node._set_import_path
 
+{-# NOINLINE bindNode__set_property_pinned #-}
+
+bindNode__set_property_pinned :: MethodBind
+bindNode__set_property_pinned
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "_set_property_pinned" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_set_property_pinned ::
+                       (Node :< cls, Object :< cls) => cls -> GodotString -> Bool -> IO ()
+_set_property_pinned cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode__set_property_pinned (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "_set_property_pinned"
+           '[GodotString, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Node._set_property_pinned
+
 {-# NOINLINE bindNode__unhandled_input #-}
 
--- | Called when an @InputEvent@ hasn't been consumed by @method _input@ or any GUI. The input event propagates up through the node tree until a node consumes it.
+-- | Called when an @InputEvent@ hasn't been consumed by @method _input@ or any GUI @Control@ item. The input event propagates up through the node tree until a node consumes it.
 --   				It is only called if unhandled input processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_process_unhandled_input@.
 --   				To consume the input event and stop it propagating further to other nodes, @method SceneTree.set_input_as_handled@ can be called.
 --   				For gameplay input, this and @method _unhandled_key_input@ are usually a better fit than @method _input@ as they allow the GUI to intercept the events first.
---   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
+--   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not an orphan).
 bindNode__unhandled_input :: MethodBind
 bindNode__unhandled_input
   = unsafePerformIO $
@@ -657,11 +758,11 @@ bindNode__unhandled_input
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Called when an @InputEvent@ hasn't been consumed by @method _input@ or any GUI. The input event propagates up through the node tree until a node consumes it.
+-- | Called when an @InputEvent@ hasn't been consumed by @method _input@ or any GUI @Control@ item. The input event propagates up through the node tree until a node consumes it.
 --   				It is only called if unhandled input processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_process_unhandled_input@.
 --   				To consume the input event and stop it propagating further to other nodes, @method SceneTree.set_input_as_handled@ can be called.
 --   				For gameplay input, this and @method _unhandled_key_input@ are usually a better fit than @method _input@ as they allow the GUI to intercept the events first.
---   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
+--   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not an orphan).
 _unhandled_input ::
                    (Node :< cls, Object :< cls) => cls -> InputEvent -> IO ()
 _unhandled_input cls arg1
@@ -681,11 +782,11 @@ instance NodeMethod Node "_unhandled_input" '[InputEvent] (IO ())
 
 {-# NOINLINE bindNode__unhandled_key_input #-}
 
--- | Called when an @InputEventKey@ hasn't been consumed by @method _input@ or any GUI. The input event propagates up through the node tree until a node consumes it.
+-- | Called when an @InputEventKey@ hasn't been consumed by @method _input@ or any GUI @Control@ item. The input event propagates up through the node tree until a node consumes it.
 --   				It is only called if unhandled key input processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_process_unhandled_key_input@.
 --   				To consume the input event and stop it propagating further to other nodes, @method SceneTree.set_input_as_handled@ can be called.
 --   				For gameplay input, this and @method _unhandled_input@ are usually a better fit than @method _input@ as they allow the GUI to intercept the events first.
---   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
+--   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not an orphan).
 bindNode__unhandled_key_input :: MethodBind
 bindNode__unhandled_key_input
   = unsafePerformIO $
@@ -695,11 +796,11 @@ bindNode__unhandled_key_input
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Called when an @InputEventKey@ hasn't been consumed by @method _input@ or any GUI. The input event propagates up through the node tree until a node consumes it.
+-- | Called when an @InputEventKey@ hasn't been consumed by @method _input@ or any GUI @Control@ item. The input event propagates up through the node tree until a node consumes it.
 --   				It is only called if unhandled key input processing is enabled, which is done automatically if this method is overridden, and can be toggled with @method set_process_unhandled_key_input@.
 --   				To consume the input event and stop it propagating further to other nodes, @method SceneTree.set_input_as_handled@ can be called.
 --   				For gameplay input, this and @method _unhandled_input@ are usually a better fit than @method _input@ as they allow the GUI to intercept the events first.
---   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not orphan).
+--   				__Note:__ This method is only called if the node is present in the scene tree (i.e. if it's not an orphan).
 _unhandled_key_input ::
                        (Node :< cls, Object :< cls) => cls -> InputEventKey -> IO ()
 _unhandled_key_input cls arg1
@@ -721,7 +822,7 @@ instance NodeMethod Node "_unhandled_key_input" '[InputEventKey]
 {-# NOINLINE bindNode_add_child #-}
 
 -- | Adds a child node. Nodes can have any number of children, but every child must have a unique name. Child nodes are automatically deleted when the parent node is deleted, so an entire scene can be removed by deleting its topmost node.
---   				If @legible_unique_name@ is @true@, the child node will have a human-readable name based on the name of the node being instanced instead of its type.
+--   				If @force_readable_name@ is @true@, improves the readability of the added node. If not named, the node is renamed to its type, and if it shares @name@ with a sibling, a number is suffixed more appropriately. This operation is very slow. As such, it is recommended leaving this to @false@, which assigns a dummy name featuring @@@ in both situations.
 --   				__Note:__ If the child node already has a parent, the function will fail. Use @method remove_child@ first to remove the node from its current parent. For example:
 --   				
 --   @
@@ -732,7 +833,7 @@ instance NodeMethod Node "_unhandled_key_input" '[InputEventKey]
 --   				
 --   @
 --   
---   				__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
+--   				__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html@tool scripts@/url@ and @url=$DOCS_URL/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 bindNode_add_child :: MethodBind
 bindNode_add_child
   = unsafePerformIO $
@@ -743,7 +844,7 @@ bindNode_add_child
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Adds a child node. Nodes can have any number of children, but every child must have a unique name. Child nodes are automatically deleted when the parent node is deleted, so an entire scene can be removed by deleting its topmost node.
---   				If @legible_unique_name@ is @true@, the child node will have a human-readable name based on the name of the node being instanced instead of its type.
+--   				If @force_readable_name@ is @true@, improves the readability of the added node. If not named, the node is renamed to its type, and if it shares @name@ with a sibling, a number is suffixed more appropriately. This operation is very slow. As such, it is recommended leaving this to @false@, which assigns a dummy name featuring @@@ in both situations.
 --   				__Note:__ If the child node already has a parent, the function will fail. Use @method remove_child@ first to remove the node from its current parent. For example:
 --   				
 --   @
@@ -754,7 +855,7 @@ bindNode_add_child
 --   				
 --   @
 --   
---   				__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
+--   				__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html@tool scripts@/url@ and @url=$DOCS_URL/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 add_child ::
             (Node :< cls, Object :< cls) => cls -> Node -> Maybe Bool -> IO ()
 add_child cls arg1 arg2
@@ -774,7 +875,7 @@ instance NodeMethod Node "add_child" '[Node, Maybe Bool] (IO ())
 {-# NOINLINE bindNode_add_child_below_node #-}
 
 -- | Adds @child_node@ as a child. The child is placed below the given @node@ in the list of children.
---   				If @legible_unique_name@ is @true@, the child node will have a human-readable name based on the name of the node being instanced instead of its type.
+--   				If @force_readable_name@ is @true@, improves the readability of the added node. If not named, the node is renamed to its type, and if it shares @name@ with a sibling, a number is suffixed more appropriately. This operation is very slow. As such, it is recommended leaving this to @false@, which assigns a dummy name featuring @@@ in both situations.
 bindNode_add_child_below_node :: MethodBind
 bindNode_add_child_below_node
   = unsafePerformIO $
@@ -785,7 +886,7 @@ bindNode_add_child_below_node
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Adds @child_node@ as a child. The child is placed below the given @node@ in the list of children.
---   				If @legible_unique_name@ is @true@, the child node will have a human-readable name based on the name of the node being instanced instead of its type.
+--   				If @force_readable_name@ is @true@, improves the readability of the added node. If not named, the node is renamed to its type, and if it shares @name@ with a sibling, a number is suffixed more appropriately. This operation is very slow. As such, it is recommended leaving this to @false@, which assigns a dummy name featuring @@@ in both situations.
 add_child_below_node ::
                        (Node :< cls, Object :< cls) =>
                        cls -> Node -> Node -> Maybe Bool -> IO ()
@@ -869,6 +970,44 @@ can_process cls
 
 instance NodeMethod Node "can_process" '[] (IO Bool) where
         nodeMethod = Godot.Core.Node.can_process
+
+{-# NOINLINE bindNode_create_tween #-}
+
+-- | Creates a new @SceneTreeTween@ and binds it to this node. This is equivalent of doing:
+--   				
+--   @
+--   
+--   				get_tree().create_tween().bind_node(self)
+--   				
+--   @
+bindNode_create_tween :: MethodBind
+bindNode_create_tween
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "create_tween" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Creates a new @SceneTreeTween@ and binds it to this node. This is equivalent of doing:
+--   				
+--   @
+--   
+--   				get_tree().create_tween().bind_node(self)
+--   				
+--   @
+create_tween ::
+               (Node :< cls, Object :< cls) => cls -> IO SceneTreeTween
+create_tween cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_create_tween (upcast cls) arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod Node "create_tween" '[] (IO SceneTreeTween)
+         where
+        nodeMethod = Godot.Core.Node.create_tween
 
 {-# NOINLINE bindNode_duplicate #-}
 
@@ -1258,7 +1397,7 @@ instance NodeMethod Node "get_network_master" '[] (IO Int) where
 
 {-# NOINLINE bindNode_get_node #-}
 
--- | Fetches a node. The @NodePath@ can be either a relative path (from the current node) or an absolute path (in the scene tree) to a node. If the path does not exist, a @null instance@ is returned and an error is logged. Attempts to access methods on the return value will result in an "Attempt to call <method> on a null instance." error.
+-- | Fetches a node. The @NodePath@ can be either a relative path (from the current node) or an absolute path (in the scene tree) to a node. If the path does not exist, @null@ is returned and an error is logged. Attempts to access methods on the return value will result in an "Attempt to call <method> on a null instance." error.
 --   				__Note:__ Fetching absolute paths only works when the node is inside the scene tree (see @method is_inside_tree@).
 --   				__Example:__ Assume your current node is Character and the following tree:
 --   				
@@ -1294,7 +1433,7 @@ bindNode_get_node
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Fetches a node. The @NodePath@ can be either a relative path (from the current node) or an absolute path (in the scene tree) to a node. If the path does not exist, a @null instance@ is returned and an error is logged. Attempts to access methods on the return value will result in an "Attempt to call <method> on a null instance." error.
+-- | Fetches a node. The @NodePath@ can be either a relative path (from the current node) or an absolute path (in the scene tree) to a node. If the path does not exist, @null@ is returned and an error is logged. Attempts to access methods on the return value will result in an "Attempt to call <method> on a null instance." error.
 --   				__Note:__ Fetching absolute paths only works when the node is inside the scene tree (see @method is_inside_tree@).
 --   				__Example:__ Assume your current node is Character and the following tree:
 --   				
@@ -1413,7 +1552,7 @@ instance NodeMethod Node "get_node_or_null" '[NodePath] (IO Node)
 {-# NOINLINE bindNode_get_owner #-}
 
 -- | The node owner. A node can have any other node as owner (as long as it is a valid parent, grandparent, etc. ascending in the tree). When saving a node (using @PackedScene@), all the nodes it owns will be saved with it. This allows for the creation of complex @SceneTree@s, with instancing and subinstancing.
---   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
+--   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html@tool scripts@/url@ and @url=$DOCS_URL/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 bindNode_get_owner :: MethodBind
 bindNode_get_owner
   = unsafePerformIO $
@@ -1424,7 +1563,7 @@ bindNode_get_owner
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The node owner. A node can have any other node as owner (as long as it is a valid parent, grandparent, etc. ascending in the tree). When saving a node (using @PackedScene@), all the nodes it owns will be saved with it. This allows for the creation of complex @SceneTree@s, with instancing and subinstancing.
---   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
+--   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html@tool scripts@/url@ and @url=$DOCS_URL/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 get_owner :: (Node :< cls, Object :< cls) => cls -> IO Node
 get_owner cls
   = withVariantArray []
@@ -1437,7 +1576,7 @@ instance NodeMethod Node "get_owner" '[] (IO Node) where
 
 {-# NOINLINE bindNode_get_parent #-}
 
--- | Returns the parent node of the current node, or a @null instance@ if the node lacks a parent.
+-- | Returns the parent node of the current node, or @null@ if the node lacks a parent.
 bindNode_get_parent :: MethodBind
 bindNode_get_parent
   = unsafePerformIO $
@@ -1447,7 +1586,7 @@ bindNode_get_parent
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns the parent node of the current node, or a @null instance@ if the node lacks a parent.
+-- | Returns the parent node of the current node, or @null@ if the node lacks a parent.
 get_parent :: (Node :< cls, Object :< cls) => cls -> IO Node
 get_parent cls
   = withVariantArray []
@@ -1537,6 +1676,40 @@ get_pause_mode cls
 
 instance NodeMethod Node "get_pause_mode" '[] (IO Int) where
         nodeMethod = Godot.Core.Node.get_pause_mode
+
+{-# NOINLINE bindNode_get_physics_interpolation_mode #-}
+
+-- | Allows enabling or disabling physics interpolation per node, offering a finer grain of control than turning physics interpolation on and off globally.
+--   			__Note:__ This can be especially useful for @Camera@s, where custom interpolation can sometimes give superior results.
+bindNode_get_physics_interpolation_mode :: MethodBind
+bindNode_get_physics_interpolation_mode
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "get_physics_interpolation_mode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Allows enabling or disabling physics interpolation per node, offering a finer grain of control than turning physics interpolation on and off globally.
+--   			__Note:__ This can be especially useful for @Camera@s, where custom interpolation can sometimes give superior results.
+get_physics_interpolation_mode ::
+                                 (Node :< cls, Object :< cls) => cls -> IO Int
+get_physics_interpolation_mode cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_get_physics_interpolation_mode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "get_physics_interpolation_mode" '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.Node.get_physics_interpolation_mode
 
 {-# NOINLINE bindNode_get_physics_process_delta_time #-}
 
@@ -1826,7 +1999,7 @@ instance NodeMethod Node "is_a_parent_of" '[Node] (IO Bool) where
 
 {-# NOINLINE bindNode_is_displayed_folded #-}
 
--- | Returns @true@ if the node is folded (collapsed) in the Scene dock.
+-- | Returns @true@ if the node is folded (collapsed) in the Scene dock. This method is only intended for use with editor tooling.
 bindNode_is_displayed_folded :: MethodBind
 bindNode_is_displayed_folded
   = unsafePerformIO $
@@ -1836,7 +2009,7 @@ bindNode_is_displayed_folded
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ if the node is folded (collapsed) in the Scene dock.
+-- | Returns @true@ if the node is folded (collapsed) in the Scene dock. This method is only intended for use with editor tooling.
 is_displayed_folded ::
                       (Node :< cls, Object :< cls) => cls -> IO Bool
 is_displayed_folded cls
@@ -1852,6 +2025,36 @@ is_displayed_folded cls
 
 instance NodeMethod Node "is_displayed_folded" '[] (IO Bool) where
         nodeMethod = Godot.Core.Node.is_displayed_folded
+
+{-# NOINLINE bindNode_is_editable_instance #-}
+
+-- | Returns @true@ if @node@ has editable children enabled relative to this node. This method is only intended for use with editor tooling.
+bindNode_is_editable_instance :: MethodBind
+bindNode_is_editable_instance
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "is_editable_instance" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if @node@ has editable children enabled relative to this node. This method is only intended for use with editor tooling.
+is_editable_instance ::
+                       (Node :< cls, Object :< cls) => cls -> Node -> IO Bool
+is_editable_instance cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_is_editable_instance (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "is_editable_instance" '[Node] (IO Bool)
+         where
+        nodeMethod = Godot.Core.Node.is_editable_instance
 
 {-# NOINLINE bindNode_is_greater_than #-}
 
@@ -1963,6 +2166,104 @@ is_network_master cls
 
 instance NodeMethod Node "is_network_master" '[] (IO Bool) where
         nodeMethod = Godot.Core.Node.is_network_master
+
+{-# NOINLINE bindNode_is_node_ready #-}
+
+-- | Returns @true@ if the node is ready, i.e. it's inside scene tree and all its children are initialized.
+--   				@method request_ready@ resets it back to @false@.
+bindNode_is_node_ready :: MethodBind
+bindNode_is_node_ready
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "is_node_ready" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if the node is ready, i.e. it's inside scene tree and all its children are initialized.
+--   				@method request_ready@ resets it back to @false@.
+is_node_ready :: (Node :< cls, Object :< cls) => cls -> IO Bool
+is_node_ready cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_is_node_ready (upcast cls) arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "is_node_ready" '[] (IO Bool) where
+        nodeMethod = Godot.Core.Node.is_node_ready
+
+{-# NOINLINE bindNode_is_physics_interpolated #-}
+
+-- | Returns @true@ if the physics interpolated flag is set for this Node (see @physics_interpolation_mode@).
+--   				__Note:__ Interpolation will only be active if both the flag is set __and__ physics interpolation is enabled within the @SceneTree@. This can be tested using @method is_physics_interpolated_and_enabled@.
+bindNode_is_physics_interpolated :: MethodBind
+bindNode_is_physics_interpolated
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "is_physics_interpolated" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if the physics interpolated flag is set for this Node (see @physics_interpolation_mode@).
+--   				__Note:__ Interpolation will only be active if both the flag is set __and__ physics interpolation is enabled within the @SceneTree@. This can be tested using @method is_physics_interpolated_and_enabled@.
+is_physics_interpolated ::
+                          (Node :< cls, Object :< cls) => cls -> IO Bool
+is_physics_interpolated cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_is_physics_interpolated
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "is_physics_interpolated" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.Node.is_physics_interpolated
+
+{-# NOINLINE bindNode_is_physics_interpolated_and_enabled #-}
+
+-- | Returns @true@ if physics interpolation is enabled (see @physics_interpolation_mode@) __and__ enabled in the @SceneTree@.
+--   				This is a convenience version of @method is_physics_interpolated@ that also checks whether physics interpolation is enabled globally.
+--   				See @SceneTree.physics_interpolation@ and @ProjectSettings.physics/common/physics_interpolation@.
+bindNode_is_physics_interpolated_and_enabled :: MethodBind
+bindNode_is_physics_interpolated_and_enabled
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "is_physics_interpolated_and_enabled" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Returns @true@ if physics interpolation is enabled (see @physics_interpolation_mode@) __and__ enabled in the @SceneTree@.
+--   				This is a convenience version of @method is_physics_interpolated@ that also checks whether physics interpolation is enabled globally.
+--   				See @SceneTree.physics_interpolation@ and @ProjectSettings.physics/common/physics_interpolation@.
+is_physics_interpolated_and_enabled ::
+                                      (Node :< cls, Object :< cls) => cls -> IO Bool
+is_physics_interpolated_and_enabled cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_is_physics_interpolated_and_enabled
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "is_physics_interpolated_and_enabled" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Core.Node.is_physics_interpolated_and_enabled
 
 {-# NOINLINE bindNode_is_physics_processing #-}
 
@@ -2175,6 +2476,39 @@ instance NodeMethod Node "is_processing_unhandled_key_input" '[]
            (IO Bool)
          where
         nodeMethod = Godot.Core.Node.is_processing_unhandled_key_input
+
+{-# NOINLINE bindNode_is_unique_name_in_owner #-}
+
+-- | Sets this node's name as a unique name in its @owner@. This allows the node to be accessed as @%Name@ instead of the full path, from any node within that scene.
+--   			If another node with the same owner already had that name declared as unique, that other node's name will no longer be set as having a unique name.
+bindNode_is_unique_name_in_owner :: MethodBind
+bindNode_is_unique_name_in_owner
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "is_unique_name_in_owner" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets this node's name as a unique name in its @owner@. This allows the node to be accessed as @%Name@ instead of the full path, from any node within that scene.
+--   			If another node with the same owner already had that name declared as unique, that other node's name will no longer be set as having a unique name.
+is_unique_name_in_owner ::
+                          (Node :< cls, Object :< cls) => cls -> IO Bool
+is_unique_name_in_owner cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_is_unique_name_in_owner
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "is_unique_name_in_owner" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.Node.is_unique_name_in_owner
 
 {-# NOINLINE bindNode_move_child #-}
 
@@ -2401,6 +2735,7 @@ instance NodeMethod Node "propagate_notification" '[Int] (IO ())
 
 -- | Queues a node for deletion at the end of the current frame. When deleted, all of its child nodes will be deleted as well. This method ensures it's safe to delete the node, contrary to @method Object.free@. Use @method Object.is_queued_for_deletion@ to check whether a node will be deleted at the end of the frame.
 --   				__Important:__ If you have a variable pointing to a node, it will @i@not@/i@ be assigned to @null@ once the node is freed. Instead, it will point to a @i@previously freed instance@/i@ and you should validate it with @method @GDScript.is_instance_valid@ before attempting to call its methods or access its properties.
+--   				__Note:__ For efficiency reasons, the final order of deletion is not guaranteed.
 bindNode_queue_free :: MethodBind
 bindNode_queue_free
   = unsafePerformIO $
@@ -2412,6 +2747,7 @@ bindNode_queue_free
 
 -- | Queues a node for deletion at the end of the current frame. When deleted, all of its child nodes will be deleted as well. This method ensures it's safe to delete the node, contrary to @method Object.free@. Use @method Object.is_queued_for_deletion@ to check whether a node will be deleted at the end of the frame.
 --   				__Important:__ If you have a variable pointing to a node, it will @i@not@/i@ be assigned to @null@ once the node is freed. Instead, it will point to a @i@previously freed instance@/i@ and you should validate it with @method @GDScript.is_instance_valid@ before attempting to call its methods or access its properties.
+--   				__Note:__ For efficiency reasons, the final order of deletion is not guaranteed.
 queue_free :: (Node :< cls, Object :< cls) => cls -> IO ()
 queue_free cls
   = withVariantArray []
@@ -2540,7 +2876,8 @@ instance NodeMethod Node "remove_from_group" '[GodotString] (IO ())
 {-# NOINLINE bindNode_replace_by #-}
 
 -- | Replaces a node in a scene by the given one. Subscriptions that pass through this node will be lost.
---   				Note that the replaced node is not automatically freed, so you either need to keep it in a variable for later use or free it using @method Object.free@.
+--   				__Note:__ The given node will become the new parent of any child nodes that the replaced node had.
+--   				__Note:__ The replaced node is not automatically freed, so you either need to keep it in a variable for later use or free it using @method Object.free@.
 bindNode_replace_by :: MethodBind
 bindNode_replace_by
   = unsafePerformIO $
@@ -2551,7 +2888,8 @@ bindNode_replace_by
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Replaces a node in a scene by the given one. Subscriptions that pass through this node will be lost.
---   				Note that the replaced node is not automatically freed, so you either need to keep it in a variable for later use or free it using @method Object.free@.
+--   				__Note:__ The given node will become the new parent of any child nodes that the replaced node had.
+--   				__Note:__ The replaced node is not automatically freed, so you either need to keep it in a variable for later use or free it using @method Object.free@.
 replace_by ::
              (Node :< cls, Object :< cls) => cls -> Node -> Maybe Bool -> IO ()
 replace_by cls arg1 arg2
@@ -2595,9 +2933,46 @@ request_ready cls
 instance NodeMethod Node "request_ready" '[] (IO ()) where
         nodeMethod = Godot.Core.Node.request_ready
 
+{-# NOINLINE bindNode_reset_physics_interpolation #-}
+
+-- | When physics interpolation is active, moving a node to a radically different transform (such as placement within a level) can result in a visible glitch as the object is rendered moving from the old to new position over the physics tick.
+--   				This glitch can be prevented by calling @reset_physics_interpolation@, which temporarily turns off interpolation until the physics tick is complete.
+--   				@NOTIFICATION_RESET_PHYSICS_INTERPOLATION@ will be received by the node and all children recursively.
+--   				__Note:__ This function should be called __after__ moving the node, rather than before.
+bindNode_reset_physics_interpolation :: MethodBind
+bindNode_reset_physics_interpolation
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "reset_physics_interpolation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | When physics interpolation is active, moving a node to a radically different transform (such as placement within a level) can result in a visible glitch as the object is rendered moving from the old to new position over the physics tick.
+--   				This glitch can be prevented by calling @reset_physics_interpolation@, which temporarily turns off interpolation until the physics tick is complete.
+--   				@NOTIFICATION_RESET_PHYSICS_INTERPOLATION@ will be received by the node and all children recursively.
+--   				__Note:__ This function should be called __after__ moving the node, rather than before.
+reset_physics_interpolation ::
+                              (Node :< cls, Object :< cls) => cls -> IO ()
+reset_physics_interpolation cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_reset_physics_interpolation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "reset_physics_interpolation" '[] (IO ())
+         where
+        nodeMethod = Godot.Core.Node.reset_physics_interpolation
+
 {-# NOINLINE bindNode_rpc #-}
 
--- | Sends a remote procedure call request for the given @method@ to peers on the network (and locally), optionally sending all additional arguments as arguments to the method called by the RPC. The call request will only be received by nodes with the same @NodePath@, including the exact same node name. Behaviour depends on the RPC configuration for the given method, see @method rpc_config@. Methods are not exposed to RPCs by default. See also @method rset@ and @method rset_config@ for properties. Returns an empty @Variant@.
+-- | Sends a remote procedure call request for the given @method@ to peers on the network (and locally), optionally sending all additional arguments as arguments to the method called by the RPC. The call request will only be received by nodes with the same @NodePath@, including the exact same node name. Behaviour depends on the RPC configuration for the given method, see @method rpc_config@. Methods are not exposed to RPCs by default. See also @method rset@ and @method rset_config@ for properties. Returns @null@.
 --   				__Note:__ You can only safely use RPCs on clients after you received the @connected_to_server@ signal from the @SceneTree@. You also need to keep track of the connection state, either by the @SceneTree@ signals like @server_disconnected@ or by checking @SceneTree.network_peer.get_connection_status() == CONNECTION_CONNECTED@.
 bindNode_rpc :: MethodBind
 bindNode_rpc
@@ -2608,7 +2983,7 @@ bindNode_rpc
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sends a remote procedure call request for the given @method@ to peers on the network (and locally), optionally sending all additional arguments as arguments to the method called by the RPC. The call request will only be received by nodes with the same @NodePath@, including the exact same node name. Behaviour depends on the RPC configuration for the given method, see @method rpc_config@. Methods are not exposed to RPCs by default. See also @method rset@ and @method rset_config@ for properties. Returns an empty @Variant@.
+-- | Sends a remote procedure call request for the given @method@ to peers on the network (and locally), optionally sending all additional arguments as arguments to the method called by the RPC. The call request will only be received by nodes with the same @NodePath@, including the exact same node name. Behaviour depends on the RPC configuration for the given method, see @method rpc_config@. Methods are not exposed to RPCs by default. See also @method rset@ and @method rset_config@ for properties. Returns @null@.
 --   				__Note:__ You can only safely use RPCs on clients after you received the @connected_to_server@ signal from the @SceneTree@. You also need to keep track of the connection state, either by the @SceneTree@ signals like @server_disconnected@ or by checking @SceneTree.network_peer.get_connection_status() == CONNECTION_CONNECTED@.
 rpc ::
       (Node :< cls, Object :< cls) =>
@@ -2654,7 +3029,7 @@ instance NodeMethod Node "rpc_config" '[GodotString, Int] (IO ())
 
 {-# NOINLINE bindNode_rpc_id #-}
 
--- | Sends a @method rpc@ to a specific peer identified by @peer_id@ (see @method NetworkedMultiplayerPeer.set_target_peer@). Returns an empty @Variant@.
+-- | Sends a @method rpc@ to a specific peer identified by @peer_id@ (see @method NetworkedMultiplayerPeer.set_target_peer@). Returns @null@.
 bindNode_rpc_id :: MethodBind
 bindNode_rpc_id
   = unsafePerformIO $
@@ -2664,7 +3039,7 @@ bindNode_rpc_id
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sends a @method rpc@ to a specific peer identified by @peer_id@ (see @method NetworkedMultiplayerPeer.set_target_peer@). Returns an empty @Variant@.
+-- | Sends a @method rpc@ to a specific peer identified by @peer_id@ (see @method NetworkedMultiplayerPeer.set_target_peer@). Returns @null@.
 rpc_id ::
          (Node :< cls, Object :< cls) =>
          cls -> Int -> GodotString -> [Variant 'GodotTy] -> IO GodotVariant
@@ -2682,7 +3057,7 @@ instance NodeMethod Node "rpc_id"
 
 {-# NOINLINE bindNode_rpc_unreliable #-}
 
--- | Sends a @method rpc@ using an unreliable protocol. Returns an empty @Variant@.
+-- | Sends a @method rpc@ using an unreliable protocol. Returns @null@.
 bindNode_rpc_unreliable :: MethodBind
 bindNode_rpc_unreliable
   = unsafePerformIO $
@@ -2692,7 +3067,7 @@ bindNode_rpc_unreliable
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sends a @method rpc@ using an unreliable protocol. Returns an empty @Variant@.
+-- | Sends a @method rpc@ using an unreliable protocol. Returns @null@.
 rpc_unreliable ::
                  (Node :< cls, Object :< cls) =>
                  cls -> GodotString -> [Variant 'GodotTy] -> IO GodotVariant
@@ -2711,7 +3086,7 @@ instance NodeMethod Node "rpc_unreliable"
 
 {-# NOINLINE bindNode_rpc_unreliable_id #-}
 
--- | Sends a @method rpc@ to a specific peer identified by @peer_id@ using an unreliable protocol (see @method NetworkedMultiplayerPeer.set_target_peer@). Returns an empty @Variant@.
+-- | Sends a @method rpc@ to a specific peer identified by @peer_id@ using an unreliable protocol (see @method NetworkedMultiplayerPeer.set_target_peer@). Returns @null@.
 bindNode_rpc_unreliable_id :: MethodBind
 bindNode_rpc_unreliable_id
   = unsafePerformIO $
@@ -2721,7 +3096,7 @@ bindNode_rpc_unreliable_id
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sends a @method rpc@ to a specific peer identified by @peer_id@ using an unreliable protocol (see @method NetworkedMultiplayerPeer.set_target_peer@). Returns an empty @Variant@.
+-- | Sends a @method rpc@ to a specific peer identified by @peer_id@ using an unreliable protocol (see @method NetworkedMultiplayerPeer.set_target_peer@). Returns @null@.
 rpc_unreliable_id ::
                     (Node :< cls, Object :< cls) =>
                     cls -> Int -> GodotString -> [Variant 'GodotTy] -> IO GodotVariant
@@ -2924,7 +3299,7 @@ instance NodeMethod Node "set_custom_multiplayer" '[MultiplayerAPI]
 
 {-# NOINLINE bindNode_set_display_folded #-}
 
--- | Sets the folded state of the node in the Scene dock.
+-- | Sets the folded state of the node in the Scene dock. This method is only intended for use with editor tooling.
 bindNode_set_display_folded :: MethodBind
 bindNode_set_display_folded
   = unsafePerformIO $
@@ -2934,7 +3309,7 @@ bindNode_set_display_folded
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Sets the folded state of the node in the Scene dock.
+-- | Sets the folded state of the node in the Scene dock. This method is only intended for use with editor tooling.
 set_display_folded ::
                      (Node :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_display_folded cls arg1
@@ -2950,6 +3325,37 @@ set_display_folded cls arg1
 
 instance NodeMethod Node "set_display_folded" '[Bool] (IO ()) where
         nodeMethod = Godot.Core.Node.set_display_folded
+
+{-# NOINLINE bindNode_set_editable_instance #-}
+
+-- | Sets the editable children state of @node@ relative to this node. This method is only intended for use with editor tooling.
+bindNode_set_editable_instance :: MethodBind
+bindNode_set_editable_instance
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "set_editable_instance" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets the editable children state of @node@ relative to this node. This method is only intended for use with editor tooling.
+set_editable_instance ::
+                        (Node :< cls, Object :< cls) => cls -> Node -> Bool -> IO ()
+set_editable_instance cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_set_editable_instance (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "set_editable_instance" '[Node, Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Node.set_editable_instance
 
 {-# NOINLINE bindNode_set_filename #-}
 
@@ -3044,7 +3450,7 @@ instance NodeMethod Node "set_network_master" '[Int, Maybe Bool]
 {-# NOINLINE bindNode_set_owner #-}
 
 -- | The node owner. A node can have any other node as owner (as long as it is a valid parent, grandparent, etc. ascending in the tree). When saving a node (using @PackedScene@), all the nodes it owns will be saved with it. This allows for the creation of complex @SceneTree@s, with instancing and subinstancing.
---   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
+--   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html@tool scripts@/url@ and @url=$DOCS_URL/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 bindNode_set_owner :: MethodBind
 bindNode_set_owner
   = unsafePerformIO $
@@ -3055,7 +3461,7 @@ bindNode_set_owner
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The node owner. A node can have any other node as owner (as long as it is a valid parent, grandparent, etc. ascending in the tree). When saving a node (using @PackedScene@), all the nodes it owns will be saved with it. This allows for the creation of complex @SceneTree@s, with instancing and subinstancing.
---   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=https://docs.godotengine.org/en/3.4/tutorials/misc/running_code_in_the_editor.html@tool scripts@/url@ and @url=https://docs.godotengine.org/en/3.4/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
+--   			__Note:__ If you want a child to be persisted to a @PackedScene@, you must set @owner@ in addition to calling @method add_child@. This is typically relevant for @url=$DOCS_URL/tutorials/plugins/running_code_in_the_editor.html@tool scripts@/url@ and @url=$DOCS_URL/tutorials/plugins/editor/index.html@editor plugins@/url@. If @method add_child@ is called without setting @owner@, the newly added @Node@ will not be visible in the scene tree, though it will be visible in the 2D/3D view.
 set_owner :: (Node :< cls, Object :< cls) => cls -> Node -> IO ()
 set_owner cls arg1
   = withVariantArray [toVariant arg1]
@@ -3096,6 +3502,40 @@ set_pause_mode cls arg1
 
 instance NodeMethod Node "set_pause_mode" '[Int] (IO ()) where
         nodeMethod = Godot.Core.Node.set_pause_mode
+
+{-# NOINLINE bindNode_set_physics_interpolation_mode #-}
+
+-- | Allows enabling or disabling physics interpolation per node, offering a finer grain of control than turning physics interpolation on and off globally.
+--   			__Note:__ This can be especially useful for @Camera@s, where custom interpolation can sometimes give superior results.
+bindNode_set_physics_interpolation_mode :: MethodBind
+bindNode_set_physics_interpolation_mode
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "set_physics_interpolation_mode" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Allows enabling or disabling physics interpolation per node, offering a finer grain of control than turning physics interpolation on and off globally.
+--   			__Note:__ This can be especially useful for @Camera@s, where custom interpolation can sometimes give superior results.
+set_physics_interpolation_mode ::
+                                 (Node :< cls, Object :< cls) => cls -> Int -> IO ()
+set_physics_interpolation_mode cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_set_physics_interpolation_mode
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "set_physics_interpolation_mode" '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.Node.set_physics_interpolation_mode
 
 {-# NOINLINE bindNode_set_physics_process #-}
 
@@ -3374,6 +3814,39 @@ instance NodeMethod Node "set_scene_instance_load_placeholder"
            (IO ())
          where
         nodeMethod = Godot.Core.Node.set_scene_instance_load_placeholder
+
+{-# NOINLINE bindNode_set_unique_name_in_owner #-}
+
+-- | Sets this node's name as a unique name in its @owner@. This allows the node to be accessed as @%Name@ instead of the full path, from any node within that scene.
+--   			If another node with the same owner already had that name declared as unique, that other node's name will no longer be set as having a unique name.
+bindNode_set_unique_name_in_owner :: MethodBind
+bindNode_set_unique_name_in_owner
+  = unsafePerformIO $
+      withCString "Node" $
+        \ clsNamePtr ->
+          withCString "set_unique_name_in_owner" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Sets this node's name as a unique name in its @owner@. This allows the node to be accessed as @%Name@ instead of the full path, from any node within that scene.
+--   			If another node with the same owner already had that name declared as unique, that other node's name will no longer be set as having a unique name.
+set_unique_name_in_owner ::
+                           (Node :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_unique_name_in_owner cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNode_set_unique_name_in_owner
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod Node "set_unique_name_in_owner" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.Node.set_unique_name_in_owner
 
 {-# NOINLINE bindNode_update_configuration_warning #-}
 

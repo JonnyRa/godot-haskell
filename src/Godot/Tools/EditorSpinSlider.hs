@@ -9,10 +9,13 @@ module Godot.Tools.EditorSpinSlider
         Godot.Tools.EditorSpinSlider._value_focus_exited,
         Godot.Tools.EditorSpinSlider._value_input_closed,
         Godot.Tools.EditorSpinSlider._value_input_entered,
+        Godot.Tools.EditorSpinSlider._value_input_gui_input,
         Godot.Tools.EditorSpinSlider.get_label,
         Godot.Tools.EditorSpinSlider.is_flat,
+        Godot.Tools.EditorSpinSlider.is_hiding_slider,
         Godot.Tools.EditorSpinSlider.is_read_only,
         Godot.Tools.EditorSpinSlider.set_flat,
+        Godot.Tools.EditorSpinSlider.set_hide_slider,
         Godot.Tools.EditorSpinSlider.set_label,
         Godot.Tools.EditorSpinSlider.set_read_only)
        where
@@ -30,6 +33,11 @@ import Godot.Core.Range()
 
 instance NodeProperty EditorSpinSlider "flat" Bool 'False where
         nodeProperty = (is_flat, wrapDroppingSetter set_flat, Nothing)
+
+instance NodeProperty EditorSpinSlider "hide_slider" Bool 'False
+         where
+        nodeProperty
+          = (is_hiding_slider, wrapDroppingSetter set_hide_slider, Nothing)
 
 instance NodeProperty EditorSpinSlider "label" GodotString 'False
          where
@@ -254,6 +262,38 @@ instance NodeMethod EditorSpinSlider "_value_input_entered"
          where
         nodeMethod = Godot.Tools.EditorSpinSlider._value_input_entered
 
+{-# NOINLINE bindEditorSpinSlider__value_input_gui_input #-}
+
+bindEditorSpinSlider__value_input_gui_input :: MethodBind
+bindEditorSpinSlider__value_input_gui_input
+  = unsafePerformIO $
+      withCString "EditorSpinSlider" $
+        \ clsNamePtr ->
+          withCString "_value_input_gui_input" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+_value_input_gui_input ::
+                         (EditorSpinSlider :< cls, Object :< cls) =>
+                         cls -> InputEvent -> IO ()
+_value_input_gui_input cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEditorSpinSlider__value_input_gui_input
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorSpinSlider "_value_input_gui_input"
+           '[InputEvent]
+           (IO ())
+         where
+        nodeMethod = Godot.Tools.EditorSpinSlider._value_input_gui_input
+
 {-# NOINLINE bindEditorSpinSlider_get_label #-}
 
 bindEditorSpinSlider_get_label :: MethodBind
@@ -309,6 +349,38 @@ is_flat cls
 
 instance NodeMethod EditorSpinSlider "is_flat" '[] (IO Bool) where
         nodeMethod = Godot.Tools.EditorSpinSlider.is_flat
+
+{-# NOINLINE bindEditorSpinSlider_is_hiding_slider #-}
+
+-- | If @true@, the slider is hidden.
+bindEditorSpinSlider_is_hiding_slider :: MethodBind
+bindEditorSpinSlider_is_hiding_slider
+  = unsafePerformIO $
+      withCString "EditorSpinSlider" $
+        \ clsNamePtr ->
+          withCString "is_hiding_slider" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the slider is hidden.
+is_hiding_slider ::
+                   (EditorSpinSlider :< cls, Object :< cls) => cls -> IO Bool
+is_hiding_slider cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEditorSpinSlider_is_hiding_slider
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorSpinSlider "is_hiding_slider" '[]
+           (IO Bool)
+         where
+        nodeMethod = Godot.Tools.EditorSpinSlider.is_hiding_slider
 
 {-# NOINLINE bindEditorSpinSlider_is_read_only #-}
 
@@ -366,6 +438,38 @@ set_flat cls arg1
 instance NodeMethod EditorSpinSlider "set_flat" '[Bool] (IO ())
          where
         nodeMethod = Godot.Tools.EditorSpinSlider.set_flat
+
+{-# NOINLINE bindEditorSpinSlider_set_hide_slider #-}
+
+-- | If @true@, the slider is hidden.
+bindEditorSpinSlider_set_hide_slider :: MethodBind
+bindEditorSpinSlider_set_hide_slider
+  = unsafePerformIO $
+      withCString "EditorSpinSlider" $
+        \ clsNamePtr ->
+          withCString "set_hide_slider" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If @true@, the slider is hidden.
+set_hide_slider ::
+                  (EditorSpinSlider :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_hide_slider cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindEditorSpinSlider_set_hide_slider
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod EditorSpinSlider "set_hide_slider" '[Bool]
+           (IO ())
+         where
+        nodeMethod = Godot.Tools.EditorSpinSlider.set_hide_slider
 
 {-# NOINLINE bindEditorSpinSlider_set_label #-}
 

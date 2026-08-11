@@ -7,10 +7,12 @@ module Godot.Core.DynamicFontData
         Godot.Core.DynamicFontData._HINTING_LIGHT,
         Godot.Core.DynamicFontData.get_font_path,
         Godot.Core.DynamicFontData.get_hinting,
+        Godot.Core.DynamicFontData.get_override_oversampling,
         Godot.Core.DynamicFontData.is_antialiased,
         Godot.Core.DynamicFontData.set_antialiased,
         Godot.Core.DynamicFontData.set_font_path,
-        Godot.Core.DynamicFontData.set_hinting)
+        Godot.Core.DynamicFontData.set_hinting,
+        Godot.Core.DynamicFontData.set_override_oversampling)
        where
 import Data.Coerce
 import Foreign.C
@@ -47,6 +49,13 @@ instance NodeProperty DynamicFontData "font_path" GodotString
 instance NodeProperty DynamicFontData "hinting" Int 'False where
         nodeProperty
           = (get_hinting, wrapDroppingSetter set_hinting, Nothing)
+
+instance NodeProperty DynamicFontData "override_oversampling" Float
+           'False
+         where
+        nodeProperty
+          = (get_override_oversampling,
+             wrapDroppingSetter set_override_oversampling, Nothing)
 
 {-# NOINLINE bindDynamicFontData_get_font_path #-}
 
@@ -109,6 +118,39 @@ get_hinting cls
 instance NodeMethod DynamicFontData "get_hinting" '[] (IO Int)
          where
         nodeMethod = Godot.Core.DynamicFontData.get_hinting
+
+{-# NOINLINE bindDynamicFontData_get_override_oversampling #-}
+
+-- | If set to a value greater than @0.0@, it will override default font oversampling, ignoring @SceneTree.use_font_oversampling@ value and viewport stretch mode.
+bindDynamicFontData_get_override_oversampling :: MethodBind
+bindDynamicFontData_get_override_oversampling
+  = unsafePerformIO $
+      withCString "DynamicFontData" $
+        \ clsNamePtr ->
+          withCString "get_override_oversampling" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If set to a value greater than @0.0@, it will override default font oversampling, ignoring @SceneTree.use_font_oversampling@ value and viewport stretch mode.
+get_override_oversampling ::
+                            (DynamicFontData :< cls, Object :< cls) => cls -> IO Float
+get_override_oversampling cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindDynamicFontData_get_override_oversampling
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod DynamicFontData "get_override_oversampling" '[]
+           (IO Float)
+         where
+        nodeMethod = Godot.Core.DynamicFontData.get_override_oversampling
 
 {-# NOINLINE bindDynamicFontData_is_antialiased #-}
 
@@ -235,3 +277,37 @@ set_hinting cls arg1
 instance NodeMethod DynamicFontData "set_hinting" '[Int] (IO ())
          where
         nodeMethod = Godot.Core.DynamicFontData.set_hinting
+
+{-# NOINLINE bindDynamicFontData_set_override_oversampling #-}
+
+-- | If set to a value greater than @0.0@, it will override default font oversampling, ignoring @SceneTree.use_font_oversampling@ value and viewport stretch mode.
+bindDynamicFontData_set_override_oversampling :: MethodBind
+bindDynamicFontData_set_override_oversampling
+  = unsafePerformIO $
+      withCString "DynamicFontData" $
+        \ clsNamePtr ->
+          withCString "set_override_oversampling" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If set to a value greater than @0.0@, it will override default font oversampling, ignoring @SceneTree.use_font_oversampling@ value and viewport stretch mode.
+set_override_oversampling ::
+                            (DynamicFontData :< cls, Object :< cls) => cls -> Float -> IO ()
+set_override_oversampling cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindDynamicFontData_set_override_oversampling
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod DynamicFontData "set_override_oversampling"
+           '[Float]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.DynamicFontData.set_override_oversampling

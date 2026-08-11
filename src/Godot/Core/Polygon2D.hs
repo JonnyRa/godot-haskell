@@ -303,7 +303,8 @@ instance NodeMethod Polygon2D "erase_bone" '[Int] (IO ()) where
 
 {-# NOINLINE bindPolygon2D_get_antialiased #-}
 
--- | If @true@, polygon edges will be anti-aliased.
+-- | If @true@, attempts to perform antialiasing for polygon edges by drawing a thin OpenGL smooth line on the edges.
+--   			__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 bindPolygon2D_get_antialiased :: MethodBind
 bindPolygon2D_get_antialiased
   = unsafePerformIO $
@@ -313,7 +314,8 @@ bindPolygon2D_get_antialiased
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, polygon edges will be anti-aliased.
+-- | If @true@, attempts to perform antialiasing for polygon edges by drawing a thin OpenGL smooth line on the edges.
+--   			__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 get_antialiased ::
                   (Polygon2D :< cls, Object :< cls) => cls -> IO Bool
 get_antialiased cls
@@ -597,6 +599,7 @@ instance NodeMethod Polygon2D "get_polygon" '[]
 
 {-# NOINLINE bindPolygon2D_get_polygons #-}
 
+-- | The list of polygons, in case more than one is being represented. Every individual polygon is stored as a @PoolIntArray@ where each @int@ is an index to a point in @polygon@. If empty, this property will be ignored, and the resulting single polygon will be composed of all points in @polygon@, using the order they are stored in.
 bindPolygon2D_get_polygons :: MethodBind
 bindPolygon2D_get_polygons
   = unsafePerformIO $
@@ -606,6 +609,7 @@ bindPolygon2D_get_polygons
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | The list of polygons, in case more than one is being represented. Every individual polygon is stored as a @PoolIntArray@ where each @int@ is an index to a point in @polygon@. If empty, this property will be ignored, and the resulting single polygon will be composed of all points in @polygon@, using the order they are stored in.
 get_polygons ::
                (Polygon2D :< cls, Object :< cls) => cls -> IO Array
 get_polygons cls
@@ -861,7 +865,8 @@ instance NodeMethod Polygon2D "get_vertex_colors" '[]
 
 {-# NOINLINE bindPolygon2D_set_antialiased #-}
 
--- | If @true@, polygon edges will be anti-aliased.
+-- | If @true@, attempts to perform antialiasing for polygon edges by drawing a thin OpenGL smooth line on the edges.
+--   			__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 bindPolygon2D_set_antialiased :: MethodBind
 bindPolygon2D_set_antialiased
   = unsafePerformIO $
@@ -871,7 +876,8 @@ bindPolygon2D_set_antialiased
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, polygon edges will be anti-aliased.
+-- | If @true@, attempts to perform antialiasing for polygon edges by drawing a thin OpenGL smooth line on the edges.
+--   			__Note:__ Due to how it works, built-in antialiasing will not look correct for translucent polygons and may not work on certain platforms. As a workaround, install the @url=https://github.com/godot-extended-libraries/godot-antialiased-line2d@Antialiased Line2D@/url@ add-on then create an AntialiasedPolygon2D node. That node relies on a texture with custom mipmaps to perform antialiasing.
 set_antialiased ::
                   (Polygon2D :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_antialiased cls arg1
@@ -1134,6 +1140,7 @@ instance NodeMethod Polygon2D "set_polygon" '[PoolVector2Array]
 
 {-# NOINLINE bindPolygon2D_set_polygons #-}
 
+-- | The list of polygons, in case more than one is being represented. Every individual polygon is stored as a @PoolIntArray@ where each @int@ is an index to a point in @polygon@. If empty, this property will be ignored, and the resulting single polygon will be composed of all points in @polygon@, using the order they are stored in.
 bindPolygon2D_set_polygons :: MethodBind
 bindPolygon2D_set_polygons
   = unsafePerformIO $
@@ -1143,6 +1150,7 @@ bindPolygon2D_set_polygons
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
+-- | The list of polygons, in case more than one is being represented. Every individual polygon is stored as a @PoolIntArray@ where each @int@ is an index to a point in @polygon@. If empty, this property will be ignored, and the resulting single polygon will be composed of all points in @polygon@, using the order they are stored in.
 set_polygons ::
                (Polygon2D :< cls, Object :< cls) => cls -> Array -> IO ()
 set_polygons cls arg1

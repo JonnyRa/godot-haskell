@@ -4,12 +4,14 @@
 module Godot.Core.MultiMesh
        (Godot.Core.MultiMesh._CUSTOM_DATA_8BIT,
         Godot.Core.MultiMesh._TRANSFORM_3D,
+        Godot.Core.MultiMesh._INTERP_QUALITY_HIGH,
         Godot.Core.MultiMesh._COLOR_NONE,
         Godot.Core.MultiMesh._COLOR_FLOAT,
         Godot.Core.MultiMesh._TRANSFORM_2D,
         Godot.Core.MultiMesh._COLOR_8BIT,
         Godot.Core.MultiMesh._CUSTOM_DATA_FLOAT,
         Godot.Core.MultiMesh._CUSTOM_DATA_NONE,
+        Godot.Core.MultiMesh._INTERP_QUALITY_FAST,
         Godot.Core.MultiMesh._get_color_array,
         Godot.Core.MultiMesh._get_custom_data_array,
         Godot.Core.MultiMesh._get_transform_2d_array,
@@ -27,9 +29,12 @@ module Godot.Core.MultiMesh
         Godot.Core.MultiMesh.get_instance_transform,
         Godot.Core.MultiMesh.get_instance_transform_2d,
         Godot.Core.MultiMesh.get_mesh,
+        Godot.Core.MultiMesh.get_physics_interpolation_quality,
         Godot.Core.MultiMesh.get_transform_format,
         Godot.Core.MultiMesh.get_visible_instance_count,
+        Godot.Core.MultiMesh.reset_instance_physics_interpolation,
         Godot.Core.MultiMesh.set_as_bulk_array,
+        Godot.Core.MultiMesh.set_as_bulk_array_interpolated,
         Godot.Core.MultiMesh.set_color_format,
         Godot.Core.MultiMesh.set_custom_data_format,
         Godot.Core.MultiMesh.set_instance_color,
@@ -38,6 +43,7 @@ module Godot.Core.MultiMesh
         Godot.Core.MultiMesh.set_instance_transform,
         Godot.Core.MultiMesh.set_instance_transform_2d,
         Godot.Core.MultiMesh.set_mesh,
+        Godot.Core.MultiMesh.set_physics_interpolation_quality,
         Godot.Core.MultiMesh.set_transform_format,
         Godot.Core.MultiMesh.set_visible_instance_count)
        where
@@ -59,6 +65,9 @@ _CUSTOM_DATA_8BIT = 1
 _TRANSFORM_3D :: Int
 _TRANSFORM_3D = 1
 
+_INTERP_QUALITY_HIGH :: Int
+_INTERP_QUALITY_HIGH = 1
+
 _COLOR_NONE :: Int
 _COLOR_NONE = 0
 
@@ -76,6 +85,9 @@ _CUSTOM_DATA_FLOAT = 2
 
 _CUSTOM_DATA_NONE :: Int
 _CUSTOM_DATA_NONE = 0
+
+_INTERP_QUALITY_FAST :: Int
+_INTERP_QUALITY_FAST = 0
 
 instance NodeProperty MultiMesh "color_array" PoolColorArray 'False
          where
@@ -106,6 +118,13 @@ instance NodeProperty MultiMesh "instance_count" Int 'False where
 
 instance NodeProperty MultiMesh "mesh" Mesh 'False where
         nodeProperty = (get_mesh, wrapDroppingSetter set_mesh, Nothing)
+
+instance NodeProperty MultiMesh "physics_interpolation_quality" Int
+           'False
+         where
+        nodeProperty
+          = (get_physics_interpolation_quality,
+             wrapDroppingSetter set_physics_interpolation_quality, Nothing)
 
 instance NodeProperty MultiMesh "transform_2d_array"
            PoolVector2Array
@@ -646,6 +665,44 @@ get_mesh cls
 instance NodeMethod MultiMesh "get_mesh" '[] (IO Mesh) where
         nodeMethod = Godot.Core.MultiMesh.get_mesh
 
+{-# NOINLINE bindMultiMesh_get_physics_interpolation_quality #-}
+
+-- | Choose whether to use an interpolation method that favors speed or quality.
+--   			When using low physics tick rates (typically below 20) or high rates of object rotation, you may get better results from the high quality setting.
+--   			__Note:__ Fast quality does not equate to low quality. Except in the special cases mentioned above, the quality should be comparable to high quality.
+bindMultiMesh_get_physics_interpolation_quality :: MethodBind
+bindMultiMesh_get_physics_interpolation_quality
+  = unsafePerformIO $
+      withCString "MultiMesh" $
+        \ clsNamePtr ->
+          withCString "get_physics_interpolation_quality" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Choose whether to use an interpolation method that favors speed or quality.
+--   			When using low physics tick rates (typically below 20) or high rates of object rotation, you may get better results from the high quality setting.
+--   			__Note:__ Fast quality does not equate to low quality. Except in the special cases mentioned above, the quality should be comparable to high quality.
+get_physics_interpolation_quality ::
+                                    (MultiMesh :< cls, Object :< cls) => cls -> IO Int
+get_physics_interpolation_quality cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindMultiMesh_get_physics_interpolation_quality
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MultiMesh "get_physics_interpolation_quality"
+           '[]
+           (IO Int)
+         where
+        nodeMethod = Godot.Core.MultiMesh.get_physics_interpolation_quality
+
 {-# NOINLINE bindMultiMesh_get_transform_format #-}
 
 -- | Format of transform used to transform mesh, either 2D or 3D.
@@ -709,6 +766,44 @@ instance NodeMethod MultiMesh "get_visible_instance_count" '[]
          where
         nodeMethod = Godot.Core.MultiMesh.get_visible_instance_count
 
+{-# NOINLINE bindMultiMesh_reset_instance_physics_interpolation #-}
+
+-- | When using @i@physics interpolation@/i@, this function allows you to prevent interpolation on an instance in the current physics tick.
+--   				This allows you to move instances instantaneously, and should usually be used when initially placing an instance such as a bullet to prevent graphical glitches.
+bindMultiMesh_reset_instance_physics_interpolation :: MethodBind
+bindMultiMesh_reset_instance_physics_interpolation
+  = unsafePerformIO $
+      withCString "MultiMesh" $
+        \ clsNamePtr ->
+          withCString "reset_instance_physics_interpolation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | When using @i@physics interpolation@/i@, this function allows you to prevent interpolation on an instance in the current physics tick.
+--   				This allows you to move instances instantaneously, and should usually be used when initially placing an instance such as a bullet to prevent graphical glitches.
+reset_instance_physics_interpolation ::
+                                       (MultiMesh :< cls, Object :< cls) => cls -> Int -> IO ()
+reset_instance_physics_interpolation cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindMultiMesh_reset_instance_physics_interpolation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MultiMesh
+           "reset_instance_physics_interpolation"
+           '[Int]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.MultiMesh.reset_instance_physics_interpolation
+
 {-# NOINLINE bindMultiMesh_set_as_bulk_array #-}
 
 -- | Sets all data related to the instances in one go. This is especially useful when loading the data from disk or preparing the data from GDNative.
@@ -743,6 +838,44 @@ instance NodeMethod MultiMesh "set_as_bulk_array" '[PoolRealArray]
            (IO ())
          where
         nodeMethod = Godot.Core.MultiMesh.set_as_bulk_array
+
+{-# NOINLINE bindMultiMesh_set_as_bulk_array_interpolated #-}
+
+-- | An alternative version of @method MultiMesh.set_as_bulk_array@ which can be used with @i@physics interpolation@/i@. This method takes two arrays, and can set the data for the current and previous tick in one go. The renderer will automatically interpolate the data at each frame.
+--   				This is useful for situations where the order of instances may change from physics tick to tick, such as particle systems.
+--   				When the order of instances is coherent, the simpler @method MultiMesh.set_as_bulk_array@ can still be used with interpolation.
+bindMultiMesh_set_as_bulk_array_interpolated :: MethodBind
+bindMultiMesh_set_as_bulk_array_interpolated
+  = unsafePerformIO $
+      withCString "MultiMesh" $
+        \ clsNamePtr ->
+          withCString "set_as_bulk_array_interpolated" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | An alternative version of @method MultiMesh.set_as_bulk_array@ which can be used with @i@physics interpolation@/i@. This method takes two arrays, and can set the data for the current and previous tick in one go. The renderer will automatically interpolate the data at each frame.
+--   				This is useful for situations where the order of instances may change from physics tick to tick, such as particle systems.
+--   				When the order of instances is coherent, the simpler @method MultiMesh.set_as_bulk_array@ can still be used with interpolation.
+set_as_bulk_array_interpolated ::
+                                 (MultiMesh :< cls, Object :< cls) =>
+                                 cls -> PoolRealArray -> PoolRealArray -> IO ()
+set_as_bulk_array_interpolated cls arg1 arg2
+  = withVariantArray [toVariant arg1, toVariant arg2]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindMultiMesh_set_as_bulk_array_interpolated
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MultiMesh "set_as_bulk_array_interpolated"
+           '[PoolRealArray, PoolRealArray]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.MultiMesh.set_as_bulk_array_interpolated
 
 {-# NOINLINE bindMultiMesh_set_color_format #-}
 
@@ -809,7 +942,7 @@ instance NodeMethod MultiMesh "set_custom_data_format" '[Int]
 {-# NOINLINE bindMultiMesh_set_instance_color #-}
 
 -- | Sets the color of a specific instance by @i@multiplying@/i@ the mesh's existing vertex colors.
---   				For the color to take effect, ensure that @color_format@ is non-@null@ on the @MultiMesh@ and @SpatialMaterial.vertex_color_use_as_albedo@ is @true@ on the material.
+--   				For the color to take effect, ensure that @color_format@ is non-@null@ on the @MultiMesh@ and @Material3D.vertex_color_use_as_albedo@ is @true@ on the material. If the color doesn't look as expected, make sure the material's albedo color is set to pure white (@Color(1, 1, 1)@).
 bindMultiMesh_set_instance_color :: MethodBind
 bindMultiMesh_set_instance_color
   = unsafePerformIO $
@@ -820,7 +953,7 @@ bindMultiMesh_set_instance_color
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Sets the color of a specific instance by @i@multiplying@/i@ the mesh's existing vertex colors.
---   				For the color to take effect, ensure that @color_format@ is non-@null@ on the @MultiMesh@ and @SpatialMaterial.vertex_color_use_as_albedo@ is @true@ on the material.
+--   				For the color to take effect, ensure that @color_format@ is non-@null@ on the @MultiMesh@ and @Material3D.vertex_color_use_as_albedo@ is @true@ on the material. If the color doesn't look as expected, make sure the material's albedo color is set to pure white (@Color(1, 1, 1)@).
 set_instance_color ::
                      (MultiMesh :< cls, Object :< cls) => cls -> Int -> Color -> IO ()
 set_instance_color cls arg1 arg2
@@ -999,6 +1132,44 @@ set_mesh cls arg1
 
 instance NodeMethod MultiMesh "set_mesh" '[Mesh] (IO ()) where
         nodeMethod = Godot.Core.MultiMesh.set_mesh
+
+{-# NOINLINE bindMultiMesh_set_physics_interpolation_quality #-}
+
+-- | Choose whether to use an interpolation method that favors speed or quality.
+--   			When using low physics tick rates (typically below 20) or high rates of object rotation, you may get better results from the high quality setting.
+--   			__Note:__ Fast quality does not equate to low quality. Except in the special cases mentioned above, the quality should be comparable to high quality.
+bindMultiMesh_set_physics_interpolation_quality :: MethodBind
+bindMultiMesh_set_physics_interpolation_quality
+  = unsafePerformIO $
+      withCString "MultiMesh" $
+        \ clsNamePtr ->
+          withCString "set_physics_interpolation_quality" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | Choose whether to use an interpolation method that favors speed or quality.
+--   			When using low physics tick rates (typically below 20) or high rates of object rotation, you may get better results from the high quality setting.
+--   			__Note:__ Fast quality does not equate to low quality. Except in the special cases mentioned above, the quality should be comparable to high quality.
+set_physics_interpolation_quality ::
+                                    (MultiMesh :< cls, Object :< cls) => cls -> Int -> IO ()
+set_physics_interpolation_quality cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindMultiMesh_set_physics_interpolation_quality
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod MultiMesh "set_physics_interpolation_quality"
+           '[Int]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.MultiMesh.set_physics_interpolation_quality
 
 {-# NOINLINE bindMultiMesh_set_transform_format #-}
 

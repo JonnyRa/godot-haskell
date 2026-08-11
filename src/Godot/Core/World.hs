@@ -5,8 +5,8 @@ module Godot.Core.World
        (Godot.Core.World.get_direct_space_state,
         Godot.Core.World.get_environment,
         Godot.Core.World.get_fallback_environment,
-        Godot.Core.World.get_scenario, Godot.Core.World.get_space,
-        Godot.Core.World.set_environment,
+        Godot.Core.World.get_navigation_map, Godot.Core.World.get_scenario,
+        Godot.Core.World.get_space, Godot.Core.World.set_environment,
         Godot.Core.World.set_fallback_environment)
        where
 import Data.Coerce
@@ -37,6 +37,9 @@ instance NodeProperty World "fallback_environment" Environment
         nodeProperty
           = (get_fallback_environment,
              wrapDroppingSetter set_fallback_environment, Nothing)
+
+instance NodeProperty World "navigation_map" Rid 'True where
+        nodeProperty = (get_navigation_map, (), Nothing)
 
 instance NodeProperty World "scenario" Rid 'True where
         nodeProperty = (get_scenario, (), Nothing)
@@ -102,7 +105,7 @@ instance NodeMethod World "get_environment" '[] (IO Environment)
 
 {-# NOINLINE bindWorld_get_fallback_environment #-}
 
--- | The World's fallback_environment will be used if the World's @Environment@ fails or is missing.
+-- | The World's fallback environment will be used if @environment@ fails or is missing.
 bindWorld_get_fallback_environment :: MethodBind
 bindWorld_get_fallback_environment
   = unsafePerformIO $
@@ -112,7 +115,7 @@ bindWorld_get_fallback_environment
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The World's fallback_environment will be used if the World's @Environment@ fails or is missing.
+-- | The World's fallback environment will be used if @environment@ fails or is missing.
 get_fallback_environment ::
                            (World :< cls, Object :< cls) => cls -> IO Environment
 get_fallback_environment cls
@@ -128,6 +131,35 @@ instance NodeMethod World "get_fallback_environment" '[]
            (IO Environment)
          where
         nodeMethod = Godot.Core.World.get_fallback_environment
+
+{-# NOINLINE bindWorld_get_navigation_map #-}
+
+-- | The @RID@ of this world's navigation map. Used by the @NavigationServer@.
+bindWorld_get_navigation_map :: MethodBind
+bindWorld_get_navigation_map
+  = unsafePerformIO $
+      withCString "World" $
+        \ clsNamePtr ->
+          withCString "get_navigation_map" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The @RID@ of this world's navigation map. Used by the @NavigationServer@.
+get_navigation_map ::
+                     (World :< cls, Object :< cls) => cls -> IO Rid
+get_navigation_map cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindWorld_get_navigation_map (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod World "get_navigation_map" '[] (IO Rid) where
+        nodeMethod = Godot.Core.World.get_navigation_map
 
 {-# NOINLINE bindWorld_get_scenario #-}
 
@@ -214,7 +246,7 @@ instance NodeMethod World "set_environment" '[Environment] (IO ())
 
 {-# NOINLINE bindWorld_set_fallback_environment #-}
 
--- | The World's fallback_environment will be used if the World's @Environment@ fails or is missing.
+-- | The World's fallback environment will be used if @environment@ fails or is missing.
 bindWorld_set_fallback_environment :: MethodBind
 bindWorld_set_fallback_environment
   = unsafePerformIO $
@@ -224,7 +256,7 @@ bindWorld_set_fallback_environment
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | The World's fallback_environment will be used if the World's @Environment@ fails or is missing.
+-- | The World's fallback environment will be used if @environment@ fails or is missing.
 set_fallback_environment ::
                            (World :< cls, Object :< cls) => cls -> Environment -> IO ()
 set_fallback_environment cls arg1

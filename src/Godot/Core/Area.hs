@@ -89,8 +89,19 @@ instance NodeSignal Area "area_exited" '[Area]
 -- | Emitted when one of another Area's @Shape@s enters one of this Area's @Shape@s. Requires @monitoring@ to be set to @true@.
 --   				@area_rid@ the @RID@ of the other Area's @CollisionObject@ used by the @PhysicsServer@.
 --   				@area@ the other Area.
---   				@area_shape_index@ the index of the @Shape@ of the other Area used by the @PhysicsServer@. Get the @CollisionShape@ node with @area.shape_owner_get_owner(area_shape_index)@.
---   				@local_shape_index@ the index of the @Shape@ of this Area used by the @PhysicsServer@. Get the @CollisionShape@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@area_shape_index@ the index of the @Shape@ from the other Area.
+--   				@local_shape_index@ the index of the @Shape@ from this Area.
+--   				__Example of getting the__ @CollisionShape@ __node from the shape index:__
+--   				
+--   @
+--   
+--   				var other_shape_owner = area.shape_find_owner(area_shape_index)
+--   				var other_shape_node = area.shape_owner_get_owner(other_shape_owner)
+--   
+--   				var local_shape_owner = shape_find_owner(local_shape_index)
+--   				var local_shape_node = shape_owner_get_owner(local_shape_owner)
+--   				
+--   @
 sig_area_shape_entered :: Godot.Internal.Dispatch.Signal Area
 sig_area_shape_entered
   = Godot.Internal.Dispatch.Signal "area_shape_entered"
@@ -101,8 +112,9 @@ instance NodeSignal Area "area_shape_entered"
 -- | Emitted when one of another Area's @Shape@s enters one of this Area's @Shape@s. Requires @monitoring@ to be set to @true@.
 --   				@area_rid@ the @RID@ of the other Area's @CollisionObject@ used by the @PhysicsServer@.
 --   				@area@ the other Area.
---   				@area_shape_index@ the index of the @Shape@ of the other Area used by the @PhysicsServer@. Get the @CollisionShape@ node with @area.shape_owner_get_owner(area_shape_index)@.
---   				@local_shape_index@ the index of the @Shape@ of this Area used by the @PhysicsServer@. Get the @CollisionShape@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@area_shape_index@ the index of the @Shape@ from the other Area.
+--   				@local_shape_index@ the index of the @Shape@ from this Area.
+--   				See also @signal area_shape_entered@.
 sig_area_shape_exited :: Godot.Internal.Dispatch.Signal Area
 sig_area_shape_exited
   = Godot.Internal.Dispatch.Signal "area_shape_exited"
@@ -126,8 +138,19 @@ instance NodeSignal Area "body_exited" '[Node]
 -- | Emitted when one of a @PhysicsBody@ or @GridMap@'s @Shape@s enters one of this Area's @Shape@s. Requires @monitoring@ to be set to @true@. @GridMap@s are detected if the @MeshLibrary@ has Collision @Shape@s.
 --   				@body_rid@ the @RID@ of the @PhysicsBody@ or @MeshLibrary@'s @CollisionObject@ used by the @PhysicsServer@.
 --   				@body@ the @Node@, if it exists in the tree, of the @PhysicsBody@ or @GridMap@.
---   				@body_shape_index@ the index of the @Shape@ of the @PhysicsBody@ or @GridMap@ used by the @PhysicsServer@. Get the @CollisionShape@ node with @body.shape_owner_get_owner(body_shape_index)@.
---   				@local_shape_index@ the index of the @Shape@ of this Area used by the @PhysicsServer@. Get the @CollisionShape@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@body_shape_index@ the index of the @Shape@ from the @PhysicsBody@ or @GridMap@.
+--   				@local_shape_index@ the index of the @Shape@ from this Area.
+--   				__Example of getting the__ @CollisionShape@ __node from the shape index:__
+--   				
+--   @
+--   
+--   				var body_shape_owner = body.shape_find_owner(body_shape_index)
+--   				var body_shape_node = body.shape_owner_get_owner(body_shape_owner)
+--   
+--   				var local_shape_owner = shape_find_owner(local_shape_index)
+--   				var local_shape_node = shape_owner_get_owner(local_shape_owner)
+--   				
+--   @
 sig_body_shape_entered :: Godot.Internal.Dispatch.Signal Area
 sig_body_shape_entered
   = Godot.Internal.Dispatch.Signal "body_shape_entered"
@@ -138,8 +161,9 @@ instance NodeSignal Area "body_shape_entered"
 -- | Emitted when one of a @PhysicsBody@ or @GridMap@'s @Shape@s enters one of this Area's @Shape@s. Requires @monitoring@ to be set to @true@. @GridMap@s are detected if the @MeshLibrary@ has Collision @Shape@s.
 --   				@body_rid@ the @RID@ of the @PhysicsBody@ or @MeshLibrary@'s @CollisionObject@ used by the @PhysicsServer@.
 --   				@body@ the @Node@, if it exists in the tree, of the @PhysicsBody@ or @GridMap@.
---   				@body_shape_index@ the index of the @Shape@ of the @PhysicsBody@ or @GridMap@ used by the @PhysicsServer@. Get the @CollisionShape@ node with @body.shape_owner_get_owner(body_shape_index)@.
---   				@local_shape_index@ the index of the @Shape@ of this Area used by the @PhysicsServer@. Get the @CollisionShape@ node with @self.shape_owner_get_owner(local_shape_index)@.
+--   				@body_shape_index@ the index of the @Shape@ from the @PhysicsBody@ or @GridMap@.
+--   				@local_shape_index@ the index of the @Shape@ from this Area.
+--   				See also @signal body_shape_entered@.
 sig_body_shape_exited :: Godot.Internal.Dispatch.Signal Area
 sig_body_shape_exited
   = Godot.Internal.Dispatch.Signal "body_shape_exited"

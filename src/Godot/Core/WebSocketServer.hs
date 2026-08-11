@@ -19,6 +19,7 @@ module Godot.Core.WebSocketServer
         Godot.Core.WebSocketServer.listen,
         Godot.Core.WebSocketServer.set_bind_ip,
         Godot.Core.WebSocketServer.set_ca_chain,
+        Godot.Core.WebSocketServer.set_extra_headers,
         Godot.Core.WebSocketServer.set_handshake_timeout,
         Godot.Core.WebSocketServer.set_private_key,
         Godot.Core.WebSocketServer.set_ssl_certificate,
@@ -485,6 +486,39 @@ instance NodeMethod WebSocketServer "set_ca_chain"
            (IO ())
          where
         nodeMethod = Godot.Core.WebSocketServer.set_ca_chain
+
+{-# NOINLINE bindWebSocketServer_set_extra_headers #-}
+
+bindWebSocketServer_set_extra_headers :: MethodBind
+bindWebSocketServer_set_extra_headers
+  = unsafePerformIO $
+      withCString "WebSocketServer" $
+        \ clsNamePtr ->
+          withCString "set_extra_headers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_extra_headers ::
+                    (WebSocketServer :< cls, Object :< cls) =>
+                    cls -> Maybe PoolStringArray -> IO ()
+set_extra_headers cls arg1
+  = withVariantArray
+      [defaultedVariant VariantPoolStringArray V.empty arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindWebSocketServer_set_extra_headers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod WebSocketServer "set_extra_headers"
+           '[Maybe PoolStringArray]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.WebSocketServer.set_extra_headers
 
 {-# NOINLINE bindWebSocketServer_set_handshake_timeout #-}
 

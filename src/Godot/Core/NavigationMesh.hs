@@ -31,6 +31,8 @@ module Godot.Core.NavigationMesh
         Godot.Core.NavigationMesh.get_detail_sample_max_error,
         Godot.Core.NavigationMesh.get_edge_max_error,
         Godot.Core.NavigationMesh.get_edge_max_length,
+        Godot.Core.NavigationMesh.get_filter_baking_aabb,
+        Godot.Core.NavigationMesh.get_filter_baking_aabb_offset,
         Godot.Core.NavigationMesh.get_filter_ledge_spans,
         Godot.Core.NavigationMesh.get_filter_low_hanging_obstacles,
         Godot.Core.NavigationMesh.get_filter_walkable_low_height_spans,
@@ -56,6 +58,8 @@ module Godot.Core.NavigationMesh
         Godot.Core.NavigationMesh.set_detail_sample_max_error,
         Godot.Core.NavigationMesh.set_edge_max_error,
         Godot.Core.NavigationMesh.set_edge_max_length,
+        Godot.Core.NavigationMesh.set_filter_baking_aabb,
+        Godot.Core.NavigationMesh.set_filter_baking_aabb_offset,
         Godot.Core.NavigationMesh.set_filter_ledge_spans,
         Godot.Core.NavigationMesh.set_filter_low_hanging_obstacles,
         Godot.Core.NavigationMesh.set_filter_walkable_low_height_spans,
@@ -116,45 +120,45 @@ _PARSED_GEOMETRY_STATIC_COLLIDERS = 1
 _SOURCE_GEOMETRY_NAVMESH_CHILDREN :: Int
 _SOURCE_GEOMETRY_NAVMESH_CHILDREN = 0
 
-instance NodeProperty NavigationMesh "agent/height" Float 'False
+instance NodeProperty NavigationMesh "agent_height" Float 'False
          where
         nodeProperty
           = (get_agent_height, wrapDroppingSetter set_agent_height, Nothing)
 
-instance NodeProperty NavigationMesh "agent/max_climb" Float 'False
+instance NodeProperty NavigationMesh "agent_max_climb" Float 'False
          where
         nodeProperty
           = (get_agent_max_climb, wrapDroppingSetter set_agent_max_climb,
              Nothing)
 
-instance NodeProperty NavigationMesh "agent/max_slope" Float 'False
+instance NodeProperty NavigationMesh "agent_max_slope" Float 'False
          where
         nodeProperty
           = (get_agent_max_slope, wrapDroppingSetter set_agent_max_slope,
              Nothing)
 
-instance NodeProperty NavigationMesh "agent/radius" Float 'False
+instance NodeProperty NavigationMesh "agent_radius" Float 'False
          where
         nodeProperty
           = (get_agent_radius, wrapDroppingSetter set_agent_radius, Nothing)
 
-instance NodeProperty NavigationMesh "cell/height" Float 'False
+instance NodeProperty NavigationMesh "cell_height" Float 'False
          where
         nodeProperty
           = (get_cell_height, wrapDroppingSetter set_cell_height, Nothing)
 
-instance NodeProperty NavigationMesh "cell/size" Float 'False where
+instance NodeProperty NavigationMesh "cell_size" Float 'False where
         nodeProperty
           = (get_cell_size, wrapDroppingSetter set_cell_size, Nothing)
 
-instance NodeProperty NavigationMesh "detail/sample_distance" Float
+instance NodeProperty NavigationMesh "detail_sample_distance" Float
            'False
          where
         nodeProperty
           = (get_detail_sample_distance,
              wrapDroppingSetter set_detail_sample_distance, Nothing)
 
-instance NodeProperty NavigationMesh "detail/sample_max_error"
+instance NodeProperty NavigationMesh "detail_sample_max_error"
            Float
            'False
          where
@@ -162,35 +166,41 @@ instance NodeProperty NavigationMesh "detail/sample_max_error"
           = (get_detail_sample_max_error,
              wrapDroppingSetter set_detail_sample_max_error, Nothing)
 
-instance NodeProperty NavigationMesh "edge/max_error" Float 'False
+instance NodeProperty NavigationMesh "edge_max_error" Float 'False
          where
         nodeProperty
           = (get_edge_max_error, wrapDroppingSetter set_edge_max_error,
              Nothing)
 
-instance NodeProperty NavigationMesh "edge/max_length" Float 'False
+instance NodeProperty NavigationMesh "edge_max_length" Float 'False
          where
         nodeProperty
           = (get_edge_max_length, wrapDroppingSetter set_edge_max_length,
              Nothing)
 
-instance NodeProperty NavigationMesh
-           "filter/filter_walkable_low_height_spans"
-           Bool
+instance NodeProperty NavigationMesh "filter_baking_aabb" Aabb
            'False
          where
         nodeProperty
-          = (get_filter_walkable_low_height_spans,
-             wrapDroppingSetter set_filter_walkable_low_height_spans, Nothing)
+          = (get_filter_baking_aabb,
+             wrapDroppingSetter set_filter_baking_aabb, Nothing)
 
-instance NodeProperty NavigationMesh "filter/ledge_spans" Bool
+instance NodeProperty NavigationMesh "filter_baking_aabb_offset"
+           Vector3
+           'False
+         where
+        nodeProperty
+          = (get_filter_baking_aabb_offset,
+             wrapDroppingSetter set_filter_baking_aabb_offset, Nothing)
+
+instance NodeProperty NavigationMesh "filter_ledge_spans" Bool
            'False
          where
         nodeProperty
           = (get_filter_ledge_spans,
              wrapDroppingSetter set_filter_ledge_spans, Nothing)
 
-instance NodeProperty NavigationMesh "filter/low_hanging_obstacles"
+instance NodeProperty NavigationMesh "filter_low_hanging_obstacles"
            Bool
            'False
          where
@@ -198,7 +208,16 @@ instance NodeProperty NavigationMesh "filter/low_hanging_obstacles"
           = (get_filter_low_hanging_obstacles,
              wrapDroppingSetter set_filter_low_hanging_obstacles, Nothing)
 
-instance NodeProperty NavigationMesh "geometry/collision_mask" Int
+instance NodeProperty NavigationMesh
+           "filter_walkable_low_height_spans"
+           Bool
+           'False
+         where
+        nodeProperty
+          = (get_filter_walkable_low_height_spans,
+             wrapDroppingSetter set_filter_walkable_low_height_spans, Nothing)
+
+instance NodeProperty NavigationMesh "geometry_collision_mask" Int
            'False
          where
         nodeProperty
@@ -206,7 +225,7 @@ instance NodeProperty NavigationMesh "geometry/collision_mask" Int
              Nothing)
 
 instance NodeProperty NavigationMesh
-           "geometry/parsed_geometry_type"
+           "geometry_parsed_geometry_type"
            Int
            'False
          where
@@ -215,7 +234,7 @@ instance NodeProperty NavigationMesh
              wrapDroppingSetter set_parsed_geometry_type, Nothing)
 
 instance NodeProperty NavigationMesh
-           "geometry/source_geometry_mode"
+           "geometry_source_geometry_mode"
            Int
            'False
          where
@@ -223,7 +242,7 @@ instance NodeProperty NavigationMesh
           = (get_source_geometry_mode,
              wrapDroppingSetter set_source_geometry_mode, Nothing)
 
-instance NodeProperty NavigationMesh "geometry/source_group_name"
+instance NodeProperty NavigationMesh "geometry_source_group_name"
            GodotString
            'False
          where
@@ -231,7 +250,7 @@ instance NodeProperty NavigationMesh "geometry/source_group_name"
           = (get_source_group_name, wrapDroppingSetter set_source_group_name,
              Nothing)
 
-instance NodeProperty NavigationMesh "polygon/verts_per_poly" Float
+instance NodeProperty NavigationMesh "polygon_verts_per_poly" Float
            'False
          where
         nodeProperty
@@ -242,22 +261,20 @@ instance NodeProperty NavigationMesh "polygons" Array 'False where
         nodeProperty
           = (_get_polygons, wrapDroppingSetter _set_polygons, Nothing)
 
-instance NodeProperty NavigationMesh "region/merge_size" Float
+instance NodeProperty NavigationMesh "region_merge_size" Float
            'False
          where
         nodeProperty
           = (get_region_merge_size, wrapDroppingSetter set_region_merge_size,
              Nothing)
 
-instance NodeProperty NavigationMesh "region/min_size" Float 'False
+instance NodeProperty NavigationMesh "region_min_size" Float 'False
          where
         nodeProperty
           = (get_region_min_size, wrapDroppingSetter set_region_min_size,
              Nothing)
 
-instance NodeProperty NavigationMesh
-           "sample_partition_type/sample_partition_type"
-           Int
+instance NodeProperty NavigationMesh "sample_partition_type" Int
            'False
          where
         nodeProperty
@@ -426,7 +443,7 @@ instance NodeMethod NavigationMesh "create_from_mesh" '[Mesh]
 {-# NOINLINE bindNavigationMesh_get_agent_height #-}
 
 -- | The minimum floor to ceiling height that will still allow the floor area to be considered walkable.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/height@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_height@.
 bindNavigationMesh_get_agent_height :: MethodBind
 bindNavigationMesh_get_agent_height
   = unsafePerformIO $
@@ -437,7 +454,7 @@ bindNavigationMesh_get_agent_height
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The minimum floor to ceiling height that will still allow the floor area to be considered walkable.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/height@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_height@.
 get_agent_height ::
                    (NavigationMesh :< cls, Object :< cls) => cls -> IO Float
 get_agent_height cls
@@ -460,7 +477,7 @@ instance NodeMethod NavigationMesh "get_agent_height" '[]
 {-# NOINLINE bindNavigationMesh_get_agent_max_climb #-}
 
 -- | The minimum ledge height that is considered to still be traversable.
---   			__Note:__ While baking, this value will be rounded down to the nearest multiple of @cell/height@.
+--   			__Note:__ While baking, this value will be rounded down to the nearest multiple of @cell_height@.
 bindNavigationMesh_get_agent_max_climb :: MethodBind
 bindNavigationMesh_get_agent_max_climb
   = unsafePerformIO $
@@ -471,7 +488,7 @@ bindNavigationMesh_get_agent_max_climb
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The minimum ledge height that is considered to still be traversable.
---   			__Note:__ While baking, this value will be rounded down to the nearest multiple of @cell/height@.
+--   			__Note:__ While baking, this value will be rounded down to the nearest multiple of @cell_height@.
 get_agent_max_climb ::
                       (NavigationMesh :< cls, Object :< cls) => cls -> IO Float
 get_agent_max_climb cls
@@ -526,7 +543,7 @@ instance NodeMethod NavigationMesh "get_agent_max_slope" '[]
 {-# NOINLINE bindNavigationMesh_get_agent_radius #-}
 
 -- | The distance to erode/shrink the walkable area of the heightfield away from obstructions.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/size@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_size@.
 bindNavigationMesh_get_agent_radius :: MethodBind
 bindNavigationMesh_get_agent_radius
   = unsafePerformIO $
@@ -537,7 +554,7 @@ bindNavigationMesh_get_agent_radius
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The distance to erode/shrink the walkable area of the heightfield away from obstructions.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/size@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_size@.
 get_agent_radius ::
                    (NavigationMesh :< cls, Object :< cls) => cls -> IO Float
 get_agent_radius cls
@@ -622,7 +639,7 @@ instance NodeMethod NavigationMesh "get_cell_size" '[] (IO Float)
 {-# NOINLINE bindNavigationMesh_get_collision_mask #-}
 
 -- | The physics layers to scan for static colliders.
---   			Only used when @geometry/parsed_geometry_type@ is @PARSED_GEOMETRY_STATIC_COLLIDERS@ or @PARSED_GEOMETRY_BOTH@.
+--   			Only used when @geometry_parsed_geometry_type@ is @PARSED_GEOMETRY_STATIC_COLLIDERS@ or @PARSED_GEOMETRY_BOTH@.
 bindNavigationMesh_get_collision_mask :: MethodBind
 bindNavigationMesh_get_collision_mask
   = unsafePerformIO $
@@ -633,7 +650,7 @@ bindNavigationMesh_get_collision_mask
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The physics layers to scan for static colliders.
---   			Only used when @geometry/parsed_geometry_type@ is @PARSED_GEOMETRY_STATIC_COLLIDERS@ or @PARSED_GEOMETRY_BOTH@.
+--   			Only used when @geometry_parsed_geometry_type@ is @PARSED_GEOMETRY_STATIC_COLLIDERS@ or @PARSED_GEOMETRY_BOTH@.
 get_collision_mask ::
                      (NavigationMesh :< cls, Object :< cls) => cls -> IO Int
 get_collision_mask cls
@@ -655,7 +672,7 @@ instance NodeMethod NavigationMesh "get_collision_mask" '[]
 
 {-# NOINLINE bindNavigationMesh_get_collision_mask_bit #-}
 
--- | Returns whether the specified @bit@ of the @geometry/collision_mask@ is set.
+-- | Returns whether the specified @bit@ of the @geometry_collision_mask@ is set.
 bindNavigationMesh_get_collision_mask_bit :: MethodBind
 bindNavigationMesh_get_collision_mask_bit
   = unsafePerformIO $
@@ -665,7 +682,7 @@ bindNavigationMesh_get_collision_mask_bit
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns whether the specified @bit@ of the @geometry/collision_mask@ is set.
+-- | Returns whether the specified @bit@ of the @geometry_collision_mask@ is set.
 get_collision_mask_bit ::
                          (NavigationMesh :< cls, Object :< cls) => cls -> Int -> IO Bool
 get_collision_mask_bit cls arg1
@@ -787,7 +804,7 @@ instance NodeMethod NavigationMesh "get_edge_max_error" '[]
 {-# NOINLINE bindNavigationMesh_get_edge_max_length #-}
 
 -- | The maximum allowed length for contour edges along the border of the mesh.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/size@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_size@.
 bindNavigationMesh_get_edge_max_length :: MethodBind
 bindNavigationMesh_get_edge_max_length
   = unsafePerformIO $
@@ -798,7 +815,7 @@ bindNavigationMesh_get_edge_max_length
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The maximum allowed length for contour edges along the border of the mesh.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/size@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_size@.
 get_edge_max_length ::
                       (NavigationMesh :< cls, Object :< cls) => cls -> IO Float
 get_edge_max_length cls
@@ -817,6 +834,73 @@ instance NodeMethod NavigationMesh "get_edge_max_length" '[]
            (IO Float)
          where
         nodeMethod = Godot.Core.NavigationMesh.get_edge_max_length
+
+{-# NOINLINE bindNavigationMesh_get_filter_baking_aabb #-}
+
+-- | If the baking @AABB@ has a volume the navigation mesh baking will be restricted to its enclosing area.
+bindNavigationMesh_get_filter_baking_aabb :: MethodBind
+bindNavigationMesh_get_filter_baking_aabb
+  = unsafePerformIO $
+      withCString "NavigationMesh" $
+        \ clsNamePtr ->
+          withCString "get_filter_baking_aabb" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If the baking @AABB@ has a volume the navigation mesh baking will be restricted to its enclosing area.
+get_filter_baking_aabb ::
+                         (NavigationMesh :< cls, Object :< cls) => cls -> IO Aabb
+get_filter_baking_aabb cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigationMesh_get_filter_baking_aabb
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod NavigationMesh "get_filter_baking_aabb" '[]
+           (IO Aabb)
+         where
+        nodeMethod = Godot.Core.NavigationMesh.get_filter_baking_aabb
+
+{-# NOINLINE bindNavigationMesh_get_filter_baking_aabb_offset #-}
+
+-- | The position offset applied to the @filter_baking_aabb@ @AABB@.
+bindNavigationMesh_get_filter_baking_aabb_offset :: MethodBind
+bindNavigationMesh_get_filter_baking_aabb_offset
+  = unsafePerformIO $
+      withCString "NavigationMesh" $
+        \ clsNamePtr ->
+          withCString "get_filter_baking_aabb_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The position offset applied to the @filter_baking_aabb@ @AABB@.
+get_filter_baking_aabb_offset ::
+                                (NavigationMesh :< cls, Object :< cls) => cls -> IO Vector3
+get_filter_baking_aabb_offset cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindNavigationMesh_get_filter_baking_aabb_offset
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod NavigationMesh "get_filter_baking_aabb_offset"
+           '[]
+           (IO Vector3)
+         where
+        nodeMethod
+          = Godot.Core.NavigationMesh.get_filter_baking_aabb_offset
 
 {-# NOINLINE bindNavigationMesh_get_filter_ledge_spans #-}
 
@@ -853,7 +937,7 @@ instance NodeMethod NavigationMesh "get_filter_ledge_spans" '[]
 {-# NOINLINE bindNavigationMesh_get_filter_low_hanging_obstacles
              #-}
 
--- | If @true@, marks non-walkable spans as walkable if their maximum is within @agent/max_climb@ of a walkable neighbor.
+-- | If @true@, marks non-walkable spans as walkable if their maximum is within @agent_max_climb@ of a walkable neighbor.
 bindNavigationMesh_get_filter_low_hanging_obstacles :: MethodBind
 bindNavigationMesh_get_filter_low_hanging_obstacles
   = unsafePerformIO $
@@ -863,7 +947,7 @@ bindNavigationMesh_get_filter_low_hanging_obstacles
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, marks non-walkable spans as walkable if their maximum is within @agent/max_climb@ of a walkable neighbor.
+-- | If @true@, marks non-walkable spans as walkable if their maximum is within @agent_max_climb@ of a walkable neighbor.
 get_filter_low_hanging_obstacles ::
                                    (NavigationMesh :< cls, Object :< cls) => cls -> IO Bool
 get_filter_low_hanging_obstacles cls
@@ -890,7 +974,7 @@ instance NodeMethod NavigationMesh
 {-# NOINLINE bindNavigationMesh_get_filter_walkable_low_height_spans
              #-}
 
--- | If @true@, marks walkable spans as not walkable if the clearance above the span is less than @agent/height@.
+-- | If @true@, marks walkable spans as not walkable if the clearance above the span is less than @agent_height@.
 bindNavigationMesh_get_filter_walkable_low_height_spans ::
                                                         MethodBind
 bindNavigationMesh_get_filter_walkable_low_height_spans
@@ -901,7 +985,7 @@ bindNavigationMesh_get_filter_walkable_low_height_spans
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, marks walkable spans as not walkable if the clearance above the span is less than @agent/height@.
+-- | If @true@, marks walkable spans as not walkable if the clearance above the span is less than @agent_height@.
 get_filter_walkable_low_height_spans ::
                                        (NavigationMesh :< cls, Object :< cls) => cls -> IO Bool
 get_filter_walkable_low_height_spans cls
@@ -1155,7 +1239,7 @@ instance NodeMethod NavigationMesh "get_source_geometry_mode" '[]
 {-# NOINLINE bindNavigationMesh_get_source_group_name #-}
 
 -- | The name of the group to scan for geometry.
---   			Only used when @geometry/source_geometry_mode@ is @SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN@ or @SOURCE_GEOMETRY_GROUPS_EXPLICIT@.
+--   			Only used when @geometry_source_geometry_mode@ is @SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN@ or @SOURCE_GEOMETRY_GROUPS_EXPLICIT@.
 bindNavigationMesh_get_source_group_name :: MethodBind
 bindNavigationMesh_get_source_group_name
   = unsafePerformIO $
@@ -1166,7 +1250,7 @@ bindNavigationMesh_get_source_group_name
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The name of the group to scan for geometry.
---   			Only used when @geometry/source_geometry_mode@ is @SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN@ or @SOURCE_GEOMETRY_GROUPS_EXPLICIT@.
+--   			Only used when @geometry_source_geometry_mode@ is @SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN@ or @SOURCE_GEOMETRY_GROUPS_EXPLICIT@.
 get_source_group_name ::
                         (NavigationMesh :< cls, Object :< cls) => cls -> IO GodotString
 get_source_group_name cls
@@ -1253,7 +1337,7 @@ instance NodeMethod NavigationMesh "get_verts_per_poly" '[]
 {-# NOINLINE bindNavigationMesh_set_agent_height #-}
 
 -- | The minimum floor to ceiling height that will still allow the floor area to be considered walkable.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/height@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_height@.
 bindNavigationMesh_set_agent_height :: MethodBind
 bindNavigationMesh_set_agent_height
   = unsafePerformIO $
@@ -1264,7 +1348,7 @@ bindNavigationMesh_set_agent_height
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The minimum floor to ceiling height that will still allow the floor area to be considered walkable.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/height@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_height@.
 set_agent_height ::
                    (NavigationMesh :< cls, Object :< cls) => cls -> Float -> IO ()
 set_agent_height cls arg1
@@ -1287,7 +1371,7 @@ instance NodeMethod NavigationMesh "set_agent_height" '[Float]
 {-# NOINLINE bindNavigationMesh_set_agent_max_climb #-}
 
 -- | The minimum ledge height that is considered to still be traversable.
---   			__Note:__ While baking, this value will be rounded down to the nearest multiple of @cell/height@.
+--   			__Note:__ While baking, this value will be rounded down to the nearest multiple of @cell_height@.
 bindNavigationMesh_set_agent_max_climb :: MethodBind
 bindNavigationMesh_set_agent_max_climb
   = unsafePerformIO $
@@ -1298,7 +1382,7 @@ bindNavigationMesh_set_agent_max_climb
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The minimum ledge height that is considered to still be traversable.
---   			__Note:__ While baking, this value will be rounded down to the nearest multiple of @cell/height@.
+--   			__Note:__ While baking, this value will be rounded down to the nearest multiple of @cell_height@.
 set_agent_max_climb ::
                       (NavigationMesh :< cls, Object :< cls) => cls -> Float -> IO ()
 set_agent_max_climb cls arg1
@@ -1353,7 +1437,7 @@ instance NodeMethod NavigationMesh "set_agent_max_slope" '[Float]
 {-# NOINLINE bindNavigationMesh_set_agent_radius #-}
 
 -- | The distance to erode/shrink the walkable area of the heightfield away from obstructions.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/size@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_size@.
 bindNavigationMesh_set_agent_radius :: MethodBind
 bindNavigationMesh_set_agent_radius
   = unsafePerformIO $
@@ -1364,7 +1448,7 @@ bindNavigationMesh_set_agent_radius
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The distance to erode/shrink the walkable area of the heightfield away from obstructions.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/size@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_size@.
 set_agent_radius ::
                    (NavigationMesh :< cls, Object :< cls) => cls -> Float -> IO ()
 set_agent_radius cls arg1
@@ -1450,7 +1534,7 @@ instance NodeMethod NavigationMesh "set_cell_size" '[Float] (IO ())
 {-# NOINLINE bindNavigationMesh_set_collision_mask #-}
 
 -- | The physics layers to scan for static colliders.
---   			Only used when @geometry/parsed_geometry_type@ is @PARSED_GEOMETRY_STATIC_COLLIDERS@ or @PARSED_GEOMETRY_BOTH@.
+--   			Only used when @geometry_parsed_geometry_type@ is @PARSED_GEOMETRY_STATIC_COLLIDERS@ or @PARSED_GEOMETRY_BOTH@.
 bindNavigationMesh_set_collision_mask :: MethodBind
 bindNavigationMesh_set_collision_mask
   = unsafePerformIO $
@@ -1461,7 +1545,7 @@ bindNavigationMesh_set_collision_mask
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The physics layers to scan for static colliders.
---   			Only used when @geometry/parsed_geometry_type@ is @PARSED_GEOMETRY_STATIC_COLLIDERS@ or @PARSED_GEOMETRY_BOTH@.
+--   			Only used when @geometry_parsed_geometry_type@ is @PARSED_GEOMETRY_STATIC_COLLIDERS@ or @PARSED_GEOMETRY_BOTH@.
 set_collision_mask ::
                      (NavigationMesh :< cls, Object :< cls) => cls -> Int -> IO ()
 set_collision_mask cls arg1
@@ -1483,8 +1567,8 @@ instance NodeMethod NavigationMesh "set_collision_mask" '[Int]
 
 {-# NOINLINE bindNavigationMesh_set_collision_mask_bit #-}
 
--- | If @value@ is @true@, sets the specified @bit@ in the @geometry/collision_mask@.
---   				If @value@ is @false@, clears the specified @bit@ in the @geometry/collision_mask@.
+-- | If @value@ is @true@, sets the specified @bit@ in the @geometry_collision_mask@.
+--   				If @value@ is @false@, clears the specified @bit@ in the @geometry_collision_mask@.
 bindNavigationMesh_set_collision_mask_bit :: MethodBind
 bindNavigationMesh_set_collision_mask_bit
   = unsafePerformIO $
@@ -1494,8 +1578,8 @@ bindNavigationMesh_set_collision_mask_bit
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @value@ is @true@, sets the specified @bit@ in the @geometry/collision_mask@.
---   				If @value@ is @false@, clears the specified @bit@ in the @geometry/collision_mask@.
+-- | If @value@ is @true@, sets the specified @bit@ in the @geometry_collision_mask@.
+--   				If @value@ is @false@, clears the specified @bit@ in the @geometry_collision_mask@.
 set_collision_mask_bit ::
                          (NavigationMesh :< cls, Object :< cls) =>
                          cls -> Int -> Bool -> IO ()
@@ -1620,7 +1704,7 @@ instance NodeMethod NavigationMesh "set_edge_max_error" '[Float]
 {-# NOINLINE bindNavigationMesh_set_edge_max_length #-}
 
 -- | The maximum allowed length for contour edges along the border of the mesh.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/size@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_size@.
 bindNavigationMesh_set_edge_max_length :: MethodBind
 bindNavigationMesh_set_edge_max_length
   = unsafePerformIO $
@@ -1631,7 +1715,7 @@ bindNavigationMesh_set_edge_max_length
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The maximum allowed length for contour edges along the border of the mesh.
---   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell/size@.
+--   			__Note:__ While baking, this value will be rounded up to the nearest multiple of @cell_size@.
 set_edge_max_length ::
                       (NavigationMesh :< cls, Object :< cls) => cls -> Float -> IO ()
 set_edge_max_length cls arg1
@@ -1650,6 +1734,73 @@ instance NodeMethod NavigationMesh "set_edge_max_length" '[Float]
            (IO ())
          where
         nodeMethod = Godot.Core.NavigationMesh.set_edge_max_length
+
+{-# NOINLINE bindNavigationMesh_set_filter_baking_aabb #-}
+
+-- | If the baking @AABB@ has a volume the navigation mesh baking will be restricted to its enclosing area.
+bindNavigationMesh_set_filter_baking_aabb :: MethodBind
+bindNavigationMesh_set_filter_baking_aabb
+  = unsafePerformIO $
+      withCString "NavigationMesh" $
+        \ clsNamePtr ->
+          withCString "set_filter_baking_aabb" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | If the baking @AABB@ has a volume the navigation mesh baking will be restricted to its enclosing area.
+set_filter_baking_aabb ::
+                         (NavigationMesh :< cls, Object :< cls) => cls -> Aabb -> IO ()
+set_filter_baking_aabb cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindNavigationMesh_set_filter_baking_aabb
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod NavigationMesh "set_filter_baking_aabb" '[Aabb]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.NavigationMesh.set_filter_baking_aabb
+
+{-# NOINLINE bindNavigationMesh_set_filter_baking_aabb_offset #-}
+
+-- | The position offset applied to the @filter_baking_aabb@ @AABB@.
+bindNavigationMesh_set_filter_baking_aabb_offset :: MethodBind
+bindNavigationMesh_set_filter_baking_aabb_offset
+  = unsafePerformIO $
+      withCString "NavigationMesh" $
+        \ clsNamePtr ->
+          withCString "set_filter_baking_aabb_offset" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+-- | The position offset applied to the @filter_baking_aabb@ @AABB@.
+set_filter_baking_aabb_offset ::
+                                (NavigationMesh :< cls, Object :< cls) => cls -> Vector3 -> IO ()
+set_filter_baking_aabb_offset cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call
+           bindNavigationMesh_set_filter_baking_aabb_offset
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod NavigationMesh "set_filter_baking_aabb_offset"
+           '[Vector3]
+           (IO ())
+         where
+        nodeMethod
+          = Godot.Core.NavigationMesh.set_filter_baking_aabb_offset
 
 {-# NOINLINE bindNavigationMesh_set_filter_ledge_spans #-}
 
@@ -1686,7 +1837,7 @@ instance NodeMethod NavigationMesh "set_filter_ledge_spans" '[Bool]
 {-# NOINLINE bindNavigationMesh_set_filter_low_hanging_obstacles
              #-}
 
--- | If @true@, marks non-walkable spans as walkable if their maximum is within @agent/max_climb@ of a walkable neighbor.
+-- | If @true@, marks non-walkable spans as walkable if their maximum is within @agent_max_climb@ of a walkable neighbor.
 bindNavigationMesh_set_filter_low_hanging_obstacles :: MethodBind
 bindNavigationMesh_set_filter_low_hanging_obstacles
   = unsafePerformIO $
@@ -1696,7 +1847,7 @@ bindNavigationMesh_set_filter_low_hanging_obstacles
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, marks non-walkable spans as walkable if their maximum is within @agent/max_climb@ of a walkable neighbor.
+-- | If @true@, marks non-walkable spans as walkable if their maximum is within @agent_max_climb@ of a walkable neighbor.
 set_filter_low_hanging_obstacles ::
                                    (NavigationMesh :< cls, Object :< cls) => cls -> Bool -> IO ()
 set_filter_low_hanging_obstacles cls arg1
@@ -1723,7 +1874,7 @@ instance NodeMethod NavigationMesh
 {-# NOINLINE bindNavigationMesh_set_filter_walkable_low_height_spans
              #-}
 
--- | If @true@, marks walkable spans as not walkable if the clearance above the span is less than @agent/height@.
+-- | If @true@, marks walkable spans as not walkable if the clearance above the span is less than @agent_height@.
 bindNavigationMesh_set_filter_walkable_low_height_spans ::
                                                         MethodBind
 bindNavigationMesh_set_filter_walkable_low_height_spans
@@ -1734,7 +1885,7 @@ bindNavigationMesh_set_filter_walkable_low_height_spans
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | If @true@, marks walkable spans as not walkable if the clearance above the span is less than @agent/height@.
+-- | If @true@, marks walkable spans as not walkable if the clearance above the span is less than @agent_height@.
 set_filter_walkable_low_height_spans ::
                                        (NavigationMesh :< cls, Object :< cls) =>
                                        cls -> Bool -> IO ()
@@ -1929,7 +2080,7 @@ instance NodeMethod NavigationMesh "set_source_geometry_mode"
 {-# NOINLINE bindNavigationMesh_set_source_group_name #-}
 
 -- | The name of the group to scan for geometry.
---   			Only used when @geometry/source_geometry_mode@ is @SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN@ or @SOURCE_GEOMETRY_GROUPS_EXPLICIT@.
+--   			Only used when @geometry_source_geometry_mode@ is @SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN@ or @SOURCE_GEOMETRY_GROUPS_EXPLICIT@.
 bindNavigationMesh_set_source_group_name :: MethodBind
 bindNavigationMesh_set_source_group_name
   = unsafePerformIO $
@@ -1940,7 +2091,7 @@ bindNavigationMesh_set_source_group_name
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | The name of the group to scan for geometry.
---   			Only used when @geometry/source_geometry_mode@ is @SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN@ or @SOURCE_GEOMETRY_GROUPS_EXPLICIT@.
+--   			Only used when @geometry_source_geometry_mode@ is @SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN@ or @SOURCE_GEOMETRY_GROUPS_EXPLICIT@.
 set_source_group_name ::
                         (NavigationMesh :< cls, Object :< cls) =>
                         cls -> GodotString -> IO ()

@@ -104,7 +104,8 @@ instance NodeMethod InputEventJoypadButton "get_button_index" '[]
 
 {-# NOINLINE bindInputEventJoypadButton_get_pressure #-}
 
--- | Represents the pressure the user puts on the button with his finger, if the controller supports it. Ranges from @0@ to @1@.
+-- | Represents the pressure the user puts on the button with their finger, if the controller supports it. Ranges from @0@ to @1@.
+--   			__Note:__ This property is never set by the engine and is always @0@.
 bindInputEventJoypadButton_get_pressure :: MethodBind
 bindInputEventJoypadButton_get_pressure
   = unsafePerformIO $
@@ -114,7 +115,8 @@ bindInputEventJoypadButton_get_pressure
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Represents the pressure the user puts on the button with his finger, if the controller supports it. Ranges from @0@ to @1@.
+-- | Represents the pressure the user puts on the button with their finger, if the controller supports it. Ranges from @0@ to @1@.
+--   			__Note:__ This property is never set by the engine and is always @0@.
 get_pressure ::
                (InputEventJoypadButton :< cls, Object :< cls) => cls -> IO Float
 get_pressure cls
@@ -203,7 +205,8 @@ instance NodeMethod InputEventJoypadButton "set_pressed" '[Bool]
 
 {-# NOINLINE bindInputEventJoypadButton_set_pressure #-}
 
--- | Represents the pressure the user puts on the button with his finger, if the controller supports it. Ranges from @0@ to @1@.
+-- | Represents the pressure the user puts on the button with their finger, if the controller supports it. Ranges from @0@ to @1@.
+--   			__Note:__ This property is never set by the engine and is always @0@.
 bindInputEventJoypadButton_set_pressure :: MethodBind
 bindInputEventJoypadButton_set_pressure
   = unsafePerformIO $
@@ -213,7 +216,8 @@ bindInputEventJoypadButton_set_pressure
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Represents the pressure the user puts on the button with his finger, if the controller supports it. Ranges from @0@ to @1@.
+-- | Represents the pressure the user puts on the button with their finger, if the controller supports it. Ranges from @0@ to @1@.
+--   			__Note:__ This property is never set by the engine and is always @0@.
 set_pressure ::
                (InputEventJoypadButton :< cls, Object :< cls) =>
                cls -> Float -> IO ()

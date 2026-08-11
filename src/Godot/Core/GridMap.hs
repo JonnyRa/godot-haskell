@@ -18,12 +18,17 @@ module Godot.Core.GridMap
         Godot.Core.GridMap.get_collision_mask,
         Godot.Core.GridMap.get_collision_mask_bit,
         Godot.Core.GridMap.get_mesh_library, Godot.Core.GridMap.get_meshes,
+        Godot.Core.GridMap.get_navigation_layers,
         Godot.Core.GridMap.get_octant_size,
+        Godot.Core.GridMap.get_physics_material,
         Godot.Core.GridMap.get_use_in_baked_light,
         Godot.Core.GridMap.get_used_cells,
+        Godot.Core.GridMap.get_used_cells_by_item,
+        Godot.Core.GridMap.is_baking_navigation,
         Godot.Core.GridMap.make_baked_meshes,
         Godot.Core.GridMap.map_to_world,
         Godot.Core.GridMap.resource_changed,
+        Godot.Core.GridMap.set_bake_navigation,
         Godot.Core.GridMap.set_cell_item,
         Godot.Core.GridMap.set_cell_scale,
         Godot.Core.GridMap.set_cell_size, Godot.Core.GridMap.set_center_x,
@@ -34,7 +39,9 @@ module Godot.Core.GridMap
         Godot.Core.GridMap.set_collision_mask,
         Godot.Core.GridMap.set_collision_mask_bit,
         Godot.Core.GridMap.set_mesh_library,
+        Godot.Core.GridMap.set_navigation_layers,
         Godot.Core.GridMap.set_octant_size,
+        Godot.Core.GridMap.set_physics_material,
         Godot.Core.GridMap.set_use_in_baked_light,
         Godot.Core.GridMap.world_to_map)
        where
@@ -58,6 +65,11 @@ sig_cell_size_changed
   = Godot.Internal.Dispatch.Signal "cell_size_changed"
 
 instance NodeSignal GridMap "cell_size_changed" '[Vector3]
+
+instance NodeProperty GridMap "bake_navigation" Bool 'False where
+        nodeProperty
+          = (is_baking_navigation, wrapDroppingSetter set_bake_navigation,
+             Nothing)
 
 instance NodeProperty GridMap "cell_center_x" Bool 'False where
         nodeProperty
@@ -97,6 +109,18 @@ instance NodeProperty GridMap "mesh_library" MeshLibrary 'False
          where
         nodeProperty
           = (get_mesh_library, wrapDroppingSetter set_mesh_library, Nothing)
+
+instance NodeProperty GridMap "navigation_layers" Int 'False where
+        nodeProperty
+          = (get_navigation_layers, wrapDroppingSetter set_navigation_layers,
+             Nothing)
+
+instance NodeProperty GridMap "physics_material" PhysicsMaterial
+           'False
+         where
+        nodeProperty
+          = (get_physics_material, wrapDroppingSetter set_physics_material,
+             Nothing)
 
 instance NodeProperty GridMap "use_in_baked_light" Bool 'False
          where
@@ -597,6 +621,35 @@ get_meshes cls
 instance NodeMethod GridMap "get_meshes" '[] (IO Array) where
         nodeMethod = Godot.Core.GridMap.get_meshes
 
+{-# NOINLINE bindGridMap_get_navigation_layers #-}
+
+bindGridMap_get_navigation_layers :: MethodBind
+bindGridMap_get_navigation_layers
+  = unsafePerformIO $
+      withCString "GridMap" $
+        \ clsNamePtr ->
+          withCString "get_navigation_layers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_navigation_layers ::
+                        (GridMap :< cls, Object :< cls) => cls -> IO Int
+get_navigation_layers cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGridMap_get_navigation_layers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GridMap "get_navigation_layers" '[] (IO Int)
+         where
+        nodeMethod = Godot.Core.GridMap.get_navigation_layers
+
 {-# NOINLINE bindGridMap_get_octant_size #-}
 
 bindGridMap_get_octant_size :: MethodBind
@@ -622,6 +675,33 @@ get_octant_size cls
 
 instance NodeMethod GridMap "get_octant_size" '[] (IO Int) where
         nodeMethod = Godot.Core.GridMap.get_octant_size
+
+{-# NOINLINE bindGridMap_get_physics_material #-}
+
+bindGridMap_get_physics_material :: MethodBind
+bindGridMap_get_physics_material
+  = unsafePerformIO $
+      withCString "GridMap" $
+        \ clsNamePtr ->
+          withCString "get_physics_material" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_physics_material ::
+                       (GridMap :< cls, Object :< cls) => cls -> IO PhysicsMaterial
+get_physics_material cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGridMap_get_physics_material
+           (upcast cls)
+           arrPtr
+           len
+           >>= \ (err, var) -> throwIfErr err >> fromGodotVariant var)
+
+instance NodeMethod GridMap "get_physics_material" '[]
+           (IO PhysicsMaterial)
+         where
+        nodeMethod = Godot.Core.GridMap.get_physics_material
 
 {-# NOINLINE bindGridMap_get_use_in_baked_light #-}
 
@@ -678,6 +758,65 @@ get_used_cells cls
 
 instance NodeMethod GridMap "get_used_cells" '[] (IO Array) where
         nodeMethod = Godot.Core.GridMap.get_used_cells
+
+{-# NOINLINE bindGridMap_get_used_cells_by_item #-}
+
+bindGridMap_get_used_cells_by_item :: MethodBind
+bindGridMap_get_used_cells_by_item
+  = unsafePerformIO $
+      withCString "GridMap" $
+        \ clsNamePtr ->
+          withCString "get_used_cells_by_item" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+get_used_cells_by_item ::
+                         (GridMap :< cls, Object :< cls) => cls -> Int -> IO Array
+get_used_cells_by_item cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGridMap_get_used_cells_by_item
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GridMap "get_used_cells_by_item" '[Int]
+           (IO Array)
+         where
+        nodeMethod = Godot.Core.GridMap.get_used_cells_by_item
+
+{-# NOINLINE bindGridMap_is_baking_navigation #-}
+
+bindGridMap_is_baking_navigation :: MethodBind
+bindGridMap_is_baking_navigation
+  = unsafePerformIO $
+      withCString "GridMap" $
+        \ clsNamePtr ->
+          withCString "is_baking_navigation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+is_baking_navigation ::
+                       (GridMap :< cls, Object :< cls) => cls -> IO Bool
+is_baking_navigation cls
+  = withVariantArray []
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGridMap_is_baking_navigation
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GridMap "is_baking_navigation" '[] (IO Bool)
+         where
+        nodeMethod = Godot.Core.GridMap.is_baking_navigation
 
 {-# NOINLINE bindGridMap_make_baked_meshes #-}
 
@@ -768,6 +907,34 @@ resource_changed cls arg1
 instance NodeMethod GridMap "resource_changed" '[Resource] (IO ())
          where
         nodeMethod = Godot.Core.GridMap.resource_changed
+
+{-# NOINLINE bindGridMap_set_bake_navigation #-}
+
+bindGridMap_set_bake_navigation :: MethodBind
+bindGridMap_set_bake_navigation
+  = unsafePerformIO $
+      withCString "GridMap" $
+        \ clsNamePtr ->
+          withCString "set_bake_navigation" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_bake_navigation ::
+                      (GridMap :< cls, Object :< cls) => cls -> Bool -> IO ()
+set_bake_navigation cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGridMap_set_bake_navigation (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GridMap "set_bake_navigation" '[Bool] (IO ())
+         where
+        nodeMethod = Godot.Core.GridMap.set_bake_navigation
 
 {-# NOINLINE bindGridMap_set_cell_item #-}
 
@@ -1112,6 +1279,35 @@ instance NodeMethod GridMap "set_mesh_library" '[MeshLibrary]
          where
         nodeMethod = Godot.Core.GridMap.set_mesh_library
 
+{-# NOINLINE bindGridMap_set_navigation_layers #-}
+
+bindGridMap_set_navigation_layers :: MethodBind
+bindGridMap_set_navigation_layers
+  = unsafePerformIO $
+      withCString "GridMap" $
+        \ clsNamePtr ->
+          withCString "set_navigation_layers" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_navigation_layers ::
+                        (GridMap :< cls, Object :< cls) => cls -> Int -> IO ()
+set_navigation_layers cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGridMap_set_navigation_layers
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GridMap "set_navigation_layers" '[Int] (IO ())
+         where
+        nodeMethod = Godot.Core.GridMap.set_navigation_layers
+
 {-# NOINLINE bindGridMap_set_octant_size #-}
 
 bindGridMap_set_octant_size :: MethodBind
@@ -1138,6 +1334,37 @@ set_octant_size cls arg1
 
 instance NodeMethod GridMap "set_octant_size" '[Int] (IO ()) where
         nodeMethod = Godot.Core.GridMap.set_octant_size
+
+{-# NOINLINE bindGridMap_set_physics_material #-}
+
+bindGridMap_set_physics_material :: MethodBind
+bindGridMap_set_physics_material
+  = unsafePerformIO $
+      withCString "GridMap" $
+        \ clsNamePtr ->
+          withCString "set_physics_material" $
+            \ methodNamePtr ->
+              godot_method_bind_get_method clsNamePtr methodNamePtr
+
+set_physics_material ::
+                       (GridMap :< cls, Object :< cls) => cls -> PhysicsMaterial -> IO ()
+set_physics_material cls arg1
+  = withVariantArray [toVariant arg1]
+      (\ (arrPtr, len) ->
+         godot_method_bind_call bindGridMap_set_physics_material
+           (upcast cls)
+           arrPtr
+           len
+           >>=
+           \ (err, var) ->
+             throwIfErr err >> fromGodotVariant var >>=
+               \ ret -> godot_variant_destroy var >> return ret)
+
+instance NodeMethod GridMap "set_physics_material"
+           '[PhysicsMaterial]
+           (IO ())
+         where
+        nodeMethod = Godot.Core.GridMap.set_physics_material
 
 {-# NOINLINE bindGridMap_set_use_in_baked_light #-}
 

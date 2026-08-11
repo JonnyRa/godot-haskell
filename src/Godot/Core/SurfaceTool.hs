@@ -66,7 +66,7 @@ instance NodeMethod SurfaceTool "add_bones" '[PoolIntArray] (IO ())
 {-# NOINLINE bindSurfaceTool_add_color #-}
 
 -- | Specifies a @Color@ to use for the @i@next@/i@ vertex. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all.
---   				__Note:__ The material must have @SpatialMaterial.vertex_color_use_as_albedo@ enabled for the vertex color to be visible.
+--   				__Note:__ The material must have @Material3D.vertex_color_use_as_albedo@ enabled for the vertex color to be visible.
 bindSurfaceTool_add_color :: MethodBind
 bindSurfaceTool_add_color
   = unsafePerformIO $
@@ -77,7 +77,7 @@ bindSurfaceTool_add_color
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
 -- | Specifies a @Color@ to use for the @i@next@/i@ vertex. If every vertex needs to have this information set and you fail to submit it for the first vertex, this information may not be used at all.
---   				__Note:__ The material must have @SpatialMaterial.vertex_color_use_as_albedo@ enabled for the vertex color to be visible.
+--   				__Note:__ The material must have @Material3D.vertex_color_use_as_albedo@ enabled for the vertex color to be visible.
 add_color ::
             (SurfaceTool :< cls, Object :< cls) => cls -> Color -> IO ()
 add_color cls arg1

@@ -190,7 +190,7 @@ instance NodeMethod EditorFileSystem "get_scanning_progress" '[]
 
 {-# NOINLINE bindEditorFileSystem_is_scanning #-}
 
--- | Returns @true@ of the filesystem is being scanned.
+-- | Returns @true@ if the filesystem is being scanned.
 bindEditorFileSystem_is_scanning :: MethodBind
 bindEditorFileSystem_is_scanning
   = unsafePerformIO $
@@ -200,7 +200,7 @@ bindEditorFileSystem_is_scanning
             \ methodNamePtr ->
               godot_method_bind_get_method clsNamePtr methodNamePtr
 
--- | Returns @true@ of the filesystem is being scanned.
+-- | Returns @true@ if the filesystem is being scanned.
 is_scanning ::
               (EditorFileSystem :< cls, Object :< cls) => cls -> IO Bool
 is_scanning cls
