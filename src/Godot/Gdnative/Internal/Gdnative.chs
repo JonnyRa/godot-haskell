@@ -296,6 +296,14 @@ deriving newtype instance Storable GdnativeCore11ApiStruct
 deriving newtype instance Eq GdnativeCore12ApiStruct
 deriving newtype instance Storable GdnativeCore12ApiStruct
 
+{#pointer *godot_gdnative_core_1_3_api_struct as GdnativeCore13ApiStruct newtype#}
+deriving newtype instance Eq GdnativeCore13ApiStruct
+deriving newtype instance Storable GdnativeCore13ApiStruct
+
+{#pointer *godot_gdnative_core_1_4_api_struct as GdnativeCore14ApiStruct newtype#}
+deriving newtype instance Eq GdnativeCore14ApiStruct
+deriving newtype instance Storable GdnativeCore14ApiStruct
+
 {#pointer *godot_gdnative_ext_nativescript_api_struct as GdnativeExtNativescriptApiStruct newtype#}
 deriving newtype instance Eq GdnativeExtNativescriptApiStruct
 deriving newtype instance Storable GdnativeExtNativescriptApiStruct
@@ -828,6 +836,16 @@ gdnativeCore12ApiStructRef = unsafePerformIO $ newIORef $
   error "attempted to get gdnativeCore12ApiStructRef too early"
 {-# NOINLINE gdnativeCore12ApiStructRef #-}
 
+gdnativeCore13ApiStructRef :: IORef GdnativeCore13ApiStruct
+gdnativeCore13ApiStructRef = unsafePerformIO $ newIORef $ 
+  error "attempted to get gdnativeCore13ApiStructRef too early"
+{-# NOINLINE gdnativeCore13ApiStructRef #-}
+
+gdnativeCore14ApiStructRef :: IORef GdnativeCore14ApiStruct
+gdnativeCore14ApiStructRef = unsafePerformIO $ newIORef $ 
+  error "attempted to get gdnativeCore14ApiStructRef too early"
+{-# NOINLINE gdnativeCore14ApiStructRef #-}
+
 gdnativeExtNativescriptApiStructRef :: IORef GdnativeExtNativescriptApiStruct
 gdnativeExtNativescriptApiStructRef = unsafePerformIO $ newIORef $ 
   error "attempted to get gdnativeExtNativescriptApiStructRef too early"
@@ -871,6 +889,8 @@ initApiStructs opts = do
 
   findExt GdnativeCore11ApiStruct gdnativeCore11ApiStructRef (coerce coreApi) 1 1
   findExt GdnativeCore12ApiStruct gdnativeCore12ApiStructRef (coerce coreApi) 1 2
+  findExt GdnativeCore13ApiStruct gdnativeCore13ApiStructRef (coerce coreApi) 1 3
+  findExt GdnativeCore14ApiStruct gdnativeCore14ApiStructRef (coerce coreApi) 1 4
 
   numExt <- {#get godot_gdnative_core_api_struct->num_extensions #} coreApi
   extsPtr <- {#get godot_gdnative_core_api_struct->extensions #} coreApi

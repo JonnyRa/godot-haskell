@@ -24,6 +24,12 @@ gdnativeCore11ApiStruct = accursedUnutterablePerformIO $ readIORef gdnativeCore1
 gdnativeCore12ApiStruct :: GdnativeCore12ApiStruct
 gdnativeCore12ApiStruct = accursedUnutterablePerformIO $ readIORef gdnativeCore12ApiStructRef
 
+gdnativeCore13ApiStruct :: GdnativeCore13ApiStruct
+gdnativeCore13ApiStruct = accursedUnutterablePerformIO $ readIORef gdnativeCore13ApiStructRef
+
+gdnativeCore14ApiStruct :: GdnativeCore14ApiStruct
+gdnativeCore14ApiStruct = accursedUnutterablePerformIO $ readIORef gdnativeCore14ApiStructRef
+
 gdnativeExtNativescriptApiStruct :: GdnativeExtNativescriptApiStruct
 gdnativeExtNativescriptApiStruct = accursedUnutterablePerformIO $ readIORef gdnativeExtNativescriptApiStructRef
 
